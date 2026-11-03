@@ -1,9 +1,10 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE (fabricated-input projector only). Live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE (fabricated Sheets reads only). Live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
-Phase 5B contract specification/examples/tests authorized; Phase 5C not authorized.
+Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
+scopes. Phase 5D-2, actual source access and publication are not authorized.
 Phase 5B baseline: develop at 7e2f8c1. No service calls or backend execution.
 
 ## Verified findings so far
@@ -411,4 +412,81 @@ keep inputs fabricated and the synthetic website unchanged unless separately
 approved. Do not access production, run Apps Script/clasp, deploy or build custom
 submissions."
 
-Phase 5C is complete locally; this does not authorize Phase 5D or live publication.
+Phase 5C completion did not authorize later work. The subsequent owner request
+authorized only the fabricated-input Phase 5D-1 recorded below, not live publication.
+
+## Phase 5D-1 — completed isolated Sheets read adapter
+
+Branch: develop. Baseline/checkpoint parent: 96ff853. Final checkpoint revision is
+this file's containing commit (see Git log). Phase 5D-2 has NOT started.
+
+### Completed work
+
+- `tools/sheets/sheets-read-adapter.cjs`: Apps Script-compatible injected namespace;
+  create returns only readPublicSnapshot. Only values.batchGet is called on the
+  injected Sheets interface. Bounded Results/Responses header/range allowlists,
+  header verification before data reads, row guards, canonical response-range/
+  dimension validation, per-week CLOSED selection/prediction filtering and fresh
+  pre/post revision/completeness/quiescence evidence. No raw source/metadata output.
+- Public responses pass through the unchanged Phase 5C projector and Phase 5B
+  validator. No fresh closed evidence => no picks/predictions/votes. No approved
+  aliases => affected scopes WITHHELD. No lifecycle/payment evidence => unknown,
+  pending or unavailable, never inferred from old flags/zero payout placeholders.
+- `tools/sheets/offline-bundle.cjs`: in-memory assembly of only the reader and
+  existing pure modules. VM checks run without Node globals or native services.
+  No file, upload, deployment or copied production Apps Script is assembled.
+- `tests/support/sheets-example.cjs`: fabricated spreadsheet matrices with legacy
+  column shapes and injected read-only Values service, evidence and codecs.
+- `tests/sheets-reader.test.cjs`: 24 reader tests, including expected shapes,
+  missing/moved columns, absent aliases, unknown/mixed/expired closure, truncated/
+  reordered/overflowing ranges, revision and concurrent-data changes, expired
+  capture, blank/zero/invalid scores, explicit timestamp/identity handling, denied
+  writes, private-field/metadata getters and Apps Script-style VM assembly.
+- `docs/architecture/SHEETS_READ_ADAPTER.md`: exact interface and access limits,
+  future owner authorization procedure, least-privilege read scope, capture/time
+  blockers, and browser/CORS guidance without JSONP or insecure proxy workarounds.
+  Only official public developer documentation was browsed; no competition service.
+
+### Verification results
+
+- `node --test tests/*.test.cjs`: 117 passed, 0 failed, 0 skipped (24 new + 93 prior).
+  Includes privacy, scoring, champion resolution, contract, projector, browser
+  navigation/responsive/network isolation and publication security/integrity.
+- `node tools/security/public-artifact.cjs verify`: exact unchanged six-file public
+  artifact and seal pass; no staging rebuild or deployment. Module syntax and
+  whitespace checks pass. Final content/history and scope review across all six changed/new files pass;
+  injected-service boundary scan passes; no real identities, secrets or linkage recorded.
+- Existing website/adapter/fixtures, contract/projector modules, Apps Script source,
+  Pages workflow/settings and production 3.0/main unchanged. No dependency install,
+  Google account/data access, Forms/Properties/triggers, clasp, native Apps Script
+  execution, upload, deployment or custom picks work.
+
+### Remaining prerequisites for any real verification
+
+The actual Values response does not prove atomicity, row completeness or a coherent
+source revision. Repeated equal reads and blank boundary guards detect some races,
+not ABA changes or data after gaps. An independently credible capture mechanism or
+approved immutable private snapshot remains REQUIRED; constant fake evidence or
+refreshing timestamps is not acceptable. The existing production system does not
+become safe to read by changing the local Script target.
+
+Owner must privately review account/target access, approved closed weeks and bounded
+ranges (including shared-row identity/time access), alias registry, historical
+closure authority, source/game mappings, lifecycle/accounting evidence and freshness.
+A real private identity normalizer and tested timezone/DST-aware submission-serial
+codec are required; test codecs are fabricated, not production implementations.
+Actual Apps Script runtime behavior, OAuth grants and browser/CORS behavior remain
+unverified. The synthetic frontend still needs its future explicit CLOSED-but-
+withheld disclosure boundary and reviewed versioned adapter. No live mode enabled.
+
+### Exact next resumable action
+
+Wait for explicit Phase 5D-2 authorization. Resume instruction:
+"Read AGENTS.md, PHASE5_PROGRESS.md, SHEETS_READ_ADAPTER.md and the v1 contract.
+Confirm the owner-authorized Phase 5D-2 scope and resolve capture/revision authority,
+approved aliases/closure, source layout and identity/time codecs first. Do not
+read the real target or run/upload Apps Script unless that precise action is newly
+approved. Preserve synthetic Pages; no deployment or custom picks form. Record
+only non-identifying check outcomes and blockers in this checkpoint."
+
+Phase 5D-1 is complete; Phase 5D-2 and production integration remain unauthorized.
