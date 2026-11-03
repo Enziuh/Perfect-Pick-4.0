@@ -25,3 +25,7 @@ apps-script/.clasp.json
 # Reviewed synthetic publication artifact
 .preview-public/
 .preview-public.seal.json
+
+# Local isolated verification package (not a Pages asset or target configuration)
+.verification-package/
+.verification-package.seal.json

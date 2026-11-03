@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE (fabricated inputs only). Live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE (local only). Live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -579,3 +579,98 @@ that exact authorization. Keep all data ephemeral and report only fixed outcomes
 counts; preserve synthetic Pages and production resources. Stop on any mismatch."
 
 No first real Google read is authorized or conducted automatically by this work.
+
+## Isolated verification package — complete locally; upload/read blocked
+
+Branch: develop. Baseline/checkpoint parent: bbfaa11. Final checkpoint revision is
+this file's containing commit (Git log). Current authorization is preparation only;
+no upload, OAuth authorization, Apps Script execution/deployment or real read.
+
+### Constructed package and exclusions
+
+- `.verification-package/` is an ignored local two-file artifact: Verification.gs
+  and appsscript.json. External ignored seal: .verification-package.seal.json.
+  No target/configuration, credentials, real data, fixtures or other assets.
+- `tools/verification/package.cjs` builds/verifies the exact inventory, approved
+  source assembly, source-path symlinks, explicit manifest, private/reference scans,
+  forbidden capabilities and SHA-256 seal. Unexpected configuration files, maps,
+  archives, directories, symlinks or changed bytes fail closed. No upload command.
+- `tools/verification/package-manifest.json`: V8, reference Pacific timezone,
+  exception logging NONE, sole spreadsheets.readonly scope and Sheets v4 advanced
+  service. No webapp/executionApi, libraries, Drive/write/Form/trigger scopes.
+- Required read adapter, projector/monthly logic, contract, timestamps, evidence
+  and redacted-report code are enclosed in a private scope. No global create/read
+  library API is exported. Only the permanently disabled diagnostic is accessible:
+  verifyPerfectPick4Package_ returns DISABLED via the existing no-capability entry.
+  Owner claims, flags, callbacks or global configuration cannot enable it.
+- No legacy score-sync/backfill, ensure-columns/setup/seeding, Form automation,
+  trigger operations, prize migration, Apps Script native writer/logging/network
+  service, doGet/doPost or anonymous handler is included. Pure code only; actual
+  Sheets read methods remain injected capabilities for a separately reviewed future
+  activation. No existing contract, projector, reader or frontend changes.
+- `.gitignore` excludes the local package/seal. No change to the six-file Pages
+  allowlist/workflow. Tracked sources reconstruct the package without committing
+  generated duplicates or any private target file.
+
+### Target verification — explicit limits
+
+`tools/verification/local-target.cjs` inspects the existing ignored local linkage
+and main/develop local history, never runs clasp or contacts Google. VERIFIED
+locally: configuration is present, ignored/untracked and distinct from historical
+3.0 linkage. No identifier or identifier digest is logged/stored in this checkpoint
+or package. Remote identity is OWNER_CONFIRMATION_REQUIRED, readyForUpload:false.
+This is separation evidence only, NOT proof that it is the intended separate 4.0
+project. Owner must privately compare Project Settings identity and inventory the
+remote code, owner/editor access, versions/deployments, triggers and libraries.
+Missing/invalid/tracked/unignored/legacy-equal linkage cannot pass local assessment.
+
+### Offline verification
+
+- `node --test tests/*.test.cjs`: 149 passed, 0 failed, 0 skipped (11 new + 138 prior).
+- `tests/verification-package.test.cjs`: exact script/manifest, strict scope and
+  no endpoints, forbidden function/service exclusions, no native calls on load or
+  diagnostic, disabled behavior despite purported config, private library closure,
+  permission escalation rejection, extra-file/symlink/tamper/seal rejection,
+  status-only local target assessment and unchanged synthetic publication.
+- `node tools/verification/package.cjs stage` and `verify`: local two-file package
+  and seal pass; diagnostic DISABLED; readyForUpload:false. Actual files inspected.
+- `node tools/verification/package.cjs target`: local separation confirmed, remote
+  owner confirmation still required. No actual Script ID appears in output.
+- `node tools/security/public-artifact.cjs verify`: unchanged synthetic six-file
+  artifact and seal pass. Syntax/whitespace checks pass. Final scope and private-content/current-and-historical-linkage review across all
+  seven changed/new files pass; detector literals and fabricated negative tests
+  were reviewed as code/test inputs, not production secrets.
+- Website/production 3.0/main, copied Apps Script, Forms/Sheets, Properties, triggers,
+  public configuration and deployment workflow unchanged. No dependencies installed,
+  real data access, clasp operation, OAuth flow, Apps Script upload/execution/deploy,
+  permissions/visibility change or custom picks work. Only public documentation
+  was browsed for manifest/scopes; no competition service was accessed.
+
+### Unresolved security/data-integrity blockers
+
+Remote 4.0 identity and owner isolation, effective existing grants, actual runtime/
+Intl behavior, actual header coordinates/timezone, identity normalization and complete
+approved alias mappings, historical authoritative CLOSED evidence, credible capture
+revision/completeness/quiescence, accounting/completion/oracle evidence and the
+frontend CLOSED-but-withheld behavior remain unresolved. Equal repeated reads and
+blank guards do not create snapshot authority or ABA safety. No production cell,
+metadata, revision tab or trigger is changed to manufacture it. No private policy
+or target is shipped, and the diagnostic cannot access real data as packaged.
+
+### Exact owner-controlled next action
+
+Owner reviews ISOLATED_VERIFICATION_PACKAGE.md, the two local files, hashes/seal
+and passing checks. Privately confirm the intended separate 4.0 target and clean
+owner-only remote isolation WITHOUT publishing its identifier or changing resources.
+Then provide NEW specific approval before any future upload, isolated synthetic
+runtime execution or OAuth authorization. Keep the diagnostic disabled; real-read
+activation/configuration and the first bounded read each need separate review and
+explicit authorization after source-authority/alias/closure gates are resolved.
+
+Resume instruction: "Read AGENTS.md, PHASE5_PROGRESS.md and
+ISOLATED_VERIFICATION_PACKAGE.md. Confirm the newly approved operation and remote
+4.0 isolation privately; do not use the copied apps-script directory or run clasp,
+upload, authorize, deploy or read real data without precise new authorization.
+Keep private configuration outside Git/package/Pages and preserve production."
+
+Preparation complete does NOT mean ready to upload, deploy, authorize or read.

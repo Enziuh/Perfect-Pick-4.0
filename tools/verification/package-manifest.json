@@ -1,0 +1,11 @@
+{
+  "timeZone": "America/Los_Angeles",
+  "runtimeVersion": "V8",
+  "exceptionLogging": "NONE",
+  "oauthScopes": ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+  "dependencies": {
+    "enabledAdvancedServices": [
+      {"userSymbol": "Sheets", "serviceId": "sheets", "version": "v4"}
+    ]
+  }
+}
