@@ -1,5 +1,9 @@
 # Controlled verification preparation — local, fabricated inputs only
 
+Current implementation: functional native read connector, DISABLED by default.
+See the final "Functional native connection" section for current owner steps;
+earlier preparation sections are retained as historical design/evidence context.
+
 Status: preparation complete; FIRST REAL READ DISABLED. No owner authorization,
 remote isolation, Google permissions or production source correctness has been
 established. This document is a conditional procedure, not authorization to run it.
@@ -344,3 +348,157 @@ actual coordinates/timezone/runtime parity, credible independent capture authori
 alias/history closure approval and exact one-read authorization. Missing accounting,
 completion and champion oracle block the corresponding parity claims. Synthetic
 Pages and all public-live-integration blockers remain unchanged.
+
+## Functional native connection — current implementation (supersedes bridge TODOs)
+
+The owner connection is now IMPLEMENTED in tools/verification/owner-connection.cjs,
+assembled privately by the existing builder. No real read or upload occurred in
+this task. Earlier sections describe historical preparation; the current entry is
+DISABLED BY DEFAULT rather than permanently incapable of activation. The pure
+legacy verifyRealCompetitionReadOnly_ helper remains unconditionally disabled.
+
+Important platform constraint: SpreadsheetApp.openById requires the spreadsheet
+editing scope in Google's official reference. It cannot satisfy the requested
+readonly manifest. This implementation therefore uses the existing Apps Script
+Advanced Sheets v4 service, with ONLY spreadsheets.readonly. No SpreadsheetApp,
+extra OAuth scope, UrlFetch workaround or access token is introduced.
+Official references: [SpreadsheetApp scope](https://developers.google.com/apps-script/reference/spreadsheet/spreadsheet-app#openById(String)),
+[metadata GET](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets/get),
+[bounded values GET](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/batchGet).
+
+### Implemented execution boundary
+
+verifyPerfectPick4Package_ ignores arguments and uses a private source provider,
+loadPrivateOwnerConfig, whose shipped implementation returns null. It does not
+read global variables, request inputs, Script Properties, files or Sheet cells for
+configuration. Absent/disabled configuration returns the existing DISABLED status
+without resolving Sheets. No HTTP handlers, deployed execution API, triggers or
+public frontend changes. Nothing is enabled by uploading the default package.
+
+Owner-only access relies on Google project/editor access control: the owner MUST
+privately confirm sole-editor access, no deployments/API execution/libraries or
+triggers and minimal effective grants. Config booleans attest that review; they
+are NOT independent identity authentication. An editor controlling source can
+change any guard. No email/identity scope is requested. If that project isolation
+cannot be established, leave null and do not execute. No remote settings were
+inspected or changed here.
+
+The diagnostic permits only one ACTIVATED attempt per execution context and a
+maximum five-minute activation window; every metadata/value call and completion
+checks the window. Each new Apps Script execution has fresh memory, so this is
+NOT persistent single-use across runs. Owner must disable private configuration
+immediately after the authorized run and never schedule or repeatedly invoke it.
+No Properties/locks/counters or production mutations enforce persistent state.
+
+### Private source configuration (never commit or share)
+
+Only in the OWNER'S REMOTE ISOLATED EDITOR, replace return null between the
+BEGIN/END OWNER-PRIVATE CONFIGURATION comments with a returned plain object.
+Do not edit the local sealed package, normal apps-script/src or tracked provider
+with private values. No extra .gs/config file is required. The exact top-level keys:
+
+- activation: exactly enabled, soleOwnerReviewed, noPublicExecutionReviewed,
+  readOnlyGrantsReviewed, notBefore and expiresAt. Booleans must be true for a
+  read. Canonical UTC timestamps bound the specifically approved run; interval
+  at most five minutes, now inside it. Keep enabled false until actual authorization.
+- mode: STRUCTURE for the first read; VERIFY only for a separately authorized full
+  bounded verification. No arbitrary actions or write mode.
+- competition: exactly the prior coordinator config: target, timeZone, revision,
+  maxAgeMs, layout, policy, aliases, closures. Exact layout and policy descriptors
+  still apply. Use confirmed real column coordinates, not synthetic letters.
+  A valid game/team/period descriptor layout is required even in STRUCTURE mode;
+  headers are matched against that bounded manifest, not auto-discovered wholesale.
+  aliases/closures may be empty arrays in STRUCTURE mode. Target and all private
+  aliases/joins belong ONLY in the private remote provider. No names are derived.
+- capture: null for STRUCTURE without source authority, otherwise the exact
+  revision/observedAt/validUntil/resultRows/responseRows/quiescent evidence object
+  documented above. captureAuthorityReviewed: explicit owner confirmation of
+  independently credible source authority; never set true merely to pass a test.
+- identityFormat: EXACT_TEXT only. Raw text must match the privately approved
+  alias registry key exactly. No name fallback, automatic phone conversion or
+  guessing leading zeroes. Confirm actual private join representation beforehand.
+
+Owner-configured capture evidence is immutable for this execution and rechecked
+by the existing adapter. It is NOT a dynamic revision source: live changes inside
+an independently guaranteed quiescent window must be ruled out externally. A
+constant configured revision, three equal attestations, equal reads, guards or
+metadata capacities do not prove source completeness/atomicity. VERIFY stays
+blocked unless the owner has genuine independent authority for the exact target,
+bounds, revision and time window. No mechanism modifies production to create it.
+Missing accounting/decision evidence stays unknown; it never means zero or paid.
+
+### First-run reads and privacy-safe result
+
+STRUCTURE reads one metadata request restricted to Results/Responses A1, with
+fields limited to spreadsheet timezone and selected sheets' title/grid capacities;
+no grid data, sheet IDs, document title or extra tabs. It then reads ONLY the exact
+selected single header cells with a values field mask. No timestamp/contact/pick/
+prediction body cells. Unknown titles/headers are compared privately, never echoed.
+The result reports expected/discovered tab COUNTS and expected/matched column
+COUNTS, never actual tab/header strings. Any mismatch returns fixed BLOCKED output.
+Timezone is MATCH only when actual metadata matches the configured parser zone.
+Timestamp compatibility remains NOT_CHECKED until real bounded timestamp records
+are validated in VERIFY; timezone match alone is not timestamp evidence.
+
+VERIFY first requires capture authority, fresh revision/bounds, approved aliases
+and authoritative CLOSED evidence for every selected week. It performs the same
+metadata/header check, then the existing coordinator/adapter/projector/validator
+pipeline through a wrapper enforcing exact target, reviewed ranges/options,
+no duplicate ranges, row limits and at most four additional values calls. Total
+maximum: one metadata call and five values calls. Known-tab single-column paths
+only; one overflow guard per primary Results Week/Responses Timestamp column.
+Response field masks omit spreadsheet ID and all metadata except required fields.
+
+Exact report keys: state, structure, records, timeZone, timestamps, closure,
+aliases, revision, schema, comparison. No player-level DTO is ever returned.
+Structure has expectedTabs/discoveredTabs/expectedColumns/matchedColumns counts.
+Records has results/responses (null unless validated), completeness fixed label.
+Raw response-row counts are PRIVATE diagnostics, never player counts/unique player
+identities and never public website data. STRUCTURE always leaves row counts null,
+completeness UNVERIFIED and comparison BLOCKED; sheet capacity is not a record count.
+VERIFY returns authority-supplied bounded counts only after contract validation;
+unavailable/partial/alias-incomplete results cannot pass comparison readiness.
+READY_FOR_PRIVATE_COMPARISON means a valid bounded read, NOT actual 3.0 parity,
+payout correctness or public release authorization. No names, aliases, contacts,
+private IDs, timestamps, header text, raw picks/predictions, notes or errors escape.
+No logging/persistence, endpoint or browser response exists. A blocked read may
+hide partial progress deliberately rather than return private error details.
+
+### Exact owner-controlled sequence — no operation authorized automatically
+
+1. Review code/tests, then explicitly authorize a source-only upload to the separate
+   owner-only 4.0 project. Recheck the documented Node preflight, target/rootDir dot
+   and exact ignored inventory. Future commands, NOT executed in this task:
+   from repository root run node tools/verification/package.cjs verify, run the
+   documented isolated Node preflight, then change directory to
+   /Users/manny/orca/projects/NFL-Perfect-Pick/tmp/verification-upload and run
+   clasp push ONLY under that upload authorization. Do not deploy or use src.
+   Uploadable project files are ONLY Verification.gs and appsscript.json;
+   local ignored .clasp.json is configuration, not an uploaded script asset.
+2. Privately verify the uploaded manifest and actual effective grants: ONLY
+   spreadsheets.readonly; reject editing, Drive, Forms, external request or identity
+   scopes. Advanced Sheets v4 must be enabled. If authorization asks for more, STOP.
+   Owner-only project review must pass before entering any private config.
+3. Under NEW explicit first STRUCTURE-read authorization, privately fill the remote
+   provider with confirmed descriptors and a fresh short activation window. Leave
+   capture null, aliases/closures empty when unavailable; no evidence fabrication.
+   Review the private delta only (provider change), preserving all other code and
+   manifest. Active private code intentionally differs from the public/default
+   integrity seal; the generic local inspector rejects private variants. Do NOT
+   weaken that inspector or copy private code to Git/local publication artifacts.
+4. Manually run verifyPerfectPick4Package_ once from that owner editor, accepting
+   ONLY the reviewed read-only authorization. Use a debugger breakpoint at the
+   entry's return report line to inspect ONLY report privately. Never log output,
+   expand raw frames, screenshot configuration, schedule execution or deploy.
+   Disable the private provider immediately afterward. No real read was done here.
+5. Resolve any structure/timezone mismatch privately without editing the source
+   Sheet. For VERIFY, separately obtain capture authority, approved alias registry,
+   exact CLOSED history, freshness/revocation and identity/time codec approval.
+   Obtain NEW authorization for those exact bounds/week/revision/window, then
+   activate VERIFY and repeat the single manual inspection/disable sequence.
+   If any evidence is missing, retain STRUCTURE/disabled mode; do not bypass gates.
+6. Rollback is owner-controlled restoration of return null in the remote provider
+   (or separately approved re-upload of the sealed disabled two-file package),
+   ending the session and reviewing only verification-specific grants. No data
+   writes occurred, so no production data rollback is needed. Do not alter 3.0,
+   Forms, triggers or existing production grants. Record only redacted outcomes.

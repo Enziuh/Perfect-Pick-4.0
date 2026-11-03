@@ -1,5 +1,8 @@
 # Isolated verification package — preparation only
 
+Current connector: implemented and offline-tested; private provider null/default
+DISABLED. See final functional-native section for activation boundaries.
+
 Status: local package built and checked; diagnostic DISABLED; NOT approved for
 upload, OAuth authorization, Apps Script execution, deployment or a real read.
 Use with FIRST_LIVE_VERIFICATION.md. No production resource was accessed/changed.
@@ -283,3 +286,23 @@ remain deliberately unimplemented pending isolation/evidence review. Local packa
 regeneration/sealing does not update the owner's remote uploaded version. Existing
 three-file upload copy must match the regenerated seal before any separately
 approved future upload; no upload/read is authorized or performed by this work.
+
+## Functional native read connector (current)
+
+The isolated package now includes owner-connection.cjs and private-owner-config.cjs
+inside its private module closure. The default provider returns null: uploaded
+source remains DISABLED until owner-private REMOTE source configuration and
+activation. Request arguments/global settings cannot activate it. Native access is
+lazy and limited to Advanced Sheets Spreadsheets.get (restricted metadata) and
+Spreadsheets.Values.batchGet (bounded columns), both covered by the UNCHANGED
+spreadsheets.readonly manifest. SpreadsheetApp.openById was deliberately excluded
+because its documented authorization requires editing permission. No scope broadened.
+
+FIRST_LIVE_VERIFICATION.md's functional-native-connection section supersedes prior
+"native bridge unimplemented" statements and explains exact private config,
+STRUCTURE versus VERIFY, owner-only Google editor access boundary, five-minute
+activation, per-execution attempt limit, manual disable and source-only upload.
+The generic package seal covers only disabled nonprivate source. Owner-configured
+remote private variants require private delta review and must never enter Git.
+The exact local upload inventory remains two project payloads plus ignored clasp
+configuration; no extra config asset, public handler, trigger or live frontend.

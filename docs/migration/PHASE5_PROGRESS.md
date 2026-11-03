@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; diagnostic coordinator preparation COMPLETE offline. Real reads and live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector IMPLEMENTED and tested offline, DISABLED by default. Real reads and live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -836,3 +836,96 @@ Resume: "Read AGENTS.md, PHASE5_PROGRESS.md and FIRST_LIVE_VERIFICATION.md. Conf
 which remaining owner-only bridge/evidence gate is newly authorized. Preserve the
 sealed disabled package and synthetic Pages; do not access Google services,
 upload, authorize or read actual data without exact new approval."
+
+## Functional native read connection — implemented; real execution NOT performed
+
+Branch develop; baseline 0673329. Checkpoint revision is this section's containing
+commit (Git log). Current task authorizes connector implementation/offline tests,
+commit and push only. No real access, OAuth, upload, execution or deployment.
+
+Completed implementation:
+- tools/verification/owner-connection.cjs implements the actual native service
+  bridge, using Advanced Sheets Spreadsheets.get and Values.batchGet. IMPORTANT:
+  Google's SpreadsheetApp.openById requires editing scope, incompatible with the
+  explicit read-only requirement. Advanced Sheets is used instead; the existing
+  sole spreadsheets.readonly scope and service manifest are BYTE-UNCHANGED.
+- tools/verification/private-owner-config.cjs defaults to return null; private
+  provider lives inside the generated package closure. No globals/arguments,
+  Script Properties, target hardcoding or enable request parameter. Default entry
+  remains DISABLED without touching Sheets. Owner activation requires private
+  remote source configuration, explicit isolation/read-only review and a canonical
+  time window of at most five minutes. One activated attempt per execution context;
+  repeated Apps Script executions reset memory, so owner must disable after use.
+- STRUCTURE first-run mode reads only restricted two-tab metadata and selected
+  single-cell headers. No contact, timestamp, selection or prediction body cells,
+  no projector publication. Reports only counts/fixed labels; row counts unknown.
+- VERIFY requires approved alias configuration, authoritative CLOSED history and
+  independently credible capture/revision/completeness evidence before native
+  access. It reuses the existing Phase 5D adapter, projector, timestamp parser,
+  coordinator and strict contract validation. Exact layout descriptor keys reject
+  injected sheet overrides. Target, columns, bounded rows, request options and
+  four-call reader budget are enforced by the native wrapper. Metadata/header
+  preflight makes total maximum one metadata + five values requests. No writes,
+  Forms, triggers, sync, prize updates, private-data output/logging or HTTP handlers.
+- Native report contains fixed state/readiness/schema/evidence/time compatibility,
+  expected/discovered tab counts, expected/matched column counts and validated
+  bounded record counts only. Sensitive header strings, player aliases/names,
+  contacts, picks, notes, IDs, timestamps, raw DTOs and exceptions never returned.
+  Mismatched headers can expose safe numeric progress but no header text.
+  READY_FOR_PRIVATE_COMPARISON is not parity or publication approval.
+- tools/sheets/offline-bundle.cjs and tools/verification/package.cjs integrate the
+  bridge privately; global namespace still exposes only diagnostic. Entry ignores
+  arguments and returns a report local for private debugger inspection. The pure
+  legacy disabled helper remains disabled; no live frontend or backend 3.0 change.
+- FIRST_LIVE_VERIFICATION.md documents exact private fields, source-only upload,
+  remote-only provider activation, minimal grant review, STRUCTURE then separately
+  authorized VERIFY, report inspection and return-null rollback. Current section
+  supersedes historical native-bridge TODOs. ISOLATED_VERIFICATION_PACKAGE.md updated.
+
+Offline verification results:
+- node --test tests/*.test.cjs: 177 passed, 0 failed, 0 skipped (11 new).
+- New fabricated tests exercise actual generated native bridge end-to-end via
+  private-source test compilation, default disabled/global/argument bypass denial,
+  missing authorization/config, unknown closure, absent/unmapped aliases, stale/
+  partial/changing snapshots, exact read-only API calls, denied mutation/services,
+  private error/header suppression, layout overrides, fixed output shape, header-
+  only STRUCTURE operation and per-context attempt/window limits. No existing
+  security/privacy tests removed, changed or skipped; no dependency added.
+- Package stage/verify and Acorn ES2020 grammar/API compatibility pass. External
+  seal refreshed; local upload payloads match it. Inventory remains Verification.gs,
+  appsscript.json and ignored .clasp.json; private clasp bytes unchanged, same
+  owner-confirmed 4.0 target/rootDir dot/mode 0600. Documented Node preflight passes.
+  Only the two project payload files are uploadable; no clasp command was run.
+- Existing browser/responsive/navigation/network isolation, privacy, scoring,
+  champion/prizes, contract and artifact-security checks pass. Current/historical
+  private-reference scans of all eight changed/untracked files and Git whitespace
+  checks pass. Normal Apps Script source, public synthetic website, six-file
+  allowlist/workflow, main and 3.0 untouched.
+
+Remaining owner actions/blockers:
+Owner must privately verify intended separate target, sole-editor/no-deployment/
+trigger/library isolation and minimal effective grants. This is Google's editor
+access boundary, not authentication proven by config booleans. Actual runtime/
+metadata/column/timezone parity and private identity format remain unverified.
+STRUCTURE needs reviewed column descriptors and explicit one-read authorization;
+VERIFY additionally requires complete aliases, historical closure/reopen evidence
+and credible independent revision/completeness/quiescence authority. Static config
+attestations/equal repeated reads/guards/capacities do NOT establish source authority.
+No source authority is manufactured by this connector. Missing accounting,
+completion/oracles block related parity claims; no automatic comparison or live
+publication. Uploaded remote code is NOT updated by this local generation.
+
+Exact next owner-controlled action/resume:
+Review FIRST_LIVE_VERIFICATION.md's Functional native connection section and
+explicitly authorize uploading ONLY tmp/verification-upload/Verification.gs and
+appsscript.json to the separate 4.0 project after the documented Node preflight.
+Future owner-only command is clasp push FROM tmp/verification-upload, not src.
+Do not deploy. Then verify manifest/effective grants and sole-owner isolation,
+privately configure the remote provider for STRUCTURE, and obtain NEW explicit
+first-read authorization before executing verifyPerfectPick4Package_ once. Inspect
+only the redacted report privately and immediately restore return null. No real
+read is authorized automatically by upload, configuration or these passing tests.
+Resume: "Read AGENTS.md, PHASE5_PROGRESS.md and FIRST_LIVE_VERIFICATION.md. Confirm
+the exact newly authorized owner operation. Connector is implemented; do not redo
+planning, bypass evidence, access Google, upload, authorize or run a diagnostic
+without the specific next approval. Keep public Pages synthetic and preserve 3.0."

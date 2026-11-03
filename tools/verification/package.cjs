@@ -5,16 +5,16 @@ const {buildOfflineBundle}=require('../sheets/offline-bundle.cjs');
 const {inspectLocalTarget,assertNoPrivateReferences}=require('./local-target.cjs');
 const ROOT=path.resolve(__dirname,'../..'),STAGE=path.join(ROOT,'.verification-package');
 const FILES=Object.freeze(['Verification.gs','appsscript.json']);
-const SOURCES=Object.freeze(['tools/sheets/offline-bundle.cjs','tools/sheets/sheets-read-adapter.cjs','tools/contracts/live-contract.cjs','tools/projector/project-competition.cjs','tools/projector/monthly-decision.cjs','tools/verification/timestamps.cjs','tools/verification/owner-evidence.cjs','tools/verification/offline-report.cjs','tools/verification/disabled-entry.cjs','tools/verification/prepared-diagnostic.cjs','tools/verification/package-manifest.json']);
+const SOURCES=Object.freeze(['tools/sheets/offline-bundle.cjs','tools/sheets/sheets-read-adapter.cjs','tools/contracts/live-contract.cjs','tools/projector/project-competition.cjs','tools/projector/monthly-decision.cjs','tools/verification/timestamps.cjs','tools/verification/owner-evidence.cjs','tools/verification/offline-report.cjs','tools/verification/disabled-entry.cjs','tools/verification/prepared-diagnostic.cjs','tools/verification/owner-connection.cjs','tools/verification/private-owner-config.cjs','tools/verification/package-manifest.json']);
 const SCOPE='https://www.googleapis.com/auth/spreadsheets.readonly';
-const ENTRY='\n// Owner-editor diagnostic only. No authorization, configuration or read capability.\nfunction verifyPerfectPick4Package_(){\n  return PerfectPickVerificationPackage_.diagnostic();\n}\n';
+const ENTRY='\n// Owner-editor diagnostic. Disabled unless the private source provider is explicitly configured.\nfunction verifyPerfectPick4Package_(){\n  const report=PerfectPickVerificationPackage_.diagnostic();\n  return report;\n}\n';
 const need=(ok,message='Verification package rejected')=>{if(!ok)throw Error(message);};
 function safePath(file){let current=path.resolve(file);need(fs.existsSync(current));while(current!==path.dirname(current)){need(!fs.lstatSync(current).isSymbolicLink(),'Symlink rejected');current=path.dirname(current);}}
 function render(){
  for(const relative of SOURCES){const full=path.join(ROOT,relative);safePath(full);need(fs.statSync(full).isFile());}
  const bundle=buildOfflineBundle(),suffix='})(globalThis);';need(bundle.endsWith(suffix));
  const privateBundle=bundle.slice(0,-suffix.length)+'})(privateRoot);';
- const script='var PerfectPickVerificationPackage_=(function(){\nconst privateRoot={};\n'+privateBundle+'\nreturn Object.freeze({diagnostic:privateRoot.PerfectPick4ReadOnly.verifyRealCompetitionReadOnly_});\n})();'+ENTRY;
+ const script='var PerfectPickVerificationPackage_=(function(){\nconst privateRoot={};\n'+privateBundle+'\nreturn Object.freeze({diagnostic:privateRoot.PerfectPick4ReadOnly.createOwnerDiagnostic(privateRoot.PerfectPick4ReadOnly.loadPrivateOwnerConfig,function(){return Sheets;},function(){return Date.now();})});\n})();'+ENTRY;
  checkAppsScriptCompatibility(script,'Verification.gs');
  return {'Verification.gs':script,'appsscript.json':fs.readFileSync(path.join(__dirname,'package-manifest.json'),'utf8')};
 }
