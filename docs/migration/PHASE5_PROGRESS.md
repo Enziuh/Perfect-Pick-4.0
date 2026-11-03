@@ -1,9 +1,10 @@
-# Phase 5A — resumable contract audit
+# Phase 5 — resumable migration checkpoint
 
-Status: COMPLETE — Phase 5A source audit only. Live integration NOT approved. Documentation-only, local source inspection; no service calls.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE (offline specification and tests only). Live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
-No Phase 5B work authorized or started.
+Phase 5B contract specification/examples/tests authorized; Phase 5C not authorized.
+Phase 5B baseline: develop at 7e2f8c1. No service calls or backend execution.
 
 ## Verified findings so far
 
@@ -197,7 +198,11 @@ counts (suppress small-group amounts if identifying). No aliases, game selection
 raw exceptions or private keys in logs/checkpoint/public artifacts. Stop on any
 unexpected mismatch; do not repair live results or change rules automatically.
 
-## Phase 5B and later — small independent gates, NOT STARTED
+## Original Phase 5A proposed gates — historical plan
+
+The owner subsequently authorized the expanded offline Phase 5B specification,
+examples and validation tests recorded below. Remote/read integration gates remain
+unstarted; this original plan is not current execution status.
 
 1. Approve versioned DTO/disclosure specification, alias ownership and historical
    closure evidence source. Resolve denominator/prediction constraints without
@@ -230,9 +235,9 @@ not rerun for this documentation-only audit; previous test success is not new
 Phase 5A execution evidence. Checkpoint passed content/privacy and historical-identifier scans plus a Git
 scope check: only this authorized document changed. No new personal data or private identifiers recorded.
 
-## Remaining work and exact next action
+## Phase 5A handoff — superseded by Phase 5B completion below
 
-Phase 5A is complete; Phase 5B awaits authorization. Next action: owner reviews the
+At the Phase 5A checkpoint, Phase 5B awaited authorization. Next action: owner reviews the
 contract/disclosure blockers and authorizes Phase 5B step 1 only (offline contract
 specification). Do not connect real data, alter synthetic publication, run backend
 functions, or start custom picks. Remote settings, historical closure evidence,
@@ -240,3 +245,70 @@ alias approval registry and production parity remain explicitly unverified.
 
 Checkpoint branch: develop; parent 6cd85d1. To identify its final documentation
 commit use Git log for this file; a self-referential commit hash is not embedded.
+
+## Phase 5B — completed offline contract specification
+
+Branch: develop. Checkpoint parent: 7e2f8c1. The commit containing this update is
+its final checkpoint revision; use Git log for this path rather than a circular
+self-referential commit hash. Phase 5C has NOT started.
+
+### Deliverables and verified coverage
+
+- `docs/architecture/LIVE_DATA_CONTRACT_V1.md`: normative required/optional fields,
+  versioned READY/UNAVAILABLE snapshots, source/closure revisions and freshness,
+  numeric score normalization, exact FINAL coherence, approved aliases, weekly/
+  monthly/season ranks and legacy denominator semantics, monthly decisions,
+  authoritative cent-based prize accounting and redacted comparison protocol.
+- `tools/contracts/live-contract.cjs`: separate I/O-free executable specification.
+  Strict unknown-key rejection at every nested record; rejects private fields
+  instead of stripping/pass-through. Trusted approval/completeness/closure and
+  accounting maps are server-owned inputs, never request/public authorization.
+  Missing approval or unverifiable closure cannot release picks, predictions,
+  participation or voting. Affected standings are withheld; no invented winners,
+  score zeroes or payment status. This is NOT a reader or production API change.
+- `tests/support/live-contract-examples.cjs`: nine invented scenarios, including
+  pending, unknown closure, missing alias, no eligible prediction, equal-distance
+  tie, zero votes and zero completed games. No downloaded/sanitized private data.
+- `tests/live-contract.test.cjs`: 30 offline tests, including recursive forbidden
+  fields, expired/reopened closure, stale/incoherent scores, rejected self-asserted
+  approvals, counts/share reconciliation, rank/aggregate consistency, evidence-
+  backed prize accounting/rollover, redacted comparison failures and deterministic
+  ordering. Monthly states/winners match the approved frontend resolver on all
+  nine synthetic examples. No Apps Script code is executed by these tests.
+
+### Test/check results
+
+- `node --test tests/*.test.cjs`: 62 passed, 0 failed, 0 skipped (30 new + 32 existing).
+  Includes browser navigation/responsive/privacy/network isolation, champion,
+  picks/voting, prize, security and artifact-tamper regressions.
+- `node tools/security/public-artifact.cjs verify`: exact existing six-file artifact
+  and external seal pass, including historical private-identifier/security scan.
+- New module/example syntax checks and Git whitespace check pass. Final content/
+  historical-identifier and modification-scope scans pass across all five changed/
+  new files; the contract module has no service/network/logging capability.
+- Website, synthetic fixture/adapter, Apps Script, publication scanner and Pages
+  workflow unchanged. No dependency install, service request, live read, backend
+  execution, clasp, upload or deployment. No custom submission work.
+
+### Remaining blockers (not silently resolved by specification)
+
+Owner-approved alias registry/complete mapping, historical official closure evidence
+and freshness budget; explicit missing-pick accuracy wording and valid prediction
+constraints; authoritative accounting and independent monthly decision oracle;
+least-privilege isolated reader and same-revision source proof. Remote settings,
+permissions and deployed 3.0 behavior remain unverified. Full-month standings in
+v1 are deliberately withheld if any configured week lacks closure; an early-month
+closed-weeks-only extension needs explicit review. No zero payout placeholder is
+accepted as payment evidence. Contract validation cannot establish source truth.
+
+### Exact next resumable task
+
+Wait for owner authorization for Phase 5C. Resume instruction:
+"Read AGENTS.md, PHASE5_PROGRESS.md and LIVE_DATA_CONTRACT_V1.md. Begin only the
+authorized Phase 5C offline read-only projection/reader design against fabricated
+inputs, using write-denying service stubs and the Phase 5B contract tests. Do not
+access production, modify the synthetic website/workflow, deploy, or build custom
+submissions. Resolve the recorded authority/alias/denominator/accounting decisions
+before any real-data integration."
+
+Phase 5B is complete; nothing in this checkpoint approves Phase 5C or publication.
