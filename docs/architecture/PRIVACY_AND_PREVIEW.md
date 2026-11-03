@@ -6,7 +6,8 @@ Stage 1 replaces only the development website's data connection. Existing Apps
 Script source, Google services, scoring rules and production automation remain
 unchanged. No production adapter is shipped. The preview must never fall back to
 live data. A missing/invalid local fixture is an error, not permission to connect.
-The eight existing sections and existing visual layout remain in place.
+The eight original capabilities remain available within the five-destination
+Phase 1 shell; see FRONTEND_PHASE_1.md for design conventions and approved rules.
 
 The published six-file artifact is built by `node tools/security/public-artifact.cjs stage`.
 Run `node --test tests/*.test.cjs`, then `node tools/security/public-artifact.cjs verify`.
@@ -46,7 +47,8 @@ completed games, total picks where approved, perfect-week flag, approved aggrega
 prize totals and rule percentages, finalization state, approved public winner aliases.
 Public entry-window fields: applicable week, authoritative status, published kickoff
 and closing time, public rule text and snapshot generation time. Do not expose
-internal property names or identifiers. Accuracy requires an approved denominator.
+internal property names or identifiers. Accuracy uses correct picks divided by completed FINAL games; zero displays
+an em dash. This presentation metric never changes ranking points.
 
 Player identity: only explicitly approved display aliases and optional opaque public
 IDs unrelated to contact information. Never derive aliases from names, phone

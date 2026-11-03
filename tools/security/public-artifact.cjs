@@ -51,7 +51,8 @@ function verify(dir=STAGE,enforceSeal=false) {
   assert((adapter.match(/\bfetch\s*\(/g)||[]).length===1 && adapter.includes("root.fetch('./fixtures/preview.json'"),'Fixture-only adapter required');
   const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
   assert(html.includes("connect-src 'self'")&&html.includes("form-action 'none'")&&html.includes("default-src 'none'"),'Isolation policy missing');
-  for(const m of html.matchAll(/(?:src|href)="([^"]+)"/g))assert(FILES.includes(m[1].split('?')[0]),'Unapproved asset reference');
+  const fragments=new Set(['#main-content','#overview','#match-center','#standings','#standings/weekly','#standings/monthly','#standings/season','#prizes','#guide','#guide/rules','#guide/faq']);
+  for(const m of html.matchAll(/(src|href)="([^"]+)"/g))assert(FILES.includes(m[2].split('?')[0]) || (m[1]==='href' && fragments.has(m[2])),'Unapproved asset reference');
   assert(!/<(?:iframe|form|object|embed)\b/i.test(html),'Active external content rejected');
   validate(JSON.parse(fs.readFileSync(path.join(dir,'fixtures/preview.json'),'utf8')));
   if(enforceSeal) assert(JSON.stringify(hashes)===fs.readFileSync(path.join(ROOT,'.preview-public.seal.json'),'utf8'),'Artifact changed after staging');

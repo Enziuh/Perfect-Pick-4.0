@@ -138,6 +138,7 @@
   function renderDashboard(prizes) {
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
+    renderChampionSpotlight(prizes);
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
     setText('weeklyPot', money(prizes.currentWeeklyPot));
@@ -193,23 +194,39 @@
     `).join('') || '<tr><td colspan="4">No weekly data yet.</td></tr>';
   }
 
+  function formatAccuracy(points, completedGames) {
+    if (!Number.isFinite(points) || !Number.isFinite(completedGames) || completedGames <= 0 || points < 0 || points > completedGames) return '—';
+    return `${(points / completedGames * 100).toFixed(1).replace(/\.0$/, '')}%`;
+  }
+
+  function accuracyHtml(player) {
+    const accuracy = formatAccuracy(player.points, player.completedGames);
+    return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="Correct picks divided by completed FINAL games">${accuracy}</span>`;
+  }
+
+  function renderStandingsRows(containerId, standings, showCompleted = true) {
+    $(containerId).innerHTML = standings.map(player => `
+      <tr class="${player.rank <= 3 ? ['','rank-first','rank-second','rank-third'][player.rank] : ''}">
+        <td><span class="rank-badge">${player.rank}</span></td>
+        <td class="player-name-cell">${escapeHtml(player.name)}</td>
+        <td class="num"><strong>${player.points}</strong></td>
+        ${showCompleted ? `<td class="num">${player.completedGames}</td>` : ''}
+        <td class="num">${accuracyHtml(player)}</td>
+      </tr>`).join('') || `<tr><td colspan="${showCompleted ? 5 : 4}">No public standings for this period yet.</td></tr>`;
+  }
+
+  function renderChampionSpotlight(prizes) {
+    const period = (prizes.periods || []).find(p => p.periodKey === prizes.currentPeriod);
+    setText('championHeading', period ? `${period.displayName}: the race is still on.` : 'Awaiting competition data.');
+    setText('championSummary', period
+      ? `Weeks ${period.startWeek}–${period.endWeek} · ${money(period.monthlyWinnerPool)} monthly prize pool. A champion is confirmed only after final results and any required tiebreak decision. No prize has been awarded.`
+      : 'Monthly results are unavailable. No champion or payout has been awarded.');
+    setText('championState', period?.allWeeksFinalized ? 'Awaiting confirmation' : 'In progress');
+  }
+
   function renderStandings(prizes) {
     renderMonthlyPeriod(prizes.currentPeriod);
-
-    const seasonBody = $('seasonStandingsBody');
-    if (seasonBody) {
-      seasonBody.innerHTML = (prizes.overallStandings || []).map(p => {
-        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
-        return `
-          <tr class="${rankClass}">
-            <td><span class="rank-badge">${p.rank}</span></td>
-            <td class="player-name-cell">${escapeHtml(p.name)}</td>
-            <td class="num"><strong>${p.points}</strong></td>
-            <td class="num">${p.completedGames}</td>
-          </tr>
-        `;
-      }).join('') || '<tr><td colspan="4">No season standings yet.</td></tr>';
-    }
+    renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
   }
 
   function tiebreakActualFromWeek_(period, weekData) {
@@ -301,19 +318,7 @@
       `;
     }
 
-    const body = $('monthlyStandingsBody');
-    if (body) {
-      body.innerHTML = (period.standings || []).map(p => {
-        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
-        return `
-          <tr class="${rankClass}">
-            <td><span class="rank-badge">${p.rank}</span></td>
-            <td class="player-name-cell">${escapeHtml(p.name)}</td>
-            <td class="num"><strong>${p.points}</strong></td>
-          </tr>
-        `;
-      }).join('') || '<tr><td colspan="3">No standings for this period yet.</td></tr>';
-    }
+    renderStandingsRows('monthlyStandingsBody', period.standings || [], false);
   }
 
   function renderPrizes(prizes) {
@@ -368,6 +373,7 @@
     $('pickPercentages').innerHTML = '<div class="muted">Loading pick percentages…</div>';
     $('playerPicksHead').innerHTML = '';
     $('playerPicksBody').innerHTML = '<tr><td>Loading player picks…</td></tr>';
+    $('playerPickCards').innerHTML = '<p class="state-message">Loading synthetic picks…</p>';
 
     try {
       let data = weekCache.get(normalizedWeek);
@@ -387,16 +393,21 @@
       if (request !== picksRequest) return;
       console.error(err);
       $('picksSubmissionCount').textContent = 'Could not load this week.';
+      $('playerPickCards').innerHTML = '<p class="state-message">Synthetic player picks unavailable.</p>';
+      $('matchGameResults').textContent = 'Synthetic results unavailable.';
       $('pickPercentages').innerHTML = `<div class="muted">${escapeHtml(err.message || 'Could not load pick percentages.')}</div>`;
       $('playerPicksBody').innerHTML = `<tr><td>${escapeHtml(err.message || 'Could not load player picks.')}</td></tr>`;
     }
   }
 
   function renderWeekPicks(data) {
+    setText('matchResultsWeek', `Week ${data.week}`);
+    renderGameResultsInto_('matchGameResults', data, false);
     if (data.entriesStatus !== 'CLOSED') {
       const message = 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
       setText('picksSubmissionCount', `Synthetic entry status: ${data.entriesStatus || 'UNKNOWN'}`);
-      $('pickPercentages').textContent = message;
+      $('pickPercentages').innerHTML = `<div class="privacy-state"><strong>Entries are protected</strong>${message}</div>`;
+      $('playerPickCards').innerHTML = '<div class="privacy-state"><strong>Picks stay private</strong>Player selections and predictions are unavailable until official closure.</div>';
       $('playerPicksHead').innerHTML = '';
       $('playerPicksBody').innerHTML = '<tr><td>Picks hidden until official closure.</td></tr>';
       return;
@@ -411,6 +422,7 @@
     renderPickPercentages(games, standings, results);
     renderTiebreakTransparency_(data);
     renderPlayerPicksTable(games, standings, results);
+    renderPlayerPickCards(data);
   }
 
 
@@ -468,8 +480,9 @@
       bodyHtml = `
         <div style="display:grid;gap:8px;margin-top:10px;">
           ${submitted.map(player => {
-            const prediction = Number(player.tiebreakPrediction);
-            const validPrediction = Number.isFinite(prediction);
+            const rawPrediction = String(player.tiebreakPrediction ?? '').trim();
+            const prediction = Number(rawPrediction);
+            const validPrediction = rawPrediction !== '' && Number.isFinite(prediction);
             const difference = validPrediction && actualTotal !== null
               ? Math.abs(prediction - actualTotal)
               : null;
@@ -596,6 +609,17 @@
     $('pickPercentages').innerHTML = cards.join('');
   }
 
+  function renderPlayerPickCards(data) {
+    if (data.entriesStatus !== 'CLOSED') return;
+    $('playerPickCards').innerHTML = (data.standings || []).map(player => {
+      const prediction = String(player.tiebreakPrediction ?? '').trim();
+      const predictionLabel = data.tiebreak?.enabled && data.tiebreak?.revealed
+        ? `<p class="player-prediction"><strong>Tiebreak prediction:</strong> ${prediction !== '' && Number.isFinite(Number(prediction)) ? `${escapeHtml(prediction)} combined points` : 'No valid prediction'}. Final score pending; no winner awarded.</p>` : '';
+      return `<details class="player-pick-card"><summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary>
+        <ul>${(player.picks || []).map(pick => `<li><span>${escapeHtml(pick.game)}</span><strong>${escapeHtml(pick.pick)} ${pick.correct === true ? '✓' : pick.correct === false ? '✕' : '· Pending'}</strong></li>`).join('')}</ul>${predictionLabel}</details>`;
+    }).join('') || '<p class="state-message">No synthetic picks for this week.</p>';
+  }
+
   function renderPlayerPicksTable(games, standings, results) {
     const head = `
       <tr>
@@ -690,20 +714,7 @@
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 
-    const standingsBody = $('weeklyStandingsBody');
-    if (standingsBody) {
-      standingsBody.innerHTML = (weekData?.standings || []).map(p => {
-        const rankClass = p.rank === 1 ? 'rank-first' : p.rank === 2 ? 'rank-second' : p.rank === 3 ? 'rank-third' : '';
-        return `
-        <tr class="${rankClass}">
-          <td><span class="rank-badge">${p.rank}</span></td>
-          <td class="player-name-cell">${escapeHtml(p.name)}</td>
-          <td class="num"><strong>${p.points}</strong></td>
-          <td class="num">${p.completedGames}</td>
-        </tr>
-      `;
-      }).join('') || '<tr><td colspan="4">No submissions yet.</td></tr>';
-    }
+    renderStandingsRows('weeklyStandingsBody', weekData?.standings || []);
 
     renderGameResultsInto_('weeklyGameResults', weekData, false);
   }
@@ -905,15 +916,52 @@
     select.addEventListener('change', () => renderMonthlyPeriod(select.value));
   }
 
-  function setupTabs() {
-    document.querySelectorAll('[data-tab]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-tab]').forEach(x => x.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
-        btn.classList.add('active');
-        $(btn.dataset.tab).classList.add('active');
+  function setupNavigation() {
+    const routes = {
+      overview: ['overview'], 'match-center': ['match-center'],
+      standings: ['standings', 'weekly'], 'standings/weekly': ['standings', 'weekly'],
+      'standings/monthly': ['standings', 'monthly'], 'standings/season': ['standings', 'season'],
+      prizes: ['prizes'], guide: ['guide', 'rules'], 'guide/rules': ['guide', 'rules'], 'guide/faq': ['guide', 'faq']
+    };
+    const legacyRoutes = {dashboard:'overview',picks:'match-center',weekly:'standings/weekly',monthly:'standings/monthly',season:'standings/season',rules:'guide/rules',faq:'guide/faq'};
+    function applyRoute(focus = false) {
+      let key = location.hash.slice(1);
+      if (legacyRoutes[key]) key = legacyRoutes[key];
+      if (!Object.hasOwn(routes, key)) key = 'overview';
+      if (location.hash !== `#${key}`) history.replaceState(null, '', `#${key}`);
+      const [destination, subview] = routes[key];
+      document.querySelectorAll('.destination').forEach(panel => { panel.hidden = panel.id !== destination; });
+      ['weekly','monthly','season','rules','faq'].forEach(id => {
+        $(id).hidden = id !== subview;
+      });
+      document.querySelectorAll('.primary-nav a').forEach(link => {
+        if (link.dataset.destination === destination) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      document.querySelectorAll('.subnav a').forEach(link => {
+        if (link.hash === `#${destination}/${subview}`) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      const heading = $(destination).querySelector('.page-header h1');
+      document.title = `${heading.textContent} · Perfect Pick 4.0 — Synthetic Preview`;
+      if (focus) heading.focus({preventScroll:true});
+    }
+    window.addEventListener('hashchange', () => applyRoute(true));
+    document.querySelectorAll('.primary-nav, .subnav').forEach(nav => {
+      nav.addEventListener('keydown', event => {
+        const links = [...nav.querySelectorAll('a')];
+        const index = links.indexOf(document.activeElement);
+        if (index < 0 || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+        event.preventDefault();
+        const target = event.key === 'Home' ? 0 : event.key === 'End' ? links.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + links.length) % links.length;
+        links[target].focus();
       });
     });
+    document.querySelector('.skip-link').addEventListener('click', event => {
+      event.preventDefault();
+      $('main-content').focus();
+    });
+    applyRoute();
   }
 
   function escapeHtml(value) {
@@ -926,7 +974,7 @@
   }
 
   async function load() {
-    setupTabs();
+    setupNavigation();
 
     try {
       setStatus('Loading synthetic preview…');
@@ -950,9 +998,12 @@
       setStatus(`Synthetic data loaded${when ? ` • ${when}` : ''}`, 'ok');
     } catch (err) {
       console.error(err);
+      setText('championHeading', 'Competition unavailable.');
+      setText('championSummary', 'Synthetic data unavailable. No champion or payout has been awarded.');
+      setText('championState', 'Unavailable');
       setStatus('Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
-      document.querySelectorAll('.tab-panel').forEach(panel => {
-        if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = '<div class="panel">Synthetic data unavailable. No external connection attempted.</div>';
+      document.querySelectorAll('.legacy-section').forEach(panel => {
+        if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = '<div class="panel state-message">Synthetic data unavailable. No external connection attempted.</div>';
       });
     }
   }

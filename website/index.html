@@ -6,32 +6,17 @@
   <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Perfect Pick 4.0 — Synthetic Preview</title>
-  <link rel="stylesheet" href="styles.css?v=20260925b">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="shell">
-    <header class="hero site-hero">
-      <div class="brand">
-        <div class="eyebrow">NFL Pick'Em</div>
-        <h1>Perfect Pick 4.0 — Synthetic Preview</h1>
-      </div>
-      <div class="header-actions">
-        <div id="status" role="status" aria-live="polite" class="status">Starting…</div>
-      </div>
-    </header>
-
-    <nav class="nav">
-      <button class="active" data-tab="dashboard">Dashboard</button>
-      <button data-tab="picks">Picks</button>
-      <button data-tab="weekly">Weekly</button>
-      <button data-tab="monthly">Monthly</button>
-      <button data-tab="season">Season</button>
-      <button data-tab="prizes">Prizes</button>
-      <button data-tab="rules">Rules</button>
-      <button data-tab="faq">FAQ</button>
-    </nav>
-
-    <section id="dashboard" class="tab-panel active">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header"><div class="header-inner"><a class="wordmark" href="#overview" aria-label="Perfect Pick overview"><span class="brand-mark" aria-hidden="true">PP<span>4</span></span><span>PERFECT PICK<small>THE FOOTBALL COMPETITION</small></span></a><span class="preview-label">Perfect Pick 4.0 — Synthetic Preview</span></div></header>
+<div class="nav-bar"><nav class="primary-nav" aria-label="Primary navigation"><a href="#overview" data-destination="overview"><span class="nav-number" aria-hidden="true">01</span>Overview</a><a href="#match-center" data-destination="match-center"><span class="nav-number" aria-hidden="true">02</span>Match Center</a><a href="#standings" data-destination="standings"><span class="nav-number" aria-hidden="true">03</span>Standings</a><a href="#prizes" data-destination="prizes"><span class="nav-number" aria-hidden="true">04</span>Prizes</a><a href="#guide" data-destination="guide"><span class="nav-number" aria-hidden="true">05</span>Guide</a></nav></div>
+<main class="shell" id="main-content" tabindex="-1">
+<div class="context-bar"><span><span class="signal-dot" aria-hidden="true"></span>2026 SEASON <span class="context-divider">/</span> SYNTHETIC COMPETITION</span><span id="status" class="status" role="status" aria-live="polite">Starting…</span></div>
+<section id="overview" class="destination" aria-label="Your season. At a glance."><header class="page-header"><p class="eyebrow">The weekly huddle</p><h1 tabindex="-1">Your season. At a glance.</h1><p class="page-intro">The matchups, the stakes, and everything still to play for.</p></header><article class="champion-spotlight" aria-labelledby="championHeading">
+ <div class="spotlight-emblem" aria-hidden="true">PP</div><div><p class="eyebrow">Monthly Champion</p><h3 id="championHeading">The race is still on.</h3><p id="championSummary">Waiting for synthetic competition data.</p><a class="text-link" href="#standings/monthly">Explore monthly standings <span aria-hidden="true">↗</span></a></div><span class="pill" id="championState">Not awarded</span>
+</article><section id="dashboard" class="legacy-section">
       <div class="card-grid">
         <div class="card"><span>Current Results Week</span><strong id="activeWeek">—</strong></div>
         <div class="card"><span>Current Weekly Pot</span><strong id="weeklyPot">$0.00</strong></div>
@@ -91,15 +76,14 @@
 
       <div class="panel">
         <h2>Recent Weeks</h2>
-        <table>
+        <div class="table-region" role="region" aria-label="dashboard data table" tabindex="0"><table>
           <thead><tr><th>Week</th><th>Pot</th><th>Status</th><th>Perfect Pick</th></tr></thead>
           <tbody id="recentWeeks"></tbody>
-        </table>
+        </table></div>
       </div>
-    </section>
-
-    <section id="picks" class="tab-panel">
-      <div class="picks-banner">
+</section></section>
+<section id="match-center" class="destination" aria-label="Match Center" hidden><header class="page-header"><p class="eyebrow">Every pick has a story</p><h1 tabindex="-1">Match Center</h1><p class="page-intro">Follow the results. Compare the picks. See how the field voted after entries close.</p></header><section id="picks" class="legacy-section">
+      <div class="picks-banner" hidden>
         <div>
           <div class="eyebrow">Weekly picks</div>
           <h2>See Who Picked Who</h2>
@@ -118,23 +102,24 @@
         </label>
       </div>
 
+      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">On the field</p><h3>Matchup results</h3></div><span class="pill" id="matchResultsWeek">Week —</span></div><div id="matchGameResults" class="game-results-grid"></div></div>
       <div class="panel">
-        <h2>Pick Percentages</h2>
+        <h3>How the field picked</h3>
         <div id="pickPercentages" class="pick-percent-grid"></div>
       </div>
 
+      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">Player view</p><h3>Picks &amp; predictions</h3></div></div><div id="playerPickCards" class="player-card-grid"><p class="state-message">Loading synthetic picks…</p></div></div>
       <div class="panel">
-        <h2>Player Picks</h2>
+        <h3>Compare every pick</h3><p class="muted">The full comparison. Scroll across matchups to explore the field.</p>
         <div class="table-scroll">
-          <table id="playerPicksTable" class="wide-table">
+          <div class="table-region" role="region" aria-label="picks data table" tabindex="0"><table id="playerPicksTable" class="wide-table">
             <thead id="playerPicksHead"></thead>
             <tbody id="playerPicksBody"></tbody>
-          </table>
+          </table></div>
         </div>
       </div>
-    </section>
-
-    <section id="weekly" class="tab-panel">
+</section></section>
+<section id="standings" class="destination" aria-label="Standings" hidden><header class="page-header"><p class="eyebrow">The competition</p><h1 tabindex="-1">Standings</h1><p class="page-intro">One point at a time. Follow the race across the week, the month, and the season.</p></header><nav class="subnav" aria-label="Standings views"><a href="#standings/weekly">Weekly</a><a href="#standings/monthly">Monthly</a><a href="#standings/season">Season</a></nav><section id="weekly" class="legacy-section">
       <div class="panel">
         <div class="section-heading-row">
           <div>
@@ -147,10 +132,10 @@
             <select id="weeklyWeekSelect"></select>
           </label>
         </div>
-        <table class="striped-table standings-table responsive-table">
-          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th></tr></thead>
+        <div class="table-region" role="region" aria-label="weekly data table" tabindex="0"><table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th><th class="num">Accuracy</th></tr></thead>
           <tbody id="weeklyStandingsBody"></tbody>
-        </table>
+        </table></div>
       </div>
 
       <div class="panel">
@@ -163,9 +148,7 @@
         </div>
         <div id="weeklyGameResults" class="game-results-grid"></div>
       </div>
-    </section>
-
-    <section id="monthly" class="tab-panel">
+</section><section id="monthly" class="legacy-section" hidden>
       <div class="panel">
         <div class="section-heading-row">
           <div>
@@ -179,14 +162,12 @@
             <select id="monthlyPeriodSelect"></select>
           </label>
         </div>
-        <table class="striped-table standings-table responsive-table">
-          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th></tr></thead>
+        <div class="table-region" role="region" aria-label="monthly data table" tabindex="0"><table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Accuracy</th></tr></thead>
           <tbody id="monthlyStandingsBody"></tbody>
-        </table>
+        </table></div>
       </div>
-    </section>
-
-    <section id="season" class="tab-panel">
+</section><section id="season" class="legacy-section" hidden>
       <div class="panel">
         <div class="section-heading-row">
           <div>
@@ -195,14 +176,13 @@
             <p class="muted">Season-long points. Final season payout structure will be decided later.</p>
           </div>
         </div>
-        <table class="striped-table standings-table responsive-table">
-          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th></tr></thead>
+        <div class="table-region" role="region" aria-label="season data table" tabindex="0"><table class="striped-table standings-table responsive-table">
+          <thead><tr><th>Rank</th><th>Player</th><th class="num">Points</th><th class="num">Games Final</th><th class="num">Accuracy</th></tr></thead>
           <tbody id="seasonStandingsBody"></tbody>
-        </table>
+        </table></div>
       </div>
-    </section>
-
-    <section id="prizes" class="tab-panel">
+</section></section>
+<section id="prizes" class="destination" aria-label="The prize room" hidden><header class="page-header"><p class="eyebrow">Know the stakes</p><h1 tabindex="-1">The prize room</h1><p class="page-intro">A clear view of each pool, every rollover, and the road to the season pot.</p></header><section id="prize-details" class="legacy-section">
       <div class="panel rule-mode-guide">
         <div>
           <div class="eyebrow">Prize rules</div>
@@ -217,16 +197,15 @@
       <div id="periodCards" class="periods"></div>
       <div class="panel">
         <h2>Weekly Prize Tracker</h2>
-        <table>
+        <div class="table-region" role="region" aria-label="prizes data table" tabindex="0"><table>
           <thead>
             <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Final</th><th>Perfect Pick Winner(s)</th><th class="num">Monthly Rollover</th></tr>
           </thead>
           <tbody id="weeklyPrizeBody"></tbody>
-        </table>
+        </table></div>
       </div>
-    </section>
-
-    <section id="rules" class="tab-panel">
+</section></section>
+<section id="guide" class="destination" aria-label="A game worth knowing." hidden><header class="page-header"><p class="eyebrow">The playbook</p><h1 tabindex="-1">A game worth knowing.</h1><p class="page-intro">Understand the competition, the prizes, and how to read your results.</p></header><nav class="subnav" aria-label="Guide views"><a href="#guide/rules">Rules</a><a href="#guide/faq">FAQ</a></nav><section id="rules" class="legacy-section">
       <div class="panel">
         <div class="eyebrow">How prizes work</div>
         <h2>Perfect Pick Rules</h2>
@@ -268,9 +247,7 @@
           </div>
         </article>
       </div>
-    </section>
-
-    <section id="faq" class="tab-panel">
+</section><section id="faq" class="legacy-section" hidden>
       <div class="panel">
         <div class="eyebrow">Player help</div>
         <h2>Frequently Asked Questions</h2>
@@ -327,13 +304,9 @@
           <p>The weekly pot is based on the number of active players for that week multiplied by the $5 entry amount.</p>
         </details>
       </div>
-    </section>
-
-    <footer class="footer">Perfect Pick 4.0 — Synthetic Preview • Player-facing dashboard</footer>
-  </main>
-
-  <script src="config.js?v=20260925b"></script>
-  <script src="preview-data.js"></script>
-  <script src="app.js?v=20260925b"></script>
+</section></section>
+<footer class="footer"><span class="footer-brand">PERFECT PICK / 4.0</span><p>Made for the love of the game.</p><small>Synthetic preview · Invented aliases and results · No live submissions</small></footer>
+</main>
+<script src="config.js"></script><script src="preview-data.js"></script><script src="app.js"></script>
 </body>
 </html>

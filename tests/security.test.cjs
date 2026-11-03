@@ -34,6 +34,9 @@ test('staged artifact rejects unexpected files, symlinks and prohibited content'
    fs.writeFileSync(path.join(temp,name),'test');assert.throws(()=>verify(temp));fs.unlinkSync(path.join(temp,name));
   }
   fs.symlinkSync(path.join(temp,'config.js'),path.join(temp,'link.js'));assert.throws(()=>verify(temp));fs.unlinkSync(path.join(temp,'link.js'));
+  for(const markup of ['<a href="#unapproved">Invalid route</a>','<script src="#overview"></script>']){
+   const p=path.join(temp,'index.html'),old=fs.readFileSync(p);fs.appendFileSync(p,markup);assert.throws(()=>verify(temp));fs.writeFileSync(p,old);
+  }
   for(const marker of ['https://example.invalid/blocked','-----BEGIN PRIVATE KEY-----','api_key: "synthetic"']){
    const p=path.join(temp,'config.js'),old=fs.readFileSync(p);fs.appendFileSync(p,'\n// '+marker);assert.throws(()=>verify(temp));fs.writeFileSync(p,old);
   }
