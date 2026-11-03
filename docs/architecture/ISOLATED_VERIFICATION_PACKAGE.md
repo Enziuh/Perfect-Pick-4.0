@@ -134,3 +134,85 @@ Official manifest references reviewed (documentation only):
 [Manifest structure](https://developers.google.com/apps-script/manifest),
 [Advanced-service dependencies](https://developers.google.com/apps-script/manifest/dependencies),
 [Explicit narrow scopes](https://developers.google.com/apps-script/concepts/scopes).
+
+## Owner-confirmed target and isolated upload directory (later preparation)
+
+Owner has now confirmed that the separate 4.0 project exists, its editor is empty,
+and the existing local apps-script/.clasp.json targets it with rootDir src. This
+is owner-provided confirmation; no remote inspection was conducted by the agent.
+The prior OWNER_CONFIRMATION_REQUIRED status describes the earlier local-only
+assessment, not a new contradiction of the owner's confirmation.
+
+Prepared directory:
+`/Users/manny/orca/projects/NFL-Perfect-Pick/tmp/verification-upload`
+
+Its exact inventory is Verification.gs, appsscript.json and .clasp.json. The
+existing tmp/ ignore rule excludes all three; no ignore rules were broadened. The
+first two are byte-identical to the previously sealed .verification-package files.
+The local .clasp.json has only scriptId (copied privately from the owner-confirmed
+local configuration) and rootDir set to a single dot. Its permissions are 0600.
+No identifier, config digest or private configuration is committed or printed.
+The original apps-script/.clasp.json and every apps-script/src file are untouched.
+
+IMPORTANT: rootDir is deliberately . in the isolated directory, NOT src. Do not
+run an upload from apps-script/, the repository root or the sealed package source
+directory. Do not copy any existing backend files, credentials, notes, tests,
+private policy, spreadsheet linkage or extra assets into this upload directory.
+Clasp consumes its local .clasp.json as target configuration; only the two reviewed
+Apps Script project files should be sent. No clasp command has been executed.
+
+### Exact future owner-controlled upload commands
+
+Only after NEW explicit upload authorization and an immediate recheck of the exact
+three-file inventory, matching target, rootDir dot and unchanged sealed bytes:
+
+```sh
+set -e
+cd /Users/manny/orca/projects/NFL-Perfect-Pick
+node tools/verification/package.cjs verify
+node - <<'JS'
+const fs = require('node:fs'), path = require('node:path'), cp = require('node:child_process');
+const pkg = require('./tools/verification/package.cjs');
+try {
+  const dir = path.resolve('tmp/verification-upload');
+  const allowed = ['.clasp.json', 'Verification.gs', 'appsscript.json'];
+  const check = ok => { if (!ok) throw Error(); };
+  check(fs.realpathSync(dir) === dir);
+  check(JSON.stringify(fs.readdirSync(dir).sort()) === JSON.stringify(allowed.sort()));
+  for (const name of allowed) {
+    check(fs.lstatSync(path.join(dir, name)).isFile());
+    const relative = path.relative(process.cwd(), path.join(dir, name));
+    cp.execFileSync('git', ['check-ignore', '-q', '--', relative], {stdio: 'pipe'});
+    check(!cp.execFileSync('git', ['ls-files', '--', relative], {encoding: 'utf8'}).trim());
+  }
+  const source = JSON.parse(fs.readFileSync('apps-script/.clasp.json', 'utf8'));
+  const local = JSON.parse(fs.readFileSync(path.join(dir, '.clasp.json'), 'utf8'));
+  check(pkg.inspectLocalTarget().localTarget === 'DISTINCT_FROM_HISTORICAL_LEGACY');
+  check(JSON.stringify(Object.keys(local).sort()) === JSON.stringify(['rootDir', 'scriptId']));
+  check(source.rootDir === 'src' && local.rootDir === '.' && local.scriptId === source.scriptId);
+  check((fs.statSync(path.join(dir, '.clasp.json')).mode & 0o777) === 0o600);
+  const contents = Object.fromEntries(pkg.FILES.map(name => [name, fs.readFileSync(path.join(dir, name), 'utf8')]));
+  check(JSON.stringify(pkg.inspect(contents)) === JSON.stringify(pkg.verify()));
+  console.log('Upload preflight PASS; target values withheld.');
+} catch {
+  console.error('Upload preflight FAILED; stop without uploading.');
+  process.exit(1);
+}
+JS
+cd /Users/manny/orca/projects/NFL-Perfect-Pick/tmp/verification-upload
+clasp push
+```
+
+These are instructions for a FUTURE owner-authorized action, not permission to run
+it now. Do not add --force, run from another directory, use deploy/run/pull, execute
+the diagnostic, authorize OAuth or read data as part of that source upload. Stop
+on any unexpected target, scope, file, manifest prompt or remote editor contents;
+confirm what would change instead of overriding a warning. Upload authorization
+does not imply execution, authorization, deployment, activation or real-read consent.
+
+The manifest still requests only spreadsheets.readonly, with no webapp or API
+execution endpoint. The disabled diagnostic has no exposed read capability even
+with global config or claimed owner arguments. Remaining blockers are unchanged:
+actual runtime/effective grants, independent capture/revision/completeness authority,
+approved private aliases and historical CLOSED evidence, field/timezone/identity
+parity, accounting/oracles and future frontend disclosure handling. No live mode.

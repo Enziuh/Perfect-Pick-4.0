@@ -674,3 +674,46 @@ upload, authorize, deploy or read real data without precise new authorization.
 Keep private configuration outside Git/package/Pages and preserve production."
 
 Preparation complete does NOT mean ready to upload, deploy, authorize or read.
+
+## Isolated upload directory — prepared locally; upload NOT performed
+
+Branch: develop. Baseline/checkpoint parent: 34af9f6. Owner now confirms the separate
+4.0 project exists, its editor is empty, and the local target is correct. The agent
+has not inspected Google; previous local-only target caveats are historical.
+
+Prepared `/Users/manny/orca/projects/NFL-Perfect-Pick/tmp/verification-upload`.
+Exact allowed inventory: Verification.gs, appsscript.json, .clasp.json. All ignored
+by the existing tmp/ rule and untracked. Code/manifest bytes match the original
+verified two-file package and external seal. Private configuration is mode 0600,
+contains only the copied owner-confirmed target plus rootDir dot, and matches the
+existing local target without printing or storing any identifier in documentation.
+Original apps-script/.clasp.json retains rootDir src and is byte-unchanged; copied
+production backend source is not selected or modified. No private policy/Sheet IDs.
+
+Manifest remains the sole spreadsheet read-only scope, no public HTTP handlers,
+write services/calls, score sync, setup, Forms, trigger installers or legacy code.
+The diagnostic and hidden read libraries remain disabled/unexposed. Only offline
+Node checks were run, with denied services; no Google/Apps Script execution, OAuth,
+clasp operation, upload, deployment or real read. Website/Pages unchanged.
+
+Validation: original package integrity/privacy checks pass; isolated payload
+inspection and exact seal-hash match pass; private config target/rootDir/permissions
+and exact three-file Git-ignored inventory pass.
+`node --test tests/verification-package.test.cjs tests/security.test.cjs`: 17 passed,
+0 failed, 0 skipped. Original package verification and unchanged six-file Pages
+artifact/seal verification pass. Documented Node preflight is tested separately,
+without running the future clasp command. Only two safe documentation files change.
+
+Remaining blockers: actual isolated runtime/Intl and effective scope verification,
+credible capture revision/completeness, real coordinates/timezone/private identity
+normalization, approved aliases/historical closure, completion/accounting/oracles
+and future frontend privacy transport. The owner-confirmed target is no longer a
+missing owner decision; no additional remote verification is claimed.
+
+Exact next owner action: review the upload directory and documented checks, then
+provide NEW explicit authorization for a source-only upload. FUTURE command, only
+from the exact isolated directory: `clasp push`. Full commands are recorded in
+ISOLATED_VERIFICATION_PACKAGE.md. Do not execute/authorize the diagnostic, deploy,
+activate live data or conduct a real read as part of that upload.
+
+This task authorized local copying and documentation only. No actual upload.
