@@ -233,3 +233,32 @@ Perfect Pick 4.0 should evolve toward:
 - Minimal operational complexity.
 
 **Current development priority: Website Version 4.0 redesign. Keep the existing production backend functioning unchanged.**
+
+## 13. Google Forms and Google Sheets Integration
+
+The existing Perfect Pick production system uses Google Forms
+for player submissions and Google Sheets for storing game data.
+
+Production workflow:
+- Players submit weekly picks through Google Forms.
+- Form submissions are recorded in a linked Google Sheet.
+- Google Apps Script reads and processes spreadsheet data.
+- Apps Script handles scoring, results, and scheduled automation.
+- The website retrieves data through the Apps Script API.
+
+Additional requirements:
+1. Preserve all existing Google Form and Sheet connections.
+2. Never modify production spreadsheet data without approval.
+3. Do not modify spreadsheet structure, columns, or formulas.
+4. Do not modify Google Form questions or response destinations.
+5. Preserve existing submission and scoring functionality.
+6. Understand spreadsheet data structures before proposing API changes.
+7. Do not expose player submission data or private information.
+8. Prefer read-only inspection when investigating integrations.
+9. Do not assume the repository contains all spreadsheet formulas,
+   script properties, triggers, or external configuration.
+
+Current priority:
+Redesign the website using the existing production data sources.
+Do not change Google Forms, Google Sheets, or production automation
+unless explicitly authorized.
