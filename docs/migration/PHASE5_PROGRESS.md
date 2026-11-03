@@ -717,3 +717,44 @@ ISOLATED_VERIFICATION_PACKAGE.md. Do not execute/authorize the diagnostic, deplo
 activate live data or conduct a real read as part of that upload.
 
 This task authorized local copying and documentation only. No actual upload.
+
+## Apps Script upload parse failure — correction complete (offline)
+
+Baseline develop includes local checkpoint b839168 (ahead of origin at task start).
+Owner reports isolated source upload failed: Unexpected token = at Verification.gs
+line 133. Reproduced offline using pinned Acorn ES2020 parser: the actual generated
+line contains ES2021 logical assignment total.hasTotals &&= ... from
+tools/contracts/live-contract.cjs:130. Node-only syntax/VM checks missed it.
+Source conditional replacement preserves short-circuit behavior; packaged hasOwn
+uses also move to ES2020 hasOwnProperty.call. Build-time independent parser/AST
+gate added to both rendering and inspection. Eight new compatibility regressions
+cover later syntax/APIs, parser integrity failure, conservative runtime execution
+and missing-total validation. Acorn 8.15.0 is pinned, MIT licensed, vendored for
+offline development only, and excluded from both upload and Pages artifacts.
+
+Regenerated .verification-package and its external integrity seal; refreshed only
+the two payload files in tmp/verification-upload. Exact inventory remains
+Verification.gs, appsscript.json and ignored .clasp.json. Private clasp configuration
+is byte-unchanged, rootDir dot, mode 0600 and matches the owner-confirmed separate
+4.0 target. Manifest unchanged: spreadsheet read-only scope, diagnostic DISABLED,
+no writes, Forms, triggers, public HTTP handlers or real services enabled.
+
+Checks: node --test tests/*.test.cjs: 157 passed, 0 failed, 0 skipped. Includes
+browser isolation/responsiveness, privacy, scoring, contract, package and artifact
+checks. Targeted compatibility/package/contract run: 49 passed. Sealed package
+verification, exact three-file documented Node upload preflight, unchanged six-file
+Pages integrity verification and private-reference scan of all changed/untracked
+files pass. Normal apps-script/src, frontend and deployment workflow unchanged.
+
+Checkpoint branch develop, baseline b839168; final correction commit is the commit
+containing this section. Reviewed prior local b839168: documentation only; both
+that checkpoint and focused fix are authorized for push after checks.
+
+Exact next owner-controlled action: review this correction and repeat documented
+preflight in docs/architecture/ISOLATED_VERIFICATION_PACKAGE.md, then retry only
+the source upload from tmp/verification-upload using clasp push if authorized.
+The agent must not run that command. Actual Google parser/runtime acceptance is
+still unverified; conservative ES2020 checks are not a Google runtime emulator.
+Do not execute/enable the diagnostic, authorize data access, deploy or conduct a
+real read. All existing live-verification/evidence blockers remain unchanged.
+No retry, clasp operation, Google execution or real-data access by the agent.

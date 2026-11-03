@@ -3,7 +3,7 @@ var PerfectPickOwnerEvidence=(function(){
  const fail=()=>{throw Error('Invalid owner evidence');};
  const need=v=>{if(!v)fail();};
  const integer=v=>Number.isSafeInteger(v)&&v>=0;
- const exact=(v,keys)=>need(v&&typeof v==='object'&&!Array.isArray(v)&&Reflect.ownKeys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k)));
+ const exact=(v,keys)=>need(v&&typeof v==='object'&&!Array.isArray(v)&&Reflect.ownKeys(v).length===keys.length&&keys.every(k=>Object.prototype.hasOwnProperty.call(v,k)));
  const stamp=v=>{need(typeof v==='string');const t=Date.parse(v);need(Number.isFinite(t)&&new Date(t).toISOString()===v);return t;};
  function aliases(records,revision){
   try{

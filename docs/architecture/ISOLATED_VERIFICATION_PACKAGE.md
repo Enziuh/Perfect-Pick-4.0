@@ -216,3 +216,51 @@ with global config or claimed owner arguments. Remaining blockers are unchanged:
 actual runtime/effective grants, independent capture/revision/completeness authority,
 approved private aliases and historical CLOSED evidence, field/timezone/identity
 parity, accounting/oracles and future frontend disclosure handling. No live mode.
+
+## Owner upload ParseError correction and compatibility gate
+
+Owner reports the source-only upload did not succeed: Unexpected token = at old
+Verification.gs line 133. The exact rejected expression was
+`total.hasTotals &&= row.totalPicks !== undefined`, originating from
+`tools/contracts/live-contract.cjs:130`, copied by the generator. Logical assignment
+is ES2021; modern Node parsed it, but the owner's Apps Script upload parser did not.
+
+Fixed at source with `if (total.hasTotals) total.hasTotals = row.totalPicks !== undefined`,
+preserving short-circuit behavior and missing-total validation. No ranks, points,
+privacy rules or financial calculations change. Packaged Object.hasOwn calls were
+also replaced by Object.prototype.hasOwnProperty.call in the contract/evidence
+source and generated module-loader template, removing that post-2020 runtime API.
+No generated file was patched independently of its originating source.
+
+`tools/verification/gas-compatibility.cjs` now gates package rendering AND inspection
+with Acorn 8.15.0 at ecmaVersion 2020 / script mode. It rejects logical assignment,
+class fields, numeric separators, module syntax and other later grammar, plus an
+AST check for selected post-2020 APIs. It reports only labels/line/column, not input
+contents. Parser absence, wrong version or failed pinned-code integrity fails closed.
+
+Acorn is vendored unmodified with MIT license and pinned provenance under
+`tools/vendor/acorn/`; this is a development-only parser dependency. No runtime
+package, Pages asset, npm install, workflow change or test-time network is needed.
+It is excluded from Verification.gs. This independent grammar check supplements
+Node VM tests; it does not impersonate or certify the actual Google engine.
+VM regressions additionally remove Object.hasOwn, String.replaceAll, Array.at and
+other selected newer built-ins while loading the disabled package and exercising
+the fabricated reader/projector pipeline.
+
+Regenerated the original package/seal and copied its two verified payload files
+into the same ignored upload directory. Inventory remains exactly Verification.gs,
+appsscript.json and .clasp.json. The private target configuration is byte-unchanged,
+rootDir remains dot, target still matches the owner-confirmed 4.0 project, and the
+manifest remains byte-unchanged/read-only. Only the diagnostic is exposed and it
+still returns DISABLED; no handlers, writes or real services are enabled.
+
+After passing the documented preflight again, the corrected package is prepared
+for an OWNER-controlled source-only retry from tmp/verification-upload. No retry,
+clasp operation, Google execution, OAuth flow or read was performed by the agent.
+Actual Google acceptance/runtime parity remains unverified until that owner action.
+Do not execute the diagnostic, authorize data access or deploy as part of a retry.
+
+Technical references (public documentation only):
+[Logical assignment is ES2021](https://v8.dev/features/logical-assignment),
+[Apps Script V8 environment](https://developers.google.com/apps-script/guides/v8-runtime),
+[Acorn parser options](https://github.com/acornjs/acorn/blob/8.15.0/acorn/README.md).

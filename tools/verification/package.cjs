@@ -1,5 +1,6 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const {checkAppsScriptCompatibility}=require('./gas-compatibility.cjs');
 const {buildOfflineBundle}=require('../sheets/offline-bundle.cjs');
 const {inspectLocalTarget,assertNoPrivateReferences}=require('./local-target.cjs');
 const ROOT=path.resolve(__dirname,'../..'),STAGE=path.join(ROOT,'.verification-package');
@@ -14,11 +15,13 @@ function render(){
  const bundle=buildOfflineBundle(),suffix='})(globalThis);';need(bundle.endsWith(suffix));
  const privateBundle=bundle.slice(0,-suffix.length)+'})(privateRoot);';
  const script='var PerfectPickVerificationPackage_=(function(){\nconst privateRoot={};\n'+privateBundle+'\nreturn Object.freeze({diagnostic:privateRoot.PerfectPick4ReadOnly.verifyRealCompetitionReadOnly_});\n})();'+ENTRY;
+ checkAppsScriptCompatibility(script,'Verification.gs');
  return {'Verification.gs':script,'appsscript.json':fs.readFileSync(path.join(__dirname,'package-manifest.json'),'utf8')};
 }
 function inspect(contents){
  need(JSON.stringify(Object.keys(contents).sort())===JSON.stringify([...FILES].sort()),'Unexpected package files');
  const source=contents['Verification.gs'],text=contents['appsscript.json'];
+ checkAppsScriptCompatibility(source,'Verification.gs');
  const manifest=JSON.parse(text);
  need(JSON.stringify(Object.keys(manifest).sort())===JSON.stringify(['timeZone','runtimeVersion','exceptionLogging','oauthScopes','dependencies'].sort()),'Unexpected manifest fields');
  need(manifest.timeZone==='America/Los_Angeles'&&manifest.runtimeVersion==='V8'&&manifest.exceptionLogging==='NONE','Unexpected runtime/logging');

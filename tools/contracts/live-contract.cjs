@@ -8,9 +8,9 @@ const integer=value=>Number.isSafeInteger(value)&&value>=0;
 const object=(value,required,optional=[])=>{
  need(value!==null&&typeof value==='object'&&!Array.isArray(value));
  need([Object.prototype,null].includes(Object.getPrototypeOf(value)));
- const keys=Reflect.ownKeys(value);need(required.every(k=>Object.hasOwn(value,k))&&keys.every(k=>required.includes(k)||optional.includes(k)));
+ const keys=Reflect.ownKeys(value);need(required.every(k=>Object.prototype.hasOwnProperty.call(value,k))&&keys.every(k=>required.includes(k)||optional.includes(k)));
 };
-const list=(value,max=1000)=>{need(Array.isArray(value)&&value.length<=max&&Reflect.ownKeys(value).length===value.length+1);for(let i=0;i<value.length;i++)need(Object.hasOwn(value,i));return value;};
+const list=(value,max=1000)=>{need(Array.isArray(value)&&value.length<=max&&Reflect.ownKeys(value).length===value.length+1);for(let i=0;i<value.length;i++)need(Object.prototype.hasOwnProperty.call(value,i));return value;};
 const unique=values=>need(new Set(values).size===values.length);
 const time=value=>{need(typeof value==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(value));const ms=Date.parse(value);need(Number.isFinite(ms)&&new Date(ms).toISOString()===value);return ms;};
 const week=value=>need(Number.isInteger(value)&&value>=1&&value<=18);
@@ -35,7 +35,7 @@ function validatePublicInternal(snapshot,trust){
   need(['STALE','UNVERIFIED','INVALID_RESULTS','MISSING_ALIAS','INCONSISTENT'].includes(snapshot.reason));return snapshot;
  }
  need(snapshot.state==='READY');
- for(const field of ['season','scoringBasis','weeks','games','standings','months','prizes'])need(Object.hasOwn(snapshot,field));
+ for(const field of ['season','scoringBasis','weeks','games','standings','months','prizes'])need(Object.prototype.hasOwnProperty.call(snapshot,field));
  need(Number.isInteger(snapshot.season)&&snapshot.season>=2000&&snapshot.season<=2200&&snapshot.scoringBasis==='SUBMITTED_FINAL_PICKS');
  const fresh=value=>{const t=time(value);need(t<=generated&&trust.now-t<=trust.maxAgeMs);};
  const approved=row=>{key(row.player);need(row.player.startsWith('p_')&&typeof row.alias==='string'&&trust.aliases.get(row.player)===row.alias&&row.alias.length>0&&row.alias.length<=48&&/^[A-Za-z][A-Za-z0-9 -]*$/.test(row.alias));};
@@ -50,7 +50,7 @@ function validatePublicInternal(snapshot,trust){
   if(w.entry.status==='CLOSED'){
    need(w.entry.authority==='OFFICIAL'&&evidence&&same(w.entry,evidence));fresh(w.entry.checkedAt);need(trust.now<time(w.entry.validUntil));
   }
-  if(w.entry.status!=='CLOSED')need(!Object.hasOwn(w,'picks')&&!Object.hasOwn(w,'votes'));
+  if(w.entry.status!=='CLOSED')need(!Object.prototype.hasOwnProperty.call(w,'picks')&&!Object.prototype.hasOwnProperty.call(w,'votes'));
  }
  need(weeks.size>0);
  const games=new Map();
@@ -98,8 +98,8 @@ function validatePublicInternal(snapshot,trust){
   list(s.weeks,18).forEach(week);unique(s.weeks);need(s.weeks.length>0&&s.weeks.every(n=>weeks.has(n)));
   if(s.scope==='WEEKLY')need(s.weeks.length===1&&s.key==='W'+s.weeks[0]);
   if(s.scope==='SEASON')need(s.key==='S'+snapshot.season);
-  if(s.state==='WITHHELD'){need(!Object.hasOwn(s,'rows')&&['CLOSURE_UNVERIFIED','MISSING_ALIAS','INCOMPLETE'].includes(s.reason));continue;}
-  need(s.state==='AVAILABLE'&&closed(s.weeks)&&s.weeks.every(n=>trust.aliasCompleteness.get(n)===true)&&!Object.hasOwn(s,'reason'));
+  if(s.state==='WITHHELD'){need(!Object.prototype.hasOwnProperty.call(s,'rows')&&['CLOSURE_UNVERIFIED','MISSING_ALIAS','INCOMPLETE'].includes(s.reason));continue;}
+  need(s.state==='AVAILABLE'&&closed(s.weeks)&&s.weeks.every(n=>trust.aliasCompleteness.get(n)===true)&&!Object.prototype.hasOwnProperty.call(s,'reason'));
   const rows=list(s.rows);unique(rows.map(r=>r.player));let last=null,rank=0;
   rows.forEach((r,i)=>{
    object(r,['player','alias','rank','points','completedGames'],['totalPicks','accuracyBasisPoints']);approved(r);
@@ -127,7 +127,7 @@ function validatePublicInternal(snapshot,trust){
   }else{
    const parts=s.weeks.map(n=>standings.get('W'+n));need(parts.every(part=>part?.state==='AVAILABLE'));
    const totals=new Map();
-   for(const part of parts)for(const row of part.rows){const total=totals.get(row.player)||{points:0,completedGames:0,totalPicks:0,hasTotals:true};total.points+=row.points;total.completedGames+=row.completedGames;total.totalPicks+=row.totalPicks??0;total.hasTotals&&=row.totalPicks!==undefined;totals.set(row.player,total);}
+   for(const part of parts)for(const row of part.rows){const total=totals.get(row.player)||{points:0,completedGames:0,totalPicks:0,hasTotals:true};total.points+=row.points;total.completedGames+=row.completedGames;total.totalPicks+=row.totalPicks??0;if(total.hasTotals)total.hasTotals=row.totalPicks!==undefined;totals.set(row.player,total);}
    need(same([...totals.keys()].sort(),s.rows.map(r=>r.player).sort()));
    for(const row of s.rows){const total=totals.get(row.player);need(row.points===total.points&&row.completedGames===total.completedGames);if(row.totalPicks!==undefined)need(total.hasTotals&&row.totalPicks===total.totalPicks);}
   }
@@ -156,7 +156,7 @@ function validatePublicInternal(snapshot,trust){
   }
   need(m.state===expected&&m.winner===winner&&m.actualTotal===actual&&m.method===method);
   if(comparisons){list(m.comparisons);m.comparisons.forEach(c=>object(c,['player','prediction','difference']));need(same(sorted(m.comparisons),sorted(comparisons)));}
-  else need(!Object.hasOwn(m,'comparisons'));
+  else need(!Object.prototype.hasOwnProperty.call(m,'comparisons'));
  }
  for(const s of standings.values())if(s.scope==='MONTHLY')need(months.has(s.key));
  const prizeKeys=[];
@@ -186,7 +186,7 @@ function validatePublicInternal(snapshot,trust){
     const perfect=s.rows.filter(r=>r.points===count&&r.completedGames===count&&r.totalPicks===count).map(r=>r.player);
     need(same([...perfect].sort(),allocations.map(a=>a.player).sort()));
    }
-  }else need(!Object.hasOwn(p,'allocations'));
+  }else need(!Object.prototype.hasOwnProperty.call(p,'allocations'));
   if(p.paymentState!=='UNKNOWN')need(p.allocationState==='CONFIRMED');
   if(p.rollover!==undefined){
    need(p.allocationState==='CONFIRMED');
