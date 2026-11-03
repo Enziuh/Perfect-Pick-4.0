@@ -7,6 +7,8 @@
   const weekCache = new Map();
   const monthlyCache = new Map();
   let deadlineTimer = null;
+  let matchData = null;
+  let matchModels = [];
 
   const $ = (id) => document.getElementById(id);
   const setText = (id, value) => {
@@ -345,7 +347,16 @@
     $('weekSelect').value = String(normalizedWeek);
     $('picksWeekTitle').textContent = `Week ${normalizedWeek} Picks`;
     $('picksSubmissionCount').textContent = 'Loading submissions…';
-    $('pickPercentages').innerHTML = '<div class="muted">Loading pick percentages…</div>';
+    matchData = null;
+    matchModels = [];
+    $('matchPrivacyNotice').hidden = false;
+    $('matchPrivacyNotice').textContent = 'Loading synthetic matchups…';
+    $('matchGameResults').innerHTML = '<p class="state-message">Loading results…</p>';
+    $('matchSelect').innerHTML = '<option value="">All matchups</option>';
+    $('playerSelect').innerHTML = '<option value="">All players</option>';
+    $('playerSelect').disabled = true;
+    $('pickMatrix').open = false;
+    syncWeekButtons(normalizedWeek);
     $('playerPicksHead').innerHTML = '';
     $('playerPicksBody').innerHTML = '<tr><td>Loading player picks…</td></tr>';
     $('playerPickCards').innerHTML = '<p class="state-message">Loading synthetic picks…</p>';
@@ -370,296 +381,111 @@
       $('picksSubmissionCount').textContent = 'Could not load this week.';
       $('playerPickCards').innerHTML = '<p class="state-message">Synthetic player picks unavailable.</p>';
       $('matchGameResults').textContent = 'Synthetic results unavailable.';
-      $('pickPercentages').innerHTML = `<div class="muted">${escapeHtml(err.message || 'Could not load pick percentages.')}</div>`;
+      $('matchPrivacyNotice').hidden = false;
+      $('matchPrivacyNotice').textContent = 'Synthetic match data unavailable. Picks and voting remain protected.';
       $('playerPicksBody').innerHTML = `<tr><td>${escapeHtml(err.message || 'Could not load player picks.')}</td></tr>`;
     }
   }
 
+  function syncWeekButtons(week) {
+    const options = [...$('weekSelect').options].map(option => Number(option.value));
+    $('previousWeek').disabled = options.indexOf(week) <= 0;
+    $('nextWeek').disabled = options.indexOf(week) >= options.length - 1;
+  }
+
+  function selectionLabel(state) {
+    return state === 'correct' ? '✓ Correct' : state === 'wrong' ? '✕ Incorrect' : 'Pending';
+  }
+
   function renderWeekPicks(data) {
+    matchData = data;
+    matchModels = (data.games || []).map(game => preview.buildMatchView(data, game, prizeData?.formControl));
     setText('matchResultsWeek', `Week ${data.week}`);
-    renderGameResultsInto_('matchGameResults', data, false);
+    $('matchSelect').innerHTML = '<option value="">All matchups</option>' + matchModels.map(model => `<option value="${escapeHtml(model.game)}">${escapeHtml(model.game)}</option>`).join('');
+    const closed = data.entriesStatus === 'CLOSED';
+    $('matchPrivacyNotice').hidden = closed;
+    $('matchPrivacyNotice').textContent = 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
+    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : `Synthetic entry status: ${data.entriesStatus || 'UNKNOWN'}`);
+    $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('') : '');
+    $('playerSelect').disabled = !closed || !data.standings.length;
+    renderMatchCards();
+    renderPlayerPickCards(data);
+    renderPlayerPicksTable(data);
+  }
+
+  function votingHtml(model) {
+    if (!model.votes) return '';
+    const votes = model.votes;
+    const description = votes.teams.map(p => `${p.team}: ${p.percentage}%, ${p.count} votes`).join('; ');
+    return `<div class="match-voting"><p class="eyebrow">Selection share</p>
+      <div class="vote-bar" role="img" aria-label="${escapeHtml(description)}">${votes.teams.map(p => `<span aria-hidden="true" style="width:${p.percentage}%;${teamColorStyle_(p.team)}"></span>`).join('')}</div>
+      <div class="vote-options">${votes.teams.map(p => `<div class="vote-option ${model.winner === p.team ? 'vote-winner' : ''}" style="${teamColorStyle_(p.team)}">
+        <div class="vote-team-line">${teamBadgeHtml_(p.team, true, 'vote-team-badge')}<strong>${escapeHtml(p.team)}</strong></div>
+        <span class="vote-share">${p.percentage}% <small>· ${p.count} vote${p.count === 1 ? '' : 's'}</small></span>
+        ${model.winner === p.team ? '<span class="vote-decision">✓ Game winner</span>' : ''}
+        ${votes.total && p.count > votes.total / 2 ? '<span class="vote-popular">Most selected</span>' : ''}
+      </div>`).join('')}</div>
+      <p class="pick-meta">${votes.total ? `${votes.total} valid votes · Popularity is not a game result.` : 'No valid votes yet. Both teams have 0%.'}</p>
+      <details class="match-comparison"><summary>Compare picks for this matchup</summary><ul>${model.selections.map(p => `<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick)}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('') || '<li>No selections for this matchup.</li>'}</ul></details>
+    </div>`;
+  }
+
+  function gameCardHtml(model, includeVoting = false) {
+    return `<article class="game-result-card" data-game="${escapeHtml(model.game)}">
+      <div class="game-result-status">${escapeHtml(model.status)}${model.winner === 'Tie' ? ' · Tie' : ''}</div>
+      <p class="kickoff-note">${model.kickoff ? `Synthetic kickoff · ${escapeHtml(formatPacificDateTime_(model.kickoff))}` : 'Kickoff unavailable'}</p>
+      ${model.teams.map((team,index) => teamResultHtml_(team,model.scores[index],!model.isFinal ? 'pending' : model.winner === 'Tie' ? 'draw' : model.winner === team ? 'winner' : 'loser')).join('')}
+      ${!model.isFinal && model.scores.some(score => score !== '') ? '<p class="pick-meta">Scores provisional · No pick result until FINAL.</p>' : ''}
+      ${includeVoting ? votingHtml(model) : ''}
+    </article>`;
+  }
+
+  function renderMatchCards() {
+    const selected = $('matchSelect').value;
+    const models = matchModels.filter(model => !selected || selected === model.game);
+    const groups = [['Awaiting results',models.filter(model => !model.isFinal)],['Final results',models.filter(model => model.isFinal)]];
+    $('matchGameResults').innerHTML = groups.filter(([,items]) => items.length).map(([title,items]) => `<h4 class="match-group-heading">${title}</h4>${items.map(model => gameCardHtml(model, true)).join('')}`).join('') || '<p class="state-message">No matchups available.</p>';
+  }
+
+  function renderPlayerPrediction(player, data) {
+    if (data.entriesStatus !== 'CLOSED' || !data.tiebreak?.enabled) return '';
+    if (!data.tiebreak.revealed) return '<p class="player-prediction">Tiebreak prediction unavailable until publication is confirmed.</p>';
+    const raw = player.tiebreakPrediction;
+    const valid = typeof raw === 'string' && /^\d{1,3}$/.test(raw);
+    const model = matchModels.find(m => m.game === data.tiebreak.game);
+    const actual = model?.isFinal && model.scores.every(score => score !== '') ? model.scores.reduce((sum,score) => sum+Number(score),0) : null;
+    return `<div class="player-prediction"><p class="eyebrow">Period-ending tiebreaker</p><p>${escapeHtml(data.tiebreak.game || 'Designated game unavailable')}</p>
+      <p><strong>Tiebreak prediction: ${valid ? `${Number(raw)} combined points` : 'No valid prediction · Ineligible'}</strong></p>
+      <p>${actual === null ? 'Actual combined score pending.' : `Actual FINAL combined score: ${actual}.${valid ? ` Off by ${Math.abs(Number(raw)-actual)}.` : ''}`}</p>
+      <a class="text-link" href="#standings/monthly">Monthly champion decision ↗</a></div>`;
+  }
+
+  function renderPlayerPickCards(data) {
     if (data.entriesStatus !== 'CLOSED') {
-      const message = 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
-      setText('picksSubmissionCount', `Synthetic entry status: ${data.entriesStatus || 'UNKNOWN'}`);
-      $('pickPercentages').innerHTML = `<div class="privacy-state"><strong>Entries are protected</strong>${message}</div>`;
       $('playerPickCards').innerHTML = '<div class="privacy-state"><strong>Picks stay private</strong>Player selections and predictions are unavailable until official closure.</div>';
+      return;
+    }
+    const selected = $('playerSelect').value;
+    const players = data.standings.filter(p => !selected || p.name === selected);
+    $('playerPickCards').innerHTML = players.map(player => `<details class="player-pick-card"${selected ? ' open' : ''}>
+      <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary>
+      <ul>${matchModels.map(model => {
+        const pick = model.selections.find(p => p.name === player.name);
+        return `<li><span>${escapeHtml(model.game)}</span>${pick ? `<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>` : '<span>No selection</span>'}</li>`;
+      }).join('')}</ul>${renderPlayerPrediction(player, data)}</details>`).join('') || '<p class="state-message">No synthetic picks for this week.</p>';
+  }
+
+  function renderPlayerPicksTable(data) {
+    if (data.entriesStatus !== 'CLOSED') {
       $('playerPicksHead').innerHTML = '';
       $('playerPicksBody').innerHTML = '<tr><td>Picks hidden until official closure.</td></tr>';
       return;
     }
-    const standings = data.standings || [];
-    const games = data.games || [];
-    const results = data.results || [];
-
-    $('picksSubmissionCount').textContent =
-      `${standings.length} submission${standings.length === 1 ? '' : 's'} for Week ${data.week}`;
-
-    renderPickPercentages(games, standings, results);
-    renderTiebreakTransparency_(data);
-    renderPlayerPicksTable(games, standings, results);
-    renderPlayerPickCards(data);
-  }
-
-
-  function renderTiebreakTransparency_(data) {
-    const tiebreak = data?.tiebreak || {};
-    if (!tiebreak.enabled) return;
-
-    const container = $('pickPercentages');
-    if (!container) return;
-
-    const standings = data?.standings || [];
-    const submitted = standings.filter(player => player.tiebreakSubmitted);
-    const game = String(tiebreak.game || 'Tiebreak game').trim();
-    const questionLabel = String(tiebreak.questionLabel || '').trim();
-
-    let actualTotal = null;
-    let actualScore = '';
-    let actualStatus = 'Pending';
-
-    const result = (data?.results || []).find(
-      r => normalizeGameLabel(r.game) === normalizeGameLabel(game)
-    );
-
-    if (result) {
-      actualStatus = String(result.status || 'Pending').trim();
-      const score1 = result.team1Score;
-      const score2 = result.team2Score;
-      const hasScores = score1 !== '' && score1 !== null && score1 !== undefined &&
-        score2 !== '' && score2 !== null && score2 !== undefined;
-
-      if (hasScores) {
-        const n1 = Number(score1);
-        const n2 = Number(score2);
-        if (Number.isFinite(n1) && Number.isFinite(n2)) {
-          actualScore = `${n1}–${n2}`;
-          if (String(actualStatus).toLowerCase() === 'final') {
-            actualTotal = n1 + n2;
-          }
-        }
-      }
-    }
-
-    let bodyHtml = '';
-
-    if (!tiebreak.revealed) {
-      bodyHtml = `
-        <div class="muted">
-          ${submitted.length} tiebreak prediction${submitted.length === 1 ? '' : 's'} submitted.
-          Predictions are hidden until picks close.
-        </div>
-      `;
-    } else if (!submitted.length) {
-      bodyHtml = '<div class="muted">No tiebreak predictions were submitted.</div>';
-    } else {
-      bodyHtml = `
-        <div style="display:grid;gap:8px;margin-top:10px;">
-          ${submitted.map(player => {
-            const rawPrediction = String(player.tiebreakPrediction ?? '').trim();
-            const prediction = Number(rawPrediction);
-            const validPrediction = rawPrediction !== '' && Number.isFinite(prediction);
-            const difference = validPrediction && actualTotal !== null
-              ? Math.abs(prediction - actualTotal)
-              : null;
-
-            return `
-              <div style="display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid rgba(20,122,95,.14);">
-                <strong>${escapeHtml(player.name)}</strong>
-                <span>
-                  ${validPrediction ? `${prediction} points` : '—'}
-                  ${difference !== null ? ` · Off by ${difference}` : ''}
-                </span>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-    }
-
-    const actualLabel = actualTotal !== null
-      ? `Final score ${escapeHtml(actualScore)} · Actual combined score: <strong>${actualTotal}</strong>`
-      : 'Actual combined score: Pending';
-
-    const html = `
-      <article class="pick-percent-card" style="grid-column:1/-1;">
-        <div class="eyebrow">TIEBREAKER TRANSPARENCY</div>
-        <div class="pick-game"><strong>${escapeHtml(game)}</strong></div>
-        ${questionLabel ? `<div class="muted" style="margin-top:4px;">${escapeHtml(questionLabel)}</div>` : ''}
-        <div style="margin-top:10px;">${actualLabel}</div>
-        ${bodyHtml}
-      </article>
-    `;
-
-    container.insertAdjacentHTML('afterbegin', html);
-  }
-
-  function resultForGame_(game, results) {
-    return (results || []).find(
-      result => normalizeGameLabel(result.game) === normalizeGameLabel(game)
-    ) || null;
-  }
-
-  function scoreDisplay_(value) {
-    return value === '' || value === null || value === undefined ? '' : String(value);
-  }
-
-  function resultScoreText_(result) {
-    if (!result) return '';
-    const score1 = scoreDisplay_(result.team1Score);
-    const score2 = scoreDisplay_(result.team2Score);
-    if (score1 === '' || score2 === '') return '';
-    return `${score1}–${score2}`;
-  }
-
-  function renderPickPercentages(games, standings, results) {
-    if (!games.length) {
-      $('pickPercentages').innerHTML = '<div class="muted">No games found for this week.</div>';
-      return;
-    }
-
-    const cards = games.map(game => {
-      const votes = new Map();
-      let total = 0;
-
-      standings.forEach(player => {
-        const pickObj = (player.picks || []).find(
-          p => normalizeGameLabel(p.game) === normalizeGameLabel(game)
-        );
-        const pick = String(pickObj?.pick || '').trim();
-        if (!pick) return;
-
-        votes.set(pick, (votes.get(pick) || 0) + 1);
-        total++;
-      });
-
-      const result = resultForGame_(game, results);
-      const winner = String(result?.winner || '').trim();
-      const status = String(result?.status || 'Pending').trim();
-      const scoreText = resultScoreText_(result);
-
-      const displayParts = [...votes.entries()]
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-        .map(([team, count]) => {
-          const pct = total ? Math.round((count / total) * 100) : 0;
-          const isFinal = status.toLowerCase() === 'final' && winner;
-          const won = isFinal && normalizeTeamLabel(team) === normalizeTeamLabel(winner);
-          const cls = won ? 'vote-option vote-winner' : 'vote-option vote-team';
-          const style = teamColorStyle_(team);
-
-          return `
-            <span class="${cls}" style="${style}">
-              ${teamBadgeHtml_(team, true, 'vote-team-badge')}
-              <span>${escapeHtml(team)}</span>
-              <strong>${pct}%</strong>
-              ${won ? '<span class="vote-check">✓</span>' : ''}
-            </span>
-          `;
-        });
-
-      const winnerLine = winner
-        ? `
-          <div class="pick-winner-line" style="${teamColorStyle_(winner)}">
-            ${teamBadgeHtml_(winner, true, 'winner-team-badge')}
-            <span>Winner: <strong>${escapeHtml(winner)}</strong>${scoreText ? ` • ${escapeHtml(scoreText)}` : ''}</span>
-          </div>
-        `
-        : '';
-
-      return `
-        <article class="pick-percent-card">
-          <div class="pick-game">${matchupHeaderHtml_(game)}</div>
-          <div class="pick-split">
-            ${displayParts.length
-              ? displayParts.join('')
-              : '<span class="muted">No picks yet</span>'}
-          </div>
-          ${winnerLine}
-          <div class="pick-meta">
-            ${escapeHtml(status)} • ${total} vote${total === 1 ? '' : 's'}
-          </div>
-        </article>
-      `;
-    });
-
-    $('pickPercentages').innerHTML = cards.join('');
-  }
-
-  function renderPlayerPickCards(data) {
-    if (data.entriesStatus !== 'CLOSED') return;
-    $('playerPickCards').innerHTML = (data.standings || []).map(player => {
-      const prediction = String(player.tiebreakPrediction ?? '').trim();
-      const predictionLabel = data.tiebreak?.enabled && data.tiebreak?.revealed
-        ? `<p class="player-prediction"><strong>Tiebreak prediction:</strong> ${prediction !== '' && Number.isFinite(Number(prediction)) ? `${escapeHtml(prediction)} combined points` : 'No valid prediction'}. Final score pending; no winner awarded.</p>` : '';
-      return `<details class="player-pick-card"><summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary>
-        <ul>${(player.picks || []).map(pick => `<li><span>${escapeHtml(pick.game)}</span><strong>${escapeHtml(pick.pick)} ${pick.correct === true ? '✓' : pick.correct === false ? '✕' : '· Pending'}</strong></li>`).join('')}</ul>${predictionLabel}</details>`;
-    }).join('') || '<p class="state-message">No synthetic picks for this week.</p>';
-  }
-
-  function renderPlayerPicksTable(games, standings, results) {
-    const head = `
-      <tr>
-        <th>Player</th>
-        ${games.map(game => `<th class="game-th">${matchupHeaderHtml_(game)}</th>`).join('')}
-      </tr>
-    `;
-
-    const body = standings.map(player => {
-      const cells = games.map(game => {
-        const pick = (player.picks || []).find(
-          p => normalizeGameLabel(p.game) === normalizeGameLabel(game)
-        );
-        const result = resultForGame_(game, results);
-
-        if (!pick || !pick.pick) {
-          return '<td class="pick-cell empty">—</td>';
-        }
-
-        const cls = pick.correct === true
-          ? 'correct'
-          : pick.correct === false
-            ? 'wrong'
-            : 'pending';
-
-        const marker = pick.correct === true
-          ? '✓'
-          : pick.correct === false
-            ? '✕'
-            : '';
-
-        const pickedTeam = String(pick.pick || '').trim();
-        const winner = String(result?.winner || pick.winner || '').trim();
-        const scoreText = resultScoreText_(result);
-
-        const winnerDetail = winner
-          ? `
-            <span class="pick-outcome-winner" style="${teamColorStyle_(winner)}">
-              ${teamBadgeHtml_(winner, true, 'pick-winner-badge')}
-              <span>Winner: ${escapeHtml(winner)}${scoreText ? ` ${escapeHtml(scoreText)}` : ''}</span>
-            </span>
-          `
-          : '<span class="pick-outcome-pending">Waiting for result</span>';
-
-        return `
-          <td class="pick-cell ${cls}" style="${teamColorStyle_(pickedTeam)}">
-            <div class="pick-cell-content">
-              <div class="pick-team-line">
-                ${teamBadgeHtml_(pickedTeam, true, 'pick-team-badge')}
-                <strong>${escapeHtml(pickedTeam)}</strong>
-                ${marker ? `<span class="pick-mark">${marker}</span>` : ''}
-              </div>
-              <div class="pick-outcome">
-                ${winnerDetail}
-              </div>
-            </div>
-          </td>
-        `;
-      }).join('');
-
-      return `<tr><td class="player-name">${escapeHtml(player.name)}</td>${cells}</tr>`;
-    }).join('');
-
-    $('playerPicksHead').innerHTML = head;
-    $('playerPicksBody').innerHTML = body || `<tr><td colspan="${games.length + 1}">No submissions yet.</td></tr>`;
+    $('playerPicksHead').innerHTML = `<tr><th>Player</th>${matchModels.map(model => `<th class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}</tr>`;
+    $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><td class="player-name">${escapeHtml(player.name)}</td>${matchModels.map(model => {
+      const pick = model.selections.find(p => p.name === player.name);
+      return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick)}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
+    }).join('')}</tr>`).join('') || `<tr><td colspan="${matchModels.length+1}">No submissions yet.</td></tr>`;
   }
 
   function populateWeekSelector(weeks, defaultWeek) {
@@ -670,16 +496,14 @@
 
     select.value = String(defaultWeek);
     select.addEventListener('change', () => loadWeekPicks(select.value));
+    ['previousWeek','nextWeek'].forEach((id,index) => $(id).addEventListener('click', () => {
+      const options = [...select.options];
+      const next = options[select.selectedIndex + (index === 0 ? -1 : 1)];
+      if (next) loadWeekPicks(next.value);
+    }));
+    $('matchSelect').addEventListener('change', renderMatchCards);
+    $('playerSelect').addEventListener('change', () => { if (matchData) renderPlayerPickCards(matchData); });
   }
-
-  function normalizeGameLabel(value) {
-    return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
-  }
-
-  function shortGameLabel(value) {
-    return String(value || '').replace(/\s+vs\.?\s+/i, ' vs ');
-  }
-
 
   function renderWeeklyDetails(weekData) {
     setText('weeklyTitle', `Week ${weekData?.week || '—'} Standings`);
@@ -691,71 +515,25 @@
 
     renderStandingsRows('weeklyStandingsBody', weekData?.standings || []);
 
-    renderGameResultsInto_('weeklyGameResults', weekData, false);
+    renderGameResultsInto_('weeklyGameResults', weekData);
   }
 
   function renderDashboardGameResults(weekData) {
     setText('dashboardResultsWeek', `Week ${weekData?.week || '—'}`);
-    renderGameResultsInto_('dashboardGameResults', weekData, true);
+    renderGameResultsInto_('dashboardGameResults', weekData);
   }
 
-  function renderGameResultsInto_(containerId, weekData, compact) {
+  function renderGameResultsInto_(containerId, weekData) {
     const container = $(containerId);
     if (!container) return;
-
-    const standings = weekData?.standings || [];
-    const games = weekData?.games || [];
-    const results = weekData?.results || [];
-
-    if (!games.length) {
-      container.innerHTML = '<div class="muted">No games found for this week.</div>';
-      return;
-    }
-
-    container.innerHTML = games.map(game => {
-      const result = resultForGame_(game, results);
-
-      // Backward compatibility while the updated Apps Script deployment rolls out.
-      const pickRecords = standings.flatMap(p => p.picks || [])
-        .filter(p => normalizeGameLabel(p.game) === normalizeGameLabel(game));
-      const sample = pickRecords.find(p => p.status) || {};
-
-      const winner = String(result?.winner ?? sample.winner ?? '').trim();
-      const status = String(result?.status ?? sample.status ?? 'Pending').trim();
-
-      const teams = String(game).split(/\s+vs\.?\s+/i);
-      const team1 = String(result?.team1 || teams[0] || game).trim();
-      const team2 = String(result?.team2 || teams[1] || '').trim();
-
-      const score1 = scoreDisplay_(result?.team1Score ?? sample.team1Score);
-      const score2 = scoreDisplay_(result?.team2Score ?? sample.team2Score);
-
-      const t1Won = winner && normalizeTeamLabel(team1) === normalizeTeamLabel(winner);
-      const t2Won = winner && normalizeTeamLabel(team2) === normalizeTeamLabel(winner);
-
-      return `
-        <article class="game-result-card ${compact ? 'compact-result-card' : ''}">
-          <div class="game-result-status">${escapeHtml(status)}</div>
-          ${teamResultHtml_(
-            team1,
-            score1,
-            winner ? (t1Won ? 'winner' : 'loser') : 'pending'
-          )}
-          ${teamResultHtml_(
-            team2,
-            score2,
-            winner ? (t2Won ? 'winner' : 'loser') : 'pending'
-          )}
-        </article>
-      `;
-    }).join('');
+    container.innerHTML = (weekData?.games || []).map(game => gameCardHtml(preview.buildMatchView(weekData, game, prizeData?.formControl))).join('') || '<p class="state-message">No games found for this week.</p>';
   }
 
   function teamResultHtml_(team, score, state) {
     const highlighted = state === 'winner';
     const style = highlighted ? teamColorStyle_(team) : '';
     const cls = highlighted ? 'team-winner' : 'team-neutral';
-    const outcomeLabel = state === 'winner' ? 'WIN' : state === 'loser' ? 'LOSS' : '';
+    const outcomeLabel = state === 'winner' ? 'WIN' : state === 'loser' ? 'LOSS' : state === 'draw' ? 'TIE' : '';
     const scoreHtml = score === ''
       ? '<span class="team-result-score empty-score">—</span>'
       : `<span class="team-result-score">${escapeHtml(score)}</span>`;

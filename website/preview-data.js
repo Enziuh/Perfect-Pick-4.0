@@ -22,7 +22,7 @@
     Object.keys(schema).every(k => Object.hasOwn(value, k) && check(schema[k], value[k]));
   const alias = choice(...APPROVED_ALIASES);
   const empty = v => Array.isArray(v) && v.length === 0;
-  const score = v => v === '' || num(v);
+  const score = v => v === '' || (num(v) && Number.isInteger(v));
   const team = choice('Bears', 'Lions', 'Chiefs', 'Bills');
   const game = choice('Bears vs Lions', 'Chiefs vs Bills');
   const status = choice('Pending', 'Final');
@@ -45,11 +45,49 @@
       if(w.entriesStatus!=='CLOSED' && (w.standings.length || w.tiebreak.revealed || w.outcome.perfectWinners.length)) fail();
       if(!w.tiebreak.revealed && w.standings.some(p=>p.tiebreakPrediction!=='')) fail();
       if(w.standings.some(p=>p.points>p.completedGames || p.completedGames>p.totalPicks || p.totalPicks>2)) fail();
+      if(new Set(w.results.map(r=>r.game)).size!==w.games.length || w.results.some(r=>!w.games.includes(r.game) || r.team1!==r.game.split(' vs ')[0] || r.team2!==r.game.split(' vs ')[1])) fail();
+      if(new Set(w.standings.map(p=>p.name)).size!==w.standings.length) fail();
+      for(const player of w.standings){
+        if(player.picks.length!==player.totalPicks || new Set(player.picks.map(p=>p.game)).size!==player.picks.length) fail();
+        if(player.picks.some(p=>!w.games.includes(p.game) || !p.game.split(' vs ').includes(p.pick))) fail();
+      }
     });
     const active=data.weeks.find(w=>w.week===data.prizes.activeWeek);
     if(!active || data.prizes.formControl.activeWeek!==active.week || data.prizes.formControl.status!==active.entriesStatus || JSON.stringify(active.standings)!==JSON.stringify(data.prizes.currentWeekStandings)) fail();
     return data;
   }
+  function buildMatchView(data, label, control = {}) {
+    // Result and selection presentation only; scoring points/ranks are untouched.
+    const teams = String(label).split(' vs ');
+    const matches = (data.results || []).filter(r => r.game === label);
+    const result = matches.length === 1 ? matches[0] : null;
+    const winner = result?.status === 'Final' && [...teams,'Tie'].includes(result.winner) ? result.winner : '';
+    const state = !result ? 'Unavailable' : result.status === 'Final' && !winner ? 'Final result unavailable' : result.status;
+    const readScore = value => value !== '' && value !== null && value !== undefined &&
+      /^(?:0|[1-9]\d*)$/.test(String(value)) ? String(value) : '';
+    const kickoff = control.activeWeek === data.week && control.firstGame === label &&
+      typeof control.firstKickoff === 'string' && !Number.isNaN(Date.parse(control.firstKickoff)) ? control.firstKickoff : '';
+    const model = {game:label,teams,status:state,winner,isFinal:Boolean(winner),kickoff,
+      scores:[readScore(result?.team1Score),readScore(result?.team2Score)],votes:null,selections:[]};
+    // Stop before touching any selection-bearing fields when closure is unconfirmed.
+    if (data.entriesStatus !== 'CLOSED') return model;
+    const rows = data.standings || [];
+    const names = rows.map(p => p.name);
+    if (new Set(names).size !== names.length || names.some(name => !APPROVED_ALIASES.includes(name))) return model;
+    model.selections = rows.flatMap(player => {
+      const picks = (player.picks || []).filter(p => p.game === label);
+      if (picks.length !== 1 || !teams.includes(picks[0].pick)) return [];
+      const selected = picks[0].pick;
+      return [{name:player.name,pick:selected,state:!winner ? 'pending' : selected === winner ? 'correct' : 'wrong'}];
+    });
+    const total = model.selections.length;
+    const counts = teams.map(team => model.selections.filter(p => p.pick === team).length);
+    const first = total ? Math.round(counts[0]/total*1000)/10 : 0;
+    model.votes = {total,teams:teams.map((team,index) => ({team,count:counts[index],
+      percentage:total ? (index === 0 ? first : Math.round((100-first)*10)/10) : 0}))};
+    return model;
+  }
+
   function parseCombinedPrediction(value) {
     // Blank, whitespace, booleans and numeric coercion must never become zero.
     if (typeof value !== 'string' || !/^\d{1,3}$/.test(value)) return null;
@@ -170,7 +208,7 @@
     if(action==='week' && /^&week=(?:[1-9]|1[0-8])$/.test(extra)) return structuredClone(data.weeks[Number(extra.slice(6))-1]);
     throw new Error('Unsupported synthetic resource.');
   }
-  const api=Object.freeze({get,validate,resolveMonthlyChampion,APPROVED_ALIASES});
+  const api=Object.freeze({get,validate,buildMatchView,resolveMonthlyChampion,APPROVED_ALIASES});
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   else Object.defineProperty(root,'PerfectPickPreview',{value:api,writable:false,configurable:false});
 })(globalThis);

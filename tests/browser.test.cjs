@@ -6,6 +6,7 @@ const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),
 const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
 const {createScenario}=require('./support/monthly-scenarios.cjs');
+const {createMatchScenario}=require('./support/match-scenarios.cjs');
 const {validate}=require(path.join(STAGE,'preview-data.js'));
 const scenarioBase=JSON.parse(fs.readFileSync(path.join(STAGE,'fixtures/preview.json'),'utf8'));
 const invalidPredictionScenario=createScenario('decisive',scenarioBase);
@@ -36,7 +37,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
  const server=http.createServer((req,res)=>{
   const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
   if(!['index.html','app.js','preview-data.js','styles.css','config.js','fixtures/preview.json'].includes(name)){res.writeHead(404).end();return;}
-  if(name==='fixtures/preview.json'&&scenario){res.writeHead(200,{'Content-Type':'application/json'}).end(JSON.stringify(validate(createScenario(scenario,scenarioBase))));return;}
+  if(name==='fixtures/preview.json'&&scenario){res.writeHead(200,{'Content-Type':'application/json'}).end(JSON.stringify(validate(scenario.startsWith('match:')?createMatchScenario(scenario.slice(6),scenarioBase):createScenario(scenario,scenarioBase))));return;}
   if(name==='fixtures/preview.json'&&fault){res.writeHead(fault==='missing'?404:200,{'Content-Type':'application/json'}).end(fault==='missing'?'':(fault==='malformed'?'{':JSON.stringify(fault==='invalid-prediction'?invalidPredictionScenario:{synthetic:false})));return;}
   res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(path.join(STAGE,name)));
  });
@@ -133,6 +134,9 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await until(p,"document.getElementById('pickPercentages').textContent.includes('officially closed')");
    assert.equal(await p.evaluate("document.querySelectorAll('#pickPercentages .vote-option, #playerPicksBody .pick-cell, #playerPickCards .player-pick-card').length"),0);
    assert(!await p.evaluate("/\\d+ submission/.test(document.getElementById('picksSubmissionCount').textContent)"));
+   assert(await p.evaluate("document.getElementById('playerSelect').disabled && document.getElementById('playerSelect').options.length===1"));
+   assert.equal(await p.evaluate("document.querySelectorAll('#picks .vote-bar, #picks .player-prediction, #picks .match-comparison').length"),0);
+   assert(!await p.evaluate("document.getElementById('picks').innerHTML.includes('Synthetic Comet')"));
   }
   for(const week of [1,2,3,4]){
    await p.evaluate(`document.getElementById('weekSelect').value='${week}';document.getElementById('weekSelect').dispatchEvent(new Event('change'))`);
@@ -141,14 +145,37 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert(await p.evaluate("document.querySelectorAll('#pickPercentages .vote-option').length>0"));
    assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),4);
    assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .team-result-score').length"),4);
+   if(week===1){
+    assert(await p.evaluate("document.querySelectorAll('#playerPickCards .selection-choice.correct').length>0 && document.querySelectorAll('#playerPickCards .selection-choice.wrong').length>0"));
+    assert(await p.evaluate("document.querySelector('#matchGameResults .vote-bar').getAttribute('aria-label').includes('Bears: 50%')"));
+   }
+   if(week===3)assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .correct, #playerPickCards .wrong, #playerPicksBody .correct, #playerPicksBody .wrong').length"),0);
    if(week===4){
     assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .player-prediction').length"),4);
-    assert(await p.evaluate("document.getElementById('pickPercentages').textContent.includes('TIEBREAKER TRANSPARENCY')"));
+    assert(await p.evaluate("document.querySelector('#playerPickCards .player-prediction').textContent.includes('40 combined points')"));
+    assert(!await p.evaluate("document.getElementById('pickPercentages').textContent.includes('TIEBREAKER TRANSPARENCY')"));
    }
   }
+  await p.evaluate("document.getElementById('playerSelect').value='Synthetic Comet';document.getElementById('playerSelect').dispatchEvent(new Event('change'))");
+  assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),1);
+  assert(await p.evaluate("document.querySelector('#playerPickCards .player-pick-card').open"));
+  await p.evaluate("document.getElementById('matchSelect').value='Bears vs Lions';document.getElementById('matchSelect').dispatchEvent(new Event('change'))");
+  assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .game-result-card').length"),1);
+  await p.evaluate("document.querySelector('#matchGameResults .match-comparison summary').click()");
+  assert(await p.evaluate("document.querySelector('#matchGameResults .match-comparison').open"));
+  assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .match-comparison li').length"),4);
+  await p.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+  await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
+  assert(await p.evaluate("document.getElementById('previousWeek').disabled"));
+  await p.evaluate("document.getElementById('nextWeek').click()");
+  await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 2')");
+  await p.evaluate("document.getElementById('previousWeek').click()");
+  await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
   await p.evaluate("document.getElementById('weekSelect').value='5';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
   await until(p,"document.getElementById('picksSubmissionCount').textContent==='Synthetic entry status: OPEN'");
   assert.equal(await p.evaluate("document.querySelectorAll('#pickPercentages .vote-option, #playerPicksBody .pick-cell, #playerPickCards .player-pick-card').length"),0);
+  assert(await p.evaluate("document.querySelector('#matchGameResults .kickoff-note').textContent.includes('Synthetic kickoff')"));
+  assert(await p.evaluate("document.querySelectorAll('#matchGameResults .kickoff-note')[1].textContent.includes('unavailable')"));
   await navigate(p,'standings/weekly');
   await p.evaluate("document.getElementById('weeklyWeekSelect').value='1';document.getElementById('weeklyWeekSelect').dispatchEvent(new Event('change'))");
   await until(p,"document.getElementById('weeklyStandingsBody').textContent.includes('Synthetic')");
@@ -175,6 +202,44 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
     }
    }
   }
+  for(const name of ['zero-votes','one-sided','pending-scores']){
+   scenario='match:'+name;const example=await page('#match-center');
+   await until(example,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
+   const week=name==='pending-scores'?3:1;
+   await example.evaluate(`document.getElementById('weekSelect').value='${week}';document.getElementById('weekSelect').dispatchEvent(new Event('change'))`);
+   await until(example,`document.getElementById('picksSubmissionCount').textContent.includes('for Week ${week}')`);
+   assert.equal(await example.evaluate("document.querySelectorAll('#matchGameResults .game-result-card:first-of-type .vote-option').length"),2);
+   assert(!await example.evaluate("/NaN|undefined|Infinity/.test(document.getElementById('picks').textContent)"));
+   if(name==='zero-votes'){
+    assert(await example.evaluate("document.querySelector('#matchGameResults .game-result-card').textContent.includes('No valid votes yet')"));
+    assert.deepEqual(await example.evaluate("[...document.querySelectorAll('#matchGameResults .game-result-card:first-of-type .vote-share')].map(el=>el.textContent.trim())"),['0% · 0 votes','0% · 0 votes']);
+   }
+   if(name==='one-sided'){
+    assert(await example.evaluate("document.querySelector('#matchGameResults .vote-winner').textContent.includes('Bears') && document.querySelector('#matchGameResults .vote-winner').textContent.includes('0%')"));
+    assert(await example.evaluate("document.querySelector('#matchGameResults .vote-popular').parentElement.textContent.includes('Lions')"));
+   }
+   if(name==='pending-scores'){
+    assert.equal(await example.evaluate("document.querySelectorAll('#picks .team-winner, #playerPickCards .correct, #playerPickCards .wrong, #playerPicksBody .correct, #playerPicksBody .wrong').length"),0);
+    assert(await example.evaluate("document.querySelector('#matchGameResults .game-result-card').textContent.includes('Scores provisional')"));
+   }
+   await example.evaluate("document.getElementById('playerSelect').value='Synthetic Comet';document.getElementById('playerSelect').dispatchEvent(new Event('change'));document.querySelector('#matchGameResults .match-comparison summary').click()");
+   assert(await example.evaluate("document.querySelector('#playerPickCards .player-pick-card').open"));
+   for(const width of [375,768,1280]){
+    await send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600},example.sessionId);
+    assert(await example.evaluate(`document.documentElement.scrollWidth<=${width}+1 && innerWidth<=${width}+1`),`${name} at ${width}`);
+    if(process.env.PP_SCREENSHOT_DIR && width!==768){
+     await example.evaluate("document.getElementById('matchGameResults').scrollIntoView()");
+     const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false},example.sessionId);
+     fs.writeFileSync(path.join(process.env.PP_SCREENSHOT_DIR,`${name}-match-${width}.png`),Buffer.from(shot.data,'base64'));
+     if(width===375){
+      await example.evaluate("document.getElementById('playerPickCards').scrollIntoView()");
+      const playerShot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false},example.sessionId);
+      fs.writeFileSync(path.join(process.env.PP_SCREENSHOT_DIR,`${name}-player-${width}.png`),Buffer.from(playerShot.data,'base64'));
+     }
+    }
+   }
+   await send('Target.closeTarget',{targetId:example.targetId});
+  }
   // These explicitly named, test-only response scenarios never modify the public fixture.
   for(const [name,state,winner] of [
    ['in-progress','IN PROGRESS',''],['clear-leader','MONTHLY CHAMPION','Synthetic Comet'],
@@ -196,6 +261,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
     for(const fragment of ['FINAL combined score: 38','off by 2','prediction: 4 points','Winning prediction','40','44'])assert(text.includes(fragment),fragment);
     assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .rank-first').length"),2);
     assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-champion').length"),1);
+   }
+   if(name==='decisive'){
+    await navigate(example,'match-center');
+    await example.evaluate("document.getElementById('weekSelect').value='4';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+    await until(example,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 4')");
+    await example.evaluate("document.getElementById('playerSelect').value='Synthetic Comet';document.getElementById('playerSelect').dispatchEvent(new Event('change'))");
+    assert(await example.evaluate("document.querySelector('#playerPickCards .player-prediction').textContent.includes('Actual FINAL combined score: 38. Off by 2.')"));
+    await navigate(example,'standings/monthly');
    }
    if(name==='equal-distance'){
     assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-unresolved').length"),2);

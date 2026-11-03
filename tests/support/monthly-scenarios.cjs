@@ -14,31 +14,8 @@ function aggregate(weeks,includeTotal=false) {
  }
  return rank([...totals.values()]);
 }
-function createScenario(name,base) {
- const data=structuredClone(base);
- if(name==='in-progress')return data;
- const monthlyWeeks=data.weeks.slice(0,4);
- for(const week of monthlyWeeks.slice(2)){
-  for(const result of week.results)Object.assign(result,{status:'Final',team1Score:21,team2Score:17,winner:result.team1});
-  for(const player of week.standings){
-   if(player.name==='Synthetic Comet'||(name!=='clear-leader' && player.name==='Synthetic Maple')){
-    player.picks.forEach(pick=>{pick.pick=week.results.find(r=>r.game===pick.game).team1;});
-   }
-  }
- }
- const target=monthlyWeeks[3];
- const game=target.results.find(r=>r.game===data.prizes.periods[0].tiebreakRule.game);
- if(name==='equal-distance')Object.assign(game,{team1Score:21,team2Score:21,winner:'Tie'});
- if(name==='zero-prediction')Object.assign(game,{team1Score:0,team2Score:0,winner:'Tie'});
- if(name==='awaiting-score')Object.assign(game,{status:'Pending',winner:'',team1Score:'',team2Score:''});
- for(const p of target.standings){
-  if(name==='no-eligible')p.tiebreakPrediction='';
-  if(name==='one-eligible' && p.name==='Synthetic Maple')p.tiebreakPrediction='';
-  if(name==='zero-prediction' && p.name==='Synthetic Comet')p.tiebreakPrediction='0';
-  p.tiebreakSubmitted=p.tiebreakPrediction!=='';
- }
- if(name==='zero-completed')for(const week of monthlyWeeks)for(const result of week.results)Object.assign(result,{status:'Pending',winner:'',team1Score:'',team2Score:''});
- for(const week of monthlyWeeks){
+function refreshScores(data) {
+ for(const week of data.weeks){
   for(const p of week.standings){
    for(const pick of p.picks){
     const r=week.results.find(r=>r.game===pick.game);
@@ -74,6 +51,32 @@ function createScenario(name,base) {
  data.prizes.projectedSeasonPot=data.prizes.periods.reduce((n,p)=>n+p.seasonContribution,0);
  // Closed-period data never enters the active, open week's standings.
  data.prizes.currentWeekStandings=[];
+}
+function createScenario(name,base) {
+ const data=structuredClone(base);
+ if(name==='in-progress')return data;
+ const monthlyWeeks=data.weeks.slice(0,4);
+ for(const week of monthlyWeeks.slice(2)){
+  for(const result of week.results)Object.assign(result,{status:'Final',team1Score:21,team2Score:17,winner:result.team1});
+  for(const player of week.standings){
+   if(player.name==='Synthetic Comet'||(name!=='clear-leader' && player.name==='Synthetic Maple')){
+    player.picks.forEach(pick=>{pick.pick=week.results.find(r=>r.game===pick.game).team1;});
+   }
+  }
+ }
+ const target=monthlyWeeks[3];
+ const game=target.results.find(r=>r.game===data.prizes.periods[0].tiebreakRule.game);
+ if(name==='equal-distance')Object.assign(game,{team1Score:21,team2Score:21,winner:'Tie'});
+ if(name==='zero-prediction')Object.assign(game,{team1Score:0,team2Score:0,winner:'Tie'});
+ if(name==='awaiting-score')Object.assign(game,{status:'Pending',winner:'',team1Score:'',team2Score:''});
+ for(const p of target.standings){
+  if(name==='no-eligible')p.tiebreakPrediction='';
+  if(name==='one-eligible' && p.name==='Synthetic Maple')p.tiebreakPrediction='';
+  if(name==='zero-prediction' && p.name==='Synthetic Comet')p.tiebreakPrediction='0';
+  p.tiebreakSubmitted=p.tiebreakPrediction!=='';
+ }
+ if(name==='zero-completed')for(const week of monthlyWeeks)for(const result of week.results)Object.assign(result,{status:'Pending',winner:'',team1Score:'',team2Score:''});
+ refreshScores(data);
  if(name==='not-closed'){
   // Server-side privacy projection: remove selections from the response entirely.
   target.entriesStatus='OPEN';target.standings=[];target.tiebreak.revealed=false;
@@ -82,4 +85,4 @@ function createScenario(name,base) {
  }
  return data;
 }
-module.exports={createScenario};
+module.exports={createScenario,refreshScores};

@@ -83,41 +83,28 @@
       </div>
 </section></section>
 <section id="match-center" class="destination" aria-label="Match Center" hidden><header class="page-header"><p class="eyebrow">Every pick has a story</p><h1 tabindex="-1">Match Center</h1><p class="page-intro">Follow the results. Compare the picks. See how the field voted after entries close.</p></header><section id="picks" class="legacy-section">
-      <div class="picks-banner" hidden>
-        <div>
-          <div class="eyebrow">Weekly picks</div>
-          <h2>See Who Picked Who</h2>
-          <p>Compare player picks, matchup voting, and finalized winners at a glance.</p>
-        </div>
-      </div>
       <div class="panel picks-toolbar">
         <div>
-          <div class="eyebrow">Weekly voting</div>
+          <div class="eyebrow">The weekly slate</div>
           <h2 id="picksWeekTitle">Week — Picks</h2>
           <p id="picksSubmissionCount" class="muted">Loading submissions…</p>
         </div>
-        <label class="week-picker">
-          <span>Week</span>
-          <select id="weekSelect"></select>
-        </label>
+        <div class="week-switcher"><button id="previousWeek" type="button" aria-label="Previous week">←</button><label class="week-picker"><span>Week</span><select id="weekSelect"></select></label><button id="nextWeek" type="button" aria-label="Next week">→</button></div>
       </div>
 
-      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">On the field</p><h3>Matchup results</h3></div><span class="pill" id="matchResultsWeek">Week —</span></div><div id="matchGameResults" class="game-results-grid"></div></div>
-      <div class="panel">
-        <h3>How the field picked</h3>
-        <div id="pickPercentages" class="pick-percent-grid"></div>
+      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">On the field</p><h3>Matchups &amp; the field</h3><p class="muted">Results tell you who won. Voting tells you who the field picked.</p></div><span class="pill" id="matchResultsWeek">Week —</span></div>
+        <label class="match-filter">Matchup<select id="matchSelect" aria-label="Filter matchups"><option value="">All matchups</option></select></label>
+        <div id="pickPercentages"><div id="matchPrivacyNotice" class="privacy-state">Picks and voting stay private until entries are officially closed.</div><div id="matchGameResults" class="game-results-grid"></div></div>
       </div>
-
-      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">Player view</p><h3>Picks &amp; predictions</h3></div></div><div id="playerPickCards" class="player-card-grid"><p class="state-message">Loading synthetic picks…</p></div></div>
-      <div class="panel">
-        <h3>Compare every pick</h3><p class="muted">The full comparison. Scroll across matchups to explore the field.</p>
+      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">Player view</p><h3>Picks &amp; predictions</h3><p class="muted">Explore an approved alias’s week, including the period-ending prediction.</p></div><label class="match-filter">Player<select id="playerSelect" aria-label="Filter players" disabled><option value="">All players</option></select></label></div><div id="playerPickCards" class="player-card-grid"><p class="state-message">Loading synthetic picks…</p></div></div>
+      <details class="panel comparison-matrix" id="pickMatrix"><summary>Full-week comparison matrix</summary><p class="muted">An optional wide view. For an easier mobile comparison, open a matchup’s player list above.</p>
         <div class="table-scroll">
           <div class="table-region" role="region" aria-label="picks data table" tabindex="0"><table id="playerPicksTable" class="wide-table">
             <thead id="playerPicksHead"></thead>
             <tbody id="playerPicksBody"></tbody>
           </table></div>
         </div>
-      </div>
+      </details>
 </section></section>
 <section id="standings" class="destination" aria-label="Standings" hidden><header class="page-header"><p class="eyebrow">The competition</p><h1 tabindex="-1">Standings</h1><p class="page-intro">One point at a time. Follow the race across the week, the month, and the season.</p></header><nav class="subnav" aria-label="Standings views"><a href="#standings/weekly">Weekly</a><a href="#standings/monthly">Monthly</a><a href="#standings/season">Season</a></nav><section id="weekly" class="legacy-section">
       <div class="panel">
