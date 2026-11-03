@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE (local only). Live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; diagnostic coordinator preparation COMPLETE offline. Real reads and live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -758,3 +758,81 @@ still unverified; conservative ES2020 checks are not a Google runtime emulator.
 Do not execute/enable the diagnostic, authorize data access, deploy or conduct a
 real read. All existing live-verification/evidence blockers remain unchanged.
 No retry, clasp operation, Google execution or real-data access by the agent.
+
+## First owner-authorized read preparation — complete offline; execution blocked
+
+Branch develop; baseline e221380. Checkpoint revision is this section's containing
+commit (Git log). Owner reports corrected source-only upload succeeded in the
+separate 4.0 project with only verification code/manifest. This is owner-provided
+status, not remote inspection. Diagnostic remains DISABLED; website synthetic-only.
+This task authorizes local preparation/tests only, not OAuth, upload or real reads.
+
+Completed:
+- tools/verification/prepared-diagnostic.cjs: pure injected coordinator; exact
+  private config/evidence fields, explicit approved alias and CLOSED builders,
+  configured timestamp parser, two-stage authorization seam, bounded existing
+  reader/projector and independent public-contract revalidation. Missing/invalid
+  authorization/config/closure/alias approval/capture blocks before Sheets calls.
+  Capture revision/bounds must remain identical across three evidence observations;
+  no broadening between consent and actual read. Unmapped entrants/partial headers/
+  scores/stale snapshots remain withheld or unavailable, with generic errors.
+- Report exact fields state/validation/readiness/counts only; aggregate game/week/
+  scope counts, no player counts, names/aliases, contacts, raw picks/predictions,
+  notes, secret IDs, points/money, targets, ranges, timestamps or exception text.
+  VALIDATED_READ is schema validation only; private comparison still required.
+  No parity assertion, guessed payout, winner or closure evidence is manufactured.
+- tools/sheets/offline-bundle.cjs and tools/verification/package.cjs include the
+  coordinator only within the existing private closure. Actual globally reachable
+  verifyPerfectPick4Package_ and verifyRealCompetitionReadOnly_ remain unconditionally
+  DISABLED. No native Sheets connector, config loader, enable flag, writes, Forms,
+  trigger installers, HTTP handlers, public endpoints or extra OAuth scopes added.
+- FIRST_LIVE_VERIFICATION.md: precise private inputs, intended minimal owner-only
+  bridge/authorization design, evidence requirements, four-call maximum Sheets
+  read plan, private redacted-result inspection and rollback. ISOLATED_VERIFICATION_PACKAGE.md
+  records current owner upload status and local-only prepared assembly changes.
+
+Tests/checks:
+- node --test tests/*.test.cjs: 166 passed, 0 failed, 0 skipped (9 new).
+- New tests: normal fabricated read/report allowlist; absent/denied/throwing/fake
+  authorization; absent/malformed config, alias and CLOSED evidence; stale/missing/
+  changed capture; exact bounded single-column reads excluding Name/notes; missing
+  entrant aliases, inconsistent headers, partial scores/timestamps; private error
+  suppression; write-denying VM execution; packaged coordinator inaccessible and
+  disabled entry immune to purported owner arguments/global config.
+- Existing browser/responsive/network isolation, scoring/champion/prize, privacy,
+  contract, read adapter, package-integrity and ES2020 compatibility checks pass.
+- Regenerated ignored .verification-package plus external seal; updated only two
+  verified payloads in tmp/verification-upload. Exact inventory Verification.gs,
+  appsscript.json and ignored .clasp.json; private clasp bytes unchanged, target
+  matches owner-confirmed 4.0, rootDir dot, mode 0600. Read-only manifest unchanged.
+  Documented Node preflight and sealed-source assembly checks pass. Unchanged
+  six-file Pages artifact/seal, private-reference scans of every changed/untracked
+  file and Git whitespace checks pass. This does NOT
+  update the remote uploaded package and does NOT authorize a new upload.
+
+Outstanding gates before real data:
+- Native owner-only bridge and Google authorization are deliberately unimplemented.
+  Injected authorize callbacks are trusted test seams, NOT authentication proof.
+  Owner must privately establish sole-editor/project/deployment/trigger isolation
+  and actual effective read-only grants. No new identity/email scope is proposed.
+- Actual Sheet coordinates/timezone/identity normalization and Apps Script Intl
+  runtime parity, independent credible revision/completeness/quiescence authority,
+  complete approved aliases and fresh historical CLOSED/reopen evidence are still
+  required. Equal reads/static bounds/fresh timestamps do not create authority.
+- Missing lifecycle/accounting/champion oracle and denominator/prediction decisions
+  prevent related parity claims. Existing public integration/privacy blockers stay.
+  No live adapter, custom submissions, public deployment or 3.0 change is included.
+
+Exact next owner-controlled action:
+Privately review FIRST_LIVE_VERIFICATION.md's prepared-coordinator procedure and
+supply only confirmation that owner isolation, effective scopes, actual coordinate/
+timezone and independent capture/alias/closure gates have been established. Never
+paste private values in chat/Git. Then explicitly authorize focused implementation
+and review of the private owner-only bridge/config assembly. Keep the uploaded
+entry disabled until that review passes. Any subsequent exact upload, fabricated
+runtime/OAuth test and one bounded real read require their own precise owner
+approval. Do not execute a diagnostic or conduct the first read automatically.
+Resume: "Read AGENTS.md, PHASE5_PROGRESS.md and FIRST_LIVE_VERIFICATION.md. Confirm
+which remaining owner-only bridge/evidence gate is newly authorized. Preserve the
+sealed disabled package and synthetic Pages; do not access Google services,
+upload, authorize or read actual data without exact new approval."

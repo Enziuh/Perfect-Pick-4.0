@@ -264,3 +264,22 @@ Technical references (public documentation only):
 [Logical assignment is ES2021](https://v8.dev/features/logical-assignment),
 [Apps Script V8 environment](https://developers.google.com/apps-script/guides/v8-runtime),
 [Acorn parser options](https://github.com/acornjs/acorn/blob/8.15.0/acorn/README.md).
+
+## Owner-reported successful upload; prepared private coordinator
+
+Owner reports the corrected disabled package uploaded successfully to the separate
+4.0 project. No remote inspection or execution is claimed. The new source assembly
+also includes tools/verification/prepared-diagnostic.cjs INSIDE the private package
+closure. It orchestrates injected, bounded read-only capabilities and returns only
+fixed status/readiness/schema labels and aggregate game/week/scope counts. All
+actual entry points stay DISABLED; the coordinator is neither globally exported
+nor connected to native Google services. No configuration loader/enable switch.
+
+See FIRST_LIVE_VERIFICATION.md's prepared-coordinator section for exact private
+inputs, two-stage owner consent design, range/read budget, report schema, first-read
+procedure and rollback. Authorization callbacks are trusted test seams, NOT proven
+owner authentication. A native owner-only bridge and independent evidence source
+remain deliberately unimplemented pending isolation/evidence review. Local package
+regeneration/sealing does not update the owner's remote uploaded version. Existing
+three-file upload copy must match the regenerated seal before any separately
+approved future upload; no upload/read is authorized or performed by this work.

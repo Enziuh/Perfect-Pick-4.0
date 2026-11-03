@@ -5,7 +5,7 @@ const {buildOfflineBundle}=require('../sheets/offline-bundle.cjs');
 const {inspectLocalTarget,assertNoPrivateReferences}=require('./local-target.cjs');
 const ROOT=path.resolve(__dirname,'../..'),STAGE=path.join(ROOT,'.verification-package');
 const FILES=Object.freeze(['Verification.gs','appsscript.json']);
-const SOURCES=Object.freeze(['tools/sheets/offline-bundle.cjs','tools/sheets/sheets-read-adapter.cjs','tools/contracts/live-contract.cjs','tools/projector/project-competition.cjs','tools/projector/monthly-decision.cjs','tools/verification/timestamps.cjs','tools/verification/owner-evidence.cjs','tools/verification/offline-report.cjs','tools/verification/disabled-entry.cjs','tools/verification/package-manifest.json']);
+const SOURCES=Object.freeze(['tools/sheets/offline-bundle.cjs','tools/sheets/sheets-read-adapter.cjs','tools/contracts/live-contract.cjs','tools/projector/project-competition.cjs','tools/projector/monthly-decision.cjs','tools/verification/timestamps.cjs','tools/verification/owner-evidence.cjs','tools/verification/offline-report.cjs','tools/verification/disabled-entry.cjs','tools/verification/prepared-diagnostic.cjs','tools/verification/package-manifest.json']);
 const SCOPE='https://www.googleapis.com/auth/spreadsheets.readonly';
 const ENTRY='\n// Owner-editor diagnostic only. No authorization, configuration or read capability.\nfunction verifyPerfectPick4Package_(){\n  return PerfectPickVerificationPackage_.diagnostic();\n}\n';
 const need=(ok,message='Verification package rejected')=>{if(!ok)throw Error(message);};

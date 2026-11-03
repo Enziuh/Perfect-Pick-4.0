@@ -191,3 +191,156 @@ do not alter existing production grants or resources as an automatic cleanup ste
 If anything was accidentally exposed, stop sharing/logging, preserve a redacted
 incident record, and request specific incident-remediation authorization. Do not
 rotate credentials, rewrite history or change production settings automatically.
+
+## Prepared coordinator — first owner-authorized read is still blocked
+
+Owner now reports a successful source-only upload of the corrected isolated
+package to the separate 4.0 project, containing only verification code/manifest.
+This is owner-provided status, not remote inspection or permission to execute.
+Local entry `verifyPerfectPick4Package_()` and delegated
+`verifyRealCompetitionReadOnly_()` STILL return DISABLED unconditionally.
+
+`tools/verification/prepared-diagnostic.cjs` adds runPreparedDiagnostic(dependencies,
+config), a pure, injected coordinator exercised ONLY with fabricated inputs. It
+reuses the bounded adapter, projector, strict contract, timestamp parser and owner
+evidence builders. The generated package hides it inside privateRoot; only the
+unchanged disabled diagnostic is globally reachable. No native Sheets connector,
+configuration reader, enable flag, logging or live entry is supplied. Passing owner
+claims/configuration to the existing entry cannot activate it.
+
+### Smallest future activation (design; not implemented or authorized)
+
+Use a separately reviewed, owner-editor-only manual call in the separate 4.0
+project. Keep the public diagnostic disabled; no webapp, API executable, HTTP
+handler, trigger, library export, custom function or browser transport. Do not
+rely on a trailing underscore, boolean, shared token or an alias Map as owner
+authentication. The project owner must privately establish sole-editor access and
+absence of deployed/public entry paths, triggers and libraries. If this cannot be
+proven, DO NOT activate. The current package intentionally has no activation path.
+
+A minimal future bridge would privately inject ONLY:
+
+- values.batchGet: a fixed wrapper around Sheets.Spreadsheets.Values.batchGet;
+  no general service object, SpreadsheetApp, writes or arbitrary function dispatch.
+- now: trusted clock; identityKey: explicitly reviewed private identity normalization.
+- readEvidence(target): independent credible revision/completeness authority for
+  that exact target/capture. Do not read extra tabs/metadata to improvise evidence.
+- authorize(stage, scope): trusted owner-session capability, not a config/request
+  callback. It must verify sole-owner isolation, reviewed effective read-only
+  grants, exact target, column layout, weeks, timezone, freshness policy, revision,
+  capture bounds and time-limited single-use approval. PREFLIGHT runs before any
+  evidence callback; BOUNDED_READ includes the exact capture before Sheets access.
+
+The injectable callback is a test seam, NOT implemented Google authentication or
+proof of source authority. A caller controlling callbacks already controls all
+service capabilities. No claim of proven real authorization follows from its tests.
+New bridge code, private assembly validation, upload and execution each need their
+own precise owner authorization. Do not switch the existing diagnostic with a flag.
+
+### Exact private inputs — outside Git, Pages, logs and chat
+
+Coordinator config has EXACTLY target, timeZone, revision, maxAgeMs, layout,
+policy, aliases and closures; unknown top-level keys reject. No private config
+file is generated or committed. Future private assembly location/storage requires
+review; this task does not read/write Script Properties or add a config loader.
+
+- target: privately verified spreadsheet identity, separate from the 4.0 script
+  target. timeZone: confirmed competition/Sheet IANA zone; no default. maxAgeMs:
+  explicitly approved positive freshness budget; revision: nonnegative safe integer
+  changed for results, alias/closure/accounting corrections. Neither is evidence
+  merely because it is configured. Numeric/local timestamps use the existing
+  configured-zone parser; ambiguous DST/local formats stop rather than guess.
+- layout: season, Results and Responses descriptors as specified above and in
+  SHEETS_READ_ADAPTER.md. Exact real tab/column/header coordinates remain UNVERIFIED.
+  Results selects only Week, Game, Team 1, Team 2, Winner, Status and the two scores.
+  Responses selects Timestamp, private Phone Number join, approved weekly matchup
+  columns and designated monthly-ending prediction columns. Never Name/notes.
+  Columns are single-column ranges, row 1 headers then bounded rows from row 2.
+- policy has EXACTLY games, teams, periods, seasonWeeks, decisions and accounting.
+  Maps explicitly bind legacy matchup/team labels to independent public game/team
+  keys; periods define start/end weeks and designated game; seasonWeeks defines
+  included scope. Decisions need revision/freshness-bound completion evidence;
+  accounting needs independently approved cents/status evidence per contract.
+  Empty decisions/accounting Maps mean unknown, never fabricated winners/payment.
+- aliases: each record is privateKey, player, alias, approved:true, revision.
+  Every alias is separately owner-approved; public keys independent of contacts.
+  Exact duplicates, invalid approval or no aliases block before reading. A missing
+  entrant discovered in a bounded read withholds its affected player scope; the
+  diagnostic never returns its identity or a partial player list.
+- closures: each record is week, snapshotRevision, closureRevision, status,
+  mechanism, verifiedClosed, checkedAt, validUntil, deadline (nullable). Exact
+  CLOSED + OWNER_VERIFIED_CLOSURE + verifiedClosed:true, matching revision, fresh
+  checkedAt and unexpired validity is required for EVERY requested week before
+  ANY Sheet read in this coordinator. Unknown/open/unverified/history guesses
+  block; elapsed deadlines/old weeks never count. Owner must independently prove
+  historical closure and revocation/reopen handling, not merely set these literals.
+- readEvidence returns EXACTLY revision, observedAt, validUntil, resultRows,
+  responseRows and quiescent:true. Results bound 1–400; Responses bound 0–1000.
+  Both timestamps canonical/fresh; revision matches policy. Independent approved
+  provenance is mandatory. All three evidence observations (authorization preflight,
+  adapter before/after) must match, including bounds. No widening after approval.
+  Static numbers/equal reads/guard cells/fresh timestamps cannot prove authority.
+
+### Report and read budget
+
+After preflight the existing adapter issues at most four Values.batchGet calls:
+headers then bodies, repeated once. It reads only descriptor-selected columns and
+adds one overflow guard to Results Week and Responses Timestamp. Headers/columns,
+responses, freshness and capture consistency are checked; no metadata enumeration,
+full-sheet export or fallback read. The extra evidence preflight makes three
+independent evidence checks; the future implementation must also be bounded and
+read-only. Rejected preconditions issue ZERO Sheets calls. Header/partial/stale/
+conversion failures stop with a generic redacted result; no automatic retries.
+
+The projector validates; the coordinator validates again against approved aliases,
+closure/accounting policy and completion-time freshness. Its aliasCompleteness
+trust allows complete sets only: the projector independently suppresses affected
+scopes when an unmapped entrant exists. It never returns the projection itself.
+Exact result keys are state, validation, readiness, counts. Counts keys are weeks,
+games, finalGames, availableScopes, withheldScopes. All are nonnegative integers.
+States BLOCKED/INCOMPLETE/VALIDATED_READ and readiness NOT_ESTABLISHED/WITHHELD/
+PRIVATE_COMPARISON_REQUIRED are fixed labels. VALIDATED_READ means schema-valid
+bounded input only, NOT 3.0 parity, production truth, authorization or publication
+approval. No baseline/oracle comparison is invented; use the existing data-only
+redacted comparator later with separately authorized ephemeral same-revision inputs.
+No player counts/names/aliases, contacts, IDs, ranges, timestamps, raw picks,
+predictions, points, money, notes, payloads or exception messages are returned.
+
+### Exact owner-controlled continuation and rollback
+
+1. Review this design; privately verify the separate 4.0 target, sole owner/editor
+   access, no deployments/public execution, triggers, unsafe source or libraries.
+   Keep current disabled upload; DO NOT run a real read yet.
+2. Privately inspect existing Sheet headers/timezone only under separately explicit
+   authorization; no metadata/header discovery is authorized here. Resolve precise
+   coordinates, identity normalization, independent capture/revision/completeness,
+   complete alias approvals and CLOSED history. If authority cannot be established
+   without production changes, STOP and request a separate capture plan.
+3. Request a focused implementation/review of the private bridge described above,
+   with those gates resolved. Then approve exact private assembly bytes, target,
+   bounded ranges/row limits, weeks, revision, time window and one execution. No
+   upload/execution is implied by this preparation. Never upload apps-script/src.
+4. Before authorizing that future execution, review manifest AND effective grants
+   in the isolated owner's UI: ONLY spreadsheets.readonly, no broad spreadsheet,
+   Drive, Forms, external-request or identity/email scope. The only advanced
+   service is Sheets v4. No OAuth flow occurred here. Resolve stale grants for the
+   verification project separately; never change production grants automatically.
+   Test fabricated Intl/DST/runtime and denial cases there before real input.
+5. Only after NEW authorization for the precise first read, manually execute the
+   reviewed owner-only runner once in the isolated editor. Inspect ONLY its returned
+   redacted report privately using a debugger breakpoint AFTER the coordinator
+   returns. Do not add Logger/console, persist output, expand raw inner frames,
+   publish an endpoint, paste personal data or screenshot private config. Stop on
+   BLOCKED/INCOMPLETE; do not bypass checks or widen permissions/ranges.
+6. Record only fixed outcomes/counts/blockers in the checkpoint; do not certify
+   parity without independently normalized same-revision baseline/oracle evidence.
+   Discard ephemeral inputs; remove the temporary private bridge/config and restore
+   the sealed disabled package under separate approval. End the owner session;
+   review/revoke only verification-specific grants if separately approved. No Sheet
+   rollback is needed because writes are prohibited. Never modify 3.0 resources.
+
+Remaining real-read blockers: unproven owner-only bridge/remote effective scopes,
+actual coordinates/timezone/runtime parity, credible independent capture authority,
+alias/history closure approval and exact one-read authorization. Missing accounting,
+completion and champion oracle block the corresponding parity claims. Synthetic
+Pages and all public-live-integration blockers remain unchanged.
