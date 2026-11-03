@@ -193,6 +193,23 @@
       {...details,winner:closest[0].name,winningDifference:minimum,margin});
   }
 
+  // Presentation only: allocations are not payment confirmations.
+  function buildWeeklyPrize(row, week) {
+    const amount = value => typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
+    const closed = week?.entriesStatus === 'CLOSED';
+    const final = closed && row?.week === week.week && row?.finalized === true && week?.outcome?.finalized === true &&
+      week.results.length === week.games.length && week.results.length > 0 && week.results.every(game => finalScore(game) !== null);
+    const names = final && Array.isArray(row.perfectPickWinnerNames) &&
+      row.perfectPickWinnerNames.every(name => APPROVED_ALIASES.includes(name)) &&
+      JSON.stringify([...row.perfectPickWinnerNames].sort()) === JSON.stringify([...(week.outcome.perfectWinners || [])].sort())
+      ? row.perfectPickWinnerNames : [];
+    const rollover = final && !names.length && week.outcome.perfectWinners?.length === 0 && row.perfectPickWinnerNames?.length === 0 && row.rolloverToMonthly === row.weeklyPot
+      ? amount(row.rolloverToMonthly) : null;
+    return {pool:amount(row?.weeklyPot), status:final ? (names.length ? 'WINNERS CONFIRMED' : rollover !== null ? 'ROLLOVER CONFIRMED' : 'ALLOCATION UNCONFIRMED') : 'PROJECTED · RESULTS PENDING',
+      winners:names, allocationEach:names.length ? amount(row.perfectPayoutEach) : null, rollover,
+      payment:'Payment status unavailable'};
+  }
+
   let pending;
   async function fixture() {
     if (!pending) pending = (async () => {
@@ -208,7 +225,7 @@
     if(action==='week' && /^&week=(?:[1-9]|1[0-8])$/.test(extra)) return structuredClone(data.weeks[Number(extra.slice(6))-1]);
     throw new Error('Unsupported synthetic resource.');
   }
-  const api=Object.freeze({get,validate,buildMatchView,resolveMonthlyChampion,APPROVED_ALIASES});
+  const api=Object.freeze({get,validate,buildMatchView,buildWeeklyPrize,resolveMonthlyChampion,APPROVED_ALIASES});
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   else Object.defineProperty(root,'PerfectPickPreview',{value:api,writable:false,configurable:false});
 })(globalThis);

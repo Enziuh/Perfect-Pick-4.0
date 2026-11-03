@@ -1824,3 +1824,15 @@ tbody tr:last-child td {
     padding:16px;
   }
 }
+
+/* Phase 4: accounting clarity and comfortable keyboard/touch targets. */
+#prizeSummary { margin-bottom: var(--space-6, 24px); }
+#prizeSummary small, .prize-allocation { display:block; margin-top:12px; line-height:1.6; font-size:.875rem; }
+.period-head { flex-wrap:wrap; gap:16px; }
+.period-head .pill { white-space:normal; }
+#overviewProgress { font-weight:600; }
+.subnav a, .primary-nav a, button, select, summary { min-height:44px; }
+#weeklyPrizeBody td { vertical-align:top; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior:auto !important; transition:none !important; } }
+
+@media (max-width:600px) { #prizeSummary { grid-template-columns:1fr; } }

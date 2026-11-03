@@ -15,9 +15,8 @@
     const el = $(id);
     if (el) el.textContent = value;
   };
-  const money = (n) => new Intl.NumberFormat('en-US', {
-    style: 'currency', currency: 'USD'
-  }).format(Number(n || 0));
+  const currencyFormatter = new Intl.NumberFormat('en-US', {style:'currency', currency:'USD'});
+  const money = n => typeof n === 'number' && Number.isFinite(n) && n >= 0 ? currencyFormatter.format(n) : 'Unavailable';
 
   async function get(action, extra = '') {
     if (!preview) throw new Error('Synthetic preview data adapter is unavailable.');
@@ -26,7 +25,10 @@
 
   async function loadWeek(week) {
     const number = Number(week);
-    if (!weekCache.has(number)) weekCache.set(number, await get('week', `&week=${number}`));
+    if (!weekCache.has(number)) {
+      const pending = get('week', `&week=${number}`).catch(error => { weekCache.delete(number); throw error; });
+      weekCache.set(number, pending);
+    }
     return weekCache.get(number);
   }
 
@@ -158,7 +160,7 @@
       .join(' + ');
 
     const monthlyBase = rolloverLines || 'No finalized weekly rollovers yet';
-    const projectedSeasonContribution = Number(prizes.currentMonthlyPot || 0) * 0.50;
+    const projectedSeasonContribution = prizes.currentProjectedSeasonContribution;
     $('prizeBreakdown').innerHTML = `
       <div class="breakdown-row">
         <span>Monthly rollover pot</span>
@@ -179,22 +181,7 @@
       </div>
     `;
 
-    const activeWeek = Number(prizes.activeWeek || 0);
-    const recent = (prizes.weekly || [])
-      .filter(w => w.activePlayers > 0 && w.week <= activeWeek)
-      .sort((a, b) => b.week - a.week)
-      .slice(0, 5);
-
-    $('recentWeeks').innerHTML = recent.map(w => `
-      <tr>
-        <td>W${w.week}</td>
-        <td>${money(w.weeklyPot)}</td>
-        <td>${w.finalized ? 'Final' : 'Pending'}</td>
-        <td>${w.perfectPickWinnerNames.length
-          ? escapeHtml(w.perfectPickWinnerNames.join(', '))
-          : (w.finalized ? 'Rollover' : '—')}</td>
-      </tr>
-    `).join('') || '<tr><td colspan="4">No weekly data yet.</td></tr>';
+    $('recentWeeks').innerHTML = '<tr><td colspan="4">Checking finalized results…</td></tr>';
   }
 
   function formatAccuracy(points, completedGames) {
@@ -298,44 +285,39 @@
     }
   }
 
-  function renderPrizes(prizes) {
-    $('periodCards').innerHTML = (prizes.periods || []).map(p => `
-      <article class="period-card">
-        <div class="period-head">
-          <div>
-            <div class="eyebrow">${escapeHtml(p.periodKey)}</div>
-            <h3>${escapeHtml(p.displayName)}</h3>
-          </div>
-          <div class="rule-choice-group" aria-label="Rule mode">
-            <span class="rule-choice ${p.ruleMode === 'OLD' ? 'active old-active' : ''}">OLD</span>
-            <span class="rule-choice ${p.ruleMode === 'NEW' ? 'active new-active' : ''}">NEW</span>
-          </div>
-        </div>
-        <div class="period-grid">
-          <div><span>Weeks</span><strong>${p.startWeek}–${p.endWeek}</strong></div>
-          <div><span>Monthly Pot</span><strong>${money(p.monthlyPot)}</strong></div>
-          <div><span>Monthly 1st Place Pool (50%)</span><strong>${money(p.monthlyWinnerPool)}</strong></div>
-          <div><span>Season Contribution (50%)</span><strong>${money(p.seasonContribution)}</strong></div>
-        </div>
-        <p class="muted">
-          ${p.leaders.length
-            ? `Current leader${p.leaders.length > 1 ? 's' : ''}: ${escapeHtml(p.leaders.join(', '))}`
-            : 'No leader data yet.'}
-        </p>
-      </article>
-    `).join('');
-
-    $('weeklyPrizeBody').innerHTML = (prizes.weekly || []).map(w => `
-      <tr>
-        <td>${w.week}</td>
-        <td>${escapeHtml(w.periodKey)}</td>
-        <td class="num">${w.activePlayers}</td>
-        <td class="num">${money(w.weeklyPot)}</td>
-        <td>${w.finalized ? 'Yes' : 'No'}</td>
-        <td>${w.perfectPickWinnerNames.length ? escapeHtml(w.perfectPickWinnerNames.join(', ')) : '—'}</td>
-        <td class="num">${money(w.rolloverToMonthly)}</td>
-      </tr>
-    `).join('');
+  async function renderPrizes(prizes) {
+    const weeks = await Promise.all(prizes.weekly.map(row => loadWeek(row.week)));
+    const weekly = prizes.weekly.map((row,i) => preview.buildWeeklyPrize(row,weeks[i]));
+    const current = weekly[prizes.activeWeek-1];
+    const topPoints = Math.max(...prizes.overallStandings.map(player => player.points));
+    const seasonLeaders = prizes.overallStandings.filter(player => player.points === topPoints).map(player => player.name);
+    const seasonContext = seasonLeaders.length ? `Current points leaders: ${seasonLeaders.join(', ')} · ${topPoints} points. Season title not confirmed.` : 'Season standings unavailable.';
+    $('prizeSummary').innerHTML = `<article class="card"><span>Week ${prizes.activeWeek} pool · projected</span><strong>${money(current.pool)}</strong><small>${escapeHtml(current.status)}. ${current.payment}.</small></article>
+      <article class="card"><span>Season pool · confirmed</span><strong>${money(prizes.confirmedSeasonPot)}</strong><small>Projected total: ${money(prizes.projectedSeasonPot)}. Payout distribution and payment status unavailable.</small><a href="#standings/season">View season standings ↗</a><small>${escapeHtml(seasonContext)}</small></article>`;
+    $('periodCards').innerHTML = (await Promise.all(prizes.periods.map(async p => {
+      const resolution = await loadMonthlyResolution(p);
+      return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
+        <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
+        <p><strong>${escapeHtml(resolution.winner || 'Champion not confirmed')}</strong>${resolution.points === null ? '' : ` · ${resolution.points} monthly points`}</p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
+        <div class="period-grid"><div><span>Monthly prize pool · ${p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
+        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct}% / ${p.seasonPct}%. Champion confirmation is not a payment. Payment status unavailable.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
+    }))).join('');
+    $('periodCards').querySelectorAll('[data-prize-period]').forEach(link => link.addEventListener('click', () => {
+      $('monthlyPeriodSelect').value = link.dataset.prizePeriod;
+      renderMonthlyPeriod(link.dataset.prizePeriod);
+    }));
+    $('weeklyPrizeBody').innerHTML = prizes.weekly.map((w,i) => {
+      const view = weekly[i];
+      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${weeks[i].entriesStatus === 'CLOSED' ? w.activePlayers : 'Protected'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">Allocation each: ${money(view.allocationEach)} · ${view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
+    }).join('');
+    $('recentWeeks').innerHTML = prizes.weekly.filter(w => w.week <= prizes.activeWeek).slice(-5).reverse().map(w => {
+      const view = weekly[w.week-1];
+      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover !== null ? 'Rollover confirmed' : 'Pending'}</td></tr>`;
+    }).join('');
+    const completed = weeks[prizes.activeWeek-1].results.filter(game => game.status === 'Final').length;
+    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[prizes.activeWeek-1].games.length} games FINAL. Synthetic snapshot, not a live feed.`);
+    const highlights = prizes.currentWeekStandings.slice(0,3);
+    setText('overviewLeaders', highlights.length ? highlights.map(p => `${p.name}: ${p.points} points`).join(' · ') : 'Weekly leaders unavailable until entries explicitly close.');
   }
 
 
@@ -362,18 +344,14 @@
     $('playerPickCards').innerHTML = '<p class="state-message">Loading synthetic picks…</p>';
 
     try {
-      let data = weekCache.get(normalizedWeek);
-      if (!data) {
-        data = await get('week', `&week=${normalizedWeek}`);
-        weekCache.set(normalizedWeek, data);
-      }
+      const data = await loadWeek(normalizedWeek);
       if (request !== picksRequest) return;
       renderWeekPicks(data);
       if (Number($('weeklyWeekSelect')?.value || activeWeek) === normalizedWeek) {
         renderWeeklyDetails(data);
       }
       if (normalizedWeek === activeWeek) {
-        renderDashboardGameResults(data);
+        await renderDashboardGameResults(data);
       }
     } catch (err) {
       if (request !== picksRequest) return;
@@ -518,9 +496,17 @@
     renderGameResultsInto_('weeklyGameResults', weekData);
   }
 
-  function renderDashboardGameResults(weekData) {
-    setText('dashboardResultsWeek', `Week ${weekData?.week || '—'}`);
-    renderGameResultsInto_('dashboardGameResults', weekData);
+  async function renderDashboardGameResults(weekData) {
+    let results = weekData;
+    if (!weekData.results.some(game => game.status === 'Final')) {
+      const recent = prizeData.weekly.filter(row => row.week < weekData.week && row.finalized).at(-1);
+      if (recent) {
+        const snapshot = await loadWeek(recent.week);
+        if (snapshot.results.some(game => game.status === 'Final')) results = snapshot;
+      }
+    }
+    setText('dashboardResultsWeek', `Week ${results.week}${results !== weekData ? ' · Recent finals' : ''}`);
+    renderGameResultsInto_('dashboardGameResults', results);
   }
 
   function renderGameResultsInto_(containerId, weekData) {
@@ -734,8 +720,6 @@
       const prizes = await get('prizes');
       prizeData = prizes;
       renderDashboard(prizes);
-      await renderStandings(prizes);
-      renderPrizes(prizes);
 
       activeWeek = Number(prizes.activeWeek || 1);
       const weeks = (prizes.weekly || []).map(w => Number(w.week)).filter(Boolean);
@@ -745,7 +729,7 @@
       populateWeeklySelector(availableWeeks, activeWeek);
       populateMonthlySelector(prizes.periods || [], prizes.currentPeriod);
 
-      await loadWeekPicks(activeWeek);
+      await Promise.all([renderStandings(prizes), renderPrizes(prizes), loadWeekPicks(activeWeek)]);
 
       const when = prizes.generatedAt ? new Date(prizes.generatedAt).toLocaleString() : '';
       setStatus(`Synthetic data loaded${when ? ` • ${when}` : ''}`, 'ok');

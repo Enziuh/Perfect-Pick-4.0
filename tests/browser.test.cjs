@@ -78,6 +78,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   }
   async function until(p,expression){for(let i=0;i<100;i++){if(await p.evaluate(expression))return;await pause(50);}throw new Error('Browser expectation timed out: '+expression);}
   const p=await page();await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
+  assert(await p.evaluate("document.getElementById('dashboardResultsWeek').textContent.includes('Recent finals')"));
   const routes=['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules','guide/faq'];
   async function navigate(p,route){
    await p.evaluate(`document.querySelector('a[href="#${route}"]').click()`);
@@ -92,11 +93,19 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert(await p.evaluate("(()=>{const ids=[...document.querySelectorAll('[id]')].map(el=>el.id);return new Set(ids).size===ids.length;})()"));
   assert.equal(await p.evaluate("document.querySelectorAll('#periodCards .period-card').length"),5);
   assert.equal(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr').length"),18);
+  assert(await p.evaluate("document.getElementById('prizeSummary').textContent.includes('Payment status unavailable')"));
+  assert(await p.evaluate("document.querySelector('#weeklyPrizeBody tr').textContent.includes('Allocation each: $10.00')"));
+  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[1].textContent.includes('ROLLOVER CONFIRMED')"));
+  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[4].textContent.includes('PROJECTED')"));
+  assert(await p.evaluate("document.getElementById('overviewProgress').textContent.includes('0 of 2 games FINAL')"));
+
   for(const route of routes){
    await navigate(p,route);
    const target=route.includes('/')?route.split('/')[1]:({'overview':'dashboard','match-center':'picks'}[route]||route);
    assert(await p.evaluate(`document.getElementById('${target}').textContent.trim().length>20`));
   }
+  await p.evaluate("document.querySelector('[data-prize-period=\"M1\"]').click()");
+  await until(p,"document.getElementById('monthlyPeriodSelect').value==='M1' && location.hash==='#standings/monthly'");
   await navigate(p,'standings/monthly');
   await send('Page.reload',{},p.sessionId);
   await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded') && !document.getElementById('monthly').hidden && location.hash==='#standings/monthly'");
@@ -195,7 +204,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    fs.mkdirSync(process.env.PP_SCREENSHOT_DIR,{recursive:true});
    for(const width of [375,1280]){
     await send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600},p.sessionId);
-    for(const route of ['overview','match-center']){
+    for(const route of ['overview','match-center','prizes']){
      await navigate(p,route);await p.evaluate('scrollTo(0,0)');
      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false},p.sessionId);
      fs.writeFileSync(path.join(process.env.PP_SCREENSHOT_DIR,`${route}-${width}.png`),Buffer.from(shot.data,'base64'));
@@ -255,6 +264,10 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await example.evaluate("document.getElementById('monthlyPrizeCallout').dataset.winner"),winner,name);
    assert.equal(await example.evaluate("document.getElementById('championState').textContent"),state,name);
    assert.equal(await example.evaluate("document.getElementById('championHeading').dataset.winner"),winner,name);
+   assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.status"),state,name);
+   assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.winner"),winner,name);
+   assert(await example.evaluate("document.querySelector('#periodCards .period-card').textContent.includes('Payment status unavailable')"));
+
    assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody tr').children.length"),5);
    if(name==='decisive'){
     const text=await example.evaluate("document.getElementById('monthlyPrizeCallout').textContent");
