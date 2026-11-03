@@ -1,39 +1,55 @@
-
-name: Deploy Perfect Pick 4.0
+name: Verify and deploy synthetic preview
 
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: github-pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  verify:
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout approved development content and history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build exact synthetic publication artifact
+        run: node tools/security/public-artifact.cjs stage
+      - name: Required offline security and browser tests
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: node --test tests/*.test.cjs
+      - name: Verify unchanged staged artifact immediately before upload
+        run: node tools/security/public-artifact.cjs verify
+      - name: Upload only verified publication artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./.preview-public
+
+  deploy:
+    if: github.ref == 'refs/heads/develop'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload website
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./website
-
-      - name: Deploy website
+      - name: Deploy previously verified artifact without checkout or rebuild
         id: deployment
         uses: actions/deploy-pages@v4
-
-

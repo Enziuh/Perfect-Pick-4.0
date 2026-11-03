@@ -1,0 +1,1660 @@
+{
+  "synthetic": true,
+  "aliases": [
+    "Synthetic Comet",
+    "Synthetic Harbor",
+    "Synthetic Maple",
+    "Synthetic Orbit"
+  ],
+  "prizes": {
+    "app": "Perfect Pick 4.0 \u2014 Synthetic Preview",
+    "season": 2026,
+    "generatedAt": "2026-10-01T12:00:00.000Z",
+    "activeWeek": 5,
+    "formControl": {
+      "activeWeek": 5,
+      "section": "Week 5",
+      "firstGame": "Bears vs Lions",
+      "firstKickoff": "2099-10-01T23:00:00.000Z",
+      "picksClose": "2099-10-01T22:00:00.000Z",
+      "status": "OPEN",
+      "deadlineRule": "Synthetic example: 1 hour before first kickoff",
+      "updated": "2026-10-01T12:00:00.000Z"
+    },
+    "currentPeriod": "M2",
+    "currentPeriodName": "Month 2",
+    "currentRuleMode": "NEW",
+    "currentWeeklyPot": 20,
+    "currentWeekStandings": [],
+    "currentWeekFinalized": false,
+    "currentWeekPerfectWinners": [],
+    "currentMonthlyPot": 0,
+    "currentMonthlyRolloverBreakdown": [],
+    "projectedMonthlyWinnerPool": 0,
+    "currentProjectedSeasonContribution": 0,
+    "currentPeriodStandings": [],
+    "currentPeriodEstimatedWinnings": [],
+    "confirmedSeasonPot": 0,
+    "projectedSeasonPot": 10,
+    "seasonPayoutPercents": null,
+    "weekly": [
+      {
+        "week": 1,
+        "periodKey": "M1",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": true,
+        "perfectPickWinners": 2,
+        "perfectPickWinnerNames": [
+          "Synthetic Comet",
+          "Synthetic Maple"
+        ],
+        "perfectPayoutEach": 10.0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 2,
+        "periodKey": "M1",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": true,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 20
+      },
+      {
+        "week": 3,
+        "periodKey": "M1",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 4,
+        "periodKey": "M1",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 5,
+        "periodKey": "M2",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 6,
+        "periodKey": "M2",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 7,
+        "periodKey": "M2",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 8,
+        "periodKey": "M2",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 9,
+        "periodKey": "M3",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 10,
+        "periodKey": "M3",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 11,
+        "periodKey": "M3",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 12,
+        "periodKey": "M3",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 13,
+        "periodKey": "M4",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 14,
+        "periodKey": "M4",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 15,
+        "periodKey": "M4",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 16,
+        "periodKey": "M4",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 17,
+        "periodKey": "M5",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      },
+      {
+        "week": 18,
+        "periodKey": "M5",
+        "activePlayers": 4,
+        "weeklyEntry": 5,
+        "weeklyPot": 20,
+        "finalized": false,
+        "perfectPickWinners": 0,
+        "perfectPickWinnerNames": [],
+        "perfectPayoutEach": 0,
+        "rolloverToMonthly": 0
+      }
+    ],
+    "periods": [
+      {
+        "periodKey": "M1",
+        "displayName": "Month 1",
+        "startWeek": 1,
+        "endWeek": 4,
+        "ruleMode": "NEW",
+        "includeInSeason": true,
+        "locked": false,
+        "monthlyPot": 20,
+        "monthlyWinnerPct": 50,
+        "monthlyWinnerPool": 10.0,
+        "seasonPct": 50,
+        "seasonContribution": 10.0,
+        "allWeeksFinalized": false,
+        "leaders": [
+          "Synthetic Comet",
+          "Synthetic Maple"
+        ],
+        "standings": [
+          {
+            "name": "Synthetic Comet",
+            "points": 2,
+            "completedGames": 4,
+            "rank": 1
+          },
+          {
+            "name": "Synthetic Maple",
+            "points": 2,
+            "completedGames": 4,
+            "rank": 1
+          },
+          {
+            "name": "Synthetic Harbor",
+            "points": 1,
+            "completedGames": 4,
+            "rank": 3
+          },
+          {
+            "name": "Synthetic Orbit",
+            "points": 1,
+            "completedGames": 4,
+            "rank": 3
+          }
+        ],
+        "tiebreakRule": {
+          "week": 4,
+          "questionLabel": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+          "game": "Chiefs vs Bills",
+          "actualTotal": "",
+          "status": "Pending",
+          "method": "Combined Points"
+        },
+        "estimatedMonthlyWinnings": [],
+        "projectedMonthlyPayoutEach": 0,
+        "monthlyPayoutEach": 0
+      },
+      {
+        "periodKey": "M2",
+        "displayName": "Month 2",
+        "startWeek": 5,
+        "endWeek": 8,
+        "ruleMode": "NEW",
+        "includeInSeason": true,
+        "locked": false,
+        "monthlyPot": 0,
+        "monthlyWinnerPct": 50,
+        "monthlyWinnerPool": 0.0,
+        "seasonPct": 50,
+        "seasonContribution": 0.0,
+        "allWeeksFinalized": false,
+        "leaders": [],
+        "standings": [],
+        "tiebreakRule": {
+          "week": 8,
+          "questionLabel": "WK 8 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+          "game": "Chiefs vs Bills",
+          "actualTotal": "",
+          "status": "Pending",
+          "method": "Combined Points"
+        },
+        "estimatedMonthlyWinnings": [],
+        "projectedMonthlyPayoutEach": 0,
+        "monthlyPayoutEach": 0
+      },
+      {
+        "periodKey": "M3",
+        "displayName": "Month 3",
+        "startWeek": 9,
+        "endWeek": 12,
+        "ruleMode": "NEW",
+        "includeInSeason": true,
+        "locked": false,
+        "monthlyPot": 0,
+        "monthlyWinnerPct": 50,
+        "monthlyWinnerPool": 0.0,
+        "seasonPct": 50,
+        "seasonContribution": 0.0,
+        "allWeeksFinalized": false,
+        "leaders": [],
+        "standings": [],
+        "tiebreakRule": {
+          "week": 12,
+          "questionLabel": "WK 12 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+          "game": "Chiefs vs Bills",
+          "actualTotal": "",
+          "status": "Pending",
+          "method": "Combined Points"
+        },
+        "estimatedMonthlyWinnings": [],
+        "projectedMonthlyPayoutEach": 0,
+        "monthlyPayoutEach": 0
+      },
+      {
+        "periodKey": "M4",
+        "displayName": "Month 4",
+        "startWeek": 13,
+        "endWeek": 16,
+        "ruleMode": "NEW",
+        "includeInSeason": true,
+        "locked": false,
+        "monthlyPot": 0,
+        "monthlyWinnerPct": 50,
+        "monthlyWinnerPool": 0.0,
+        "seasonPct": 50,
+        "seasonContribution": 0.0,
+        "allWeeksFinalized": false,
+        "leaders": [],
+        "standings": [],
+        "tiebreakRule": {
+          "week": 16,
+          "questionLabel": "WK 16 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+          "game": "Chiefs vs Bills",
+          "actualTotal": "",
+          "status": "Pending",
+          "method": "Combined Points"
+        },
+        "estimatedMonthlyWinnings": [],
+        "projectedMonthlyPayoutEach": 0,
+        "monthlyPayoutEach": 0
+      },
+      {
+        "periodKey": "M5",
+        "displayName": "Month 5",
+        "startWeek": 17,
+        "endWeek": 18,
+        "ruleMode": "NEW",
+        "includeInSeason": true,
+        "locked": false,
+        "monthlyPot": 0,
+        "monthlyWinnerPct": 50,
+        "monthlyWinnerPool": 0.0,
+        "seasonPct": 50,
+        "seasonContribution": 0.0,
+        "allWeeksFinalized": false,
+        "leaders": [],
+        "standings": [],
+        "tiebreakRule": {
+          "week": 18,
+          "questionLabel": "WK 18 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+          "game": "Chiefs vs Bills",
+          "actualTotal": "",
+          "status": "Pending",
+          "method": "Combined Points"
+        },
+        "estimatedMonthlyWinnings": [],
+        "projectedMonthlyPayoutEach": 0,
+        "monthlyPayoutEach": 0
+      }
+    ],
+    "overallStandings": [
+      {
+        "name": "Synthetic Comet",
+        "points": 2,
+        "completedGames": 4,
+        "rank": 1,
+        "totalPicks": 8
+      },
+      {
+        "name": "Synthetic Maple",
+        "points": 2,
+        "completedGames": 4,
+        "rank": 1,
+        "totalPicks": 8
+      },
+      {
+        "name": "Synthetic Harbor",
+        "points": 1,
+        "completedGames": 4,
+        "rank": 3,
+        "totalPicks": 8
+      },
+      {
+        "name": "Synthetic Orbit",
+        "points": 1,
+        "completedGames": 4,
+        "rank": 3,
+        "totalPicks": 8
+      }
+    ],
+    "estimatedSeasonWinnings": []
+  },
+  "weeks": [
+    {
+      "season": 2026,
+      "week": 1,
+      "entriesStatus": "CLOSED",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "Bears",
+          "status": "Final",
+          "team1Score": 21,
+          "team2Score": 17
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "Chiefs",
+          "status": "Final",
+          "team1Score": 21,
+          "team2Score": 17
+        }
+      ],
+      "outcome": {
+        "finalized": true,
+        "status": "winner",
+        "perfectWinners": [
+          "Synthetic Comet",
+          "Synthetic Maple"
+        ]
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": [
+        {
+          "rank": 1,
+          "name": "Synthetic Comet",
+          "points": 2,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": true,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "Bears",
+              "status": "Final",
+              "correct": true
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": true
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Maple",
+          "points": 2,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": true,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "Bears",
+              "status": "Final",
+              "correct": true
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": true
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 3,
+          "name": "Synthetic Harbor",
+          "points": 0,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "Bears",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": false
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 3,
+          "name": "Synthetic Orbit",
+          "points": 0,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "Bears",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": false
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        }
+      ]
+    },
+    {
+      "season": 2026,
+      "week": 2,
+      "entriesStatus": "CLOSED",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "Tie",
+          "status": "Final",
+          "team1Score": 21,
+          "team2Score": 21
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "Chiefs",
+          "status": "Final",
+          "team1Score": 21,
+          "team2Score": 17
+        }
+      ],
+      "outcome": {
+        "finalized": true,
+        "status": "rollover",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": [
+        {
+          "rank": 1,
+          "name": "Synthetic Harbor",
+          "points": 1,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "Tie",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": true
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Orbit",
+          "points": 1,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "Tie",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": true
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 3,
+          "name": "Synthetic Comet",
+          "points": 0,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "Tie",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": false
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 3,
+          "name": "Synthetic Maple",
+          "points": 0,
+          "completedGames": 2,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "Tie",
+              "status": "Final",
+              "correct": false
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "Chiefs",
+              "status": "Final",
+              "correct": false
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        }
+      ]
+    },
+    {
+      "season": 2026,
+      "week": 3,
+      "entriesStatus": "CLOSED",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": [
+        {
+          "rank": 1,
+          "name": "Synthetic Comet",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Harbor",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Maple",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Orbit",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": false,
+          "tiebreakPrediction": "",
+          "tiebreakQuestion": ""
+        }
+      ]
+    },
+    {
+      "season": 2026,
+      "week": 4,
+      "entriesStatus": "CLOSED",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": true,
+        "revealed": true,
+        "questionLabel": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+        "game": "Chiefs vs Bills",
+        "method": "Combined Points"
+      },
+      "standings": [
+        {
+          "rank": 1,
+          "name": "Synthetic Comet",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": true,
+          "tiebreakPrediction": "40",
+          "tiebreakQuestion": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score"
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Harbor",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": true,
+          "tiebreakPrediction": "42",
+          "tiebreakQuestion": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score"
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Maple",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Bears",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Bills",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": true,
+          "tiebreakPrediction": "44",
+          "tiebreakQuestion": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score"
+        },
+        {
+          "rank": 1,
+          "name": "Synthetic Orbit",
+          "points": 0,
+          "completedGames": 0,
+          "totalPicks": 2,
+          "perfectWeek": false,
+          "picks": [
+            {
+              "game": "Bears vs Lions",
+              "pick": "Lions",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            },
+            {
+              "game": "Chiefs vs Bills",
+              "pick": "Chiefs",
+              "winner": "",
+              "status": "Pending",
+              "correct": null
+            }
+          ],
+          "tiebreakSubmitted": true,
+          "tiebreakPrediction": "46",
+          "tiebreakQuestion": "WK 4 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score"
+        }
+      ]
+    },
+    {
+      "season": 2026,
+      "week": 5,
+      "entriesStatus": "OPEN",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 6,
+      "entriesStatus": "UNKNOWN",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 7,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 8,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": true,
+        "revealed": false,
+        "questionLabel": "WK 8 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+        "game": "Chiefs vs Bills",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 9,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 10,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 11,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 12,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": true,
+        "revealed": false,
+        "questionLabel": "WK 12 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+        "game": "Chiefs vs Bills",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 13,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 14,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 15,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 16,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": true,
+        "revealed": false,
+        "questionLabel": "WK 16 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+        "game": "Chiefs vs Bills",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 17,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": false,
+        "revealed": false,
+        "questionLabel": "",
+        "game": "",
+        "method": "Combined Points"
+      },
+      "standings": []
+    },
+    {
+      "season": 2026,
+      "week": 18,
+      "entriesStatus": "UPCOMING",
+      "games": [
+        "Bears vs Lions",
+        "Chiefs vs Bills"
+      ],
+      "results": [
+        {
+          "game": "Bears vs Lions",
+          "team1": "Bears",
+          "team2": "Lions",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        },
+        {
+          "game": "Chiefs vs Bills",
+          "team1": "Chiefs",
+          "team2": "Bills",
+          "winner": "",
+          "status": "Pending",
+          "team1Score": "",
+          "team2Score": ""
+        }
+      ],
+      "outcome": {
+        "finalized": false,
+        "status": "pending",
+        "perfectWinners": []
+      },
+      "tiebreak": {
+        "enabled": true,
+        "revealed": false,
+        "questionLabel": "WK 18 Tie Breaker \u2014 Chiefs vs Bills \u2014 Enter Combined Score",
+        "game": "Chiefs vs Bills",
+        "method": "Combined Points"
+      },
+      "standings": []
+    }
+  ]
+}

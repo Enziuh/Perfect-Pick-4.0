@@ -21,3 +21,7 @@ temp/
 backups/
 
 apps-script/.clasp.json
+
+# Reviewed synthetic publication artifact
+.preview-public/
+.preview-public.seal.json

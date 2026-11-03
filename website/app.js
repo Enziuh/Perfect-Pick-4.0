@@ -1,6 +1,7 @@
 (() => {
-  const cfg = window.PERFECT_PICK_3 || {};
-  const api = String(cfg.apiUrl || '').replace(/\/+$/, '');
+  const preview = window.PerfectPickPreview;
+  let picksRequest = 0;
+  let monthlyRequest = 0;
   let activeWeek = null;
   let prizeData = null;
   const weekCache = new Map();
@@ -16,11 +17,14 @@
   }).format(Number(n || 0));
 
   async function get(action, extra = '') {
-    if (!api) throw new Error('API URL has not been configured yet.');
-    const url = `${api}?action=${encodeURIComponent(action)}${extra}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`API request failed (${res.status})`);
-    return res.json();
+    if (!preview) throw new Error('Synthetic preview data adapter is unavailable.');
+    return preview.get(action, extra);
+  }
+
+  async function loadWeek(week) {
+    const number = Number(week);
+    if (!weekCache.has(number)) weekCache.set(number, await get('week', `&week=${number}`));
+    return weekCache.get(number);
   }
 
   function setStatus(text, type = '') {
@@ -214,7 +218,7 @@
     const results = weekData?.results || [];
 
     const result = targetGame
-      ? results.find(r => normalizeGame_(r.game) === normalizeGame_(targetGame))
+      ? results.find(r => normalizeGameLabel(r.game) === normalizeGameLabel(targetGame))
       : results[results.length - 1];
 
     if (!result) return { status: 'Pending', actualTotal: null, score: '' };
@@ -255,6 +259,7 @@
 
   async function renderMonthlyPeriod(periodKey) {
     if (!prizeData) return;
+    const request = ++monthlyRequest;
     const period = (prizeData.periods || []).find(p => p.periodKey === periodKey);
     if (!period) return;
 
@@ -269,6 +274,7 @@
       }
     }
 
+    if (request !== monthlyRequest) return;
     const monthlyPrizeCallout = $('monthlyPrizeCallout');
     if (monthlyPrizeCallout) {
       const prizeAmount = money(period.monthlyWinnerPool || 0);
@@ -352,6 +358,7 @@
 
 
   async function loadWeekPicks(week) {
+    const request = ++picksRequest;
     const normalizedWeek = Number(week);
     if (!normalizedWeek) return;
 
@@ -368,6 +375,7 @@
         data = await get('week', `&week=${normalizedWeek}`);
         weekCache.set(normalizedWeek, data);
       }
+      if (request !== picksRequest) return;
       renderWeekPicks(data);
       if (Number($('weeklyWeekSelect')?.value || activeWeek) === normalizedWeek) {
         renderWeeklyDetails(data);
@@ -376,6 +384,7 @@
         renderDashboardGameResults(data);
       }
     } catch (err) {
+      if (request !== picksRequest) return;
       console.error(err);
       $('picksSubmissionCount').textContent = 'Could not load this week.';
       $('pickPercentages').innerHTML = `<div class="muted">${escapeHtml(err.message || 'Could not load pick percentages.')}</div>`;
@@ -384,6 +393,14 @@
   }
 
   function renderWeekPicks(data) {
+    if (data.entriesStatus !== 'CLOSED') {
+      const message = 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
+      setText('picksSubmissionCount', `Synthetic entry status: ${data.entriesStatus || 'UNKNOWN'}`);
+      $('pickPercentages').textContent = message;
+      $('playerPicksHead').innerHTML = '';
+      $('playerPicksBody').innerHTML = '<tr><td>Picks hidden until official closure.</td></tr>';
+      return;
+    }
     const standings = data.standings || [];
     const games = data.games || [];
     const results = data.results || [];
@@ -669,7 +686,7 @@
     setText('weeklyTitle', `Week ${weekData?.week || '—'} Standings`);
     setText(
       'weeklyStatusNote',
-      weekData?.outcome?.finalized ? 'This week is final.' : 'Live standings for this week.'
+      weekData?.outcome?.finalized ? 'This week is final.' : 'Synthetic standings; results pending.'
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 
@@ -865,12 +882,14 @@
 
     select.addEventListener('change', async () => {
       const week = Number(select.value);
-      let data = weekCache.get(week);
-      if (!data) {
-        data = await get('week', `&week=${week}`);
-        weekCache.set(week, data);
+      try {
+        const data = await loadWeek(week);
+        if (Number(select.value) === week) renderWeeklyDetails(data);
+      } catch (_) {
+        setText('weeklyStatusNote', 'Synthetic week unavailable. No external connection was attempted.');
+        $('weeklyStandingsBody').innerHTML = '';
+        $('weeklyGameResults').textContent = 'Synthetic data unavailable.';
       }
-      renderWeeklyDetails(data);
     });
   }
 
@@ -909,13 +928,8 @@
   async function load() {
     setupTabs();
 
-    if (!api) {
-      setStatus('Add your Apps Script Web App URL to config-3.0.js.', 'warn');
-      return;
-    }
-
     try {
-      setStatus('Loading Perfect Pick 3.0…');
+      setStatus('Loading synthetic preview…');
       const prizes = await get('prizes');
       prizeData = prizes;
       renderDashboard(prizes);
@@ -933,10 +947,13 @@
       await loadWeekPicks(activeWeek);
 
       const when = prizes.generatedAt ? new Date(prizes.generatedAt).toLocaleString() : '';
-      setStatus(`Live data loaded${when ? ` • ${when}` : ''}`, 'ok');
+      setStatus(`Synthetic data loaded${when ? ` • ${when}` : ''}`, 'ok');
     } catch (err) {
       console.error(err);
-      setStatus(err.message || 'Could not load data.', 'error');
+      setStatus('Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = '<div class="panel">Synthetic data unavailable. No external connection attempted.</div>';
+      });
     }
   }
 
