@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE (fabricated Sheets reads only). Live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE (fabricated inputs only). Live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -490,3 +490,92 @@ approved. Preserve synthetic Pages; no deployment or custom picks form. Record
 only non-identifying check outcomes and blockers in this checkpoint."
 
 Phase 5D-1 is complete; Phase 5D-2 and production integration remain unauthorized.
+
+## Controlled verification preparation — complete locally; real read disabled
+
+Branch: develop. Baseline/checkpoint parent: a33b114. The containing commit is this
+checkpoint revision (see Git log). Current authorization covers fabricated local
+implementation/testing only. No real-read, Google authorization, Apps Script upload/
+execution, public integration or deployment is authorized or performed.
+
+### Completed preparation and precise read scope
+
+- `tools/verification/timestamps.cjs`: pure configured-timezone parser for Apps
+  Script Date instants, canonical UTC ISO, explicit local calendar strings and
+  Sheets serials. America/Los_Angeles matches reference competition configuration;
+  owner still must confirm actual Sheet timezone. DST gaps/folds reject ambiguous
+  wall times; explicit instants preserve their UTC value. No host-timezone guess,
+  locale parsing, external service or silent fallback. Actual Apps Script Intl
+  support remains unverified and must pass fabricated runtime tests before use.
+- `tools/verification/owner-evidence.cjs`: explicit owner-approved private-join to
+  independently provisioned public-key/alias Maps; exact fields/revision, duplicate
+  rejection, no raw-name derivation. Fresh, revision-bound, independently owner-
+  verified CLOSED records only; elapsed deadlines cannot create disclosure authority.
+  These typed records are NOT proof of actual owner identity or verified history.
+- `tools/verification/offline-report.cjs`: data-only private review summary. Returns
+  only fixed state/validation/check codes, aggregate game/week/scope counts and
+  discrepancy-category count. No player identities/counts, contact data, selections,
+  predictions, points, money, notes, IDs, timestamps, errors or raw snapshots.
+  Missing baseline/oracle, withheld scopes or invalid/unavailable data cannot pass.
+- `tools/verification/disabled-entry.cjs`: verifyRealCompetitionReadOnly_ ALWAYS
+  returns DISABLED. No service/read capability or enabling flag/token/callback.
+  Owner authorization and remote isolation cannot be proven here, so no executable
+  real-read path is enabled. Trailing underscore is not relied on as authentication.
+- Existing exact read scope confirmed: Results' eight score/matchup fields, plus
+  Responses Timestamp/Phone Number and approved CLOSED-week selection/prediction
+  columns only. Headers precede bounded bodies; no Name, notes, Players, ledger,
+  Form Control, Forms, Properties, triggers, score sync or setup imports/calls.
+  Existing 5D-1 partial/revision/header/freshness rejection is reused unchanged.
+- `tools/sheets/offline-bundle.cjs` now assembles these extra pure helpers in memory
+  alongside the existing approved modules. No Node globals or native Google access
+  in the VM runtime; no file/upload/deployment. Real-read entry remains disabled.
+- `docs/architecture/FIRST_LIVE_VERIFICATION.md`: precise field inventory, timezone/
+  evidence rules, private owner report contract, conditional first-read procedure,
+  stop/rollback plan and unverified isolation/source-authority requirements.
+
+### Test and review results
+
+- `node --test tests/*.test.cjs`: 138 passed, 0 failed, 0 skipped (21 new + 117 prior).
+- New tests cover Pacific winter/summer/DST boundaries, missing/invalid dates,
+  serial fractions, direct/cross-realm Dates, host timezone independence, unavailable
+  Intl, explicit alias/closure/revision authority, realistic fabricated serials
+  through the reader/projector, redacted discrepancy reports, stale/incomplete/
+  inconsistent captures, missing oracles, withheld scopes, disabled entry bypass
+  attempts, write-denying VM services and unchanged publication membership.
+- Existing privacy, scoring, champion, contract, reader/projector, snapshot,
+  browser/responsive/external-network isolation and artifact-security checks pass.
+- `node tools/security/public-artifact.cjs verify`: unchanged exact six-file
+  artifact/seal passes. Module syntax/Git whitespace checks pass. Final review/scans across all eight changed/new files pass: diff/scope,
+  untracked content, private-content/history and native-capability boundaries; no real identities, endpoints, keys or private configuration recorded.
+- Existing website, synthetic fixture/adapter, contract, read adapter, projector,
+  Apps Script source, production 3.0, main and Pages configuration unchanged.
+  No dependencies installed, actual Sheet/Form/API/Properties/trigger access,
+  clasp, Apps Script execution/upload/deploy or custom picks work.
+
+### Blockers before any first real read
+
+Real account/editor/deployment/trigger isolation, minimal OAuth scope and actual
+Apps Script runtime have not been inspected. Independent credible capture revision/
+completeness/quiescence or an approved immutable snapshot remains mandatory; equal
+reads and guard rows cannot prove atomicity/ABA safety. No such authority is created
+by these helpers. Owner must approve actual bounded coordinates, private identity
+normalization, complete alias mapping, weekly closure history, timezone/input format,
+source freshness, completion/accounting evidence and comparison oracle. Resolve
+missing-pick denominator/prediction eligibility constraints before live parity.
+
+The CLOSED-but-withheld frontend zero-vote presentation gap remains a later public
+integration blocker. No live adapter or owner-report endpoint exists in Pages.
+A private comparison result cannot authorize publication or certify source truth.
+
+### Exact next resumable action
+
+Owner reviews FIRST_LIVE_VERIFICATION.md and the recorded blockers, then gives NEW
+explicit approval for the precise next isolated assembly/runtime or actual read
+operation. Until then keep verifyRealCompetitionReadOnly_ disabled. Resume:
+"Read AGENTS.md, PHASE5_PROGRESS.md and FIRST_LIVE_VERIFICATION.md. Confirm the
+newly approved scope and owner isolation/capture/alias/closure/timezone evidence.
+Do not read a real Sheet, upload/execute Apps Script or change permissions without
+that exact authorization. Keep all data ephemeral and report only fixed outcomes/
+counts; preserve synthetic Pages and production resources. Stop on any mismatch."
+
+No first real Google read is authorized or conducted automatically by this work.
