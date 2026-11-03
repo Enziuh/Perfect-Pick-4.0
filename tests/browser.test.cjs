@@ -6,6 +6,23 @@ const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),
 const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
+async function waitForChromeClose(closed,timeoutMs) {
+ let timer;
+ try {
+  return await Promise.race([
+   closed.then(()=>true),
+   new Promise(resolve=>{timer=setTimeout(()=>resolve(false),timeoutMs);})
+  ]);
+ }finally{clearTimeout(timer);}
+}
+async function stopChrome(child,closed) {
+ // Register `closed` immediately after spawn: exitCode stays null after a signal,
+ // and `exit` does not guarantee that the child's stdio has closed.
+ if(child.exitCode===null && child.signalCode===null) child.kill('SIGTERM');
+ if(await waitForChromeClose(closed,5000)) return;
+ child.kill('SIGKILL');
+ if(!await waitForChromeClose(closed,5000)) throw new Error('Chrome did not close; temporary profile retained.');
+}
 test('isolated browser: eight tabs, closure privacy, failures, navigation and responsive layout',{timeout:90000},async()=>{
  verify(STAGE,true);
  const chrome=process.env.CHROME_PATH || (process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/google-chrome');
@@ -21,7 +38,8 @@ test('isolated browser: eight tabs, closure privacy, failures, navigation and re
  const origin=`http://127.0.0.1:${server.address().port}`;
  const profile=fs.mkdtempSync(path.join(os.tmpdir(),'pp-chrome-'));
  const child=spawn(chrome,['--headless=new','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--disable-background-networking','--disable-component-update','--disable-sync','--no-first-run','--no-default-browser-check','--disable-default-apps','--disable-extensions','--disable-features=MediaRouter,OptimizationHints','about:blank'],{stdio:['ignore','ignore','pipe']});
- let socket;
+ const closed=new Promise(resolve=>child.once('close',resolve));
+ let socket,failure;
  try{
   const endpoint=await new Promise((resolve,reject)=>{
    let log='';const timer=setTimeout(()=>reject(new Error('Chrome startup failed; publication BLOCKED')),15000);
@@ -88,7 +106,22 @@ test('isolated browser: eight tabs, closure privacy, failures, navigation and re
    await send('Target.closeTarget',{targetId:broken.targetId});
   }
   assert.deepEqual(external,[],'External request attempted');assert.deepEqual(errors,[]);
+ }catch(error){failure=error;
  }finally{
-  if(socket)socket.close();child.kill('SIGTERM');await new Promise(r=>child.exitCode!==null?r():child.once('exit',r));await new Promise(r=>server.close(r));fs.rmSync(profile,{recursive:true,force:true});
+  const cleanupErrors=[];
+  try{if(socket)socket.close();}catch(error){cleanupErrors.push(error);}
+  let chromeClosed=false;
+  try{await stopChrome(child,closed);chromeClosed=true;}catch(error){cleanupErrors.push(error);}
+  try{await new Promise((resolve,reject)=>server.close(error=>error?reject(error):resolve()));}catch(error){cleanupErrors.push(error);}
+  if(chromeClosed){
+   try{
+    // Chrome helpers can briefly finish profile writes after the parent closes.
+    // Retry only Node's transient recursive-removal errors; exhaustion still fails.
+    await fs.promises.rm(profile,{recursive:true,force:true,maxRetries:10,retryDelay:100});
+   }catch(error){cleanupErrors.push(error);}
+  }
+  if(cleanupErrors.length) throw new AggregateError(failure?[failure,...cleanupErrors]:cleanupErrors,
+   failure?'Browser assertions failed; cleanup also failed.':'Browser cleanup failed.',failure?{cause:failure}:undefined);
+  if(failure) throw failure;
  }
 });
