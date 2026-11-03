@@ -1,0 +1,22 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+dist/
+build/
+.cache/
+
+# Local editor / AI tooling
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Backups are local safety copies
+backups/
+
