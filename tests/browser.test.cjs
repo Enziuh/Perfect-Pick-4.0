@@ -5,6 +5,11 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),os=require('node:os');
 const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
+const {createScenario}=require('./support/monthly-scenarios.cjs');
+const {validate}=require(path.join(STAGE,'preview-data.js'));
+const scenarioBase=JSON.parse(fs.readFileSync(path.join(STAGE,'fixtures/preview.json'),'utf8'));
+const invalidPredictionScenario=createScenario('decisive',scenarioBase);
+invalidPredictionScenario.weeks[3].standings[0].tiebreakPrediction='invalid';
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 async function waitForChromeClose(closed,timeoutMs) {
  let timer;
@@ -27,11 +32,12 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
  verify(STAGE,true);
  const chrome=process.env.CHROME_PATH || (process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/google-chrome');
  assert(fs.existsSync(chrome),'Required Chrome unavailable; publication BLOCKED');
- let fault='';const external=[],errors=[];
+ let fault='',scenario='';const external=[],errors=[];
  const server=http.createServer((req,res)=>{
   const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
   if(!['index.html','app.js','preview-data.js','styles.css','config.js','fixtures/preview.json'].includes(name)){res.writeHead(404).end();return;}
-  if(name==='fixtures/preview.json'&&fault){res.writeHead(fault==='missing'?404:200,{'Content-Type':'application/json'}).end(fault==='missing'?'':(fault==='malformed'?'{':JSON.stringify({synthetic:false})));return;}
+  if(name==='fixtures/preview.json'&&scenario){res.writeHead(200,{'Content-Type':'application/json'}).end(JSON.stringify(validate(createScenario(scenario,scenarioBase))));return;}
+  if(name==='fixtures/preview.json'&&fault){res.writeHead(fault==='missing'?404:200,{'Content-Type':'application/json'}).end(fault==='missing'?'':(fault==='malformed'?'{':JSON.stringify(fault==='invalid-prediction'?invalidPredictionScenario:{synthetic:false})));return;}
   res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(path.join(STAGE,name)));
  });
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -118,7 +124,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);
    for(const route of routes){
     await navigate(p,route);
-    assert(await p.evaluate('document.documentElement.scrollWidth <= innerWidth + 1'),`Horizontal page overflow: ${route} at ${width}`);
+    assert(await p.evaluate(`document.documentElement.scrollWidth <= ${width} + 1 && innerWidth <= ${width} + 1`),`Horizontal page overflow: ${route} at ${width}`);
    }
   }
   await navigate(p,'match-center');
@@ -169,7 +175,57 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
     }
    }
   }
-  for(const mode of ['missing','invalid','malformed']){
+  // These explicitly named, test-only response scenarios never modify the public fixture.
+  for(const [name,state,winner] of [
+   ['in-progress','IN PROGRESS',''],['clear-leader','MONTHLY CHAMPION','Synthetic Comet'],
+   ['decisive','MONTHLY CHAMPION','Synthetic Comet'],['equal-distance','UNRESOLVED TIE',''],
+   ['no-eligible','NO ELIGIBLE TIEBREAKER',''],['awaiting-score','AWAITING FINAL SCORE',''],
+   ['zero-completed','IN PROGRESS',''],['not-closed','IN PROGRESS',''],
+   ['one-eligible','MONTHLY CHAMPION','Synthetic Comet'],['zero-prediction','MONTHLY CHAMPION','Synthetic Comet']
+  ]){
+   scenario=name;const example=await page('#standings/monthly');
+   await until(example,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
+   await example.evaluate("document.getElementById('monthlyPeriodSelect').value='M1';document.getElementById('monthlyPeriodSelect').dispatchEvent(new Event('change'))");
+   await until(example,`document.getElementById('monthlyPrizeCallout').dataset.state==='${state}' && document.getElementById('monthlyTitle').textContent==='Month 1 Standings'`);
+   assert.equal(await example.evaluate("document.getElementById('monthlyPrizeCallout').dataset.winner"),winner,name);
+   assert.equal(await example.evaluate("document.getElementById('championState').textContent"),state,name);
+   assert.equal(await example.evaluate("document.getElementById('championHeading').dataset.winner"),winner,name);
+   assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody tr').children.length"),5);
+   if(name==='decisive'){
+    const text=await example.evaluate("document.getElementById('monthlyPrizeCallout').textContent");
+    for(const fragment of ['FINAL combined score: 38','off by 2','prediction: 4 points','Winning prediction','40','44'])assert(text.includes(fragment),fragment);
+    assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .rank-first').length"),2);
+    assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-champion').length"),1);
+   }
+   if(name==='equal-distance'){
+    assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-unresolved').length"),2);
+    assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-champion').length"),0);
+   }
+   if(['awaiting-score','not-closed','in-progress','zero-completed'].includes(name))assert.equal(await example.evaluate("document.querySelectorAll('#monthlyPrizeCallout .champion-comparison').length"),0);
+   if(name==='not-closed')assert(!await example.evaluate("/Winning prediction|combined points/.test(document.getElementById('monthlyPrizeCallout').textContent)"));
+   if(name==='zero-completed')assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody .accuracy-indicator').textContent"),'—');
+   for(const width of [375,768,1280]){
+    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},example.sessionId);
+    for(const route of ['standings/monthly','overview']){
+     await navigate(example,route);
+     assert(await example.evaluate(`document.documentElement.scrollWidth <= ${width} + 1 && innerWidth <= ${width} + 1`),`${name} at ${width}`);
+     if(process.env.PP_SCREENSHOT_DIR && ['decisive','equal-distance'].includes(name) && width!==768){
+      await example.evaluate('scrollTo(0,0)');
+      const shot=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false},example.sessionId);
+      fs.writeFileSync(path.join(process.env.PP_SCREENSHOT_DIR,`${name}-${route.replace('/','-')}-${width}.png`),Buffer.from(shot.data,'base64'));
+     }
+    }
+   }
+   // Changing back to an unfinished period must clear the previous champion everywhere.
+   await navigate(example,'standings/monthly');
+   await example.evaluate("document.getElementById('monthlyPeriodSelect').value='M2';document.getElementById('monthlyPeriodSelect').dispatchEvent(new Event('change'))");
+   await until(example,"document.getElementById('monthlyPrizeCallout').dataset.state==='IN PROGRESS'");
+   assert.equal(await example.evaluate("document.getElementById('championHeading').dataset.winner"),'');
+   assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-champion').length"),0);
+   await send('Target.closeTarget',{targetId:example.targetId});
+  }
+  scenario='';
+  for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");
    assert(await broken.evaluate("document.getElementById('dashboard').textContent.includes('No external connection attempted')"));
    await navigate(broken,'guide/faq');

@@ -40,7 +40,8 @@ navigation fragments. No external assets, framework or new package dependency.
   ranking points using a tiebreak outcome.
 - Preserve existing scoring, prize calculations, rollover rules and amounts.
 
-The Phase 1 champion spotlight is explicitly non-awarding. Existing fixtures have
+Historical Phase 1 behavior (superseded by FRONTEND_PHASE_2.md): the champion
+spotlight was explicitly non-awarding. Existing fixtures have
 no finalized monthly period. It shows current period, pool, and progress/confirmation
 status. Full champion resolution, final-score prediction comparisons, and payout
 integration are deliberately deferred; no live payout calculation is introduced.

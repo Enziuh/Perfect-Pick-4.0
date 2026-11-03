@@ -5,6 +5,7 @@
   let activeWeek = null;
   let prizeData = null;
   const weekCache = new Map();
+  const monthlyCache = new Map();
   let deadlineTimer = null;
 
   const $ = (id) => document.getElementById(id);
@@ -138,7 +139,7 @@
   function renderDashboard(prizes) {
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
-    renderChampionSpotlight(prizes);
+
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
     setText('weeklyPot', money(prizes.currentWeeklyPot));
@@ -204,74 +205,77 @@
     return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="Correct picks divided by completed FINAL games">${accuracy}</span>`;
   }
 
-  function renderStandingsRows(containerId, standings, showCompleted = true) {
+  function renderStandingsRows(containerId, standings, showCompleted = true, resolution = null) {
     $(containerId).innerHTML = standings.map(player => `
-      <tr class="${player.rank <= 3 ? ['','rank-first','rank-second','rank-third'][player.rank] : ''}">
+      <tr class="${player.rank <= 3 ? ['','rank-first','rank-second','rank-third'][player.rank] : ''}${resolution?.leaders.includes(player.name) && resolution.status === 'UNRESOLVED TIE' ? ' is-unresolved' : ''}">
         <td><span class="rank-badge">${player.rank}</span></td>
-        <td class="player-name-cell">${escapeHtml(player.name)}</td>
+        <td class="player-name-cell">${escapeHtml(player.name)}${resolution?.winner === player.name ? '<span class="standing-note is-champion">Monthly Champion</span>' : resolution?.leaders.includes(player.name) ? `<span class="standing-note">${resolution.leaders.length === 1 ? 'Leader' : 'Shared leader'}</span>` : ''}</td>
         <td class="num"><strong>${player.points}</strong></td>
         ${showCompleted ? `<td class="num">${player.completedGames}</td>` : ''}
         <td class="num">${accuracyHtml(player)}</td>
       </tr>`).join('') || `<tr><td colspan="${showCompleted ? 5 : 4}">No public standings for this period yet.</td></tr>`;
   }
 
-  function renderChampionSpotlight(prizes) {
-    const period = (prizes.periods || []).find(p => p.periodKey === prizes.currentPeriod);
-    setText('championHeading', period ? `${period.displayName}: the race is still on.` : 'Awaiting competition data.');
-    setText('championSummary', period
-      ? `Weeks ${period.startWeek}–${period.endWeek} · ${money(period.monthlyWinnerPool)} monthly prize pool. A champion is confirmed only after final results and any required tiebreak decision. No prize has been awarded.`
-      : 'Monthly results are unavailable. No champion or payout has been awarded.');
-    setText('championState', period?.allWeeksFinalized ? 'Awaiting confirmation' : 'In progress');
+  function championExplanation(resolution) {
+    let text = resolution.reason;
+    if (resolution.actualTotal !== null) text = `${resolution.game} · FINAL combined score: ${resolution.actualTotal}. ${text}`;
+    if (resolution.winner && resolution.winningDifference !== null) {
+      const prediction = resolution.comparisons.find(p => p.name === resolution.winner).prediction;
+      text += ` Winning prediction: ${prediction}; off by ${resolution.winningDifference}.`;
+      if (resolution.margin !== null) text += ` Margin over the next closest eligible prediction: ${resolution.margin} points.`;
+    }
+    return text;
   }
 
-  function renderStandings(prizes) {
-    renderMonthlyPeriod(prizes.currentPeriod);
+  function renderChampionSpotlight(period, resolution) {
+    const title = resolution.winner ? `${period.displayName} · ${resolution.winner}` : `${period.displayName} · ${resolution.status.toLowerCase()}`;
+    setText('championHeading', title);
+    const points = resolution.points === null ? '' : `${resolution.points} monthly points. `;
+    setText('championSummary', `${points}${championExplanation(resolution)} Prize pool: ${money(period.monthlyWinnerPool)}. ${resolution.winner ? 'Champion confirmation does not record or calculate a payment.' : 'No prize has been awarded.'}`);
+    setText('championState', resolution.status);
+    $('championState').dataset.state = resolution.status;
+    $('championHeading').dataset.winner = resolution.winner || '';
+  }
+
+  async function loadMonthlyResolution(period) {
+    if (!monthlyCache.has(period.periodKey)) {
+      monthlyCache.set(period.periodKey, (async () => {
+        const weeks = await Promise.all(Array.from({length:period.endWeek-period.startWeek+1}, (_,i) => loadWeek(period.startWeek+i)));
+        return preview.resolveMonthlyChampion(period, weeks);
+      })());
+    }
+    return monthlyCache.get(period.periodKey);
+  }
+
+  async function renderStandings(prizes) {
+    await renderMonthlyPeriod(prizes.currentPeriod);
     renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
   }
 
-  function tiebreakActualFromWeek_(period, weekData) {
-    const tiebreak = period?.tiebreakRule || {};
-    const targetGame = String(tiebreak.game || '').trim();
-    const results = weekData?.results || [];
-
-    const result = targetGame
-      ? results.find(r => normalizeGameLabel(r.game) === normalizeGameLabel(targetGame))
-      : results[results.length - 1];
-
-    if (!result) return { status: 'Pending', actualTotal: null, score: '' };
-
-    const status = String(result.status || '').trim();
-    const score1 = result.team1Score;
-    const score2 = result.team2Score;
-    const hasScores = score1 !== '' && score1 !== null && score1 !== undefined &&
-      score2 !== '' && score2 !== null && score2 !== undefined;
-
-    if (!hasScores) return { status, actualTotal: null, score: '' };
-
-    const n1 = Number(score1);
-    const n2 = Number(score2);
-    if (!Number.isFinite(n1) || !Number.isFinite(n2)) {
-      return { status, actualTotal: null, score: '' };
-    }
-
-    return {
-      status,
-      actualTotal: n1 + n2,
-      score: `${n1}–${n2}`
-    };
+  function championComparisonsHtml(resolution) {
+    if (!resolution.comparisons.length) return '';
+    return `<div class="table-region" role="region" aria-label="Monthly tiebreaker comparison" tabindex="0">
+      <table class="champion-comparison"><caption>Tied first-place players · ${escapeHtml(resolution.game)} · FINAL combined score ${resolution.actualTotal}</caption>
+        <thead><tr><th>Approved alias</th><th class="num">Prediction</th><th class="num">Absolute difference</th><th>Decision</th></tr></thead>
+        <tbody>${resolution.comparisons.map(player => `<tr class="${player.name === resolution.winner ? 'rank-first' : ''}">
+          <td>${escapeHtml(player.name)}</td><td class="num">${player.eligible ? player.prediction : '—'}</td>
+          <td class="num">${player.eligible ? player.difference : '—'}</td>
+          <td>${!player.eligible ? 'Ineligible: missing or invalid prediction' : player.name === resolution.winner ? 'Winning prediction' : resolution.status === 'UNRESOLVED TIE' && player.difference === Math.min(...resolution.comparisons.filter(p => p.eligible).map(p => p.difference)) ? 'Equally closest · manual decision' : 'Eligible'}</td>
+        </tr>`).join('')}</tbody></table></div>`;
   }
 
-  function tiebreakStatusHtml_(period, weekData) {
-    const tiebreak = period?.tiebreakRule || {};
-    const game = tiebreak.game || 'Final game';
-    const actual = tiebreakActualFromWeek_(period, weekData);
-    const isFinal = String(actual.status || '').toLowerCase() === 'final';
-
-    if (isFinal && actual.actualTotal !== null) {
-      return `<div class="monthly-tiebreak-note"><strong>Tiebreaker:</strong> ${escapeHtml(game)} · Final score ${escapeHtml(actual.score)} · <strong>Combined score: ${actual.actualTotal}</strong></div>`;
-    }
-
-    return `<div class="monthly-tiebreak-note"><strong>Tiebreaker:</strong> ${escapeHtml(game)} · Combined score: Pending</div>`;
+  function renderMonthlyChampion(period, resolution) {
+    const callout = $('monthlyPrizeCallout');
+    callout.dataset.state = resolution.status;
+    callout.dataset.winner = resolution.winner || '';
+    callout.innerHTML = `<div class="champion-panel-heading"><div><span class="monthly-prize-label">${escapeHtml(period.displayName)} · Monthly competition</span>
+      <h3>${resolution.winner ? escapeHtml(resolution.winner) : 'Monthly Champion decision'}</h3></div>
+      <span class="pill champion-status" data-state="${resolution.status}">${resolution.status}</span></div>
+      <p>${resolution.points === null ? '' : `<strong>${resolution.points} monthly points</strong> · `}${escapeHtml(championExplanation(resolution))}</p>
+      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
+      ${championComparisonsHtml(resolution)}`;
+    renderChampionSpotlight(period, resolution);
+    renderStandingsRows('monthlyStandingsBody', period.standings || [], true, resolution);
   }
 
   async function renderMonthlyPeriod(periodKey) {
@@ -279,46 +283,17 @@
     const request = ++monthlyRequest;
     const period = (prizeData.periods || []).find(p => p.periodKey === periodKey);
     if (!period) return;
-
-    setText('monthlyTitle', period.displayName || period.periodKey || 'Monthly Standings');
-
-    let tiebreakWeekData = null;
-    if (period.endWeek) {
-      try {
-        tiebreakWeekData = await loadWeek(period.endWeek);
-      } catch (_) {
-        tiebreakWeekData = null;
-      }
+    setText('monthlyTitle', `${period.displayName} Standings`);
+    // Clear any previous period's winner immediately, including on failed loads.
+    renderMonthlyChampion(period, preview.resolveMonthlyChampion(period, []));
+    try {
+      const resolution = await loadMonthlyResolution(period);
+      if (request !== monthlyRequest) return;
+      renderMonthlyChampion(period, resolution);
+    } catch (_) {
+      if (request !== monthlyRequest) return;
+      renderMonthlyChampion(period, preview.resolveMonthlyChampion(period, []));
     }
-
-    if (request !== monthlyRequest) return;
-    const monthlyPrizeCallout = $('monthlyPrizeCallout');
-    if (monthlyPrizeCallout) {
-      const prizeAmount = money(period.monthlyWinnerPool || 0);
-      const leaders = period.leaders || [];
-      const tiebreak = period.tiebreakRule || {};
-      const questionLabel = tiebreak.questionLabel || `WK ${period.endWeek} Tie Breaker — Final Game — Enter Combined Score`;
-
-      const leaderLabel = leaders.length === 1
-        ? `${escapeHtml(leaders[0])} is currently in 1st place`
-        : leaders.length > 1
-          ? `${leaders.map(escapeHtml).join(', ')} are currently tied for 1st place`
-          : 'No current leader yet';
-
-      const tieMessage = leaders.length > 1
-        ? `If the period ended tied, the tied 1st-place players would use: <strong>${escapeHtml(questionLabel)}</strong>. Closest combined-points prediction wins the monthly prize.`
-        : `If the period ends with multiple players tied for 1st, the tiebreaker is: <strong>${escapeHtml(questionLabel)}</strong>.`;
-
-      monthlyPrizeCallout.innerHTML = `
-        <span class="monthly-prize-label">Current 1st Place Prize</span>
-        <strong>${prizeAmount}</strong>
-        <small>${leaderLabel}</small>
-        <div class="monthly-tiebreak-note">${tieMessage}</div>
-        ${tiebreakStatusHtml_(period, tiebreakWeekData)}
-      `;
-    }
-
-    renderStandingsRows('monthlyStandingsBody', period.standings || [], false);
   }
 
   function renderPrizes(prizes) {
@@ -981,7 +956,7 @@
       const prizes = await get('prizes');
       prizeData = prizes;
       renderDashboard(prizes);
-      renderStandings(prizes);
+      await renderStandings(prizes);
       renderPrizes(prizes);
 
       activeWeek = Number(prizes.activeWeek || 1);
