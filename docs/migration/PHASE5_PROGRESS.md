@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE (offline specification and tests only). Live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE (fabricated-input projector only). Live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phase 5B contract specification/examples/tests authorized; Phase 5C not authorized.
@@ -250,7 +250,8 @@ commit use Git log for this file; a self-referential commit hash is not embedded
 
 Branch: develop. Checkpoint parent: 7e2f8c1. The commit containing this update is
 its final checkpoint revision; use Git log for this path rather than a circular
-self-referential commit hash. Phase 5C has NOT started.
+self-referential commit hash. At that checkpoint Phase 5C had not started; see its
+subsequently authorized completion below.
 
 ### Deliverables and verified coverage
 
@@ -311,4 +312,103 @@ access production, modify the synthetic website/workflow, deploy, or build custo
 submissions. Resolve the recorded authority/alias/denominator/accounting decisions
 before any real-data integration."
 
-Phase 5B is complete; nothing in this checkpoint approves Phase 5C or publication.
+Phase 5B completion did not authorize further work. The subsequent owner request
+authorized only the fabricated-input Phase 5C recorded below, not publication.
+
+## Phase 5C — completed isolated fabricated-input projector
+
+Branch: develop. Baseline/checkpoint parent: 061edcc. Final checkpoint revision is
+this document's containing commit (Git log), avoiding a self-referential hash.
+Phase 5D is NOT started or authorized. No production data was used or requested.
+
+### Completed implementation and compatibility
+
+- `tools/projector/project-competition.cjs`: pure legacy-shaped source -> strict
+  contract-v1 snapshot, with explicit allowlists, normalized numeric scores/team/
+  matchup/status labels, alias approvals, per-week official closure, complete-read
+  evidence, latest private submission selection, FINAL-only points, shared ranks,
+  weekly/monthly/season aggregation, voting and authoritative accounting projection.
+  Global alias collisions cannot merge different participants across weeks.
+- `tools/projector/monthly-decision.cjs`: isolated deterministic points-first
+  decisions. Required finality/lifecycle evidence; missing/invalid predictions
+  ineligible; equal closest unresolved. Never changes ranks, points or payouts.
+- `tools/projector/read-only-reader.cjs`: one synchronous readSnapshot capability;
+  no action dispatch, setup, sync, native service or write function. No legacy
+  Apps Script import. Future real reader permissions still require independent
+  review; this interface cannot make arbitrary injected code read-only.
+- `tests/support/projector-examples.cjs`: fabricated legacy-shaped Results and
+  private submission records plus independent fabricated policy/evidence. No real
+  contact information or production linkage. Unknown private fields never copied.
+- `tests/support/write-denying-services.cjs`: VM-native services/network/logging
+  deny operations and record attempted calls, including swallowed exceptions.
+  Tests also guard source/policy objects and Maps against mutation.
+- `tests/support/projector-frontend-needs.cjs`: test-only structural mapping into
+  existing frontend pure Match Center/champion components; not a live adapter.
+  Source fixture/contract equivalence and semantic component needs are tested.
+- `docs/architecture/READ_ONLY_PROJECTOR.md`: interfaces, input/evidence provenance,
+  privacy/failure behavior, compatibility gaps and remaining authorization gates.
+
+### Privacy, scoring and evidence guarantees verified offline
+
+No private submissions are read before verified CLOSED. Unknown, expired, mismatched
+revision or missing closure becomes UNKNOWN/WITHHELD; passed deadlines are not
+closure evidence. Missing/ambiguous aliases or incomplete/malicious selections
+withhold complete affected scopes, not misleading partial rankings/counts. No
+name/contact fallback, raw identifiers, notes or free-text exceptions are returned.
+
+Missing/stale score or snapshot evidence returns a safe unavailable envelope;
+zero is distinct from absence. Missing/stale accounting remains unavailable with
+UNKNOWN payment; legacy zero payout placeholders are ignored. Explicit approved
+rollover/funding evidence is preserved without recomputing financial rules.
+Contradictory paid unresolved outcomes fail closed. Missing completion evidence
+cannot confirm a champion. Reopened/revoked evidence cannot reuse a cached response;
+the projector has no cache. No real-world permissions or source truth is certified.
+
+### Test results and safety checks
+
+- `node --test tests/*.test.cjs`: 93 passed, 0 failed, 0 skipped (31 projector tests
+  plus 62 existing). Covers nine fabricated scenarios, poisoned private getters,
+  missing/expired/reopened closure, invalid records, source-order ties, blank/zero/
+  stale FINAL scores, approved aliases, cross-week identity collisions, rankings,
+  champion decisions, accounting/rollover, write denial and frontend data needs.
+- Existing browser navigation/responsive/privacy/external-network isolation,
+  scoring/champion, contract schema, publication security and integrity tests pass.
+- `node tools/security/public-artifact.cjs verify`: unchanged exact six-file
+  artifact/seal passes, including historical-identifier scans. No staging rebuild
+  or publication required. New module syntax and Git whitespace checks pass.
+- Final scope and private-content/history scans pass across all nine changed/
+  untracked files; projector service/logging-isolation scan passes; no real identities, endpoints or private identifiers are recorded.
+- Website, synthetic adapter/fixture, Phase 5B validator/specification, existing
+  Apps Script, publication scanner and Pages workflow unchanged. No dependencies,
+  production reads, clasp, Apps Script execution/upload/deploy, settings changes,
+  custom picks form or production 3.0/main modifications.
+
+### Remaining live-integration blockers
+
+All Phase 5B authority decisions remain: approved complete alias mapping, historical
+closure proof/freshness budget, source completeness/revision guarantees, private
+normalization/deduplication ingestion, missing-pick denominator wording, prediction
+eligibility range, authorized accounting/payment ledger and completion oracle.
+No actual Google reader, access permissions or deployed-backend parity was tested.
+
+Frontend compatibility is SEMANTIC, not drop-in transport compatibility. In
+particular, current synthetic Match Center assumes approved alias completeness:
+CLOSED with an empty withheld standings list yields zero voting in that old pure
+model. The v1 projector correctly omits votes and marks standings WITHHELD. A
+future separately reviewed adapter/UI disclosure state must preserve unavailable
+instead of manufacturing zero. New alias handling, status casing, public game keys,
+integer cents/nulls, prediction bounds, per-game kickoff and accounting transport
+also need explicit integration. Do not bypass the strict synthetic validator or
+switch the published preview to live data to resolve these gaps.
+
+### Exact next resumable action
+
+Wait for Phase 5D authorization. Resume instruction:
+"Read AGENTS.md, PHASE5_PROGRESS.md, READ_ONLY_PROJECTOR.md and the v1 contract.
+Review the unresolved evidence/alias/accounting decisions and the CLOSED-but-
+withheld frontend disclosure gap. Plan only the owner-authorized Phase 5D scope;
+keep inputs fabricated and the synthetic website unchanged unless separately
+approved. Do not access production, run Apps Script/clasp, deploy or build custom
+submissions."
+
+Phase 5C is complete locally; this does not authorize Phase 5D or live publication.
