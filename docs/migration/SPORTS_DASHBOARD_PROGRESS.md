@@ -162,3 +162,38 @@ layout failure. Browser page helper now explicitly waits for the status DOM node
 before checking the same application-ready condition; no functional/security assertion
 removed, skipped or relaxed. Local full rerun required before retrying workflow.
 Published source stays66e89d3; backend18 unchanged throughout.
+
+## TARGETED FIXES RELEASE COMPLETE
+
+Published commit22ea053 (functional frontend change cf9e84c + browser DOM-ready wait),
+manual api workflow41930970941 SUCCESS. Local + CI261/261 tests PASS, zero failed/skipped.
+Earlier blocked run41930492212 never deployed; exact test navigation race corrected
+without weakening application-state/privacy assertions. Published rollback66e89d3 kept.
+
+Actual public site verification PASS after deployment: default Week9 now explicitly
+says OPEN and offers View Week8 player picks, not missing disclosure evidence. Clicking
+the shortcut opens Week8, enables the24-option selector (All +23 approved aliases),
+shows23 actual player cards and voting. Selecting one approved alias shows its picks
+and period-ending prediction/final-score comparison. Game-specific comparison displays
+23 actual selections with correct/incorrect counts matching the validated model.
+Compare All Players is optional/collapsed initially;23 matrix rows' correct totals,
+submitted-FINAL accuracy and tiebreak predictions EXACTLY match existing API data.
+Horizontal matrix scroll tested inside its own region at375/768/1440px; no page overflow.
+Winner row/checkmark/WINNER label/bold score and losing row verified; missing kickoff
+notes omitted, configured deadline/player explanation correct. Switching back toWeek9
+clears all player cards, selections/predictions/votes/matrix totals and alias options;
+no approved alias appears in that OPEN-week Picks DOM. Closed-week shortcuts never
+authorize disclosure, only select existing validated data. API18 remains unchanged.
+
+Broader real-site checks also PASS:272 games/121 FINAL/151 pending at this read,
+32 displayed Week1 scores match API, weekly/season23-row tables and M1/M2 champion/
+tiebreaker displays, all five destinations and375/768/1440px,32/32 SVG logo decodes,
+zero runtime errors/unexpected external requests/fixture fetches. Downloaded deployed
+tar exactly38 reviewed files, no links/unexpected entries; all38 actual public files
+byte-match reviewed source and pass private-reference/SVG/integrity checks.
+
+No API extension/update, production deployment, Sheet/Form/ESPN trigger/scoring change
+or additional approval needed. No performance optimization undertaken. Task COMPLETE;
+STOP here pending the owner's separate performance task. Exact resume: start at this
+entry, keep published22ea053/API18 working, do not repeat disclosure diagnostics or
+start another phase. Private validation receipts stay ignored in tmp/player-view-fix/.
