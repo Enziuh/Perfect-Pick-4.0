@@ -6,6 +6,9 @@ const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),
 const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
 const {createScenario}=require('./support/monthly-scenarios.cjs');
+const presentation=require('../tools/presentation/package.cjs');
+const {liveSheetExample}=require('./support/live-sheet-example.cjs');
+const {createSheetDashboard}=require('../tools/presentation/sheet-dashboard.cjs');
 const {dashboardScenario}=require('./support/dashboard-scenarios.cjs');
 const {createMatchScenario}=require('./support/match-scenarios.cjs');
 const {validate}=require(path.join(STAGE,'preview-data.js'));
@@ -334,6 +337,21 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    }
    if(name==='decisive'){await send('Emulation.setVirtualTimePolicy',{policy:'advance',budget:310000},owner.sessionId);await until(owner,"document.getElementById('status').textContent.includes('snapshot expired')");await send('Emulation.setVirtualTimePolicy',{policy:'advance'},owner.sessionId);await navigate(owner,'guide/faq');await navigate(owner,'match-center');assert.equal(await owner.evaluate("document.querySelectorAll('#picks .vote-option, #picks .player-pick-card').length"),0);}
    await send('Target.closeTarget',{targetId:owner.targetId});privateAssets=null;
+  }
+  {
+   const live=liveSheetExample(),now=Date.now(),at=new Date(now).toISOString(),untilTime=new Date(now+300000).toISOString();live.policy.now=now;live.cfg.authority=live.authority;
+   live.authority.capture.observedAt=at;live.authority.capture.validUntil=untilTime;live.authority.closures.forEach(c=>{c.checkedAt=at;c.validUntil=untilTime;});for(const d of live.authority.decisions.values())d.verifiedAt=at;for(const a of live.authority.accounting.values())a.verifiedAt=at;for(const r of live.matrix.Responses.slice(1))r[0]=at;
+   const read=createSheetDashboard(()=>live.cfg,()=>live.sheets,Date.now),first=read();assert.equal(first.state,'READY');
+   const stub=`<script>window.__viewErrors=[];console.error=(e)=>window.__viewErrors.push(e.stack||String(e));window.__rpcCalls=0;window.__rpcFail=false;window.__rpcReply=${JSON.stringify(first).replace(/</g,'\\u003c')};window.google={script:{get run(){let ok,bad;return {withSuccessHandler(f){ok=f;return this},withFailureHandler(f){bad=f;return this},getPerfectPickDashboard(){window.__rpcCalls++;setTimeout(()=>window.__rpcFail?bad(Error('PRIVATE_RPC_DETAIL')):ok(window.__rpcReply),0)}}}}};</script>`;
+   privateAssets={'index.html':presentation.renderHtml().replace('<script>('+require('../tools/presentation/live-client.js').startLiveClient.toString(),stub+'<script>('+require('../tools/presentation/live-client.js').startLiveClient.toString())};
+   const connected=await page('#match-center');await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(await connected.evaluate('window.__rpcCalls'),1);
+   assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Synthetic Comet')"));
+   for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/faq']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
+   live.matrix.Results[1][6]='24';const updated=read();assert.equal(updated.state,'READY');await connected.evaluate('window.__rpcReply='+JSON.stringify(updated));await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,'window.__rpcCalls===2');await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");
+   await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");assert(await connected.evaluate("document.getElementById('matchGameResults').textContent.includes('24')"));
+   await connected.evaluate("window.__rpcFail=true;document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.includes('unavailable')");assert.equal(await connected.evaluate("document.querySelectorAll('#picks .player-pick-card, #picks .vote-option').length"),0);assert.equal(await connected.evaluate("document.querySelectorAll('[data-winner]').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('PRIVATE_RPC_DETAIL')"));
+   await connected.evaluate("window.__rpcFail=false;document.getElementById('refreshResults').click()");try{await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");}catch(e){throw Error(e.message+' state='+await connected.evaluate("JSON.stringify({errors:window.__viewErrors,calls:window.__rpcCalls,status:document.getElementById('status').textContent})"));}assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
+   await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");

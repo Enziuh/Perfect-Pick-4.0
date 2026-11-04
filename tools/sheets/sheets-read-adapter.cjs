@@ -31,14 +31,15 @@ var PerfectPickSheetsReadAdapter = (function () {
       need(layout.responses.identity.header==='Phone Number'&&layout.responses.timestamp.header==='Timestamp');
       const responseColumns=[layout.responses.identity.column,layout.responses.timestamp.column];responseColumns.forEach(column);
       const mapped=[...policy.games.entries()];
-      need(layout.responses.games.length===mapped.length);
-      for(const c of layout.responses.games){column(c.column);responseColumns.push(c.column);const m=c.header.match(/^W(\d+)\s*\|\s*(.+)$/i);need(m&&Number(m[1])===c.week&&normalize(m[2])===normalize(c.game));need(mapped.some(([label,g])=>g.week===c.week&&normalize(label)===normalize(c.week+'|'+c.game)));}
-      need(new Set(layout.responses.games.map(c=>normalize(c.week+'|'+c.game))).size===mapped.length);
-      for(const c of layout.responses.predictions){column(c.column);responseColumns.push(c.column);need(new RegExp('^WK\\s*'+c.week+'\\s+Tie\\s*Breaker\\b','i').test(c.header));const game=policy.games.get(c.week+'|'+c.game);need(game&&policy.periods.some(p=>p.endWeek===c.week&&p.designatedGame===game.game));}
+      const required=mapped.filter(([,g])=>closureAllowed(policy.closures.get(g.week),policy));
+      need(layout.responses.games.length<=mapped.length&&required.every(([label,g])=>layout.responses.games.some(c=>c.week===g.week&&normalize(c.week+'|'+c.game)===normalize(label))));
+      for(const c of layout.responses.games){column(c.column);responseColumns.push(c.column);const m=c.header.trim().match(/^W(\d+)\s*\|\s*(.+)$/i);need(m&&Number(m[1])===c.week&&normalize(m[2])===normalize(c.game));need(mapped.some(([label,g])=>g.week===c.week&&normalize(label)===normalize(c.week+'|'+c.game)));}
+      need(new Set(layout.responses.games.map(c=>normalize(c.week+'|'+c.game))).size===layout.responses.games.length);
+      for(const c of layout.responses.predictions){column(c.column);responseColumns.push(c.column);need(new RegExp('^WK\\s*'+c.week+'\\s+Tie\\s*Breaker\\b','i').test(c.header.trim()));const matches=[...policy.games].filter(([label,g])=>g.week===c.week&&normalize(label)===normalize(c.week+'|'+c.game));need(matches.length===1);const game=matches[0][1];need(game&&policy.periods.some(p=>p.endWeek===c.week&&p.designatedGame===game.game));}
       need(new Set(responseColumns).size===responseColumns.length);
       need(new Set(layout.responses.predictions.map(c=>c.week)).size===layout.responses.predictions.length);
-      const expected=policy.periods.filter(p=>p.designatedGame!==null).map(p=>p.endWeek).sort((a,b)=>a-b);
-      need(JSON.stringify([...new Set(expected)])===JSON.stringify(layout.responses.predictions.map(p=>p.week).sort((a,b)=>a-b)));
+      const expected=policy.periods.filter(p=>p.designatedGame!==null&&closureAllowed(policy.closures.get(p.endWeek),policy)).map(p=>p.endWeek).sort((a,b)=>a-b);
+      need(JSON.stringify([...new Set(expected)])===JSON.stringify(layout.responses.predictions.filter(p=>closureAllowed(policy.closures.get(p.week),policy)).map(p=>p.week).sort((a,b)=>a-b)));
       need(typeof dependencies.identityKey==='function'&&typeof dependencies.submissionTime==='function'&&typeof dependencies.now==='function');
     }catch{throw Error('Invalid Sheets reader configuration');}
     function readPublicSnapshot(){

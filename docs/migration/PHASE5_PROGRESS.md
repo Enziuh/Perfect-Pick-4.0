@@ -1087,3 +1087,87 @@ Later VERIFY needs actual matchup/prediction descriptors, independent capture au
 normalized approved aliases and historical CLOSED evidence; public transport/Form URL/
 financial fact authority and publication remain separate gates. Resume at this owner
 header-only action, not another broad audit or a production-writing operation.
+
+## Integrated dashboard delivery — completed locally, activation pending
+
+Checkpoint branch: develop. Starting commit: 149dac2. The focused integration
+commit containing this checkpoint is the next descendant (resolve with
+`git log -1 --format=%h -- docs/migration/PHASE5_PROGRESS.md`). No production
+resource, Apps Script upload/execution, OAuth, or website deployment was performed.
+
+Owner-reported live evidence supersedes the preceding STRUCTURE next step:
+separate 4.0 STRUCTURE and Results A1:H400 reads succeeded, reporting 272 games,
+121 final and 151 pending. Diagnostic disabled afterward. Do not repeat them.
+The ignored redacted workbook was inspected locally: Results A-H, response Wn
+question columns through week 9, monthly predictions at ending-week questions,
+Tiebreak Rules designation B versus Question Label I, and prize-rule/accounting
+columns verified. Phone redactions are intentional, never production defects.
+No raw workbook rows, names, contacts or private identifiers were copied to Git.
+
+Implemented:
+- tools/presentation/sheet-dashboard.cjs: persistent native Sheets v4 bounded
+  delivery -> existing reader/projector/validator/dashboard bridge. Stable
+  repeated Results reads, real Result team/order/header mapping, actual Form
+  Control context and prize period/tiebreak designations. Results-only works
+  without aliases/closure/capture; private scopes stay unavailable.
+- Independent approved alias/CLOSED/capture/decision gates reuse Phase 5 modules.
+  Future uncreated Form columns no longer block current approved closed weeks.
+  Latest private normalized-phone/week submissions and Final-only points retained.
+  Season coverage explicitly labels included weeks; no invented missing periods.
+- Optional approved financial import reads actual pot overrides/active-player
+  counts, allocation shares and NEW rollovers; never Ledger names/notes, settled
+  payments or monthly prize allocations. Unsupported accounting stays unknown.
+- tools/presentation/package.cjs + live-config.cjs: exact two-file sealed build
+  of the EXISTING UI and same backend, disabled by default. Owner-only HtmlService
+  and google.script.run transport avoids anonymous JSON/CORS/JSONP. Manifest fixes
+  MYSELF/USER_ACCESSING, Sheets v4, sole spreadsheets.readonly scope. No writers,
+  Form actions, triggers or legacy operations. No private configuration in client.
+- live-client.js + website/app.js: all five destinations share current validated
+  data, onload/manual/six-hour/return-to-tab refresh. No server triggers installed.
+  Failure/expiry clears protected DOM and retries safely. Fixed retry cleanup
+  preserving nested Match Center nodes; listener setup no longer accumulates.
+- Official player Form button accepts privately verified canonical published URL;
+  no locally established published URL, so default remains unavailable. A link is
+  navigation only, not OPEN evidence; official Form remains the entry authority.
+- READ_ONLY_DASHBOARD.md gives exact minimal activation/rollback and private
+  configuration placeholders; FIRST_LIVE_VERIFICATION.md points to current action.
+
+Completed checks:
+- `node --test tests/*.test.cjs`: 219 passed, zero failed/skipped. Fabricated native
+  service/RPC tests, writer-denying stubs, CLOSED/alias/capture revocation, real
+  column mappings, two-letter team keys, future absent response columns, approved
+  prize funding, Form URL checks and refresh/recovery covered. All prior contract,
+  scoring/monthly decisions, privacy, ES2020 Apps Script grammar, integrity/security,
+  browser external-network isolation and 375/768/1280 layouts retained and passed.
+- Ignored workbook passed in-memory integration: 272 games, five periods, private
+  records withheld. No production reads or generated real-data snapshots.
+- Presentation stage/seal and owner-only manifest checks pass. Default diagnostic
+  package regenerated separately. Public six-file Pages allowlist/workflow and
+  synthetic adapter/fixtures remain intact; no new dependencies.
+- tmp/presentation-upload contains only Verification.gs, appsscript.json, ignored
+  local .clasp.json. Target matches owner-verified separate 4.0 target; rootDir dot,
+  mode 0600; payload matches seal. Workbook/upload/private config stay ignored.
+
+Remaining approval/configuration gates:
+Actual owner-only HtmlService/OAuth/runtime behavior and real scoring/identity/
+financial parity are not certified by offline tests. Owner must supply target,
+timezone, expected count and verified player-facing Form URL privately. Real
+player display additionally requires approved aliases, independent fresh CLOSED
+and capture evidence; monthly champions need completion/decision authority;
+financial publication needs accounting approval. Read timestamps do not prove when
+3.0 last synchronized scores. Six-hour refresh runs only while the page is open;
+no server scheduled snapshot or duplicate sync is installed. Public release/access
+review and any real-data publication remain explicit separate approval gates.
+
+Exact next owner action / resume:
+Review docs/architecture/READ_ONLY_DASHBOARD.md and authorize uploading ONLY the
+sealed presentation Verification.gs/appsscript.json from tmp/presentation-upload
+to the SAME separate 4.0 project, replacing the prior diagnostic-only code. Do not
+use apps-script/src. After approval, owner runs `cd tmp/presentation-upload` then
+`clasp push`; this task does not run it. Owner privately configures the remote
+provider, reviews sole read-only grant and separately authorizes owner-only web-app
+deployment plus dashboard reads. Then privately compare results/ranks against 3.0;
+never publish raw records or grant aliases/closure automatically. Keep Pages
+synthetic. Rollback disables deployment/restores null provider; 3.0 unaffected.
+Resume at owner activation/verification, not another audit, STRUCTURE read, CSV
+preview or custom submission form.

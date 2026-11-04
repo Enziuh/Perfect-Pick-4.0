@@ -1,3 +1,22 @@
+# Current dashboard activation status
+
+The owner reports the separate 4.0 STRUCTURE check and bounded Results read
+already succeeded (272 games: 121 final, 151 pending); the diagnostic was disabled
+afterward. These are owner-reported observations, not reads performed by Codex.
+Do not repeat those checks. The redacted local reference workbook confirmed the
+layout; redacted phones are intentional and prove nothing about production identity.
+
+**Current next action:** see [READ_ONLY_DASHBOARD.md](READ_ONLY_DASHBOARD.md) for
+uploading the same UI plus read-only Sheets delivery to the separate owner-only
+4.0 presentation deployment. It remains disabled until private owner configuration.
+The sole OAuth scope stays spreadsheets.readonly. Apps Script 3.0 remains the sole
+writer. Pages remains synthetic. Upload, OAuth, real reads and deployment require
+separate owner authorization; none is performed automatically.
+
+The material below records the earlier diagnostic preparation, its narrower range
+allowlist and then-unverified state. It does not override the current presentation
+profile's bounded approved metadata/prize reads or authorize another live read.
+
 # Controlled verification preparation — local, fabricated inputs only
 
 Current implementation: functional native read connector, DISABLED by default.

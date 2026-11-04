@@ -1,7 +1,9 @@
 (() => {
   const preview = window.PerfectPickPreview;
-  const ownerView = preview?.kind === 'owner-contract';
-  const sourceLabel = ownerView ? 'Owner verification' : 'Synthetic';
+  const liveView = preview?.kind === 'live';
+  const ownerView = liveView || preview?.kind === 'owner-contract';
+  let navigationStarted = false;
+  const sourceLabel = liveView ? 'Competition' : ownerView ? 'Owner verification' : 'Synthetic';
   const publicPicks = data => data.entriesStatus === 'CLOSED' && data.visibility !== 'WITHHELD';
   let picksRequest = 0;
   let monthlyRequest = 0;
@@ -146,6 +148,7 @@
   function renderDashboard(prizes) {
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
+    if(liveView)setText('sourceStatusNote','3.0 reports entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. Picks require independently verified closure.');
 
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
@@ -242,6 +245,7 @@
   async function renderStandings(prizes) {
     await renderMonthlyPeriod(prizes.currentPeriod);
     renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
+    if(liveView&&prizes.seasonCoverage){const heading=document.querySelector('#season h2');if(heading)heading.textContent='Season standings · covered weeks '+prizes.seasonCoverage;}
   }
 
   function championComparisonsHtml(resolution) {
@@ -319,7 +323,7 @@
       return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover !== null ? 'Rollover confirmed' : 'Pending'}</td></tr>`;
     }).join('');
     const completed = weeks[currentIndex].results.filter(game => game.status === 'Final').length;
-    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
+    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${liveView ? 'Read-only Sheet snapshot; Refresh results fetches current scores.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
     const highlights = prizes.currentWeekStandings.slice(0,3);
     setText('overviewLeaders', highlights.length ? highlights.map(p => `${p.name}: ${p.points} points`).join(' · ') : 'Weekly leaders unavailable until entries explicitly close.');
   }
@@ -336,7 +340,7 @@
     matchData = null;
     matchModels = [];
     $('matchPrivacyNotice').hidden = false;
-    $('matchPrivacyNotice').textContent = 'Loading synthetic matchups…';
+    $('matchPrivacyNotice').textContent = `Loading ${sourceLabel.toLowerCase()} matchups…`;
     $('matchGameResults').innerHTML = '<p class="state-message">Loading results…</p>';
     $('matchSelect').innerHTML = '<option value="">All matchups</option>';
     $('playerSelect').innerHTML = '<option value="">All players</option>';
@@ -345,7 +349,7 @@
     syncWeekButtons(normalizedWeek);
     $('playerPicksHead').innerHTML = '';
     $('playerPicksBody').innerHTML = '<tr><td>Loading player picks…</td></tr>';
-    $('playerPickCards').innerHTML = '<p class="state-message">Loading synthetic picks…</p>';
+    $('playerPickCards').innerHTML = `<p class="state-message">Loading ${sourceLabel.toLowerCase()} picks…</p>`;
 
     try {
       const data = await loadWeek(normalizedWeek);
@@ -361,7 +365,7 @@
       if (request !== picksRequest) return;
       console.error(err);
       $('picksSubmissionCount').textContent = 'Could not load this week.';
-      $('playerPickCards').innerHTML = '<p class="state-message">Synthetic player picks unavailable.</p>';
+      $('playerPickCards').innerHTML = `<p class="state-message">${sourceLabel} player picks unavailable.</p>`;
       $('matchGameResults').textContent = `${sourceLabel} results unavailable.`;
       $('matchPrivacyNotice').hidden = false;
       $('matchPrivacyNotice').textContent = 'Match data unavailable. Picks and voting remain protected.';
@@ -477,14 +481,14 @@
     ).join('');
 
     select.value = String(defaultWeek);
-    select.addEventListener('change', () => loadWeekPicks(select.value));
-    ['previousWeek','nextWeek'].forEach((id,index) => $(id).addEventListener('click', () => {
+    select.onchange = () => loadWeekPicks(select.value);
+    ['previousWeek','nextWeek'].forEach((id,index) => $(id).onclick = () => {
       const options = [...select.options];
       const next = options[select.selectedIndex + (index === 0 ? -1 : 1)];
       if (next) loadWeekPicks(next.value);
-    }));
-    $('matchSelect').addEventListener('change', renderMatchCards);
-    $('playerSelect').addEventListener('change', () => { if (matchData) renderPlayerPickCards(matchData); });
+    });
+    $('matchSelect').onchange = renderMatchCards;
+    $('playerSelect').onchange = () => { if (matchData) renderPlayerPickCards(matchData); };
   }
 
   function renderWeeklyDetails(weekData) {
@@ -634,7 +638,7 @@
     ).join('');
     select.value = String(defaultWeek);
 
-    select.addEventListener('change', async () => {
+    select.onchange = async () => {
       const week = Number(select.value);
       try {
         const data = await loadWeek(week);
@@ -644,7 +648,7 @@
         $('weeklyStandingsBody').innerHTML = '';
         $('weeklyGameResults').textContent = `${sourceLabel} data unavailable.`;
       }
-    });
+    };
   }
 
   function populateMonthlySelector(periods, defaultPeriod) {
@@ -656,7 +660,7 @@
     ).join('');
     select.value = defaultPeriod || periods[0]?.periodKey || '';
 
-    select.addEventListener('change', () => renderMonthlyPeriod(select.value));
+    select.onchange = () => renderMonthlyPeriod(select.value);
   }
 
   function setupNavigation() {
@@ -686,7 +690,7 @@
         else link.removeAttribute('aria-current');
       });
       const heading = $(destination).querySelector('.page-header h1');
-      document.title = `${heading.textContent} · Perfect Pick 4.0 — ${ownerView ? 'Owner Verification' : 'Synthetic Preview'}`;
+      document.title = `${heading.textContent} · Perfect Pick 4.0 — ${liveView ? 'Competition' : ownerView ? 'Owner Verification' : 'Synthetic Preview'}`;
       if (focus) heading.focus({preventScroll:true});
     }
     window.addEventListener('hashchange', () => applyRoute(true));
@@ -717,10 +721,11 @@
   }
 
   async function load() {
-    setupNavigation();
+    if (!navigationStarted) { setupNavigation(); navigationStarted=true; }
+    weekCache.clear(); monthlyCache.clear();
 
     try {
-      setStatus(ownerView ? 'Loading validated owner snapshot…' : 'Loading synthetic preview…');
+      setStatus(liveView ? 'Loading competition data…' : ownerView ? 'Loading validated owner snapshot…' : 'Loading synthetic preview…');
       const prizes = await get('prizes');
       prizeData = prizes;
       renderDashboard(prizes);
@@ -742,12 +747,26 @@
       setText('championHeading', 'Competition unavailable.');
       setText('championSummary', `${sourceLabel} data unavailable. No champion or payout has been awarded.`);
       setText('championState', 'Unavailable');
-      setStatus(ownerView ? 'Verified snapshot unavailable. Reverification required; no external connection attempted.' : 'Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
-      document.querySelectorAll('.legacy-section').forEach(panel => {
+      setStatus(liveView ? 'Competition data unavailable. Use Refresh results to retry.' : ownerView ? 'Verified snapshot unavailable. Reverification required; no external connection attempted.' : 'Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
+      if (!liveView) document.querySelectorAll('.legacy-section').forEach(panel => {
         if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = `<div class="panel state-message">${sourceLabel} data unavailable. No external connection attempted.</div>`;
       });
     }
   }
 
   document.addEventListener('DOMContentLoaded', load);
+  if (liveView) {
+    document.addEventListener('perfectpick:refresh', load);
+    document.addEventListener('perfectpick:unavailable', () => {
+      weekCache.clear(); monthlyCache.clear(); matchData=null; matchModels=[]; picksRequest++; monthlyRequest++;
+      document.querySelectorAll('.legacy-section').forEach(panel => { if (!['rules','faq'].includes(panel.id)) { panel.querySelectorAll('tbody').forEach(body=>body.textContent=''); } });
+      for (const id of ['playerPickCards','playerPicksBody','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','picksSubmissionCount','weeklyStatusNote','overviewProgress']) { const element=$(id); if(element)element.textContent='Competition data unavailable. Refresh to retry.'; }
+      for (const id of ['championHeading','championSummary','championState','weeklyPot','monthlyPot','monthlyWinnerPool','seasonPot','confirmedSeasonPot']) { const element=$(id); if(element) { element.textContent='Unavailable'; delete element.dataset.winner; } }
+      const privacy=$('matchPrivacyNotice');if(privacy){privacy.hidden=false;privacy.textContent='Competition data unavailable. Picks and voting remain protected.';}
+      document.querySelectorAll('[data-winner]').forEach(element=>delete element.dataset.winner);
+      const players=$('playerSelect');if(players){players.innerHTML='<option value="">Unavailable</option>';players.disabled=true;}
+      const button=$('submitPicks');if(button){button.removeAttribute('href');button.setAttribute('aria-disabled','true');button.disabled=true;}
+      setStatus('Competition data unavailable. Refresh to retry.', 'error');
+    });
+  }
 })();

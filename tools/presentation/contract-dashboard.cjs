@@ -43,6 +43,7 @@ function createDashboardModel(candidate,trust,context){
  const current=weeks.find(w=>w.week===context.activeWeek),official=s.weeks.find(w=>w.week===context.activeWeek),period=periods.find(p=>current.week>=p.startWeek&&current.week<=p.endWeek),season=byPrize.get('S'+s.season);
  const prizes={season:s.season,generatedAt:s.generatedAt,activeWeek:current.week,formControl:{activeWeek:current.week,status:current.entriesStatus,picksClose:official.entry.deadline,firstGame:'',firstKickoff:'',deadlineRule:'Official deadline; closure is independently verified'},currentPeriod:period?.periodKey||'',currentPeriodName:period?.displayName||'Unavailable',currentWeekStandings:current.standings,currentWeeklyPot:prizeViews[current.week].pool,currentMonthlyPot:period?.monthlyPot??null,projectedMonthlyWinnerPool:period?.monthlyWinnerPool??null,currentProjectedSeasonContribution:period?.seasonContribution??null,currentMonthlyRolloverBreakdown:[],confirmedSeasonPot:season?.poolState==='CONFIRMED'?dollars(season.poolCents):null,projectedSeasonPot:dollars(season?.projectedPoolCents),weekly,periods,overallStandings:rows('S'+s.season)};
  const expiresAt=Math.min(Date.parse(s.generatedAt)+trust.maxAgeMs,...s.games.map(g=>Date.parse(g.verifiedAt)+trust.maxAgeMs),...s.weeks.filter(w=>freshEntry(w.entry)).flatMap(w=>[Date.parse(w.entry.validUntil),Date.parse(w.entry.checkedAt)+trust.maxAgeMs]));
+ prizes.seasonCoverage=byScope.get('S'+s.season)?.weeks.join(', ')||'';
  return {expiresAt,prizes,weeks,matchViews,prizeViews,resolutions,form:formEntry(context.form,JSON.stringify(trust.closures.get(official.week))===JSON.stringify(official.entry)?official.entry:null,trust.now,trust.maxAgeMs)};
 }
 // Runs in private owner-preview assembly only, never in the public six-file adapter.
@@ -54,4 +55,4 @@ function createViewAdapter(model,clock){
   resolveMonthlyChampion:(period,weeks)=>{check();if(!weeks.length)return {status:'IN PROGRESS',reason:'Checking validated monthly decision.',winner:null,points:null,leaders:[],game:'',actualTotal:null,comparisons:[],winningDifference:null,margin:null};return copy(model.resolutions[period.periodKey]);}});
 }
 function compareDashboard(actual,baseline,trust,options){return comparePublic(actual,baseline,trust,options);}
-module.exports={createDashboardModel,createViewAdapter,compareDashboard};
+module.exports={createDashboardModel,createViewAdapter,compareDashboard,TEAM_NAMES:NAMES};
