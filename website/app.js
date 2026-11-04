@@ -14,6 +14,7 @@
   let deadlineTimer = null;
   let matchData = null;
   let matchModels = [];
+  let eligiblePickWeeks = [];
 
   const $ = (id) => document.getElementById(id);
   const setText = (id, value) => {
@@ -101,7 +102,7 @@
     setText('picksCloseTime', formatPacificDateTime_(closeAt));
     setText('firstGameLabel', data.firstGame || '—');
     setText('firstKickoffTime', kickoffAt ? `Kickoff: ${formatPacificDateTime_(kickoffAt)}` : '—');
-    setText('deadlineRuleLabel', data.deadlineRule || '3 hours before first kickoff');
+    setText('deadlineRuleLabel', 'Picks close at the official deadline.');
 
     const badge = $('formStatusBadge');
     if (badge) {
@@ -295,6 +296,7 @@
 
   async function renderPrizes(prizes) {
     const weeks = await Promise.all(prizes.weekly.map(row => loadWeek(row.week)));
+    updatePickWeekAvailability(weeks);
     const weekly = prizes.weekly.map((row,i) => preview.buildWeeklyPrize(row,weeks[i]));
     const currentIndex = prizes.weekly.findIndex(w => w.week === prizes.activeWeek);
     const current = weekly[currentIndex];
@@ -390,6 +392,34 @@
     return state === 'correct' ? '✓ Correct' : state === 'wrong' ? '✕ Incorrect' : 'Pending';
   }
 
+  // Reported OPEN improves messaging only; it never authorizes disclosure.
+  function isOpenWeek(data) {
+    return data.entriesStatus === 'OPEN' || data.week === activeWeek && prizeData?.formControl.reportedStatus === 'OPEN';
+  }
+
+  function pickPrivacyMessage(data) {
+    if (isOpenWeek(data)) return `Week ${data.week} is open. Picks, predictions and voting stay private until entries are officially closed.`;
+    if (data.entriesStatus === 'CLOSED') return `Week ${data.week} is closed, but approved player picks are unavailable until weekly data is complete.`;
+    return `Week ${data.week} player picks are unavailable until entries are officially closed and complete approved picks are available.`;
+  }
+
+  function updatePickWeekAvailability(weeks) {
+    eligiblePickWeeks = weeks.filter(w=>publicPicks(w)&&w.standings.length).map(w=>w.week).sort((a,b)=>a-b);
+    for (const id of ['weekSelect','weeklyWeekSelect']) for (const option of $(id).options) {
+      const data=weeks.find(w=>w.week===Number(option.value));
+      if(data)option.textContent=`Week ${data.week} · ${publicPicks(data)?'Closed':isOpenWeek(data)?'Open':'Private'}`;
+    }
+    if(matchData)renderPickWeekHelp(matchData);
+  }
+
+  function renderPickWeekHelp(data) {
+    const latest=eligiblePickWeeks.at(-1),button=$('closedWeekShortcut');
+    setText('selectedWeekPrivacy',publicPicks(data)?`Week ${data.week} is closed. Approved player picks and comparisons are available.`:pickPrivacyMessage(data));
+    button.hidden=publicPicks(data)||latest===undefined;
+    button.textContent=latest===undefined?'No closed-week picks available':`View Week ${latest} player picks`;
+    button.onclick=()=>loadWeekPicks(latest);
+  }
+
   function renderWeekPicks(data) {
     matchData = data;
     matchModels = (data.games || []).map(game => preview.buildMatchView(data, game, prizeData?.formControl));
@@ -397,8 +427,9 @@
     $('matchSelect').innerHTML = '<option value="">All matchups</option>' + matchModels.map(model => `<option value="${escapeHtml(model.game)}">${escapeHtml(model.game)}</option>`).join('');
     const closed = publicPicks(data);
     $('matchPrivacyNotice').hidden = closed;
-    $('matchPrivacyNotice').textContent = data.visibility === 'WITHHELD' ? 'Player picks and voting unavailable; verified disclosure evidence is incomplete.' : 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
-    setText('picksSubmissionCount', data.visibility === 'WITHHELD' ? 'Player picks and voting unavailable; verified disclosure evidence is incomplete.' : closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : `${sourceLabel} entry status: ${data.entriesStatus || 'UNKNOWN'}`);
+    $('matchPrivacyNotice').textContent = pickPrivacyMessage(data);
+    renderPickWeekHelp(data);
+    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : pickPrivacyMessage(data));
     $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('') : '');
     $('playerSelect').disabled = !closed || !data.standings.length;
     renderMatchCards();
@@ -426,8 +457,8 @@
   function gameCardHtml(model, includeVoting = false) {
     return `<article class="game-result-card" data-game="${escapeHtml(model.game)}">
       <div class="game-result-status" data-status="${escapeHtml(model.status)}">${model.status === 'In progress' ? 'LIVE · In progress' : escapeHtml(model.status)}${model.winner === 'Tie' ? ' · Tie' : ''}</div>
-      <p class="kickoff-note">${model.kickoff ? `${ownerView ? 'Kickoff' : 'Synthetic kickoff'} · ${escapeHtml(formatPacificDateTime_(model.kickoff))}` : 'Kickoff unavailable'}</p>
-      ${model.teams.map((team,index) => teamResultHtml_(team,model.scores[index],!model.isFinal ? 'pending' : model.winner === 'Tie' ? 'draw' : model.winner === team ? 'winner' : 'loser')).join('')}
+      ${model.kickoff ? `<p class="kickoff-note">${ownerView ? 'Kickoff' : 'Synthetic kickoff'} · ${escapeHtml(formatPacificDateTime_(model.kickoff))}</p>` : ''}
+      ${model.teams.map((team,index) => teamResultHtml_(team,model.scores[index],!model.isFinal || !model.winner ? 'pending' : model.winner === 'Tie' ? 'draw' : model.winner === team ? 'winner' : 'loser')).join('')}
       ${!model.isFinal && model.scores.some(score => score !== '') ? '<p class="pick-meta">Scores provisional · No pick result until FINAL.</p>' : ''}
       ${includeVoting ? votingHtml(model) : ''}
     </article>`;
@@ -440,11 +471,16 @@
     $('matchGameResults').innerHTML = groups.filter(([,items]) => items.length).map(([title,items]) => `<h4 class="match-group-heading">${title}</h4>${items.map(model => gameCardHtml(model, true)).join('')}`).join('') || '<p class="state-message">No matchups available.</p>';
   }
 
+  function validTiebreakPrediction(player) {
+    const raw=player.tiebreakPrediction;
+    return typeof raw==='string' && /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) ? Number(raw) : null;
+  }
+
   function renderPlayerPrediction(player, data) {
     if (!publicPicks(data) || !data.tiebreak?.enabled) return '';
     if (!data.tiebreak.revealed) return '<p class="player-prediction">Tiebreak prediction unavailable until publication is confirmed.</p>';
-    const raw = player.tiebreakPrediction;
-    const valid = typeof raw === 'string' && /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw));
+    const raw = validTiebreakPrediction(player);
+    const valid = raw !== null;
     const model = matchModels.find(m => m.game === data.tiebreak.game);
     const actual = model?.isFinal && model.scores.every(score => score !== '') ? model.scores.reduce((sum,score) => sum+Number(score),0) : null;
     return `<div class="player-prediction"><p class="eyebrow">Period-ending tiebreaker</p><p>${escapeHtml(data.tiebreak.game || 'Designated game unavailable')}</p>
@@ -455,7 +491,7 @@
 
   function renderPlayerPickCards(data) {
     if (!publicPicks(data)) {
-      $('playerPickCards').innerHTML = data.visibility === 'WITHHELD' ? '<div class="privacy-state"><strong>Player picks unavailable</strong>Verified disclosure evidence is incomplete.</div>' : '<div class="privacy-state"><strong>Picks stay private</strong>Player selections and predictions are unavailable until official closure.</div>';
+      $('playerPickCards').innerHTML = `<div class="privacy-state"><strong>Picks stay private</strong>${escapeHtml(pickPrivacyMessage(data))}</div>`;
       return;
     }
     const selected = $('playerSelect').value;
@@ -471,14 +507,15 @@
   function renderPlayerPicksTable(data) {
     if (!publicPicks(data)) {
       $('playerPicksHead').innerHTML = '';
-      $('playerPicksBody').innerHTML = data.visibility === 'WITHHELD' ? '<tr><td>Player picks unavailable; disclosure evidence incomplete.</td></tr>' : '<tr><td>Picks hidden until official closure.</td></tr>';
+      $('playerPicksBody').innerHTML = `<tr><td>${escapeHtml(pickPrivacyMessage(data))}</td></tr>`;
       return;
     }
-    $('playerPicksHead').innerHTML = `<tr><th>Player</th>${matchModels.map(model => `<th class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}</tr>`;
-    $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><td class="player-name">${escapeHtml(player.name)}</td>${matchModels.map(model => {
+    const showPrediction=data.tiebreak?.enabled&&data.tiebreak.revealed;
+    $('playerPicksHead').innerHTML = `<tr><th scope="col">Player</th>${matchModels.map(model => `<th scope="col" class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}${showPrediction?'<th scope="col">Tiebreak total</th>':''}<th scope="col">Correct</th><th scope="col">Accuracy</th></tr>`;
+    $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><th scope="row" class="player-name">${escapeHtml(player.name)}</th>${matchModels.map(model => {
       const pick = model.selections.find(p => p.name === player.name);
       return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick)}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
-    }).join('')}</tr>`).join('') || `<tr><td colspan="${matchModels.length+1}">No submissions yet.</td></tr>`;
+    }).join('')}${showPrediction?`<td class="num matrix-prediction">${validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
   }
 
   function populateWeekSelector(weeks, defaultWeek) {
@@ -533,8 +570,8 @@
   function teamResultHtml_(team, score, state) {
     const highlighted = state === 'winner';
     const style = highlighted ? teamColorStyle_(team) : '';
-    const cls = highlighted ? 'team-winner' : 'team-neutral';
-    const outcomeLabel = state === 'winner' ? 'WIN' : state === 'loser' ? 'LOSS' : state === 'draw' ? 'TIE' : '';
+    const cls = highlighted ? 'team-winner' : state === 'loser' ? 'team-loser' : 'team-neutral';
+    const outcomeLabel = state === 'winner' ? '✓ WINNER' : state === 'loser' ? 'LOSS' : state === 'draw' ? 'TIE' : '';
     const scoreHtml = score === ''
       ? '<span class="team-result-score empty-score">—</span>'
       : `<span class="team-result-score">${escapeHtml(score)}</span>`;
@@ -774,7 +811,7 @@
     document.addEventListener('perfectpick:degraded',()=>setStatus('Update unavailable. Showing still-valid snapshot; retry with Refresh results.','warning'));
     document.addEventListener('perfectpick:refresh', load);
     document.addEventListener('perfectpick:unavailable', () => {
-      weekCache.clear(); monthlyCache.clear(); matchData=null; matchModels=[]; picksRequest++; monthlyRequest++;
+      weekCache.clear(); monthlyCache.clear(); matchData=null; matchModels=[]; eligiblePickWeeks=[]; $('closedWeekShortcut').hidden=true; setText('selectedWeekPrivacy','Picks unavailable. Refresh to retry.'); picksRequest++; monthlyRequest++;
       document.querySelectorAll('.legacy-section').forEach(panel => { if (!['rules','faq'].includes(panel.id)) { panel.querySelectorAll('tbody').forEach(body=>body.textContent=''); } });
       for (const id of ['playerPickCards','playerPicksBody','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','overviewLeaderCards','dashboardUpcoming','picksSubmissionCount','weeklyStatusNote','overviewProgress']) { const element=$(id); if(element)element.textContent='Competition data unavailable. Refresh to retry.'; }
       for (const id of ['championHeading','championSummary','championState','weeklyPot','monthlyPot','monthlyWinnerPool','seasonPot','confirmedSeasonPot']) { const element=$(id); if(element) { element.textContent='Unavailable'; delete element.dataset.winner; } }

@@ -114,3 +114,42 @@ Rollback frontend commit remains6fad89d; API18 requires no rollback for this fro
 change. Exact resume: start here; maintain published66e89d3 and wait for a new owner
 request. Do not repeat completed audits/integration/activation or modify the backend.
 Local verification receipts/screenshots stay ignored in tmp/sports-dashboard/.
+
+## Targeted game results / player comparison fixes — ready to publish
+
+Resumed develop c3ae913 / published66e89d3. Exact live diagnosis: Match Center defaults
+to active Week9 (OPEN). Public API18 intentionally represents its disclosure as UNKNOWN,
+UNVERIFIED / WITHHELD, reason CLOSURE_UNVERIFIED. The old frontend incorrectly described
+this expected OPEN-week state as incomplete evidence. There is NO missing closure,
+alias approval/completeness, pick mapping or contract failure for Weeks1–8: fresh
+live dashboard4 + unchanged decoder verified each CLOSED/OFFICIAL/AVAILABLE,23 players,
+and matching game votes. Public browser confirmed selectedWeek9/disabled selector and
+misleading text, then Week8's23 player cards/voting/standings worked. All23 designated
+predictions exist in each period-ending Week4/8; other weeks have no designated monthly
+tiebreaker, so no prediction is fabricated for them. No backend fix or approval needed.
+
+Frontend-only changes: distinguish reported OPEN messaging from disclosure permission;
+publicPicks CLOSED/visibility gate unchanged. Week selectors label Closed/Open/Private
+using validated data, not dates. OPEN/unknown state offers direct button to the latest
+eligible CLOSED week, with clear selected-week explanation. Expiry clears that shortcut.
+Player selector, game-specific comparisons and predictions retain original trusted model.
+Optional Compare All Players matrix gains existing correct totals/accuracy and eligible
+period-ending predictions, semantic row headings/sticky names and contained scrolling.
+Winner rows now full-row team-color tint/border, bold scores and explicit checkmark +
+WINNER; losing rows secondary, ties/pending/live not falsely declared winners. Never
+infer a winner from scores. Missing kickoff labels omitted; real kickoff/Pacific timezone
+retained. Deadline explanation rewritten for players, actual configured time unchanged.
+
+261/261 full tests PASS, zero failures/skips. Existing privacy/scoring/tiebreaker/API,
+asset security/integrity and all32 SVG tests retained. Browser regressions explicitly
+exercise OPEN→latest CLOSED shortcut, aliases/selector/predictions, matrix totals and
+internal scrolling at375/768/1280px, winner labels, missing vs configured kickoff, missing
+aliases and unknown closure/expiry. Replaced only obsolete exact UI-copy expectations
+with requested player-facing wording and missing-kickoff omission checks; disclosure
+assertions remain intact. No performance work, backend/source/contract/workflow/asset
+inventory or production service changes. Exact38-file publication allowlist remains.
+
+Next: commit/push these tested frontend files, dispatch existing manual api Pages
+workflow, then verify actual published Week9 shortcut→Week8 picks/voting/comparisons/
+predictions/matrix, winner styling and all32 logo paths. Backend remains18, no upload,
+new permission/deployment or owner approval required. Frontend rollback66e89d3 preserved.

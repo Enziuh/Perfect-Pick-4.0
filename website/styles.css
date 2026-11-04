@@ -1968,3 +1968,30 @@ select,button:not(.submit-picks) {background:var(--panel2);color:var(--text);bor
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 #overview>.champion-spotlight {margin-top:20px}
+
+/* Targeted result/disclosure usability, retaining the sports dashboard system. */
+.team-winner {background:color-mix(in srgb,var(--team-color) 38%,var(--panel2));border:1px solid color-mix(in srgb,var(--team-color) 65%,#fff);border-left:4px solid var(--team-color);padding:10px;border-radius:9px}
+.team-winner .team-result-score {font-weight:900;font-size:34px;color:#fff}
+.team-winner .team-result-right>strong {font-size:11px;font-weight:850;letter-spacing:.025em;color:var(--accent)}
+.team-loser {color:var(--muted)}
+.team-loser .team-result-score {font-size:26px;font-weight:650;color:var(--muted)}
+.team-loser .team-logo {opacity:.75}
+.week-disclosure-help {display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0}
+.week-disclosure-help p {flex:1 1 240px;margin:0;font-size:13px;color:var(--muted)}
+#closedWeekShortcut {border:1px solid var(--accent);border-radius:8px;padding:10px 16px;color:var(--accent);font-weight:700}
+.comparison-matrix {min-width:0;max-width:100%}
+.comparison-matrix>.table-scroll {overflow:visible;min-width:0}
+.comparison-matrix .table-region {max-height:65vh;overflow:auto;max-width:100%}
+#playerPicksTable {border-collapse:separate;border-spacing:0;font-size:12px}
+#playerPicksTable td,#playerPicksTable th {padding:10px;border-bottom:1px solid var(--line)}
+#playerPicksTable thead th {position:sticky;top:0;background:var(--panel2);z-index:2}
+#playerPicksTable .player-name {min-width:130px;max-width:150px;white-space:normal;color:var(--text);text-transform:none;letter-spacing:normal;font-size:12px}
+#playerPicksTable thead th:first-child {left:0;z-index:3;min-width:130px}
+#playerPicksTable .game-th,#playerPicksTable .pick-cell {min-width:142px;max-width:160px}
+#playerPicksTable .matchup-header {gap:4px;align-items:flex-start;font-size:10px}
+#playerPicksTable .matchup-team {flex-direction:column;gap:4px;min-width:0}
+#playerPicksTable .team-logo {width:26px;height:26px}
+#playerPicksTable .matchup-badge {min-width:36px}
+#playerPicksTable .pick-outcome {font-size:11px;margin:4px 0 0}
+#playerPicksTable .matrix-total {font-weight:800}
+@media(max-width:700px){.team-winner .team-result-right {flex-direction:column;align-items:flex-end;gap:4px}.team-winner .team-result-score {font-size:32px}.team-winner .team-result-right>strong {font-size:10px}.comparison-matrix>summary{font-size:16px}}

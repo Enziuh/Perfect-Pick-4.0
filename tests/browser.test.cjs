@@ -154,7 +154,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);
    for(const route of routes){
     await navigate(p,route);
-    assert(await p.evaluate(`document.documentElement.scrollWidth <= ${width} + 1 && innerWidth <= ${width} + 1`),`Horizontal page overflow: ${route} at ${width}`);
+    assert(await p.evaluate(`document.documentElement.scrollWidth <= ${width} + 1 && innerWidth <= ${width} + 1`),`Horizontal page overflow: ${route} at ${width}; `+await p.evaluate("JSON.stringify([...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1&&!e.closest('.table-region')).slice(0,10).map(e=>({tag:e.tagName,id:e.id,class:e.className,width:e.getBoundingClientRect().width})))"));
    }
   }
   await navigate(p,'match-center');
@@ -167,6 +167,18 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await p.evaluate("document.querySelectorAll('#picks .vote-bar, #picks .player-prediction, #picks .match-comparison').length"),0);
    assert(!await p.evaluate("document.getElementById('picks').innerHTML.includes('Synthetic Comet')"));
   }
+  await p.evaluate("document.getElementById('weekSelect').value='5';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+  await until(p,"!document.getElementById('closedWeekShortcut').hidden && document.getElementById('selectedWeekPrivacy').textContent.includes('Week 5 is open')");
+  assert.equal(await p.evaluate("document.getElementById('closedWeekShortcut').textContent"),'View Week 4 player picks');
+  assert(!await p.evaluate("document.getElementById('picks').textContent.includes('Verified disclosure evidence is incomplete')"));
+  await p.evaluate("document.getElementById('closedWeekShortcut').click()");
+  await until(p,"document.getElementById('weekSelect').value==='4' && document.querySelectorAll('#playerPickCards .player-pick-card').length===4");
+  assert(await p.evaluate("document.getElementById('closedWeekShortcut').hidden && !document.getElementById('playerSelect').disabled"));
+  assert(await p.evaluate("document.querySelector('#pickMatrix>summary').textContent==='Compare All Players' && !document.getElementById('pickMatrix').open"));
+  await p.evaluate("document.querySelector('#pickMatrix>summary').click()");
+  assert.equal(await p.evaluate("document.querySelectorAll('#playerPicksBody tr').length"),4);
+  assert.equal(await p.evaluate("document.querySelectorAll('#playerPicksBody .matrix-total,#playerPicksBody .accuracy-indicator,#playerPicksBody .matrix-prediction').length"),12);
+  for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);assert(await p.evaluate(`document.documentElement.scrollWidth<=${width}+1`));if(width===375){assert(await p.evaluate("(()=>{const region=document.querySelector('#pickMatrix .table-region');region.scrollLeft=100;return region.scrollWidth>region.clientWidth&&region.scrollLeft>0;})()"));}}
   for(const week of [1,2,3,4]){
    await p.evaluate(`document.getElementById('weekSelect').value='${week}';document.getElementById('weekSelect').dispatchEvent(new Event('change'))`);
    await until(p,`document.getElementById('picksSubmissionCount').textContent.includes('for Week ${week}')`);
@@ -177,6 +189,8 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    if(week===1){
     assert(await p.evaluate("document.querySelectorAll('#playerPickCards .selection-choice.correct').length>0 && document.querySelectorAll('#playerPickCards .selection-choice.wrong').length>0"));
     assert(await p.evaluate("document.querySelector('#matchGameResults .vote-bar').getAttribute('aria-label').includes('Bears: 50%')"));
+    assert(await p.evaluate("[...document.querySelectorAll('#matchGameResults .team-winner')].every(e=>e.textContent.includes('✓ WINNER')&&getComputedStyle(e).borderLeftStyle==='solid'&&getComputedStyle(e.querySelector('.team-result-score')).fontWeight==='900')"));
+    assert(await p.evaluate("document.querySelectorAll('#matchGameResults .team-loser').length>0"));
    }
    if(week===3)assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .correct, #playerPickCards .wrong, #playerPicksBody .correct, #playerPicksBody .wrong').length"),0);
    if(week===4){
@@ -201,10 +215,10 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   await p.evaluate("document.getElementById('previousWeek').click()");
   await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
   await p.evaluate("document.getElementById('weekSelect').value='5';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
-  await until(p,"document.getElementById('picksSubmissionCount').textContent==='Synthetic entry status: OPEN'");
+  await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('Week 5 is open') && document.getElementById('picksSubmissionCount').textContent.includes('officially closed')");
   assert.equal(await p.evaluate("document.querySelectorAll('#pickPercentages .vote-option, #playerPicksBody .pick-cell, #playerPickCards .player-pick-card').length"),0);
   assert(await p.evaluate("document.querySelector('#matchGameResults .kickoff-note').textContent.includes('Synthetic kickoff')"));
-  assert(await p.evaluate("document.querySelectorAll('#matchGameResults .kickoff-note')[1].textContent.includes('unavailable')"));
+  assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .kickoff-note').length"),1);assert(!await p.evaluate("document.getElementById('matchGameResults').textContent.includes('Kickoff unavailable')"));
   await navigate(p,'standings/weekly');
   await p.evaluate("document.getElementById('weeklyWeekSelect').value='1';document.getElementById('weeklyWeekSelect').dispatchEvent(new Event('change'))");
   await until(p,"document.getElementById('weeklyStandingsBody').textContent.includes('Synthetic')");
