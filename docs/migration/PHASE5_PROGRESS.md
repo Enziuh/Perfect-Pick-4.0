@@ -1313,3 +1313,62 @@ local candidate ready for private evidence review, NOT authorized for deployment
 This documentation-only checkpoint commit follows the implementation commit.
 Resume instruction: continue from 619d1de using the exact owner-evidence/approval
 step above; do not restart implementation or activate player publication automatically.
+
+## Activation-blocker consolidation (2026-11-04)
+
+Resumed from develop 61be980 / tested implementation 619d1de. Read-only local
+blocker review complete; no frontend/API code, deployment, production resource or
+permission changes. One concise checklist is now
+`docs/architecture/PLAYER_ACTIVATION_APPROVAL.md` (source references included).
+
+Verified: Form link is dynamic, not a locally configured published responder URL;
+original source, saved baseline/editor/activation config and ignored reference
+workbook contained no verified responder URL. Linked Form metadata can supply it
+in the next authorized read; owner need not invent/copy an edit URL or run diagnostics.
+Normal scheduled/manual closure verifies response acceptance before writing current
+CLOSED markers. Form Control/Script Properties overwrite current-week state, and
+repair paths exist; no local historical closure archive was found. Current markers
+alone cannot independently prove historical closure or current response acceptance.
+No live Form/Sheet/Properties/execution-history read was performed.
+
+Private owner review prepared ONLY under ignored `tmp/player-activation-review/`,
+directory mode 0700 and private JSON mode 0600. `aliases-review.private.json` has
+23 reference registry-label drafts, all approved:false, no phone values; five draft
+labels repeat. Actual normalized joins/duplicate-player reconciliation cannot be
+established from intentionally redacted phones. No aliases approved, inferred as
+publication authority, committed or published; no private values copied here.
+
+Reference comparison: M1 weeks 1–4 has 64 coherent FINAL games; M2 weeks 5–8 has
+57; later periods are incomplete. Five NEW periods use configured 50/50 shares and
+include season funding. Weeks 4/8 designated games have FINAL scores, while stored
+Actual Total is blank; existing resolver uses Results scores, so no owner-supplied
+combined total or score repair is needed. These are reference-only facts, not a
+freshness guarantee or certification of real player winners. Existing PP3 prize
+reader uses active-player count/override, not raw winner-name/finalized columns;
+source outcomes drive weekly shares/NEW rollovers. No monthly payment/season
+payout authority inferred. Redacted identities cannot certify winners/rollovers.
+
+Remaining: one owner authorization for bounded private existing-system reads;
+actual alias/identity approval; positive historical closure evidence or explicit
+scoped owner attestation if retained records are absent; permitted publication
+scopes/accounting exceptions; conditional controlled release approval. Do NOT ask
+for manual recomputation of rule-based scores/pools or repeat connectivity checks.
+The existing freshness gate still expires manual evidence; reliable historical
+reverification has NOT been established, so continuous player disclosure cannot yet
+be claimed ready. No static timestamp may be silently renewed.
+
+Exact next step: owner reviews the four items in PLAYER_ACTIVATION_APPROVAL.md.
+After explicit read authorization, automatically retrieve linked published Form URL,
+current acceptance/control, private registry joins and necessary bounded competition
+facts; reconcile privately and report only counts/exceptions. Do not invoke writer
+or diagnostic helpers that enumerate/manage triggers. Only unresolved identity,
+historical closure, tie/accounting exceptions need owner judgment. Release remains
+blocked until separately authorized and evidence/security/parity checks pass; API17
+and the published results-only site remain unchanged. No new architecture phase.
+
+Checks for this documentation-only checkpoint: 37/37 relevant JSON/PP3 compatibility
+regressions PASS, 0 failed/skipped; both safe documents pass private-reference scan;
+Git whitespace check PASS. Ignored private review inventory/modes verified; no private
+review contents staged. Files touched in Git: this checkpoint and
+PLAYER_ACTIVATION_APPROVAL.md only. Latest full implementation suite remains
+240/240 at 619d1de; no runtime changes require reimplementation or deployment.
