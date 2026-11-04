@@ -153,3 +153,23 @@ remain blocked. The existing approved read scope remains valid. Do not repeat sc
 prize comparisons or ask for a manual M2 decision. The six single-name candidates,
 all 23 alias approvals, unproven historical closure and eventual publication approval
 remain the same private review items; none was approved by this diagnosis.
+
+## Approved one-run attempt outcome
+
+One temporary editor-only staging diagnostic was added, executed once and removed.
+It reached its private report after bounded reads, without new OAuth consent, but
+its long string report was truncated in the debugger and the paused run timed out
+before capture. The Form responder metadata validation passed inside runtime; the
+actual URL and registry/closure reconciliation report were NOT retained/certified.
+The prior 23 API-derived labels (six single-part) remain unapproved and not verified
+registry mappings. No historical CLOSED authority was added.
+
+Exact staging source/manifest restoration and unchanged staging deployments,
+production editor and API17 were independently verified. No writer function ran;
+an incidental existing staging doGet summary read also completed. The live Pages
+website is unchanged. This failure needs no OAuth/service/production change.
+
+Next authorization, if desired: ONE additional same-scope editor diagnostic using
+the corrected, locally tested chunked report capture, followed by exact restoration.
+No second execution is authorized by the original one-run approval. The checkpoint
+records the private backup locations and precise safe resume sequence.

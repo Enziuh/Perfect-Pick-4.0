@@ -1486,3 +1486,67 @@ Checks: 37/37 relevant offline JSON/PP3 compatibility tests PASS, zero failed/sk
 safe-document private-reference scan and Git whitespace checks PASS. Private diagnostic
 files remain Git-ignored. Checkpoint is BLOCKED on the precise staging source/one-run
 approval above, not on another audit or new infrastructure. Runtime code unchanged.
+
+## One approved editor diagnostic — capture failure; exact restore COMPLETE
+
+Owner approved one temporary bounded staging diagnostic and one execution, with
+removal/restoration required. Starting checkpoint 0589b5c; production API17 and
+published Pages remain unchanged. Do not repeat the execution without new approval.
+
+Performed in the existing private staging project only:
+- Saved full recoverable source/manifest and deployment metadata backup, plus
+  production editor/deployment hashes. Verified staging source against the saved
+  clean seal and MYSELF / USER_ACCESSING access before adding one temporary file.
+  No existing file, manifest, router, deployment, OAuth scope or trigger changed.
+- Diagnostic read only Players A:B, Responses timestamp A/private phone C (bounded
+  to 1001 rows), linked Form published URL/acceptance, Form Control A1:H2 and tab
+  names for known history titles. Existing normalization used; no raw phones,
+  submissions or registry full names in its report. No logging or persistent writes.
+  Fake-service bounds/privacy/error masking and Apps Script ES2020 tests passed.
+- Executed verifyPlayerActivationOwner ONCE via the existing staging editor debugger;
+  no new consent requested. Reached the report breakpoint after bounded reads. The
+  visible report preview showed PRIVATE_OWNER_REVIEW_ONLY, proving its linked-Form
+  responder validation passed, but its long JSON-string value was truncated by the
+  debugger UI. The full report could not be saved before the paused execution timed
+  out at 360.634 seconds. Browser retained responses did not recover the report.
+  This is an agent report-capture failure, not an authorization/service failure.
+- One incidental staging doGet/summary read also completed when an editor keyboard
+  shortcut was used before selecting the diagnostic. No writer, synchronization,
+  Form-control or trigger function was selected or executed. Use browser Reload
+  button, not that keyboard shortcut, in future editor automation.
+- Removed the temporary file immediately after timeout. Server readback confirms
+  EXACT pre-operation staging file hashes/manifest, unchanged staging deployments,
+  unchanged production editor and unchanged API17 deployment. Browser refreshed
+  afterward; temporary file/function absent. No second diagnostic execution attempted.
+
+Results NOT certified: actual Form URL was fetched/validated inside runtime but not
+retained; registry reconciliation count and individual alias matches were not captured;
+historical closure count not recovered. Do not label the 23 prior API drafts as
+registry-verified. Six single-name candidates remain unresolved, all approvals false.
+No new historical CLOSED proof, payment or public identity authority is established.
+Prior verified scoring/monthly champion/prize arithmetic remains valid within its
+recorded snapshot; do not repeat those comparisons merely because report capture failed.
+
+Private recovery/diagnostic files only under ignored
+`tmp/player-activation-review/editor-diagnostic/` (0700; JSON/backup files0600):
+backup.private.json, candidate-hashes.private.json, upload.private.json,
+restored.private.json, execution-outcome.private.json. No secret/ID/report values
+copied into Git. Local TemporaryOwnerRead.gs now has a prepared, fabricated-tested
+bounded chunked private report (160-character chunks, maximum90) to avoid the UI's
+string truncation; this corrected capture candidate was NOT uploaded or executed.
+
+Exact resume: request approval for ONE additional same-scope diagnostic execution
+using the corrected private capture. No new scope/project/client/deployment is needed.
+Use a fresh staging source backup; prior operation's backup must remain preserved.
+Read the small report chunks immediately, end execution before the six-minute limit,
+save only to the ignored private review location and restore staging exactly again.
+Do not reinterpret prior one-run approval as permission to retry. Production/Pages
+changes and player publication remain unauthorized. Remaining owner decisions stay
+alias approval (including six initials), historical attestation only where proof is
+absent, and eventual separately controlled release.
+
+Final checks for this attempt: original and corrected capture candidates pass
+fabricated bounded-read/privacy/error/ES2020 checks; 37/37 relevant regressions PASS,
+zero failed/skipped. Documentation private-reference scan and Git whitespace checks
+PASS. Only the safe checklist/checkpoint are committed. Operational result remains
+REPORT_CAPTURE_FAILED_AND_STAGING_RESTORED, not successful identity verification.
