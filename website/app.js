@@ -93,7 +93,7 @@
   function renderFormControl_(control) {
     const data = control || {};
     const week = Number(data.activeWeek || 0);
-    const status = String(data.status || '').trim().toUpperCase();
+    const status = String((ownerView ? data.reportedStatus : '') || data.status || '').trim().toUpperCase();
     const closeAt = data.picksClose || '';
     const kickoffAt = data.firstKickoff || '';
 
@@ -208,7 +208,7 @@
         <td class="num"><strong>${player.points}</strong></td>
         ${showCompleted ? `<td class="num">${player.completedGames}</td>` : ''}
         <td class="num">${accuracyHtml(player)}</td>
-      </tr>`).join('') || `<tr><td colspan="${showCompleted ? 5 : 4}">No public standings for this period yet.</td></tr>`;
+      </tr>`).join('') || `<tr><td colspan="${showCompleted ? 5 : 4}">Standings await approved display names and verified closed entry periods.</td></tr>`;
   }
 
   function championExplanation(resolution) {

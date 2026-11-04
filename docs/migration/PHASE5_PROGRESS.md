@@ -1632,3 +1632,63 @@ required parity/privacy/artifact checks, and perform only separately approved ac
 Do NOT repeat the completed capture, create infrastructure, redesign, or publish pending
 inputs. No full extra test suite run for this capture-only task; direct-file fake/live
 schema/privacy/completeness/integrity checks and exact cleanup passed.
+
+## Final activation preparation — original PP3 policy restored
+
+Resumed 9eb3a44. Owner corrected/approved the name-format policy, NOT the individual
+23 names: one word stays as entered (including accents), multiple words become first
+name + last initial. Verified exact toPublicName_ source parity; all23 actual proposals
+match the reconciled registry/API labels, zero conflicts. Six single names are VALID,
+no initials requested. All individual approval flags remain false. Private proposed
+names/registry/source/config stay ignored; final conversational owner review is allowed.
+
+Owner explicitly attested Week8 CLOSED after the official close/Week9 setup. Stored
+that statement privately with its own attestedAt/revision. Weeks1–7 remain unverified;
+Week9 OPEN, never disclose its picks/predictions/votes. Server-owned closedAttestations
+now verifies explicit record/revision/time and current Form Control coherence before
+issuing fresh finite-lived snapshot evidence. It does not infer other weeks, rewrite
+old Form observations or extend stale browser snapshots. Revocation/reopening/unknown
+control/future records fail closed. Existing raw-observation expiry rules unchanged.
+
+Implemented/tested local candidate: original display rule shared across strict API,
+projector/validator; safe Unicode without contact/markup disclosure. Explicit approved
+registry labels join to normalized phone keys only inside existing PP3 context; no
+submitted-name publication fallback/automatic alias approval. Monthly completion comes
+from configured bounds/full slates/FINAL results, respecting explicit holds. Explicit
+seasonWeeks labels covered weeks rather than silently changing scope. Reviewed
+calculatedOutcomeWeeks revalidates original weekly payout/NEW rollover calculations
+for eligible CLOSED/complete/approved scopes only; no payment state inferred.
+
+Local ignored final-api-candidate is sealed: differs from immutable production17
+baseline ONLY in PerfectPick4_Json (already-routed dashboard4). Manifest, original
+routes/helpers/writers unchanged. Private candidate publication false, names unapproved;
+not uploaded. Original live API17/editor/automation have not been modified.
+
+Authorized non-sensitive frontend release: exact six assets, no player records or
+actual proposed names. Original name support in transport, corrected submitted-FINAL
+accuracy tooltip, neutral incorrect-pick styling, clearer protected standings and
+reported OPEN context independent of disclosure. Official metadata-verified player
+Form link enabled through exact approved public routing variable and separate Form
+publication marker. No edit/token URLs or added fetch origin permitted; synthetic
+profile unchanged. Manual develop workflow/seal checks retained, no permissions change.
+
+Validation: 251/251 full tests PASS, zero failed/skipped; 11 focused activation tests
+cover original name parity/single accents, registry approvals, Week8-only proof,
+Week9 privacy/revocation/cache expiry, explicit season coverage, source completion,
+prize facts and safe Form link. Browser all five destinations/375–768–1280 layouts,
+external isolation, Form navigation attribute and protected states PASS. The sandbox
+allowlist adds only the pure name helper; obsolete double-period style rejection was
+replaced by an actual forbidden-email case, preserving privacy/approval checks.
+Six-file API/Form artifact scan/seal and explicit no-proposed-name check PASS. No live
+reconciliation repeated, no new dependency/hosting/project/trigger or public API change.
+
+Remaining ONE owner request: individually approve the23 proposed display names; attest
+which Weeks1–7 are CLOSED (Week8 already confirmed, never grant Week9); approve the
+reviewed dashboard4-only production update and CLOSED-eligible player/pool publication.
+Keep payments UNKNOWN and unsupported distributions unavailable. Monthly/season scopes
+still withhold when required closure/alias evidence is missing; future weeks require
+real official evidence or explicit owner records, never deadlines. Resume from the
+private owner-decisions.private.json and production-candidate-config.private.json;
+use existing production17 rollback/editor-preservation procedure for any later approved
+API version. No another diagnostic, infrastructure phase or name-initial request.
+Frontend deployment/result status follows after the approved manual workflow.

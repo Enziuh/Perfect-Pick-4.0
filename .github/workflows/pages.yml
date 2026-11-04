@@ -43,12 +43,16 @@ jobs:
         env:
           PP4_PUBLIC_API_URL: ${{ vars.PP4_PUBLIC_API_URL }}
           PP4_API_PUBLICATION_APPROVAL: ${{ vars.PP4_API_PUBLICATION_APPROVAL }}
+          PP4_PUBLIC_FORM_URL: ${{ vars.PP4_PUBLIC_FORM_URL }}
+          PP4_FORM_PUBLICATION_APPROVAL: ${{ vars.PP4_FORM_PUBLICATION_APPROVAL }}
         run: node tools/api/pages-artifact.cjs stage
       - name: Verify unchanged staged artifact immediately before upload
         env:
           PROFILE: ${{ inputs.profile }}
           PP4_PUBLIC_API_URL: ${{ vars.PP4_PUBLIC_API_URL }}
           PP4_API_PUBLICATION_APPROVAL: ${{ vars.PP4_API_PUBLICATION_APPROVAL }}
+          PP4_PUBLIC_FORM_URL: ${{ vars.PP4_PUBLIC_FORM_URL }}
+          PP4_FORM_PUBLICATION_APPROVAL: ${{ vars.PP4_FORM_PUBLICATION_APPROVAL }}
         run: |
           if [ "$PROFILE" = "api" ]; then
             node tools/api/pages-artifact.cjs verify

@@ -1,4 +1,6 @@
 'use strict';
+const {toPublicName,policyAlias}=require('../compatibility/pp3-display-name.cjs');
+const {normalizePhone}=require('../compatibility/pp3-identity.cjs');
 // Private owner configuration only. No I/O, identity derivation, renewal or publication.
 function configuredMap(value,kind){
  if(value===undefined)return new Map();
@@ -13,8 +15,25 @@ function configuredMap(value,kind){
  return map;
 }
 function requireDisplayAliases(records){
- if(!Array.isArray(records)||records.some(r=>typeof r?.alias!=='string'||!/^[A-Za-z]+(?:['-][A-Za-z]+)* [A-Z]\.$/.test(r.alias)))throw Error('Explicit first-name and last-initial approval required');
+ if(!Array.isArray(records)||records.some(r=>!policyAlias(r?.alias)))throw Error('Explicit approval of PP3-formatted display names required');
  return records;
+}
+// Join explicitly reviewed public labels to existing private registry keys in memory.
+function registryAliases(registry,records,revision){
+ if(!registry||!Array.isArray(records)||records.length>1000)throw Error('Invalid registry approvals');
+ const labels=new Map(),phones=new Set();
+ for(const [raw,name] of Object.entries(registry)){
+  const phone=normalizePhone(raw),label=toPublicName(name);if(!phone||phones.has(phone))throw Error('Ambiguous registry identity');phones.add(phone);
+  const found=labels.get(label)||[];found.push(phone);labels.set(label,found);
+ }
+ const seen=new Set(),out=[];
+ for(const r of records){
+  if(!r||Object.keys(r).sort().join(',')!=='alias,approved,player,revision,sourceLabel'||typeof r.approved!=='boolean'||seen.has(r.sourceLabel))throw Error('Invalid registry approvals');seen.add(r.sourceLabel);
+  if(!r.approved)continue;
+  const matched=labels.get(r.sourceLabel);if(r.revision!==revision||matched?.length!==1||r.alias!==r.sourceLabel||!policyAlias(r.alias))throw Error('Registry approval mismatch');
+  out.push({privateKey:matched[0],player:r.player,alias:r.alias,approved:true,revision});
+ }
+ return out;
 }
 function approvedAllocationWeeks(records,revision,now,maxAgeMs){
  if(records===undefined)return new Set();
@@ -34,4 +53,4 @@ function approvedRollovers(records,revision,now,maxAgeMs){
  const weeks=approvedAllocationWeeks(records.map(r=>{if(!r||!/^M[1-9][0-9]?$/.test(r.to))throw Error('Invalid rollover approval');const {to,...approval}=r;return approval;}),revision,now,maxAgeMs);
  return new Map(records.filter(r=>weeks.has(r.week)).map(r=>[r.week,r.to]));
 }
-module.exports={configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers};
+module.exports={configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers,registryAliases};

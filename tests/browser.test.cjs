@@ -372,6 +372,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    api.cfg.authority=null;apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && document.querySelectorAll('#playerPickCards .player-pick-card').length===0");
    await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Avery A.')"));assert.equal(apiRequests.length,2);
+   // An independently reviewed official entry link is navigation, never disclosure authority.
+   const officialForm={url:'https://docs.google.com/forms/d/e/FABRICATED_PLAYER_FORM/viewform',verified:true,approvedForPlayers:true};
+   api.matrix['Form Control'][1][5]='OPEN';apiReply=api.get();privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true,form:officialForm});
+   await send('Page.reload',{},connected.sessionId);await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && document.getElementById('submitPicks').tagName==='A'");
+   assert.equal(await connected.evaluate("document.getElementById('submitPicks').getAttribute('href')"),officialForm.url);
+   assert.equal(await connected.evaluate("document.getElementById('formStatusBadge').textContent"),'Picks Open');
+   assert(await connected.evaluate("document.getElementById('submitPicks').rel.includes('noopener')"));
+   assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option,#picks .player-pick-card').length"),0);assert.equal(apiRequests.length,3);
    await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;apiReply=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){

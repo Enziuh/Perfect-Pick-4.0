@@ -139,7 +139,7 @@ Private perfectPick4JsonConfig_ authority (never browser/query configuration):
 
 - aliases: existing records with privateKey, independent public player key, alias,
   approved:true and matching revision. Owner supplies each exact approved label;
-  the JSON path now requires first name + last initial, e.g. an invented Avery A.
+  the JSON path preserves PP3: a one-word name as entered, or first name + last initial for multiple words (e.g. invented Avery A.).
   No registry/submitted-name fallback or automatic first-name derivation. These
   examples do not approve any actual entrant. The public alias envelope includes
   only players actually disclosed in validated CLOSED-week picks. The browser also
@@ -199,3 +199,37 @@ as counts, never names/phones/picks. Only after these pass, separately approve
 publishing player scopes and the existing api-profile Pages workflow. Current
 version 17/results-only Pages continue operating throughout. No OAuth, trigger,
 Sheet/Form changes, new platform or custom submission form is needed or authorized.
+
+
+## Final activation correction / current owner scope
+
+Original toPublicName_ preserves one word, including accents, and abbreviates multiple
+words. Policy approval does not approve individual records. registryAliases records
+{sourceLabel, player, alias, approved, revision} may replace phone-bearing aliases in
+private configuration; exact unique approved labels join to the existing private
+registry inside the server. No contact value reaches the response or owner review.
+
+closedAttestations records {week, revision, attestedAt, status, approved} are a new
+server-owned authority input. Only Week8 was explicitly attested by the owner. Each
+snapshot verifies the current owner-record revision/time and current Form Control
+coherence before emitting a finite-lived CLOSED entry; this is verification of an
+explicit owner decision, not a claim of a fresh Form-read observation. Reopened,
+unknown current control or revoked/unapproved/future/mismatched records fail closed.
+Existing cached observations still expire and cannot be renewed implicitly. Weeks1–7
+remain unverified, Week9 OPEN, and alias approval/publication remains separately gated.
+
+Original configured periods, complete slates and FINAL results supply monthly completion
+when all required privacy/integrity checks pass; explicit owner decision holds override.
+Optional explicit seasonWeeks labels coverage rather than silently dropping open weeks.
+calculatedOutcomeWeeks authorizes original finalized weekly allocations/NEW rollovers
+only for complete CLOSED scopes with approved aliases and confirmed pool authority.
+Amounts are reread/reconciled from original computations, never payments or guessed splits.
+
+The frontend can independently link the metadata-verified official player Form without
+exposing player records. PP4_PUBLIC_FORM_URL plus
+PP4_FORM_PUBLICATION_APPROVAL=APPROVED_OFFICIAL_FORM_V1 enables only that exact canonical
+/viewform route in config.js; edit/token URLs fail closed. This adds no fetch origin,
+asset, submission handler or production operation. The exact six-file allowlist,
+manual develop workflow and integrity checks remain. Original API17 remains results-only
+until separately approved; the candidate changes only PerfectPick4_Json, not routing,
+manifest, original actions or writers. Unapproved private configuration is not deployable.

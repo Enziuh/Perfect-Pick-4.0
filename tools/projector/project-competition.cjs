@@ -1,4 +1,5 @@
 'use strict';
+const {safeAlias}=require('../compatibility/pp3-display-name.cjs');
 const {VERSION,normalizeScore,validatePublic} = require('../contracts/live-contract.cjs');
 const {monthlyDecision} = require('./monthly-decision.cjs');
 const integer = value => Number.isSafeInteger(value) && value >= 0;
@@ -99,7 +100,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
     const approvals=[];
     for(const identity of latest.keys()){
       const a=policy.aliases.get(identity);
-      if(!a || a.approved!==true || !/^p_[a-z0-9]{8,32}$/.test(a.player) || typeof a.alias!=='string' || a.alias.length>48 || !/^[A-Za-z][A-Za-z0-9 -]*\.?$/.test(a.alias))return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
+      if(!a || a.approved!==true || !/^p_[a-z0-9]{8,32}$/.test(a.player) || !safeAlias(a.alias))return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
       const collisions=[...policy.aliases.values()].filter(other=>other?.approved===true && (other.player===a.player || other.alias===a.alias));
       if(collisions.length!==1)return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
       approvals.push(a);

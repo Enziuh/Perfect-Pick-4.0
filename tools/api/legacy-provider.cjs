@@ -3,7 +3,7 @@ const {projectCompetition}=require('../projector/project-competition.cjs');
 const {validatePublic}=require('../contracts/live-contract.cjs');
 const evidence=require('../verification/owner-evidence.cjs');
 const {normalizePhone}=require('../compatibility/pp3-identity.cjs');
-const {configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers}=require('./player-authority.cjs');
+const {configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers,registryAliases}=require('./player-authority.cjs');
 const {mapApprovedPrizeFacts}=require('../compatibility/legacy-prize-facts.cjs');
 const {TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
@@ -30,8 +30,11 @@ function createLegacyProvider(deps){
    const policy={now,revision,maxAgeMs,aliases:new Map(),closures:new Map(),completeWeeks:new Map(),games:definitions,teams:new Map(Object.entries(TEAM_NAMES).map(([a,n])=>[n,a])),periods:[],decisions:new Map(),accounting:new Map(),seasonWeeks:weeks};
    const authority=cfg.authority;
    if(authority){
-    policy.aliases=evidence.aliases(requireDisplayAliases(authority.aliases),revision,normalizePhone);
+    if(authority.aliases!==undefined&&authority.registryAliases!==undefined)throw Error();
+    const approvals=authority.registryAliases!==undefined?registryAliases(ctx.playerRegistry,authority.registryAliases,revision):authority.aliases;
+    policy.aliases=evidence.aliases(requireDisplayAliases(approvals),revision,normalizePhone);
     policy.closures=evidence.closures(authority.closures,{revision,now,maxAgeMs});
+    for(const [week,record] of evidence.attestations(authority.closedAttestations||[],{revision,now,maxAgeMs},prizes.formControl)){if(policy.closures.has(week))throw Error();policy.closures.set(week,record);}
     if(['OPEN','UPCOMING'].includes(prizes.formControl?.status))policy.closures.delete(Number(prizes.formControl.activeWeek));
     policy.decisions=configuredMap(authority.decisions,'decision');policy.accounting=configuredMap(authority.accounting,'accounting');
    }
@@ -40,6 +43,7 @@ function createLegacyProvider(deps){
    // Match the original season scope: every created response-game week, not just disclosed weeks.
    const seasonWeeks=[...new Set(ctx.games.map(g=>g.week))].sort((a,b)=>a-b);
    if(seasonWeeks.length)policy.seasonWeeks=seasonWeeks;
+   if(authority?.seasonWeeks!==undefined){const selected=authority.seasonWeeks;if(!Array.isArray(selected)||!selected.length||new Set(selected).size!==selected.length||!selected.every(w=>seasonWeeks.includes(w)))throw Error();policy.seasonWeeks=[...selected];}
    const source={revision,observedAt:at,season:prizes.season,games,weeks:weeks.map(week=>{
     const closed=policy.closures.has(week),columns=ctx.games.filter(g=>g.week===week),required=games.filter(g=>g.week===week);
     const complete=closed&&columns.length===required.length&&required.every(g=>columns.some(c=>norm(c.game)===norm(g.game)));
@@ -51,11 +55,27 @@ function createLegacyProvider(deps){
      return {identity:normalizePhone(s.phone),timestamp:new Date(s.timestamp).toISOString(),selections:columns.map(g=>({game:g.game,pick:s.response[g.header]})),prediction:r?{game:r.game,value:t.prediction}:null};
     }):[]};
    })};
+   // Configured period bounds + complete original slates + coherent FINAL results
+   // determine completion; explicit owner holds still take precedence.
+   for(const period of policy.periods){
+    const span=Array.from({length:period.endWeek-period.startWeek+1},(_,i)=>period.startWeek+i);
+    if(!policy.decisions.has(period.key)&&prizes.periods.find(p=>p.periodKey===period.key)?.allWeeksFinalized===true&&span.every(w=>policy.closures.has(w)&&policy.completeWeeks.get(w)&&games.some(g=>g.week===w)&&games.filter(g=>g.week===w).every(g=>norm(g.status)==='final')))policy.decisions.set(period.key,{snapshotRevision:revision,complete:true,verifiedAt:at});
+   }
    // Preserve PP3 pots/overrides/NEW rollover/shares; require explicit accounting approval.
-   if(authority?.poolStates!==undefined){const rollovers=approvedRollovers(authority.rolloverApprovals,revision,now,maxAgeMs);policy.accounting=mapApprovedPrizeFacts(prizes,{revision,verifiedAt:at,pools:configuredMap(authority.poolStates,'pool'),rollovers});}
+   const calculated=authority?.calculatedOutcomeWeeks||[];
+   if(!Array.isArray(calculated)||new Set(calculated).size!==calculated.length||!calculated.every(w=>weeks.includes(w)))throw Error();
+   // Owner authorizes calculation scopes, not payment facts. Reverify the original
+   // finalized outcome against current CLOSED/completeness/alias evidence each read.
+   const qualified=calculated.filter(week=>policy.closures.has(week)&&policy.completeWeeks.get(week)&&prizes.weekly.find(w=>w.week===week)?.finalized===true&&latest.filter(s=>s.week===week).every(s=>policy.aliases.has(normalizePhone(s.phone))));
+   if(authority?.poolStates!==undefined){
+    const rollovers=approvedRollovers(authority.rolloverApprovals,revision,now,maxAgeMs);
+    for(const week of qualified){const row=prizes.weekly.find(w=>w.week===week);if(row.perfectPickWinners===0&&row.rolloverToMonthly>0){if(rollovers.has(week)&&rollovers.get(week)!==row.periodKey)throw Error();rollovers.set(week,row.periodKey);}}
+    policy.accounting=mapApprovedPrizeFacts(prizes,{revision,verifiedAt:at,pools:configuredMap(authority.poolStates,'pool'),rollovers});
+   }
    // Explicit, fresh allocation approval is separate from pool approval. Reuse PP3's
    // scored perfect-week result and payout amount, never its derived winner names.
    const allocationWeeks=approvedAllocationWeeks(authority?.allocationApprovals,revision,now,maxAgeMs);
+   qualified.forEach(week=>allocationWeeks.add(week));
    for(const week of allocationWeeks){
     const account=policy.accounting.get('W'+week),row=prizes.weekly.find(w=>w.week===week);
     const input=source.weeks.find(w=>w.week===week);

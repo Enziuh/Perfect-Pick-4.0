@@ -1,12 +1,13 @@
 'use strict';
 const {createDashboardModel,createViewAdapter,TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
+const {policyAlias}=require('../compatibility/pp3-display-name.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
 function decode(reply,now){
  if(!reply||Object.keys(reply).sort().join(',')!=='activeWeek,aliases,control,form,schema,snapshot'||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
  const aliases=new Map();for(const a of reply.aliases){if(!a||Object.keys(a).sort().join(',')!=='alias,player'||aliases.has(a.player))throw Error('Competition data unavailable');aliases.set(a.player,a.alias);}
  const disclosed=new Map();
  for(const w of reply.snapshot?.weeks||[])for(const p of w.picks||[])disclosed.set(p.player,p.alias);
- if(disclosed.size!==aliases.size||[...aliases].some(([player,alias])=>disclosed.get(player)!==alias||!/^[A-Za-z]+(?:['-][A-Za-z]+)* [A-Z]\.$/.test(alias)))throw Error('Competition data unavailable');
+ if(disclosed.size!==aliases.size||[...aliases].some(([player,alias])=>disclosed.get(player)!==alias||!policyAlias(alias)))throw Error('Competition data unavailable');
  const s=reply.snapshot;const trust={now,maxAgeMs:120000,aliases,closures:new Map((s?.weeks||[]).map(w=>[w.week,w.entry])),aliasCompleteness:new Map((s?.weeks||[]).map(w=>[w.week,Object.hasOwn(w,'picks')])),prizes:new Map((s?.prizes||[]).map(p=>[p.key,p]))};
  if(reply.form!==null&&!approvedPlayerDestination(reply.form))throw Error('Competition data unavailable');
  const model=createDashboardModel(s,trust,{activeWeek:reply.activeWeek,form:reply.form});
@@ -16,6 +17,7 @@ function decode(reply,now){
  Object.assign(model.prizes.formControl,c);return model;
 }
 function install(root,config){
+ if(config.form!==undefined&&!approvedPlayerDestination(config.form))throw Error('Approved official Form link required');
  const endpoint=config.endpoint;if(!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(endpoint))throw Error('Approved JSON endpoint required');
  let current=null,pending=null,timer=null,failed=false,last=0;
  const notice=name=>root.document.dispatchEvent(new root.Event(name));
@@ -29,7 +31,10 @@ function install(root,config){
     const response=await root.fetch(endpoint+'?action=dashboard4',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
     if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error();
     const text=await response.text();if(text.length>2000000)throw Error();
-    const model=decode(JSON.parse(text),Date.now());current=createViewAdapter(model,()=>Date.now());failed=false;last=Date.now();root.clearTimeout(timer);
+    const model=decode(JSON.parse(text),Date.now());
+    const official=approvedPlayerDestination(config.form);
+    if(official&&model.weeks.find(w=>w.week===model.prizes.activeWeek).entriesStatus!=='CLOSED'&&model.prizes.formControl.reportedStatus!=='CLOSED')model.form={available:true,url:official,label:'Submit Picks',message:'Continue to the existing official Google Form. Entry availability is controlled by the Form.'};
+    current=createViewAdapter(model,()=>Date.now());failed=false;last=Date.now();root.clearTimeout(timer);
     timer=root.setTimeout(()=>{clear();refresh();},Math.max(1,model.expiresAt-Date.now()));
     const button=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
     if(button&&note){const f=model.form;{const link=root.document.createElement(f.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(f.available){link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');button.replaceWith(link);}note.textContent=f.message;}

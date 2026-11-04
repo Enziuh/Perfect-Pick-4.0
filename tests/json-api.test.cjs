@@ -63,7 +63,7 @@ test('approved aliases are never enumerated before verified disclosure or for un
 test('raw registry names and unapproved/incorrectly formatted aliases cannot authorize player publication',()=>{
  for(const alias of ['Raw Full Name','Avery','PRIVATE_NAME','Avery A.']){
   const x=example();x.cfg.authority=x.e.authority;x.e.authority.aliases[0].alias=alias;
-  if(alias==='Avery A.'){x.e.authority.aliases[0].approved=false;}
+  x.e.authority.aliases[0].approved=false;
   const r=x.get();assert(r.state==='UNAVAILABLE'||r.snapshot.weeks.every(w=>!w.picks));
  }
 });

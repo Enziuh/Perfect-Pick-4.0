@@ -19,7 +19,7 @@ test('private phone normalization matches 3.0 digit stripping and optional leadi
 test('approval is explicit; normalized collisions reject; first name plus initial period is supported',()=>{
  const record={privateKey:formatted(digits),player:'p_approved01',alias:'Invented A.',approved:true,revision:1};
  assert.equal(aliases([record],1,normalizePhone).get(digits).alias,'Invented A.');
- for(const r of [{...record,approved:false},{...record,alias:'Unapproved..'},{...record,privateKey:'REDACTED'}])assert.throws(()=>aliases([r],1,normalizePhone));
+ for(const r of [{...record,approved:false},{...record,alias:'unapproved@example.test'},{...record,privateKey:'REDACTED'}])assert.throws(()=>aliases([r],1,normalizePhone));
  assert.throws(()=>aliases([record,{...record,privateKey:digits,player:'p_approved02',alias:'Invented B.'}],1,normalizePhone));
 });
 test('verified Results A-H profile reads correct teams/status/scores and Responses A/C; Name/Players never read',()=>{
