@@ -7,6 +7,9 @@ const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
 const {createScenario}=require('./support/monthly-scenarios.cjs');
 const presentation=require('../tools/presentation/package.cjs');
+const apiPages=require('../tools/api/pages-artifact.cjs');
+const {example:legacyApiExample}=require('./support/pp3-api-example.cjs');
+const apiEndpoint='https://script.google.com/macros/s/AKfycb_FABRICATED_PUBLIC_JSON_ROUTE/exec';
 const {liveSheetExample}=require('./support/live-sheet-example.cjs');
 const {createSheetDashboard}=require('../tools/presentation/sheet-dashboard.cjs');
 const {dashboardScenario}=require('./support/dashboard-scenarios.cjs');
@@ -37,7 +40,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
  verify(STAGE,true);
  const chrome=process.env.CHROME_PATH || (process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/google-chrome');
  assert(fs.existsSync(chrome),'Required Chrome unavailable; publication BLOCKED');
- let fault='',scenario='',privateAssets=null;const external=[],errors=[];
+ let fault='',scenario='',privateAssets=null,apiReply=null;const external=[],errors=[],apiRequests=[];
  const server=http.createServer((req,res)=>{
   const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
   if(!['index.html','app.js','preview-data.js','styles.css','config.js','fixtures/preview.json'].includes(name)){res.writeHead(404).end();return;}
@@ -66,11 +69,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    if(m.id){const p=callbacks.get(m.id);callbacks.delete(m.id);if(m.error)p.reject(new Error(m.error.message));else p.resolve(m.result);return;}
    if(m.method==='Fetch.requestPaused'){
     const url=m.params.request.url;
+    if(apiReply&&url===apiEndpoint+'?action=dashboard4'){
+     apiRequests.push(url);send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Access-Control-Allow-Origin',value:origin}],body:Buffer.from(JSON.stringify(apiReply)).toString('base64')},m.sessionId).catch(e=>errors.push(e.message));return;
+    }
     const local=url.startsWith(origin+'/');
     if(!local)external.push(url);
     send(local?'Fetch.continueRequest':'Fetch.failRequest',local?{requestId:m.params.requestId}:{requestId:m.params.requestId,errorReason:'BlockedByClient'},m.sessionId).catch(e=>errors.push(e.message));
    }
-   if(m.method==='Network.requestWillBeSent' && !m.params.request.url.startsWith(origin+'/') && !m.params.request.url.startsWith('about:'))external.push(m.params.request.url);
+   if(m.method==='Network.requestWillBeSent' && !m.params.request.url.startsWith(origin+'/') && !m.params.request.url.startsWith('about:') && !(apiReply&&m.params.request.url===apiEndpoint+'?action=dashboard4'))external.push(m.params.request.url);
    if(m.method==='Runtime.exceptionThrown')errors.push('Uncaught browser exception');
   });
   async function page(route=''){
@@ -352,6 +358,19 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await connected.evaluate("window.__rpcFail=true;document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.includes('unavailable')");assert.equal(await connected.evaluate("document.querySelectorAll('#picks .player-pick-card, #picks .vote-option').length"),0);assert.equal(await connected.evaluate("document.querySelectorAll('[data-winner]').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('PRIVATE_RPC_DETAIL')"));
    await connected.evaluate("window.__rpcFail=false;document.getElementById('refreshResults').click()");try{await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");}catch(e){throw Error(e.message+' state='+await connected.evaluate("JSON.stringify({errors:window.__viewErrors,calls:window.__rpcCalls,status:document.getElementById('status').textContent})"));}assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
    await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;
+  }
+  {
+   const api=legacyApiExample();api.e.policy.now=Date.now();const at=new Date(api.e.policy.now).toISOString(),expires=new Date(api.e.policy.now+120000).toISOString();
+   api.cfg.authority=api.e.authority;api.e.authority.closures.forEach(c=>{c.checkedAt=at;c.validUntil=expires;});for(const d of api.e.authority.decisions.values())d.verifiedAt=at;for(const a of api.e.authority.accounting.values())a.verifiedAt=at;
+   api.matrix.Responses.slice(1).forEach(r=>r[0]=at);apiReply=api.get();assert.equal(apiReply.schema,'PP4_JSON_V1');
+   privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
+   await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(apiRequests.length,1);
+   assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Synthetic Comet')"));
+   assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
+   for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
+   api.cfg.authority=null;apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && document.querySelectorAll('#playerPickCards .player-pick-card').length===0");
+   await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Synthetic Comet')"));assert.equal(apiRequests.length,2);
+   await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;apiReply=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");

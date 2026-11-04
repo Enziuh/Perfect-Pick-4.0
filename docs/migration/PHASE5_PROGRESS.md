@@ -1171,3 +1171,57 @@ never publish raw records or grant aliases/closure automatically. Keep Pages
 synthetic. Rollback disables deployment/restores null provider; 3.0 unaffected.
 Resume at owner activation/verification, not another audit, STRUCTURE read, CSV
 preview or custom submission form.
+
+## Return to final GitHub Pages / existing JSON API integration
+
+Branch develop; starting commit 567d6e1. This entry supersedes the preceding
+HtmlService activation as the final hosting direction. That owner-only deployment
+is a testing reference only and was not modified in this task.
+
+Completed implementation:
+- Reused original doGet/ContentService JSON architecture and PP3 context,
+  latest-submission, result lookup and prize builders. Original frontend calls
+  prizes and lazy week; health/summary/overall contracts also verified from source.
+- tools/api/legacy-provider.cjs produces an allowlisted validated public snapshot;
+  tools/api/json-extension.cjs generates one disabled additive API extension.
+  apps-script/extensions/PP4_JSON_ROUTE.patch adds dashboard4 without changing any
+  existing response branch, cache, writer, Form routine or trigger. Original src
+  is untouched; patch tested in memory against the actual router.
+- Actual contract differences requiring the small addition: CLOSED-only disclosure,
+  explicit alias approval rather than name fallback, future Results games before
+  response questions exist, monthly champion/tiebreak decisions and unknown payments.
+  Existing API has a forbidden-key filter; no production disclosure was assumed or
+  queried. Reported OPEN/reopened control denies current-week disclosure even when
+  an older CLOSED proof exists. Missing aliases withhold rather than fabricate zero.
+- tools/api/browser-client.cjs connects the existing redesigned app to the same
+  fixed Apps Script /exec URL and dashboard4 action. Strict validation, 120-second
+  freshness, coalescing, timeout/expiry/error clearing, optional verified Form link;
+  no JSONP, client secrets, alternate-URL switch or raw legacy fallback.
+- tools/api/pages-artifact.cjs builds/verifies exact six-file API publication
+  profile. Manual develop-only Pages workflow defaults to synthetic; API profile
+  requires explicit public endpoint approval, all tests, privacy scan and unchanged
+  sealed artifact. Original synthetic controls are retained, not weakened.
+- docs/architecture/GITHUB_PAGES_API.md documents original action/field contracts,
+  actual incompatibilities and minimum owner-approved activation. No new platform,
+  backend project, dependencies or architecture phase.
+
+Validation: 231 tests passed, zero failed/skipped, via node --test tests/*.test.cjs.
+Includes actual original scoring/latest-submission function parity, monthly ties/
+invalid predictions/shared ranks, approved identities, reopened/unknown/stale closure,
+no contact/raw record leaks, generated ES2020 extension, unchanged legacy routes,
+JSON CORS transport with fabricated intercepted responses, all five destinations,
+375/768/1280 layouts, original browser isolation and artifact/security checks.
+Original redacted workbook structural findings reused; redacted phones intentionally
+not treated as production defects. Workbook and private activation inputs stay ignored.
+
+Exact next action: review GITHUB_PAGES_API.md and authorize only the additive
+extension/route in the EXISTING working JSON API project and an update of its
+existing deployment/version, retaining its URL. Do not use the current separate
+4.0 clasp target or bulk-upload src. Privately configure results-only publication
+approval; do not approve aliases/closure/accounting automatically. Then separately
+approve a bounded sanitized JSON/CORS verification and manual API-profile Pages
+publication. Existing public API URL recovered locally into ignored activation
+configuration with publicationApproved false; no endpoint or private value in Git.
+Actual live JSON/CORS/competition parity remains unverified until authorized API
+activation. No production interaction, upload, execution, deployment, GitHub settings
+change, new trigger, Sheet/Form change or actual-data publication occurred here.

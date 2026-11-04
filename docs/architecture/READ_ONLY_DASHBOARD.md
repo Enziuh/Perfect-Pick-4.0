@@ -1,4 +1,9 @@
-# Integrated read-only dashboard
+# Owner-only testing reference
+
+Final frontend hosting is GitHub Pages using the existing Apps Script JSON API.
+See [GITHUB_PAGES_API.md](GITHUB_PAGES_API.md) for the implemented final transport
+and narrow compatible API addition. The HtmlService profile below is retained
+only as a private testing reference; do not create another deployment for it.
 
 The existing five-destination UI is packaged for the **separate 4.0 Apps Script
 project**, using its already installed Sheets v4 service. HtmlService serves the

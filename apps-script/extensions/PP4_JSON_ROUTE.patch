@@ -1,0 +1,13 @@
+--- a/apps-script/src/00_Config_Setup.js
++++ b/apps-script/src/00_Config_Setup.js
+@@ -51,7 +51,9 @@
+   const action = String(e?.parameter?.action || 'summary').toLowerCase();
+   let data;
+ 
+-  if (action === 'health') {
++  if (action === 'dashboard4') {
++    data = typeof buildPerfectPick4Dashboard_ === 'function' ? buildPerfectPick4Dashboard_() : {state:'UNAVAILABLE'};
++  } else if (action === 'health') {
+     data = {
+       ok: true,
+       app: 'Perfect Pick 3.0',

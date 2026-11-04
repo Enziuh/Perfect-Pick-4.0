@@ -1,0 +1,45 @@
+'use strict';
+const {createDashboardModel,createViewAdapter,TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
+const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
+function decode(reply,now){
+ if(!reply||Object.keys(reply).sort().join(',')!=='activeWeek,aliases,control,form,schema,snapshot'||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
+ const aliases=new Map();for(const a of reply.aliases){if(!a||Object.keys(a).sort().join(',')!=='alias,player'||aliases.has(a.player))throw Error('Competition data unavailable');aliases.set(a.player,a.alias);}
+ const s=reply.snapshot;const trust={now,maxAgeMs:120000,aliases,closures:new Map((s?.weeks||[]).map(w=>[w.week,w.entry])),aliasCompleteness:new Map((s?.weeks||[]).map(w=>[w.week,Object.hasOwn(w,'picks')])),prizes:new Map((s?.prizes||[]).map(p=>[p.key,p]))};
+ if(reply.form!==null&&!approvedPlayerDestination(reply.form))throw Error('Competition data unavailable');
+ const model=createDashboardModel(s,trust,{activeWeek:reply.activeWeek,form:reply.form});
+ const c=reply.control,iso=v=>v===''||typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
+ if(!c||Object.keys(c).sort().join(',')!=='activeWeek,firstGame,firstKickoff,picksClose,reportedStatus'||c.activeWeek!==reply.activeWeek||!['OPEN','CLOSED','UPCOMING','UNKNOWN'].includes(c.reportedStatus)||!iso(c.firstKickoff)||!iso(c.picksClose)||!(c.firstGame===''||s.games.some(g=>g.week===reply.activeWeek&&TEAM_NAMES[g.home]+' vs '+TEAM_NAMES[g.away]===c.firstGame)))throw Error('Competition data unavailable');
+ const destination=approvedPlayerDestination(reply.form);if(destination&&model.weeks.find(w=>w.week===reply.activeWeek).entriesStatus!=='CLOSED')model.form={available:true,url:destination,label:'Submit Picks',message:'Official Form · Check entry availability on the Form.'};
+ Object.assign(model.prizes.formControl,c);return model;
+}
+function install(root,config){
+ const endpoint=config.endpoint;if(!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(endpoint))throw Error('Approved JSON endpoint required');
+ let current=null,pending=null,timer=null,failed=false,last=0;
+ const notice=name=>root.document.dispatchEvent(new root.Event(name));
+ const clear=()=>{current=null;failed=true;notice('perfectpick:unavailable');};
+ async function request(force=false){
+  if(pending)return pending;if(current&&!force&&Date.now()<last+120000)return current;
+  if(failed&&!force)throw Error('Competition data unavailable');
+  pending=(async()=>{
+   const controller=new root.AbortController(),timeout=root.setTimeout(()=>controller.abort(),20000);
+   try{
+    const response=await root.fetch(endpoint+'?action=dashboard4',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
+    if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error();
+    const text=await response.text();if(text.length>2000000)throw Error();
+    const model=decode(JSON.parse(text),Date.now());current=createViewAdapter(model,()=>Date.now());failed=false;last=Date.now();root.clearTimeout(timer);
+    timer=root.setTimeout(()=>{clear();refresh();},Math.max(1,model.expiresAt-Date.now()));
+    const button=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
+    if(button&&note){const f=model.form;{const link=root.document.createElement(f.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(f.available){link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');button.replaceWith(link);}note.textContent=f.message;}
+    return current;
+   }finally{root.clearTimeout(timeout);}
+  })().finally(()=>{pending=null;}).catch(()=>{clear();throw Error('Competition data unavailable');});return pending;
+ }
+ async function refresh(){try{await request(true);notice('perfectpick:refresh');}catch{}}
+ const adapter={kind:'live',get:async(...args)=>(await request()).get(...args)};
+ for(const name of ['buildMatchView','buildWeeklyPrize','resolveMonthlyChampion'])adapter[name]=(...args)=>{if(!current)throw Error('Competition data unavailable');return current[name](...args);};
+ Object.defineProperty(root,'PerfectPickPreview',{value:Object.freeze(adapter),writable:false,configurable:false});
+ root.setInterval(refresh,21600000);
+ root.document.addEventListener('visibilitychange',()=>{if(!root.document.hidden&&Date.now()-last>=120000)refresh();});
+ root.document.addEventListener('DOMContentLoaded',()=>root.document.getElementById('refreshResults')?.addEventListener('click',refresh));
+}
+module.exports={decode,install};

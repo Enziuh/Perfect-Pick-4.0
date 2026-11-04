@@ -1,7 +1,13 @@
-name: Verify and deploy synthetic preview
+name: Verify and deploy Perfect Pick frontend
 
 on:
   workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Synthetic rollback or separately approved existing JSON API'
+        type: choice
+        options: [synthetic, api]
+        default: synthetic
 
 permissions: {}
 
@@ -32,8 +38,25 @@ jobs:
         env:
           CHROME_PATH: /usr/bin/google-chrome
         run: node --test tests/*.test.cjs
+      - name: Build separately approved API profile
+        if: inputs.profile == 'api'
+        env:
+          PP4_PUBLIC_API_URL: ${{ vars.PP4_PUBLIC_API_URL }}
+          PP4_API_PUBLICATION_APPROVAL: ${{ vars.PP4_API_PUBLICATION_APPROVAL }}
+        run: node tools/api/pages-artifact.cjs stage
       - name: Verify unchanged staged artifact immediately before upload
-        run: node tools/security/public-artifact.cjs verify
+        env:
+          PROFILE: ${{ inputs.profile }}
+          PP4_PUBLIC_API_URL: ${{ vars.PP4_PUBLIC_API_URL }}
+          PP4_API_PUBLICATION_APPROVAL: ${{ vars.PP4_API_PUBLICATION_APPROVAL }}
+        run: |
+          if [ "$PROFILE" = "api" ]; then
+            node tools/api/pages-artifact.cjs verify
+          elif [ "$PROFILE" = "synthetic" ]; then
+            node tools/security/public-artifact.cjs verify
+          else
+            exit 1
+          fi
       - name: Upload only verified publication artifact
         uses: actions/upload-pages-artifact@v3
         with:
