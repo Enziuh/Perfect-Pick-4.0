@@ -109,7 +109,7 @@ test('comparison is deterministic, distinguishes missing champion oracle, and ne
  const malformed=structuredClone(b);malformed.notes='FORBIDDEN';assert.throws(()=>comparePublic(a.snapshot,malformed,a.trust),{message:'Invalid public contract'});
 });
 test('contract tools and synthetic examples remain outside the six-file browser publication',()=>{
- assert.equal(FILES.length,6);assert(!FILES.some(file=>/contract/.test(file)));
+ assert.equal(FILES.length,38);assert(!FILES.some(file=>/contract/.test(file)));
  for(const name of ['website/app.js','website/config.js','website/preview-data.js','website/index.html'])assert(!fs.readFileSync(path.resolve(__dirname,'..',name),'utf8').includes('live-contract'));
 });
 test('trusted alias completeness prevents silently dropping an unmapped participant',()=>{

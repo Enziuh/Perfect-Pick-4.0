@@ -41,7 +41,7 @@ test('staged artifact rejects unexpected files, symlinks and prohibited content'
    const p=path.join(temp,'config.js'),old=fs.readFileSync(p);fs.appendFileSync(p,'\n// '+marker);assert.throws(()=>verify(temp));fs.writeFileSync(p,old);
   }
  }finally{fs.rmSync(temp,{recursive:true,force:true});}
- assert.equal(FILES.length,6);
+ assert.equal(FILES.length,38);assert.equal(FILES.filter(f=>f.startsWith('assets/teams/')).length,32);
 });
 test('manual deployment remains develop-only and verification precedes upload',()=>{
  const workflow=fs.readFileSync(path.join(__dirname,'../.github/workflows/pages.yml'),'utf8');

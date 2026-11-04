@@ -4,7 +4,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),os=require('node:os');
 const {spawn}=require('node:child_process');
-const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
+const {STAGE,verify,FILES}=require('../tools/security/public-artifact.cjs');
 const {createScenario}=require('./support/monthly-scenarios.cjs');
 const presentation=require('../tools/presentation/package.cjs');
 const apiPages=require('../tools/api/pages-artifact.cjs');
@@ -43,11 +43,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
  let fault='',scenario='',privateAssets=null,apiReply=null;const external=[],errors=[],apiRequests=[];
  const server=http.createServer((req,res)=>{
   const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
-  if(!['index.html','app.js','preview-data.js','styles.css','config.js','fixtures/preview.json'].includes(name)){res.writeHead(404).end();return;}
-  if(privateAssets){if(!Object.hasOwn(privateAssets,name)){res.writeHead(404).end();return;}res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html'}).end(privateAssets[name]);return;}
+  if(!FILES.includes(name)){res.writeHead(404).end();return;}
+  if(privateAssets){if(!Object.hasOwn(privateAssets,name)){res.writeHead(404).end();return;}res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':'text/html'}).end(privateAssets[name]);return;}
   if(name==='fixtures/preview.json'&&scenario){res.writeHead(200,{'Content-Type':'application/json'}).end(JSON.stringify(validate(scenario.startsWith('match:')?createMatchScenario(scenario.slice(6),scenarioBase):createScenario(scenario,scenarioBase))));return;}
   if(name==='fixtures/preview.json'&&fault){res.writeHead(fault==='missing'?404:200,{'Content-Type':'application/json'}).end(fault==='missing'?'':(fault==='malformed'?'{':JSON.stringify(fault==='invalid-prediction'?invalidPredictionScenario:{synthetic:false})));return;}
-  res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(path.join(STAGE,name)));
+  res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':name.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(path.join(STAGE,name)));
  });
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const origin=`http://127.0.0.1:${server.address().port}`;
@@ -63,7 +63,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   });
   socket=new WebSocket(endpoint);await new Promise((r,j)=>{socket.addEventListener('open',r,{once:true});socket.addEventListener('error',j,{once:true});});
   let seq=0;const callbacks=new Map();
-  const send=(method,params={},sessionId)=>new Promise((resolve,reject)=>{const id=++seq;callbacks.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));});
+  const interceptionOps=new Set();
+  const send=(method,params={},sessionId)=>{const task=new Promise((resolve,reject)=>{const id=++seq;callbacks.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));});if(['Fetch.continueRequest','Fetch.fulfillRequest','Fetch.failRequest'].includes(method)){interceptionOps.add(task);task.then(()=>interceptionOps.delete(task),()=>interceptionOps.delete(task));}return task;};
+  async function closePage(p){
+   // Stop interception and drain commands before detaching a page with lazy images.
+   // All request failures still reach the existing errors assertion.
+   await send('Fetch.disable',{},p.sessionId);await Promise.allSettled([...interceptionOps]);
+   await send('Target.closeTarget',{targetId:p.targetId});
+  }
   socket.addEventListener('message',({data})=>{
    const m=JSON.parse(data);
    if(m.id){const p=callbacks.get(m.id);callbacks.delete(m.id);if(m.error)p.reject(new Error(m.error.message));else p.resolve(m.result);return;}
@@ -91,6 +98,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   const p=await page();await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
   assert(await p.evaluate("document.getElementById('submitPicks').disabled && !document.getElementById('submitPicks').hasAttribute('href')"));
   assert(await p.evaluate("document.getElementById('dashboardResultsWeek').textContent.includes('Recent finals')"));
+  assert(await p.evaluate(`Promise.all(${JSON.stringify(require('../tools/security/team-assets.cjs').TEAM_FILES)}.map(src=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i.naturalWidth>0&&i.naturalHeight>0&&i.src.startsWith(location.origin+'/assets/teams/'));i.onerror=()=>resolve(false);i.src=src;}))).then(results=>results.length===32&&results.every(Boolean))`));
   const routes=['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules','guide/faq'];
   async function navigate(p,route){
    await p.evaluate(`document.querySelector('a[href="#${route}"]').click()`);
@@ -124,7 +132,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   const shared=await page('#guide/faq');
   await until(shared,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded') && !document.getElementById('faq').hidden");
   assert(await shared.evaluate("document.getElementById('faq').querySelectorAll('details').length>=12"));
-  await send('Target.closeTarget',{targetId:shared.targetId});
+  await closePage(shared);
   await navigate(p,'overview');await navigate(p,'prizes');
   await p.evaluate('history.back()');await until(p,"location.hash==='#overview' && !document.getElementById('overview').hidden");
   // Native links support Enter; arrow keys move focus without trapping Tab.
@@ -259,7 +267,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
      }
     }
    }
-   await send('Target.closeTarget',{targetId:example.targetId});
+   await closePage(example);
   }
   // These explicitly named, test-only response scenarios never modify the public fixture.
   for(const [name,state,winner] of [
@@ -320,7 +328,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await until(example,"document.getElementById('monthlyPrizeCallout').dataset.state==='IN PROGRESS'");
    assert.equal(await example.evaluate("document.getElementById('championHeading').dataset.winner"),'');
    assert.equal(await example.evaluate("document.querySelectorAll('#monthlyStandingsBody .is-champion').length"),0);
-   await send('Target.closeTarget',{targetId:example.targetId});
+   await closePage(example);
   }
   scenario='';
   for(const name of ['decisive','missing-alias','unknown']){
@@ -342,7 +350,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
     assert(!await owner.evaluate("document.getElementById('picks').textContent.includes('0 votes') || document.getElementById('picks').textContent.includes('0 submission')"));
    }
    if(name==='decisive'){await send('Emulation.setVirtualTimePolicy',{policy:'advance',budget:310000},owner.sessionId);await until(owner,"document.getElementById('status').textContent.includes('snapshot expired')");await send('Emulation.setVirtualTimePolicy',{policy:'advance'},owner.sessionId);await navigate(owner,'guide/faq');await navigate(owner,'match-center');assert.equal(await owner.evaluate("document.querySelectorAll('#picks .vote-option, #picks .player-pick-card').length"),0);}
-   await send('Target.closeTarget',{targetId:owner.targetId});privateAssets=null;
+   await closePage(owner);privateAssets=null;
   }
   {
    const live=liveSheetExample(),now=Date.now(),at=new Date(now).toISOString(),untilTime=new Date(now+300000).toISOString();live.policy.now=now;live.cfg.authority=live.authority;
@@ -357,7 +365,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");assert(await connected.evaluate("document.getElementById('matchGameResults').textContent.includes('24')"));
    await connected.evaluate("window.__rpcFail=true;document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.includes('unavailable')");assert.equal(await connected.evaluate("document.querySelectorAll('#picks .player-pick-card, #picks .vote-option').length"),0);assert.equal(await connected.evaluate("document.querySelectorAll('[data-winner]').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('PRIVATE_RPC_DETAIL')"));
    await connected.evaluate("window.__rpcFail=false;document.getElementById('refreshResults').click()");try{await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");}catch(e){throw Error(e.message+' state='+await connected.evaluate("JSON.stringify({errors:window.__viewErrors,calls:window.__rpcCalls,status:document.getElementById('status').textContent})"));}assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
-   await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;
+   await closePage(connected);privateAssets=null;
   }
   {
    const api=legacyApiExample();api.e.policy.now=Date.now();const at=new Date(api.e.policy.now).toISOString(),expires=new Date(api.e.policy.now+120000).toISOString();
@@ -372,8 +380,18 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    await navigate(connected,'prizes');assert(await connected.evaluate("document.getElementById('prizeSummary').textContent.includes('23 participants per week') && document.getElementById('prizeSummary').textContent.includes('not verified collected funds')"));
    await navigate(connected,'standings/monthly');assert(!await connected.evaluate("document.getElementById('monthlyPrizeCallout').textContent.includes('Payment status:')"));
+   // A failed refresh must preserve still-valid disclosure, retry exactly twice,
+   // leave an explicit retry control, and retain week/month filters on recovery.
+   await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+   await until(connected,"document.querySelectorAll('#playerPickCards .player-pick-card').length===2");
+   apiReply={state:'UNAVAILABLE'};await connected.evaluate("document.getElementById('refreshResults').click()");
+   await until(connected,"document.getElementById('status').textContent.includes('Showing still-valid snapshot')");assert.equal(apiRequests.length,4);
+   assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
+   assert(await connected.evaluate("!document.getElementById('refreshResults').disabled"));
+   apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(apiRequests.length,5);
+   assert.equal(await connected.evaluate("document.getElementById('weekSelect').value"),'1');
    api.cfg.authority=null;apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && document.querySelectorAll('#playerPickCards .player-pick-card').length===0");
-   await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Avery A.')"));assert.equal(apiRequests.length,2);
+   await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Avery A.')"));assert.equal(apiRequests.length,6);
    // An independently reviewed official entry link is navigation, never disclosure authority.
    const officialForm={url:'https://docs.google.com/forms/d/e/FABRICATED_PLAYER_FORM/viewform',verified:true,approvedForPlayers:true};
    api.matrix['Form Control'][1][5]='OPEN';apiReply=api.get();privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true,form:officialForm});
@@ -381,15 +399,15 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await connected.evaluate("document.getElementById('submitPicks').getAttribute('href')"),officialForm.url);
    assert.equal(await connected.evaluate("document.getElementById('formStatusBadge').textContent"),'Picks Open');
    assert(await connected.evaluate("document.getElementById('submitPicks').rel.includes('noopener')"));
-   assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option,#picks .player-pick-card').length"),0);assert.equal(apiRequests.length,3);
-   await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;apiReply=null;
+   assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option,#picks .player-pick-card').length"),0);assert.equal(apiRequests.length,7);
+   await closePage(connected);privateAssets=null;apiReply=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");
    assert(await broken.evaluate("document.getElementById('dashboard').textContent.includes('No external connection attempted')"));
    await navigate(broken,'guide/faq');
    assert(await broken.evaluate("document.getElementById('faq').querySelectorAll('details').length>=12"));
-   await send('Target.closeTarget',{targetId:broken.targetId});
+   await closePage(broken);
   }
   assert.deepEqual(external,[],'External request attempted');assert.deepEqual(errors,[]);
  }catch(error){failure=error;

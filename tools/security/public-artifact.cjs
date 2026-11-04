@@ -2,7 +2,8 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
 const {validate}=require('../../website/preview-data.js');
 const ROOT=path.resolve(__dirname,'../..');
-const FILES=Object.freeze(['index.html','styles.css','config.js','preview-data.js','app.js','fixtures/preview.json']);
+const {TEAM_FILES,validateLogo}=require('./team-assets.cjs');
+const FILES=Object.freeze(['index.html','styles.css','config.js','preview-data.js','app.js','fixtures/preview.json',...TEAM_FILES]);
 const STAGE=path.join(ROOT,'.preview-public');
 function assert(ok,message){if(!ok)throw new Error(message);}
 function inventory(dir,prefix='',strict=true) {
@@ -11,7 +12,7 @@ function inventory(dir,prefix='',strict=true) {
   for(const name of fs.readdirSync(dir)) {
     const relative=prefix+name,full=path.join(dir,name),stat=fs.lstatSync(full);
     assert(!stat.isSymbolicLink(),'Symlink rejected');
-    if(stat.isDirectory()) {assert(!strict || relative==='fixtures','Unexpected directory rejected');out.push(...inventory(full,relative+'/',strict));}
+    if(stat.isDirectory()) {assert(!strict || ['fixtures','assets','assets/teams'].includes(relative),'Unexpected directory rejected');out.push(...inventory(full,relative+'/',strict));}
     else {assert(stat.isFile(),'Special file rejected');out.push(relative);}
   }
   return out.sort();
@@ -41,7 +42,7 @@ function verify(dir=STAGE,enforceSeal=false) {
   const ids=knownIdentifiers(),hashes={};
   const banned=[/https?:\/\//i,/["'(]\s*\/\//,/\b(?:script|docs|sheets|forms)\.google\./i,/\bespn\./i,/sourceMappingURL/i,/-----BEGIN .*PRIVATE KEY-----/,/\b(?:gh[pousr]_|github_pat_|AIza|ya29\.)[\w.-]+/,/\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/,/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i,/(?<!\d)(?:\+1[- .]?)?\(?\d{3}\)?[- .]\d{3}[- .]\d{4}(?!\d)/,/(?:\b(?:api[_-]?key|client[_-]?secret|refresh[_-]?token|access[_-]?token|password)\b)\s*[=:]/i,/\b(?:XMLHttpRequest|WebSocket|EventSource|sendBeacon|serviceWorker|importScripts)\b/];
   for(const file of FILES){
-    const bytes=fs.readFileSync(path.join(dir,file));const s=bytes.toString('utf8');
+    const bytes=fs.readFileSync(path.join(dir,file));let s=bytes.toString('utf8');if(TEAM_FILES.includes(file)){validateLogo(s);s=s.replace('http://www.w3.org/2000/svg','SVG_NAMESPACE');}
     assert(!bytes.includes(0),'Binary content rejected');
     assert(!banned.some(p=>p.test(s)) && !ids.some(id=>s.includes(id)),'Prohibited artifact content: '+file);
     if(file!=='preview-data.js')assert(!/\bfetch\s*\(/.test(s),'Unexpected network adapter');
@@ -61,6 +62,7 @@ function verify(dir=STAGE,enforceSeal=false) {
 function stage(){
   assert(JSON.stringify(inventory(path.join(ROOT,'website'),'',false))===JSON.stringify([...FILES].sort()),'Unexpected website input');
   fs.mkdirSync(path.join(STAGE,'fixtures'),{recursive:true});
+  fs.mkdirSync(path.join(STAGE,'assets/teams'),{recursive:true});
   for(const file of FILES)fs.copyFileSync(path.join(ROOT,'website',file),path.join(STAGE,file));
   const hashes=verify();
   fs.writeFileSync(path.join(ROOT,'.preview-public.seal.json'),JSON.stringify(hashes));
@@ -70,7 +72,7 @@ if(require.main===module){
   const command=process.argv[2];
   if(command==='stage')stage();else assert(command==='verify','Use stage or verify');
   const hashes=verify(STAGE,true);
-  console.log('PASS: exact six-file artifact; fixture schema, isolation policy, secret and historical identifier scans.');
+  console.log('PASS: exact reviewed frontend/logo artifact; fixture schema, isolation policy, secret and historical identifier scans.');
   console.log(JSON.stringify(hashes,null,2));
 }
 module.exports={FILES,STAGE,verify,stage,inventory};

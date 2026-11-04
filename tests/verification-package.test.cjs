@@ -64,7 +64,7 @@ test('target inspection CLI reports status only; no clasp or network operation',
  const out=cp.execFileSync(process.execPath,[path.resolve(__dirname,'../tools/verification/package.cjs'),'target'],{encoding:'utf8'});const status=JSON.parse(out);assert.equal(status.readyForUpload,false);assert.equal(status.remoteProjectIdentity,'OWNER_CONFIRMATION_REQUIRED');assert.deepEqual(Object.keys(status),['localTarget','remoteProjectIdentity','readyForUpload']);
 });
 test('package is ignored and never added to the synthetic six-file publication',()=>{
- const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,6);assert(!FILES.includes('Verification.gs'));assert(!FILES.includes('appsscript.json'));
+ const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,38);assert(!FILES.includes('Verification.gs'));assert(!FILES.includes('appsscript.json'));
  for(const file of ['.verification-package/Verification.gs','.verification-package.seal.json'])cp.execFileSync('git',['check-ignore','-q',file]);
  assert.equal(cp.execFileSync('git',['ls-files','--','.verification-package'],{encoding:'utf8'}).trim(),'');
 });

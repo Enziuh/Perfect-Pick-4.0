@@ -19,30 +19,41 @@ function decode(reply,now){
 function install(root,config){
  if(config.form!==undefined&&!approvedPlayerDestination(config.form))throw Error('Approved official Form link required');
  const endpoint=config.endpoint;if(!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(endpoint))throw Error('Approved JSON endpoint required');
- let current=null,pending=null,timer=null,failed=false,last=0;
+ let current=null,pending=null,expiryTimer=null,refreshTimer=null,failed=false,last=0,expiresAt=0,degraded=false;
  const notice=name=>root.document.dispatchEvent(new root.Event(name));
  const clear=()=>{current=null;failed=true;notice('perfectpick:unavailable');};
+ const fresh=()=>current&&Date.now()<expiresAt;
+ const wait=ms=>new Promise(resolve=>root.setTimeout(resolve,ms));
  async function request(force=false){
-  if(pending)return pending;if(current&&!force&&Date.now()<last+120000)return current;
+  if(pending)return pending;if(fresh()&&!force)return current;
   if(failed&&!force)throw Error('Competition data unavailable');
+  notice('perfectpick:loading');
   pending=(async()=>{
-   const controller=new root.AbortController(),timeout=root.setTimeout(()=>controller.abort(),20000);
-   try{
-    const response=await root.fetch(endpoint+'?action=dashboard4',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
-    if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error();
-    const text=await response.text();if(text.length>2000000)throw Error();
-    const model=decode(JSON.parse(text),Date.now());
-    const official=approvedPlayerDestination(config.form);
-    if(official&&model.weeks.find(w=>w.week===model.prizes.activeWeek).entriesStatus!=='CLOSED'&&model.prizes.formControl.reportedStatus!=='CLOSED')model.form={available:true,url:official,label:'Submit Picks',message:'Continue to the existing official Google Form. Entry availability is controlled by the Form.'};
-    current=createViewAdapter(model,()=>Date.now());failed=false;last=Date.now();root.clearTimeout(timer);
-    timer=root.setTimeout(()=>{clear();refresh();},Math.max(1,model.expiresAt-Date.now()));
-    const button=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
-    if(button&&note){const f=model.form;{const link=root.document.createElement(f.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(f.available){link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');button.replaceWith(link);}note.textContent=f.message;}
-    return current;
-   }finally{root.clearTimeout(timeout);}
-  })().finally(()=>{pending=null;}).catch(()=>{clear();throw Error('Competition data unavailable');});return pending;
+   let model;
+   for(let attempt=0;attempt<3;attempt++){
+    if(attempt)await wait(attempt===1?400:1200);
+    const controller=new root.AbortController(),timeout=root.setTimeout(()=>controller.abort(),20000);
+    try{
+     const response=await root.fetch(endpoint+'?action=dashboard4',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
+     if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error();
+     const text=await response.text();if(text.length>2000000)throw Error();
+     model=decode(JSON.parse(text),Date.now());break;
+    }catch{if(attempt===2)throw Error('Competition data unavailable');}
+    finally{root.clearTimeout(timeout);}
+   }
+   const official=approvedPlayerDestination(config.form);
+   if(official&&model.weeks.find(w=>w.week===model.prizes.activeWeek).entriesStatus!=='CLOSED'&&model.prizes.formControl.reportedStatus!=='CLOSED')model.form={available:true,url:official,label:'Submit Picks',message:'Continue to the existing official Google Form. Entry availability is controlled by the Form.'};
+   current=createViewAdapter(model,()=>Date.now());failed=false;degraded=false;last=Date.now();expiresAt=model.expiresAt;
+   root.clearTimeout(expiryTimer);root.clearTimeout(refreshTimer);
+   // Refresh ahead of expiry. Never extend disclosure evidence to cover an outage.
+   refreshTimer=root.setTimeout(refresh,Math.max(1,expiresAt-Date.now()-30000));
+   expiryTimer=root.setTimeout(()=>{clear();refresh();},Math.max(1,expiresAt-Date.now()));
+   const button=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
+   if(button&&note){const f=model.form;const link=root.document.createElement(f.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(f.available){link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');button.replaceWith(link);note.textContent=f.message;}
+   return current;
+  })().catch(()=>{if(fresh()){degraded=true;notice('perfectpick:degraded');return current;}clear();throw Error('Competition data unavailable');}).finally(()=>{pending=null;notice('perfectpick:settled');});return pending;
  }
- async function refresh(){try{await request(true);notice('perfectpick:refresh');}catch{}}
+ async function refresh(){try{await request(true);if(!degraded)notice('perfectpick:refresh');}catch{}}
  const adapter={kind:'live',get:async(...args)=>(await request()).get(...args)};
  for(const name of ['buildMatchView','buildWeeklyPrize','resolveMonthlyChampion'])adapter[name]=(...args)=>{if(!current)throw Error('Competition data unavailable');return current[name](...args);};
  Object.defineProperty(root,'PerfectPickPreview',{value:Object.freeze(adapter),writable:false,configurable:false});

@@ -35,7 +35,7 @@ test('vendored dependency is pinned, MIT licensed and never part of Apps Script 
  assert.equal(meta.version,'8.15.0');assert.equal(meta.license,'MIT');
  for(const [file,field] of [['acorn.cjs','sha256'],['LICENSE','licenseSha256']])assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(dir,file))).digest('hex'),meta[field]);
  const source=pkg.render()['Verification.gs'];assert(!source.includes('Acorn'));assert(!source.includes('ecmaVersion'));assert(!pkg.SOURCES.some(p=>p.includes('vendor')));
- const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,6);assert(!FILES.some(p=>/vendor|acorn|compatibility/.test(p)));
+ const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,38);assert(!FILES.some(p=>/vendor|acorn|compatibility/.test(p)));
 });
 test('source and generated package are ES2020-compatible and package inspection enforces the gate',()=>{
  const source=fs.readFileSync(path.resolve(__dirname,'../tools/contracts/live-contract.cjs'),'utf8');

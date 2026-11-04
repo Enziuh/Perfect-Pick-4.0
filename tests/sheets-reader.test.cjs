@@ -94,7 +94,7 @@ test('Apps Script-style bundle runs without Node globals and denies native servi
  assert.deepEqual(denied.attempts,[]);
 });
 test('Sheets modules stay outside the exact synthetic publication and current runtime',()=>{
- const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,6);assert(!FILES.some(f=>/sheets|bundle/.test(f)));
+ const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,38);assert(!FILES.some(f=>/sheets|bundle/.test(f)));
  for(const file of ['app.js','preview-data.js','config.js','index.html'])assert(!fs.readFileSync(path.resolve(__dirname,'../website',file),'utf8').includes('PerfectPick4ReadOnly'));
 });
 

@@ -148,7 +148,7 @@
   function renderDashboard(prizes) {
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
-    if(liveView)setText('sourceStatusNote','3.0 reports entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. Picks require independently verified closure.');
+    if(liveView)setText('sourceStatusNote','Entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. Player picks appear only after verified closure.');
 
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
@@ -156,6 +156,7 @@
     setText('monthlyPot', money(prizes.currentMonthlyPot));
     setText('monthlyWinnerPool', money(prizes.projectedMonthlyWinnerPool));
     setText('seasonPot', money(prizes.projectedSeasonPot));
+    setText('poolEstimateNote',prizes.estimateBasis ? `Pools are estimates based on ${prizes.estimateBasis.participantsPerWeek} participants per week, not verified collected funds.` : 'Prize amounts reflect available rules and evidence.');
     setText(
       'confirmedSeasonPot',
       prizes.estimateBasis ? `Estimate based on ${prizes.estimateBasis.participantsPerWeek} participants per week; not collected funds` : liveView ? 'Calculated pool information; collections handled separately' : `Confirmed after completed periods: ${money(prizes.confirmedSeasonPot)}`
@@ -242,8 +243,8 @@
     return monthlyCache.get(period.periodKey);
   }
 
-  async function renderStandings(prizes) {
-    await renderMonthlyPeriod(prizes.currentPeriod);
+  async function renderStandings(prizes, selectedPeriod = prizes.currentPeriod) {
+    await renderMonthlyPeriod(selectedPeriod);
     renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
     if(liveView&&prizes.seasonCoverage){const heading=document.querySelector('#season h2');if(heading)heading.textContent='Season standings · covered weeks '+prizes.seasonCoverage;}
   }
@@ -321,12 +322,17 @@
     }).join('');
     $('recentWeeks').innerHTML = prizes.weekly.filter(w => w.week <= prizes.activeWeek).slice(-5).reverse().map(w => {
       const view = weekly[prizes.weekly.findIndex(row => row.week === w.week)];
-      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover !== null ? 'Rollover confirmed' : 'Pending'}</td></tr>`;
+      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover > 0 ? (view.estimateBasis ? 'Estimated rollover' : 'Rollover confirmed') : view.rollover === 0 ? 'No rollover' : 'Pending'}</td></tr>`;
     }).join('');
     const completed = weeks[currentIndex].results.filter(game => game.status === 'Final').length;
-    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${liveView ? 'Read-only Sheet snapshot; Refresh results fetches current scores.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
+    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${liveView ? 'Results refresh automatically; use Refresh results to check again.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
     const highlights = prizes.currentWeekStandings.slice(0,3);
-    setText('overviewLeaders', highlights.length ? highlights.map(p => `${p.name}: ${p.points} points`).join(' · ') : 'Weekly leaders unavailable until entries explicitly close.');
+    const leaders=highlights.length?prizes.currentWeekStandings:prizes.overallStandings;
+    setText('overviewLeaders', leaders.length ? (highlights.length?'Current weekly leaders':'Season leaders · verified covered weeks') : 'Weekly leaders unavailable until entries explicitly close.');
+    $('overviewLeaderCards').innerHTML=leaders.filter(p=>p.rank<=3).map(p=>`<article class="leader-card rank-${['','first','second','third'][p.rank]}"><span class="rank-badge">${p.rank}</span><div><strong>${escapeHtml(p.name)}</strong><small>${p.points} correct · ${formatAccuracy(p.points,p.completedGames)} accuracy</small></div></article>`).join('');
+    const upcoming=weeks[currentIndex];
+    $('dashboardUpcoming').innerHTML=upcoming.games.filter(game=>preview.buildMatchView(upcoming,game,prizes.formControl).isFinal===false).slice(0,3).map(game=>gameCardHtml(preview.buildMatchView(upcoming,game,prizes.formControl))).join('')||'<p class="state-message">No upcoming games in the current week.</p>';
+
   }
 
 
@@ -419,7 +425,7 @@
 
   function gameCardHtml(model, includeVoting = false) {
     return `<article class="game-result-card" data-game="${escapeHtml(model.game)}">
-      <div class="game-result-status">${escapeHtml(model.status)}${model.winner === 'Tie' ? ' · Tie' : ''}</div>
+      <div class="game-result-status" data-status="${escapeHtml(model.status)}">${model.status === 'In progress' ? 'LIVE · In progress' : escapeHtml(model.status)}${model.winner === 'Tie' ? ' · Tie' : ''}</div>
       <p class="kickoff-note">${model.kickoff ? `${ownerView ? 'Kickoff' : 'Synthetic kickoff'} · ${escapeHtml(formatPacificDateTime_(model.kickoff))}` : 'Kickoff unavailable'}</p>
       ${model.teams.map((team,index) => teamResultHtml_(team,model.scores[index],!model.isFinal ? 'pending' : model.winner === 'Tie' ? 'draw' : model.winner === team ? 'winner' : 'loser')).join('')}
       ${!model.isFinal && model.scores.some(score => score !== '') ? '<p class="pick-meta">Scores provisional · No pick result until FINAL.</p>' : ''}
@@ -589,7 +595,8 @@
   function teamBadgeHtml_(team, highlighted = false, className = 'team-badge') {
     const style = highlighted ? teamColorStyle_(team) : '';
     const cls = highlighted ? `${className} highlighted` : className;
-    return `<span class="${cls}" ${style ? `style="${style}"` : ''}>${escapeHtml(teamAbbr_(team))}</span>`;
+    const abbr=teamAbbr_(team);const known=Object.values(NFL_TEAM_ABBRS).includes(abbr);
+    return `<span class="${cls}" ${style ? `style="${style}"` : ''}>${known ? `<img class="team-logo" src="assets/teams/${abbr.toLowerCase()}.svg" width="48" height="48" alt="" loading="lazy" decoding="async">` : ''}<span class="team-abbreviation">${escapeHtml(abbr)}</span></span>`;
   }
 
   function matchupHeaderHtml_(game) {
@@ -723,6 +730,7 @@
 
   async function load() {
     if (!navigationStarted) { setupNavigation(); navigationStarted=true; }
+    const selected={week:$('weekSelect').value,weekly:$('weeklyWeekSelect').value,month:$('monthlyPeriodSelect').value,player:$('playerSelect').value,match:$('matchSelect').value};
     weekCache.clear(); monthlyCache.clear();
 
     try {
@@ -735,11 +743,15 @@
       const weeks = (prizes.weekly || []).map(w => Number(w.week)).filter(Boolean);
       const availableWeeks = weeks.length ? weeks : Array.from({ length: 18 }, (_, i) => i + 1);
 
-      populateWeekSelector(availableWeeks, activeWeek);
-      populateWeeklySelector(availableWeeks, activeWeek);
-      populateMonthlySelector(prizes.periods || [], prizes.currentPeriod);
+      populateWeekSelector(availableWeeks, availableWeeks.includes(Number(selected.week))?Number(selected.week):activeWeek);
+      populateWeeklySelector(availableWeeks, availableWeeks.includes(Number(selected.weekly))?Number(selected.weekly):activeWeek);
+      populateMonthlySelector(prizes.periods || [], prizes.periods.some(p=>p.periodKey===selected.month)?selected.month:prizes.currentPeriod);
 
-      await Promise.all([renderStandings(prizes), renderPrizes(prizes), loadWeekPicks(activeWeek)]);
+      await Promise.all([renderStandings(prizes,$('monthlyPeriodSelect').value), renderPrizes(prizes), loadWeekPicks(Number($('weekSelect').value))]);
+      renderWeeklyDetails(await loadWeek(Number($('weeklyWeekSelect').value)));
+      await renderDashboardGameResults(await loadWeek(activeWeek));
+      for(const [id,value] of [['playerSelect',selected.player],['matchSelect',selected.match]])if(value&&[...$(id).options].some(o=>o.value===value))$(id).value=value;
+      if(matchData){renderMatchCards();renderPlayerPickCards(matchData);}
 
       const when = prizes.generatedAt ? new Date(prizes.generatedAt).toLocaleString() : '';
       setStatus(`${sourceLabel} data loaded${when ? ` • ${when}` : ''}`, 'ok');
@@ -757,11 +769,14 @@
 
   document.addEventListener('DOMContentLoaded', load);
   if (liveView) {
+    document.addEventListener('perfectpick:loading',()=>{const button=$('refreshResults');if(button){button.disabled=true;button.textContent='Updating…';}});
+    document.addEventListener('perfectpick:settled',()=>{const button=$('refreshResults');if(button){button.disabled=false;button.textContent='Refresh results';}});
+    document.addEventListener('perfectpick:degraded',()=>setStatus('Update unavailable. Showing still-valid snapshot; retry with Refresh results.','warning'));
     document.addEventListener('perfectpick:refresh', load);
     document.addEventListener('perfectpick:unavailable', () => {
       weekCache.clear(); monthlyCache.clear(); matchData=null; matchModels=[]; picksRequest++; monthlyRequest++;
       document.querySelectorAll('.legacy-section').forEach(panel => { if (!['rules','faq'].includes(panel.id)) { panel.querySelectorAll('tbody').forEach(body=>body.textContent=''); } });
-      for (const id of ['playerPickCards','playerPicksBody','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','picksSubmissionCount','weeklyStatusNote','overviewProgress']) { const element=$(id); if(element)element.textContent='Competition data unavailable. Refresh to retry.'; }
+      for (const id of ['playerPickCards','playerPicksBody','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','overviewLeaderCards','dashboardUpcoming','picksSubmissionCount','weeklyStatusNote','overviewProgress']) { const element=$(id); if(element)element.textContent='Competition data unavailable. Refresh to retry.'; }
       for (const id of ['championHeading','championSummary','championState','weeklyPot','monthlyPot','monthlyWinnerPool','seasonPot','confirmedSeasonPot']) { const element=$(id); if(element) { element.textContent='Unavailable'; delete element.dataset.winner; } }
       const privacy=$('matchPrivacyNotice');if(privacy){privacy.hidden=false;privacy.textContent='Competition data unavailable. Picks and voting remain protected.';}
       document.querySelectorAll('[data-winner]').forEach(element=>delete element.dataset.winner);

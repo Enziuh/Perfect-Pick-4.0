@@ -98,7 +98,7 @@ test('real-read entry remains disabled regardless of flags, callbacks, globals o
  const api=context.PerfectPick4ReadOnly;assert.equal(api.verifyRealCompetitionReadOnly_().state,'DISABLED');assert.equal(api.timestamps.createParser('America/Los_Angeles').parse('2026-07-15 12:00:00'),'2026-07-15T19:00:00.000Z');assert.deepEqual(denied.attempts,[]);assert.equal(context.doGet,undefined);assert.equal(context.doPost,undefined);
 });
 test('verification components have no read services, write actions, or public publication membership',()=>{
- const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,6);assert(!FILES.some(f=>/verification/.test(f)));
+ const {FILES}=require('../tools/security/public-artifact.cjs');assert.equal(FILES.length,38);assert(!FILES.some(f=>/verification/.test(f)));
  for(const file of ['timestamps.cjs','owner-evidence.cjs','offline-report.cjs','disabled-entry.cjs']){
   const source=fs.readFileSync(path.resolve(__dirname,'../tools/verification',file),'utf8');assert(!/\b(?:SpreadsheetApp|FormApp|ScriptApp|PropertiesService|UrlFetchApp|fetch|console|Logger)\s*[.(]/.test(source));
  }
