@@ -20,7 +20,7 @@ function runPreparedDiagnostic(dependencies,config){
   const parser=createParser(config.timeZone);
   exact(config.policy,['games','teams','periods','seasonWeeks','decisions','accounting']);
   const policy={...config.policy,revision:config.revision,now,maxAgeMs:config.maxAgeMs,
-   aliases:ownerEvidence.aliases(config.aliases,config.revision),closures:ownerEvidence.closures(config.closures,{revision:config.revision,now,maxAgeMs:config.maxAgeMs}),completeWeeks:new Map()};
+   aliases:ownerEvidence.aliases(config.aliases,config.revision,dependencies.identityKey),closures:ownerEvidence.closures(config.closures,{revision:config.revision,now,maxAgeMs:config.maxAgeMs}),completeWeeks:new Map()};
   need(policy.games instanceof Map&&policy.games.size>0&&policy.games.size<=400&&policy.aliases.size>0);
   const weeks=[...new Set([...policy.games.values()].map(g=>g.week))].sort((a,b)=>a-b);
   need(weeks.length>0&&weeks.every(w=>policy.closures.has(w)));

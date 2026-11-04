@@ -35,9 +35,10 @@ An empty collection means verified none; it must never stand for withheld data.
   spreadsheet, script or provider event identifiers. Approval registry validates
   exact player-key/alias pairing; a label-format check is insufficient approval.
 - Alias: explicitly approved label, 1–48 ASCII letters/digits/spaces/hyphens,
-  beginning with a letter. A missing mapping withholds identity-bearing scopes;
-  no real-name fallback, abbreviation or contact hash. This conservative label
-  transport can be extended only through an explicitly reviewed contract revision.
+  beginning with a letter, optionally ending with one terminal period to support
+  the owner-approved first-name/last-initial format. A missing mapping withholds identity-bearing scopes;
+  no real-name fallback, abbreviation or contact hash. No submitted/registry name is automatically converted or approved. This targeted
+  format extension preserves strict alias mapping and all other v1 fields.
 - Team: canonical NFL abbreviations enumerated in the executable specification;
   two different valid teams per matchup. No arbitrary spreadsheet strings.
 - Competition keys: W1–W18; M1–M99; S plus a four-digit season. These are public

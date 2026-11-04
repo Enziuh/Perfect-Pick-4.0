@@ -4,6 +4,7 @@ const {runPreparedDiagnostic}=require('./prepared-diagnostic.cjs');
 const {create}=require('../sheets/sheets-read-adapter.cjs');
 const {projectCompetition}=require('../projector/project-competition.cjs');
 const ownerEvidence=require('./owner-evidence.cjs');
+const {identityNormalizer}=require('../compatibility/pp3-identity.cjs');
 const {createParser}=require('./timestamps.cjs');
 const need=v=>{if(!v)throw Error('Verification blocked');};
 const integer=v=>Number.isSafeInteger(v)&&v>=0;
@@ -33,7 +34,8 @@ function createOwnerDiagnostic(loadPrivateConfig,getSheets,now,consumeValidated=
    const started=now(),from=stamp(a.notBefore),until=stamp(a.expiresAt);
    need(integer(started)&&from<=started&&until>started&&until-from<=300000);
    const active=()=>{const t=now();need(integer(t)&&t>=started&&t<until);return t;};
-   need(['STRUCTURE','VERIFY'].includes(privateConfig.mode)&&privateConfig.identityFormat==='EXACT_TEXT');
+   need(['STRUCTURE','VERIFY'].includes(privateConfig.mode));
+   const normalizeIdentity=identityNormalizer(privateConfig.identityFormat);
    const c=privateConfig.competition;
    exact(c,['target','timeZone','revision','maxAgeMs','layout','policy','aliases','closures']);
    need(typeof c.target==='string'&&c.target.length>=1&&integer(c.revision)&&integer(c.maxAgeMs)&&c.maxAgeMs>0);
@@ -45,14 +47,14 @@ function createOwnerDiagnostic(loadPrivateConfig,getSheets,now,consumeValidated=
    for(const d of [c.layout.responses.timestamp,c.layout.responses.identity])exact(d,['header','column']);
    for(const d of [...c.layout.responses.games,...c.layout.responses.predictions])exact(d,['week','game','header','column']);
    const parser=createParser(c.timeZone);parser.parse('2026-01-15T12:00:00.000Z');
-   const policy={...c.policy,now:started,revision:c.revision,maxAgeMs:c.maxAgeMs,aliases:ownerEvidence.aliases(c.aliases,c.revision),closures:ownerEvidence.closures(c.closures,{revision:c.revision,now:started,maxAgeMs:c.maxAgeMs}),completeWeeks:new Map()};
+   const policy={...c.policy,now:started,revision:c.revision,maxAgeMs:c.maxAgeMs,aliases:ownerEvidence.aliases(c.aliases,c.revision,normalizeIdentity),closures:ownerEvidence.closures(c.closures,{revision:c.revision,now:started,maxAgeMs:c.maxAgeMs}),completeWeeks:new Map()};
    // Validate the existing exact layout without invoking a service or projector.
    create({values:{batchGet(){throw Error('No read during configuration validation');}},projectCompetition,readEvidence(){throw Error('No evidence read during validation');},identityKey:v=>v,submissionTime:parser.parse,now:active},c.target,c.layout,policy);
    const descriptors=[...c.layout.results.columns.map(d=>({...d,sheet:'Results'})),...[c.layout.responses.timestamp,c.layout.responses.identity,...c.layout.responses.games,...c.layout.responses.predictions].map(d=>({...d,sheet:'Responses'}))];
    need(descriptors.length<=450);result.structure.expectedColumns=descriptors.length;
    const weeks=[...new Set([...policy.games.values()].map(g=>g.week))];
-   need(weeks.length>0);
-   result.closure=weeks.every(w=>policy.closures.has(w))?'AVAILABLE':'UNVERIFIED';
+   need(privateConfig.mode==='STRUCTURE'||weeks.length>0);
+   result.closure=weeks.length>0&&weeks.every(w=>policy.closures.has(w))?'AVAILABLE':'UNVERIFIED';
    result.aliases=policy.aliases.size?'CONFIGURED_NOT_YET_VERIFIED':'UNVERIFIED';
    let capture=null;
    if(privateConfig.capture!==null){
@@ -81,7 +83,7 @@ function createOwnerDiagnostic(loadPrivateConfig,getSheets,now,consumeValidated=
    for(const d of descriptors){const count=d.sheet==='Results'?capture.resultRows:capture.responseRows,guard=d.header==='Week'||d.header==='Timestamp';if(count||guard)allowed.add(range(d.sheet,d.column,2,count+1+Number(guard)));}
    let calls=0;
    const values={batchGet(target,options){active();need(target===c.target&&++calls<=4);exact(options,['ranges','majorDimension','valueRenderOption','dateTimeRenderOption']);need(Array.isArray(options.ranges)&&options.ranges.length>0&&options.ranges.length<=descriptors.length&&new Set(options.ranges).size===options.ranges.length&&options.ranges.every(r=>allowed.has(r)));need(options.majorDimension==='ROWS'&&options.valueRenderOption==='UNFORMATTED_VALUE'&&options.dateTimeRenderOption==='SERIAL_NUMBER');return sheets.Spreadsheets.Values.batchGet(target,{...options,fields:VALUE_FIELDS});}};
-   const report=runPreparedDiagnostic({values,now:active,consumeValidated,identityKey:v=>{need(typeof v==='string'&&v.length>0);return v;},readEvidence(target){active();need(target===c.target&&stamp(capture.validUntil)>now());return {...capture};},authorize(stage,scope){active();return ['PREFLIGHT','BOUNDED_READ'].includes(stage)&&scope.target===c.target&&scope.revision===c.revision;}},c);
+   const report=runPreparedDiagnostic({values,now:active,consumeValidated,identityKey:normalizeIdentity,readEvidence(target){active();need(target===c.target&&stamp(capture.validUntil)>now());return {...capture};},authorize(stage,scope){active();return ['PREFLIGHT','BOUNDED_READ'].includes(stage)&&scope.target===c.target&&scope.revision===c.revision;}},c);
    active();
    result.state=report.state;result.schema=report.validation;
    if(report.validation==='VALID'){

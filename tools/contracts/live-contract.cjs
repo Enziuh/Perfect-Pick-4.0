@@ -38,7 +38,7 @@ function validatePublicInternal(snapshot,trust){
  for(const field of ['season','scoringBasis','weeks','games','standings','months','prizes'])need(Object.prototype.hasOwnProperty.call(snapshot,field));
  need(Number.isInteger(snapshot.season)&&snapshot.season>=2000&&snapshot.season<=2200&&snapshot.scoringBasis==='SUBMITTED_FINAL_PICKS');
  const fresh=value=>{const t=time(value);need(t<=generated&&trust.now-t<=trust.maxAgeMs);};
- const approved=row=>{key(row.player);need(row.player.startsWith('p_')&&typeof row.alias==='string'&&trust.aliases.get(row.player)===row.alias&&row.alias.length>0&&row.alias.length<=48&&/^[A-Za-z][A-Za-z0-9 -]*$/.test(row.alias));};
+ const approved=row=>{key(row.player);need(row.player.startsWith('p_')&&typeof row.alias==='string'&&trust.aliases.get(row.player)===row.alias&&row.alias.length>0&&row.alias.length<=48&&/^[A-Za-z][A-Za-z0-9 -]*\.?$/.test(row.alias));};
  const weeks=new Map();
  for(const w of list(snapshot.weeks,18)){
   object(w,['week','entry'],['picks','votes']);week(w.week);need(!weeks.has(w.week));weeks.set(w.week,w);

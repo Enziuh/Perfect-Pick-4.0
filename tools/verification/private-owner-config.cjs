@@ -1,4 +1,5 @@
 'use strict';
+const {minimalStructureConfig}=require('../sheets/workbook-profile.cjs');
 // Owner edits ONLY the remote isolated package copy under separate authorization.
 // No request/global/property configuration, identity fallback or committed private values.
 function loadPrivateOwnerConfig(){

@@ -6,7 +6,7 @@ var PerfectPickSheetsReadAdapter = (function () {
   const integer=value=>Number.isSafeInteger(value)&&value>=0;
   const stamp=value=>{need(typeof value==='string');const ms=Date.parse(value);need(Number.isFinite(ms)&&new Date(ms).toISOString()===value);return ms;};
   const fresh=(value,p)=>{try{const t=stamp(value);return t<=p.now&&p.now-t<=p.maxAgeMs;}catch{return false;}};
-  const normalize=value=>{need(typeof value==='string');return value.trim().replace(/\s+/g,' ').toLowerCase();};
+  const normalize=value=>{need(typeof value==='string');return value.trim().replace(/\s+/g,' ').toLowerCase().replace(/\s+vs\.?\s+/g,' vs ');};
   const fields=['Week','Game','Team 1','Team 2','Winner','Status','Team 1 Score','Team 2 Score'];
   function column(number){need(Number.isInteger(number)&&number>=1&&number<=1024);let out='';while(number){number--;out=String.fromCharCode(65+number%26)+out;number=Math.floor(number/26);}return out;}
   function range(sheet,col,first,last){return `'${sheet}'!${column(col)}${first}:${column(col)}${last}`;}

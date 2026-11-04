@@ -1,7 +1,8 @@
 # Controlled verification preparation — local, fabricated inputs only
 
 Current implementation: functional native read connector, DISABLED by default.
-See the final "Functional native connection" section for current owner steps;
+See PP3_COMPATIBILITY.md for the current minimal ten-header STRUCTURE profile;
+see the "Functional native connection" section for remaining owner safety steps;
 earlier preparation sections are retained as historical design/evidence context.
 
 Status: preparation complete; FIRST REAL READ DISABLED. No owner authorization,
@@ -12,8 +13,8 @@ Current synthetic Pages and production 3.0 remain untouched.
 ## Verified read-path inventory
 
 The configured layout is described by server-owned column descriptors in
-`tools/sheets/sheets-read-adapter.cjs`; actual column positions have NOT been
-verified against the real spreadsheet. Only these fields may be requested:
+`tools/sheets/sheets-read-adapter.cjs`; live metadata has NOT been checked. Owner-supplied workbook coordinates are
+now captured in workbook-profile.cjs (see PP3_COMPATIBILITY.md). Only these fields may be requested:
 
 - Results tab, row 1 headers and bounded data from row 2: Week, Game, Team 1,
   Team 2, Winner, Status, Team 1 Score, Team 2 Score.
@@ -25,8 +26,9 @@ verified against the real spreadsheet. Only these fields may be requested:
   Forms, Properties or trigger metadata. Prize facts and lifecycle completion
   remain separately approved policy evidence, never derived from hidden tabs.
 
-Eight synthetic result-column positions are tested (Week A, Game B, Winner C,
-Status D, Team 1 E, Team 2 F, scores G/H); these are EXAMPLES, not live positions.
+The earlier permuted-column fixture (Winner C, Status D, teams E/F) remains ONLY
+an alternate-layout test. The real owner-supplied profile is Week A, Game B,
+teams C/D, Winner E, Status F, scores G/H. The known Responses base is A/C.
 The fabricated Responses columns are Timestamp A, Name B (not read), private join C,
 week-one pick D, week-two pick E, prediction F, notes G (not read). Actual selected
 coordinates must be checked privately by the owner before configuration.
@@ -82,8 +84,8 @@ browser/request JSON, public fixtures or proof of the owner's identity.
 
 Alias record: privateKey, player (independent public key), alias, approved:true,
 revision. All fields required, unknown fields rejected. Exact approval/revision,
-unique private key/public key/alias and safe display labels are required. No real
-name abbreviation, contact hashing or automatic approval. Empty/unmapped players
+unique private key/public key/alias and safe display labels are required. No automatic real-name abbreviation, contact hashing or automatic approval.
+Owner-approved first name/last initial (optional terminal period) is supported. Empty/unmapped players
 remain withheld. The owner must deliberately approve each alias and private join
 normalization; a registry of real names is not an approval registry.
 
@@ -406,15 +408,19 @@ with private values. No extra .gs/config file is required. The exact top-level k
 - competition: exactly the prior coordinator config: target, timeZone, revision,
   maxAgeMs, layout, policy, aliases, closures. Exact layout and policy descriptors
   still apply. Use confirmed real column coordinates, not synthetic letters.
-  A valid game/team/period descriptor layout is required even in STRUCTURE mode;
-  headers are matched against that bounded manifest, not auto-discovered wholesale.
+  STRUCTURE may now use the minimal empty game/team/period manifest, selecting
+  only ten known header cells. VERIFY requires explicit real game/prediction
+  descriptors; unknown headers are not auto-approved wholesale.
   aliases/closures may be empty arrays in STRUCTURE mode. Target and all private
   aliases/joins belong ONLY in the private remote provider. No names are derived.
 - capture: null for STRUCTURE without source authority, otherwise the exact
   revision/observedAt/validUntil/resultRows/responseRows/quiescent evidence object
   documented above. captureAuthorityReviewed: explicit owner confirmation of
   independently credible source authority; never set true merely to pass a test.
-- identityFormat: EXACT_TEXT only. Raw text must match the privately approved
+- identityFormat: PP3_PHONE for the actual workbook; EXACT_TEXT is retained for
+  old fabricated fixtures only. PP3_PHONE removes nondigits and an eleven-digit
+  leading 1, matching 3.0. Approved alias keys normalize by the same rule; collisions
+  reject. See PP3_COMPATIBILITY.md. EXACT_TEXT behavior: Raw text must match the privately approved
   alias registry key exactly. No name fallback, automatic phone conversion or
   guessing leading zeroes. Confirm actual private join representation beforehand.
 
@@ -514,3 +520,14 @@ endpoint, and has been exercised only with fabricated data. This is not permissi
 to export a real snapshot or run the first read. Follow the exact separate upload,
 OAuth/STRUCTURE, evidence/VERIFY, private comparison and transport/publication
 approvals in that document. Normal synthetic Pages remains the rollback build.
+
+## Current first STRUCTURE read — reduced to known header coordinates
+
+PP3_COMPATIBILITY.md contains the exact bundled minimalStructureConfig factory
+usage with disabled/null private placeholders. Results A–H and Responses A/C are
+owner-supplied coordinates; ten headers and restricted timezone metadata are the
+only reads. No body rows/phone values, game map, alias or closure registry, capture
+evidence, Players or financial tabs are needed for this header-only mode. Native
+VERIFY still requires its full evidence. Do not mistake intentional redacted
+example phones for production defects or invent identities to make samples pass.
+No upload, OAuth or read is authorized by preparing this configuration.

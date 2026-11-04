@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector and validated dashboard bridge IMPLEMENTED/tested offline, packaged read entry DISABLED by default. Real reads and live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector and validated dashboard bridge IMPLEMENTED/tested offline, 3.0/workbook compatibility COMPLETE offline; packaged read entry DISABLED by default. Real reads and live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -998,3 +998,92 @@ contract outputs without selections, but current-week OPEN results/control trans
 needs a reviewed read plan/evidence before activation. No inferred OPEN status or
 elapsed-deadline closure is introduced. Private consumer assembly is in-process
 only, not an authenticated browser delivery implementation or a public endpoint.
+
+## Focused 3.0/workbook compatibility — implementation complete offline
+
+Branch develop; baseline 66adb55. Checkpoint revision is the containing commit.
+Owner-supplied layout/source analysis only; no live workbook access or original
+3.0 function execution. Intentional example phone redactions are NOT production
+identity defects. No personal workbook records/IDs/configuration stored here.
+
+Implemented findings:
+- tools/sheets/workbook-profile.cjs: actual owner-supplied Results Week A/Game B/
+  Team 1 C/Team 2 D/Winner E/Status F/scores G-H; Responses Timestamp A, private
+  Phone Number C. No Name B/Players reads. Old permuted fixture retained as a
+  configurable-layout regression, not a live default. Weekly/prediction columns
+  after C require explicit private descriptors for VERIFY, never guessed letters.
+- tools/compatibility/pp3-identity.cjs and native coordinator/evidence integration:
+  PP3_PHONE mode mirrors digit stripping/eleven-digit leading-1 removal from
+  40_Cache_Helpers.js:258. Responses and approved registry keys use identical
+  normalization; collisions/empty approval keys reject. No public phone-derived
+  keys, submitted-name fallback or automatic approval. Explicit first+last-initial
+  aliases (one optional terminal period) now validate consistently in v1/projector/
+  owner evidence. Players registry display names alone never authorize publication.
+- Projector: latest timestamped nonempty weekly entry selected BEFORE chosen-pick
+  validation; equal timestamps use later source order as in 20_Data.js:67. Older
+  invalid superseded picks do not invalidate a later valid entry; bad latest picks
+  do not resurrect older entries. Matchup vs/vs. and last-word canonical team
+  matching now follow 3.0 while rejecting conflicting approved mappings.
+- Scoring/ranks: Final-only one-point rules, missing-pick exclusion from completed
+  pick denominator, complete-perfect-week requirement and union-of-participants
+  monthly/season aggregates retained. Tiebreakers never alter points/ranks.
+  Accuracy is correct / completed SUBMITTED FINAL picks, not all completed NFL
+  games. A missing pick prevents Perfect Week even with 100% submitted-pick accuracy.
+- tools/compatibility/legacy-prize-facts.cjs: pure approved fact mapping for existing
+  weekly pots, NEW-rule rollovers, monthly funding shares and confirmed/projected
+  season pools. Exact cents; no inferred active-player counts or recalculated splits.
+  Explicit per-scope accounting/rollover approval needed; projector/validator check
+  finality/no-perfect/accounting consistency. Ignore notes, name-bearing records,
+  monthly payout placeholders and raw payment flags. No settled payments or monthly
+  allocation invented. No new financial tab reads; approved facts remain a later
+  capture/import gate.
+- Native STRUCTURE now permits empty game/period manifests. Bundled factory
+  minimalStructureConfig returns disabled/null private placeholders with TEN known
+  header cells only. No aliases, phone values, capture/closure evidence or guessed
+  game columns needed for first metadata/header verification. VERIFY retains all
+  prior gates and read-only scope. Private provider still returns null by default.
+- Documentation: PP3_COMPATIBILITY.md records precise source references, actual
+  versus alternate layouts, deliberate stricter validation/privacy differences,
+  exact factory usage and owner-controlled next action. FIRST_LIVE_VERIFICATION.md
+  and LIVE_DATA_CONTRACT_V1.md updated for minimal profile and approved alias syntax.
+
+Tests: 205 passed, 0 failed/skipped (16 new) via node --test tests/*.test.cjs.
+New fabricated regressions cover real layout order, normalized duplicates/timestamp
+order, superseded/latest invalid picks, private aliases/collisions/redaction,
+FINAL-only accuracy versus schedule coverage, sparse period participation, team/
+matchup spelling, monthly ties, approval-gated cents/rollovers, strict contract
+validation and first STRUCTURE header-only access. Existing browser/responsive/
+network isolation, privacy, scoring, package, syntax and artifact checks pass.
+Final package/seal refresh, ES2020 parser gate, source/native capability inspection,
+private-reference scans and owner upload preflight PASS. Ignored upload inventory
+remains Verification.gs, appsscript.json and .clasp.json; private target bytes,
+rootDir dot and mode 0600 unchanged. Sole read-only manifest scope unchanged.
+Public six-file artifact/seal and Git whitespace checks PASS; all modified and
+untracked files reviewed. Additional tests reject coercible accounting objects
+and exercise the bundled minimal factory in a fabricated native-service VM.
+No dependencies added or existing tests weakened. Original apps-script/src,
+website, fixture/adapter, publication workflow, main and 3.0 are unchanged.
+
+Remaining deliberate differences/blockers:
+3.0's invalid timestamp-to-zero and silent empty-phone skips are NOT copied: 4.0
+blocks ambiguous/unidentifiable captures instead of fabricating completeness. This
+says nothing about actual production phones; redacted examples cannot prove private
+identity parity. Coherent numeric FINAL scores and explicit aliases/CLOSED authority
+remain mandatory. Old-week/deadline disclosure (10_Prizes_Scoring.js:450) is NEVER
+used. 3.0 writers/setup/sync/triggers remain untouched and excluded. No real score,
+accounting or identity parity has been certified; Sheet coordinates/timezone/runtime
+must still pass the authorized header read. Public Pages stays synthetic unchanged.
+
+Exact next owner action/resume:
+Review PP3_COMPATIBILITY.md's minimalStructureConfig example. Explicitly authorize
+uploading ONLY the sealed Verification.gs/appsscript.json from tmp/verification-upload
+(after documented Node preflight) to the separate owner-only 4.0 project. Do not use
+apps-script/src or deploy. Privately fill target/timezone and fresh activation window
+in the REMOTE provider; review sole-editor/no-public-deployment/no-trigger/library
+isolation and effective spreadsheets.readonly scope. Then separately authorize ONE
+verifyPerfectPick4Package_ STRUCTURE execution/OAuth review, inspect only the fixed
+report and restore return null. No read is performed or authorized automatically.
+Later VERIFY needs actual matchup/prediction descriptors, independent capture authority,
+normalized approved aliases and historical CLOSED evidence; public transport/Form URL/
+financial fact authority and publication remain separate gates. Resume at this owner
+header-only action, not another broad audit or a production-writing operation.

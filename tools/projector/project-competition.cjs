@@ -31,11 +31,12 @@ function ranked(rows) {
       accuracyBasisPoints:row.completedGames ? Math.round(row.points/row.completedGames*10000) : null};
   });
 }
-const normalizedLabel = label => {requireValue(typeof label==='string');return label.trim().toLowerCase().replace(/\s+/g,' ').replace(/\s*\|\s*/g,'|');};
+const normalizedLabel = label => {requireValue(typeof label==='string');return label.trim().toLowerCase().replace(/\s+/g,' ').replace(/\s*\|\s*/g,'|').replace(/\s+vs\.?\s+/g,' vs ');};
 function approvedTeam(value,policy) {
   if(typeof value!=='string')return undefined;
-  const matches=[...policy.teams].filter(([name])=>normalizedLabel(name)===normalizedLabel(value));
-  requireValue(matches.length<=1);return matches[0]?.[1];
+  const nickname=normalizedLabel(value).split(' ').pop();
+  const matches=[...new Set([...policy.teams].filter(([name])=>normalizedLabel(name).split(' ').pop()===nickname).map(([,team])=>team))];
+  requireValue(matches.length<=1);return matches[0];
 }
 function gameDefinition(week,label,policy) {
   if(typeof label!=='string')return undefined;
@@ -89,16 +90,16 @@ function weeklyProjection(rawWeek, entry, policy, games) {
     const latest=new Map();
     for(const raw of array(rawWeek.submissions)) {
       requireValue(typeof raw.identity==='string' && raw.identity.length>0);
-      const when=timestamp(raw.timestamp);requireValue(when<=policy.now);
-      const selections=selectionsProjection(raw,rawWeek.week,policy,games);
-      if(!selections.length)continue; // Same legacy rule: no game selections means no weekly entry.
+      if(!array(raw.selections,32).some(s=>s.pick!==null&&s.pick!==undefined&&String(s.pick).trim()!==''))continue;
+      const when=timestamp(raw.timestamp);requireValue(when<=policy.now); // Same legacy rule: no game selections means no weekly entry.
       const previous=latest.get(raw.identity);
-      if(!previous || when>=previous.when)latest.set(raw.identity,{raw,when,selections});
+      if(!previous || when>=previous.when)latest.set(raw.identity,{raw,when});
     }
+    for(const candidate of latest.values())candidate.selections=selectionsProjection(candidate.raw,rawWeek.week,policy,games);
     const approvals=[];
     for(const identity of latest.keys()){
       const a=policy.aliases.get(identity);
-      if(!a || a.approved!==true || !/^p_[a-z0-9]{8,32}$/.test(a.player) || typeof a.alias!=='string' || !/^[A-Za-z][A-Za-z0-9 -]{0,47}$/.test(a.alias))return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
+      if(!a || a.approved!==true || !/^p_[a-z0-9]{8,32}$/.test(a.player) || typeof a.alias!=='string' || a.alias.length>48 || !/^[A-Za-z][A-Za-z0-9 -]*\.?$/.test(a.alias))return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
       const collisions=[...policy.aliases.values()].filter(other=>other?.approved===true && (other.player===a.player || other.alias===a.alias));
       if(collisions.length!==1)return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
       approvals.push(a);
