@@ -92,7 +92,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await send('Runtime.enable',{},sessionId);await send('Page.enable',{},sessionId);await send('Network.enable',{},sessionId);await send('Fetch.enable',{patterns:[{urlPattern:'*'}]},sessionId);
    const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true},sessionId);if(r.exceptionDetails)throw new Error('Evaluation failed');return r.result.value;};
    await send('Page.navigate',{url:origin+'/'+route},sessionId);
-   return {sessionId,targetId,evaluate};
+   const result={sessionId,targetId,evaluate};
+   // Navigation acknowledgement precedes HTML parsing on a cold/slow runner.
+   // Wait for the status node before testing the unchanged application states.
+   await until(result,"Boolean(document.getElementById('status'))");
+   return result;
   }
   async function until(p,expression){for(let i=0;i<100;i++){if(await p.evaluate(expression))return;await pause(50);}throw new Error('Browser expectation timed out: '+expression);}
   const p=await page();await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");

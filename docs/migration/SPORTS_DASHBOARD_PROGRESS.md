@@ -153,3 +153,12 @@ Next: commit/push these tested frontend files, dispatch existing manual api Page
 workflow, then verify actual published Week9 shortcut→Week8 picks/voting/comparisons/
 predictions/matrix, winner styling and all32 logo paths. Backend remains18, no upload,
 new permission/deployment or owner approval required. Frontend rollback66e89d3 preserved.
+
+Targeted fix commit cf9e84c pushed. First Pages run41930492212 correctly BLOCKED upload/
+deployment:260 passed,1 browser failure. Exact CI error was pre-DOM evaluation of
+status.textContent in the owner-RPC page at browser.test.cjs:375 (Page.navigate had
+acknowledged navigation before HTML parsed). It was NOT a production data/privacy or
+layout failure. Browser page helper now explicitly waits for the status DOM node
+before checking the same application-ready condition; no functional/security assertion
+removed, skipped or relaxed. Local full rerun required before retrying workflow.
+Published source stays66e89d3; backend18 unchanged throughout.
