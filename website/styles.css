@@ -1771,11 +1771,10 @@ tbody tr:last-child td {
   border-left:3px solid var(--team-color);
 }
 .selection-choice.wrong {
-  background:#faf1ee;
-  border-left:3px solid #b96669;
+  background:transparent;
 }
 .selection-choice.wrong small {
-  color:var(--danger);
+  color:var(--muted);
 }
 .player-pick-card li>span:first-child {
   font-size:14px;

@@ -3,6 +3,7 @@ const {projectCompetition}=require('../projector/project-competition.cjs');
 const {validatePublic}=require('../contracts/live-contract.cjs');
 const evidence=require('../verification/owner-evidence.cjs');
 const {normalizePhone}=require('../compatibility/pp3-identity.cjs');
+const {configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers}=require('./player-authority.cjs');
 const {mapApprovedPrizeFacts}=require('../compatibility/legacy-prize-facts.cjs');
 const {TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
@@ -29,14 +30,16 @@ function createLegacyProvider(deps){
    const policy={now,revision,maxAgeMs,aliases:new Map(),closures:new Map(),completeWeeks:new Map(),games:definitions,teams:new Map(Object.entries(TEAM_NAMES).map(([a,n])=>[n,a])),periods:[],decisions:new Map(),accounting:new Map(),seasonWeeks:weeks};
    const authority=cfg.authority;
    if(authority){
-    policy.aliases=evidence.aliases(authority.aliases,revision,normalizePhone);
+    policy.aliases=evidence.aliases(requireDisplayAliases(authority.aliases),revision,normalizePhone);
     policy.closures=evidence.closures(authority.closures,{revision,now,maxAgeMs});
     if(['OPEN','UPCOMING'].includes(prizes.formControl?.status))policy.closures.delete(Number(prizes.formControl.activeWeek));
-    policy.decisions=authority.decisions||new Map();policy.accounting=authority.accounting||new Map();
+    policy.decisions=configuredMap(authority.decisions,'decision');policy.accounting=configuredMap(authority.accounting,'accounting');
    }
    policy.periods=(prizes.periods||[]).map(p=>({key:p.periodKey,startWeek:p.startWeek,endWeek:p.endWeek,designatedGame:p.tiebreakRule?.method==='Combined Points'?definitions.get(p.endWeek+'|'+norm(p.tiebreakRule.game))?.game??null:null}));
    const latest=policy.closures.size?Object.values(deps.latest(ctx.responses,ctx.games)):[];
-   const selected=weeks.filter(w=>policy.closures.has(w));if(selected.length)policy.seasonWeeks=selected;
+   // Match the original season scope: every created response-game week, not just disclosed weeks.
+   const seasonWeeks=[...new Set(ctx.games.map(g=>g.week))].sort((a,b)=>a-b);
+   if(seasonWeeks.length)policy.seasonWeeks=seasonWeeks;
    const source={revision,observedAt:at,season:prizes.season,games,weeks:weeks.map(week=>{
     const closed=policy.closures.has(week),columns=ctx.games.filter(g=>g.week===week),required=games.filter(g=>g.week===week);
     const complete=closed&&columns.length===required.length&&required.every(g=>columns.some(c=>norm(c.game)===norm(g.game)));
@@ -49,7 +52,23 @@ function createLegacyProvider(deps){
     }):[]};
    })};
    // Preserve PP3 pots/overrides/NEW rollover/shares; require explicit accounting approval.
-   if(authority?.poolStates instanceof Map){const rollovers=new Map((prizes.weekly||[]).filter(w=>w.finalized&&w.rolloverToMonthly>0).map(w=>[w.week,w.periodKey]));policy.accounting=mapApprovedPrizeFacts(prizes,{revision,verifiedAt:at,pools:authority.poolStates,rollovers});}
+   if(authority?.poolStates!==undefined){const rollovers=approvedRollovers(authority.rolloverApprovals,revision,now,maxAgeMs);policy.accounting=mapApprovedPrizeFacts(prizes,{revision,verifiedAt:at,pools:configuredMap(authority.poolStates,'pool'),rollovers});}
+   // Explicit, fresh allocation approval is separate from pool approval. Reuse PP3's
+   // scored perfect-week result and payout amount, never its derived winner names.
+   const allocationWeeks=approvedAllocationWeeks(authority?.allocationApprovals,revision,now,maxAgeMs);
+   for(const week of allocationWeeks){
+    const account=policy.accounting.get('W'+week),row=prizes.weekly.find(w=>w.week===week);
+    const input=source.weeks.find(w=>w.week===week);
+    if(!policy.completeWeeks.get(week)||account?.value.poolState!=='CONFIRMED'||!row?.finalized||typeof deps.score!=='function')continue;
+    const entries=latest.filter(s=>s.week===week),columns=ctx.games.filter(g=>g.week===week);
+    if(!input||entries.some(s=>!policy.aliases.has(normalizePhone(s.phone))))continue;
+    const perfect=entries.filter(s=>deps.score(s,columns,ctx.playerRegistry,ctx.resultLookup).perfectWeek);
+    if(!perfect.length)continue;
+    if(perfect.length!==row.perfectPickWinners)throw Error();
+    const {cents}=require('../compatibility/legacy-prize-facts.cjs');
+    const each=cents(row.perfectPayoutEach);if(each===null||each*perfect.length>account.value.poolCents)throw Error();
+    policy.accounting.set('W'+week,{...account,value:{...account.value,allocationState:'CONFIRMED',allocations:perfect.map(s=>({player:policy.aliases.get(normalizePhone(s.phone)).player,cents:each}))}});
+   }
    const snapshot=projectCompetition(source,policy);if(snapshot.state!=='READY')throw Error();
    const trust={now,maxAgeMs,aliases:new Map([...policy.aliases.values()].map(a=>[a.player,a.alias])),closures:new Map([...policy.closures].map(([w,c])=>[w,c.entry])),aliasCompleteness:new Map(snapshot.weeks.map(w=>[w.week,Array.isArray(w.picks)])),prizes:new Map(snapshot.prizes.map(p=>[p.key,p]))};
    validatePublic(snapshot,trust);
@@ -57,7 +76,7 @@ function createLegacyProvider(deps){
    const c=prizes.formControl||{},first=games.find(g=>norm(g.game)===norm(c.firstGame)&&g.week===Number(c.activeWeek));
    const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v?v:'';
    const control={activeWeek,firstGame:first?TEAM_NAMES[team(first.team1)]+' vs '+TEAM_NAMES[team(first.team2)]:'',firstKickoff:iso(c.firstKickoff),picksClose:iso(c.picksClose),reportedStatus:['OPEN','CLOSED','UPCOMING'].includes(c.status)?c.status:'UNKNOWN'};
-   return {schema:'PP4_JSON_V1',snapshot,control,aliases:[...trust.aliases].map(([player,alias])=>({player,alias})),activeWeek,form:approvedPlayerDestination(cfg.form)?{url:cfg.form.url,verified:true,approvedForPlayers:true}:null};
+   return {schema:'PP4_JSON_V1',snapshot,control,aliases:[...new Map(snapshot.weeks.flatMap(w=>(w.picks||[]).map(p=>[p.player,p.alias])))].map(([player,alias])=>({player,alias})),activeWeek,form:approvedPlayerDestination(cfg.form)?{url:cfg.form.url,verified:true,approvedForPlayers:true}:null};
   }catch{return {state:'UNAVAILABLE'};}
  };
 }

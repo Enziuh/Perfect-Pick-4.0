@@ -10,8 +10,8 @@ test('existing PP3 context and prize builders feed Results to Pages with private
  const x=example(),r=x.get();assert.equal(r.schema,'PP4_JSON_V1');const model=decode(r,x.e.policy.now);assert.equal(model.matchViews[1]['Bears vs Lions'].scores[0],'20');assert.equal(model.weeks[0].visibility,'WITHHELD');assert.equal(model.matchViews[1]['Bears vs Lions'].votes,null);assert.deepEqual(model.prizes.overallStandings,[]);assert(!JSON.stringify(r).includes('PRIVATE_'));assert(!JSON.stringify(r).includes(x.e.authority.aliases[0].privateKey));assert.deepEqual(x.e.denied.attempts,[]);
 });
 test('approved CLOSED and alias authority reuse PP3 latest entry and points-first monthly tiebreaker',()=>{
- const x=example();x.cfg.authority=x.e.authority;let r=x.get();assert.equal(r.schema,'PP4_JSON_V1');let m=decode(r,x.e.policy.now);assert.equal(m.weeks[0].standings.length,2);assert.equal(m.resolutions.M1.winner,'Synthetic Comet');assert.equal(m.matchViews[1]['Bears vs Lions'].votes.total,2);
- const row=structuredClone(x.matrix.Responses[1]);row[0]=new Date(x.e.policy.now+1).toISOString();row[3]='Lions';x.matrix.Responses.push(row);x.e.policy.now+=2;r=x.get();m=decode(r,x.e.policy.now);assert.equal(m.weeks[0].standings.find(p=>p.name==='Synthetic Comet').points,0);assert.equal(m.weeks[0].standings.length,2);
+ const x=example();x.cfg.authority=x.e.authority;let r=x.get();assert.equal(r.schema,'PP4_JSON_V1');let m=decode(r,x.e.policy.now);assert.equal(m.weeks[0].standings.length,2);assert.equal(m.resolutions.M1.winner,'Avery A.');assert.equal(m.matchViews[1]['Bears vs Lions'].votes.total,2);
+ const row=structuredClone(x.matrix.Responses[1]);row[0]=new Date(x.e.policy.now+1).toISOString();row[3]='Lions';x.matrix.Responses.push(row);x.e.policy.now+=2;r=x.get();m=decode(r,x.e.policy.now);assert.equal(m.weeks[0].standings.find(p=>p.name==='Avery A.').points,0);assert.equal(m.weeks[0].standings.length,2);
 });
 test('projected points, completed picks and perfect weeks match the original scoring functions',()=>{
  const x=example();x.cfg.authority=x.e.authority;const row=structuredClone(x.matrix.Responses[1]);row[0]=new Date(x.e.policy.now+1).toISOString();row[2]='1'+row[2];row[3]='Lions';x.matrix.Responses.push(row);x.e.policy.now+=2;
@@ -54,3 +54,78 @@ test('browser fetches only the fixed reviewed JSON action, coalesces and recover
  const real=Date.now,now=x.e.policy.now;Date.now=()=>now;try{install(root,{endpoint});await Promise.all([root.PerfectPickPreview.get('prizes'),root.PerfectPickPreview.get('week','&week=1')]);assert.equal(calls.length,1);assert.equal(calls[0].url,endpoint+'?action=dashboard4');assert.equal(calls[0].options.credentials,'omit');root.fetch=async()=>{throw Error('PRIVATE_FAILURE');};await intervals[0]();await assert.rejects(()=>root.PerfectPickPreview.get('prizes'),{message:'Competition data unavailable'});}finally{Date.now=real;}
 });
 module.exports={example,endpoint};
+
+test('approved aliases are never enumerated before verified disclosure or for unused players',()=>{
+ const x=example();x.cfg.authority=x.e.authority;x.e.authority.closures=[];
+ let r=x.get();assert.deepEqual(r.aliases,[]);assert(!JSON.stringify(r).includes('Avery A.'));
+ const copy=structuredClone(r);copy.aliases=[{player:'p_unused000',alias:'Unused U.'}];assert.throws(()=>decode(copy,x.e.policy.now));
+});
+test('raw registry names and unapproved/incorrectly formatted aliases cannot authorize player publication',()=>{
+ for(const alias of ['Raw Full Name','Avery','PRIVATE_NAME','Avery A.']){
+  const x=example();x.cfg.authority=x.e.authority;x.e.authority.aliases[0].alias=alias;
+  if(alias==='Avery A.'){x.e.authority.aliases[0].approved=false;}
+  const r=x.get();assert(r.state==='UNAVAILABLE'||r.snapshot.weeks.every(w=>!w.picks));
+ }
+});
+test('original overall and monthly points, completed submitted picks and shared ranks match approved JSON',()=>{
+ const x=example();x.cfg.authority=x.e.authority;
+ // A partial submission counts only its selected FINAL games, never all NFL games.
+ const extra=['W1 | Packers vs Vikings'];x.matrix.Responses[0].push(...extra);
+ x.matrix.Responses.slice(1).forEach(r=>r.push(''));
+ x.matrix.Results.push([1,'Packers vs Vikings','Packers','Vikings','Packers','Final',20,10]);
+ const ctx=x.deps.context();ctx.playerRegistry=Object.fromEntries(x.e.authority.aliases.map(a=>[a.privateKey,a.alias]));
+ const oldOverall=x.sandbox.buildOverallFromContext_(ctx).standings;
+ const oldMonth=x.sandbox.getPeriodStandings_(ctx,1,2);
+ const m=decode(x.get(),x.e.policy.now);
+ for(const [actual,expected] of [[m.prizes.overallStandings,oldOverall],[m.prizes.periods[0].standings,oldMonth]]){
+  assert.equal(actual.length,expected.length);
+  for(const old of expected){const row=actual.find(r=>r.name===old.name);assert(row);for(const k of ['rank','points','completedGames'])assert.equal(row[k],old[k]);}
+ }
+ assert.equal(m.weeks[0].standings[0].completedGames,1);assert.equal(m.weeks[0].results.length,2);
+});
+test('season never silently drops an unverified created week from original aggregation scope',()=>{
+ const x=example();x.cfg.authority=x.e.authority;x.e.authority.closures=x.e.authority.closures.filter(c=>c.week===1);
+ const r=x.get(),season=r.snapshot.standings.find(s=>s.scope==='SEASON');assert.deepEqual(season.weeks,[1,2]);assert.equal(season.state,'WITHHELD');assert.equal(decode(r,x.e.policy.now).prizes.overallStandings.length,0);
+});
+test('JSON-compatible private decision and pool approvals reuse the existing validated projector',()=>{
+ const x=example();x.cfg.authority=x.e.authority;
+ x.e.authority.decisions=[...x.e.authority.decisions].map(([key,value])=>({key,...value}));
+ x.e.authority.poolStates=[{key:'W1',state:'CONFIRMED'},{key:'M1',state:'PROJECTED'},{key:'S2026',state:'CONFIRMED'}];
+ const r=x.get();assert.equal(r.schema,'PP4_JSON_V1');const m=decode(r,x.e.policy.now);assert.equal(m.resolutions.M1.winner,'Avery A.');assert.equal(m.prizeViews[1].pool,10);assert.equal(m.prizeViews[1].allocationEach,null);assert.equal(m.prizes.periods[0].paymentState,'UNKNOWN');
+});
+test('weekly allocations need separate fresh owner approval and original perfect-week payout facts',()=>{
+ for(const mode of ['approved','missing','stale','unknown-closure','missing-alias','wrong-revision']){
+  const x=example();x.cfg.authority=x.e.authority;x.e.authority.poolStates=[{key:'W1',state:'CONFIRMED'}];
+  const approval={week:1,snapshotRevision:1,verifiedAt:new Date(x.e.policy.now).toISOString(),approved:true};
+  x.e.authority.allocationApprovals=mode==='missing'?[]:[approval];
+  if(mode==='stale')approval.verifiedAt=new Date(x.e.policy.now-120001).toISOString();
+  if(mode==='wrong-revision')approval.snapshotRevision=2;
+  if(mode==='unknown-closure')x.e.authority.closures=[];
+  if(mode==='missing-alias')x.e.authority.aliases=[];
+  const r=x.get();assert.equal(r.schema,'PP4_JSON_V1');const p=r.snapshot.prizes.find(p=>p.key==='W1');
+  assert.equal(p.paymentState,'UNKNOWN');
+  if(mode==='approved'){assert.equal(p.allocationState,'CONFIRMED');assert.equal(p.allocations.length,1);assert(p.allocations.every(a=>a.cents===1000));assert.equal(decode(r,x.e.policy.now).prizeViews[1].allocationEach,10);}
+  else assert(!Object.hasOwn(p,'allocations'));
+ }
+});
+test('private JSON authority duplicates/extras and unknown pool states fail closed',()=>{
+ for(const setup of [a=>a.poolStates=[{key:'W1',state:'CONFIRMED',notes:'PRIVATE'}],a=>a.poolStates=[{key:'W1',state:'CONFIRMED'},{key:'W1',state:'PROJECTED'}],a=>a.poolStates=[{key:'W1',state:'PAID'}],a=>a.decisions=[{key:'M1',complete:true}]]){
+  const x=example();x.cfg.authority=x.e.authority;setup(x.e.authority);assert.equal(x.get().state,'UNAVAILABLE');
+ }
+});
+test('only explicitly approved no-perfect rollovers import the actual legacy amount and destination',()=>{
+ for(const approved of [false,true]){
+  const x=example();x.cfg.authority=x.e.authority;
+  x.matrix.Responses.slice(1).forEach(r=>{if(r[3])r[3]='Lions';});
+  x.e.authority.poolStates=[{key:'W1',state:'CONFIRMED'},{key:'M1',state:'CONFIRMED'}];
+  if(approved)x.e.authority.rolloverApprovals=[{week:1,to:'M1',snapshotRevision:1,verifiedAt:new Date(x.e.policy.now).toISOString(),approved:true}];
+  const r=x.get();assert.equal(r.schema,'PP4_JSON_V1');const p=r.snapshot.prizes.find(p=>p.key==='W1');
+  if(approved){assert.deepEqual(p.rollover,{to:'M1',cents:1000});assert.equal(p.paymentState,'UNKNOWN');const model=decode(r,x.e.policy.now);assert.equal(model.prizeViews[1].rollover,10);assert.equal(model.prizes.periods[0].monthlyWinnerPool,5);}
+  else assert(!Object.hasOwn(p,'rollover'));
+ }
+});
+test('reading approved allocations never mutates private owner configuration',()=>{
+ const x=example();x.cfg.authority=x.e.authority;
+ x.e.authority.allocationApprovals=[{week:1,snapshotRevision:1,verifiedAt:new Date(x.e.policy.now).toISOString(),approved:true}];
+ const before=structuredClone(x.cfg.authority);assert.equal(x.get().schema,'PP4_JSON_V1');assert.deepEqual(x.cfg.authority,before);
+});

@@ -197,7 +197,7 @@
 
   function accuracyHtml(player) {
     const accuracy = formatAccuracy(player.points, player.completedGames);
-    return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="Correct picks divided by completed FINAL games">${accuracy}</span>`;
+    return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="Correct picks divided by submitted picks with FINAL results">${accuracy}</span>`;
   }
 
   function renderStandingsRows(containerId, standings, showCompleted = true, resolution = null) {

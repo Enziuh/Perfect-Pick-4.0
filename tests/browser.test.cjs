@@ -365,11 +365,13 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    api.matrix.Responses.slice(1).forEach(r=>r[0]=at);apiReply=api.get();assert.equal(apiReply.schema,'PP4_JSON_V1');
    privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
    await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(apiRequests.length,1);
-   assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Synthetic Comet')"));
+   assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Avery A.')"));
    assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
+   assert(await connected.evaluate("[...document.querySelectorAll('.accuracy-indicator')].every(e=>e.title.includes('submitted picks with FINAL results'))"));
+   assert(await connected.evaluate("(()=>{const e=document.querySelector('#playerPickCards .selection-choice.wrong');return e && getComputedStyle(e).backgroundColor==='rgba(0, 0, 0, 0)' && e.textContent.includes('Incorrect');})()"));
    for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    api.cfg.authority=null;apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && document.querySelectorAll('#playerPickCards .player-pick-card').length===0");
-   await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Synthetic Comet')"));assert.equal(apiRequests.length,2);
+   await navigate(connected,'match-center');assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('Avery A.')"));assert.equal(apiRequests.length,2);
    await send('Target.closeTarget',{targetId:connected.targetId});privateAssets=null;apiReply=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){

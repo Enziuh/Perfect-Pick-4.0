@@ -1,5 +1,9 @@
 # Phase 5 — resumable migration checkpoint
 
+Latest state: see **Player-facing completion** at the end. Earlier phase/activation
+entries are historical; they do not supersede current owner authorization or the
+published results-only baseline. No live player-feature activation is authorized.
+
 Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector and validated dashboard bridge IMPLEMENTED/tested offline, 3.0/workbook compatibility COMPLETE offline; packaged read entry DISABLED by default. Real reads and live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
@@ -1225,3 +1229,81 @@ configuration with publicationApproved false; no endpoint or private value in Gi
 Actual live JSON/CORS/competition parity remains unverified until authorized API
 activation. No production interaction, upload, execution, deployment, GitHub settings
 change, new trigger, Sheet/Form change or actual-data publication occurred here.
+
+## Player-facing completion — local work in progress (2026-11-04)
+
+Supersedes historical activation instructions above. Last successful published
+commit: 3d0af3a on develop. Owner-authorized results-only API version 17 and Pages
+publication succeeded previously; this task does not change either deployment.
+Historical verified counts (272/121 FINAL/151 pending) are not a freshness guarantee.
+
+Completed first milestone: existing PP3 source/builders and ignored redacted workbook
+headers rechecked locally, without live calls or copying private records. Existing
+JSON week/overall/prizes shapes contain scores/standings/picks/pot computations;
+original actions were successfully live-tested in the preceding authorized activation.
+This task adds no raw legacy browser fallback. Existing dashboard4 already provides
+weekly/monthly/season tables, player cards/votes, and shared champion resolution.
+Local fixes now restrict envelope aliases to actually disclosed CLOSED-week records,
+require explicit approved first-name/last-initial labels at the JSON boundary, retain
+the original created-response-week season scope, and support explicit fresh weekly
+allocation approvals using original PP3 perfect-week/payout calculations. No payments
+or monthly payout placeholders are promoted to settled accounting. Private JSON
+arrays can configure existing decision/accounting maps without client configuration.
+Accuracy tooltip now states submitted FINAL picks; incorrect picks retain X with
+neutral styling. Tests/activation gate completion recorded in the next entry.
+
+Touched: tools/api/{legacy-provider,player-authority,browser-client,json-extension}.cjs,
+website/{app.js,styles.css}, tests/json-api.test.cjs, tests/browser.test.cjs,
+tests/support/pp3-api-example.cjs, and this checkpoint. Only local source changes.
+Next: finish fabricated regressions, run the complete suite and both artifact checks,
+then commit/push passing changes. No production upload or Pages dispatch authorized.
+
+Second completed milestone: 20 focused JSON integration regressions PASS (including
+8 new tests), using actual original PP3 functions in a fabricated service sandbox.
+Verified overall/monthly rank/point/completed-pick parity with a partially selected
+slate; explicit allocation approval maps original payout amounts to approved public
+keys; rollover requires separate fresh approval and validated full-pot destination.
+Tests reject invalid aliases/unused public alias enumeration, missing/reopened/
+unknown/stale closure, wrong-revision allocation authority and malicious private
+configuration. Existing equal-distance/missing-prediction champion regressions pass.
+The GITHUB_PAGES_API.md activation appendix records exact existing configuration
+shapes and remaining approvals. No actual aliases/phones/URLs/IDs are recorded here.
+Full suite, final artifact validation, commit/push and next-step status follow below.
+
+Final local validation milestone: COMPLETE. `node --test tests/*.test.cjs`:
+240 passed, 0 failed/skipped (21 focused JSON tests, 9 added). Browser tests retain
+all previous assertions and add incorrect-pick neutral styling and submitted-FINAL
+accuracy-label checks. Fabricated aliases in the JSON helper now use invented
+first-name/last-initial labels; generic synthetic previews remain unchanged.
+Owner configuration non-mutation regression passes. All existing monthly champion,
+points/ranks, picks/votes, Form-link, revocation/expiry, desktop/tablet/mobile,
+network isolation, read-only denial, grammar/security and artifact tests pass.
+
+`public-artifact.cjs stage/verify` PASS. Disabled extension regenerated locally;
+Apps Script ES2020 compatibility and private-reference inspection PASS. Local API
+artifact stage/verify/seal PASS, exact six-file inventory unchanged. Compared with
+the published baseline build: only styles.css, preview-data.js (JSON client bundle)
+and app.js differ. Config/endpoint, index.html, synthetic fixture, workflow and
+original apps-script/src are unchanged. Git whitespace check and complete modified/
+untracked-file review PASS. No dependencies added. No network service reads,
+clasp/OAuth/source upload, deployment/API changes, Sheet/Form/trigger modifications,
+real player capture or public player-data publication performed in this task.
+
+Status: player integration candidate is implemented/tested locally; LIVE player
+features remain BLOCKED on owner evidence/approval. Approved alias records and
+independent fresh historical CLOSED evidence have not been supplied. Do not derive
+aliases from names, infer closure, renew static evidence automatically, fabricate
+payments or claim real player/accounting parity. Verified canonical player Form URL
+is still absent; Submit Picks remains safely disabled. Monthly tables/champions
+remain withheld/pending until configured period evidence permits disclosure.
+
+Exact resume: read this latest entry and GITHUB_PAGES_API.md's player-feature
+appendix, then use `git log -1 --format=%h -- tools/api/legacy-provider.cjs` to identify
+the tested implementation commit. Request the owner's private approval inputs and
+explicit authorization for narrowly scoped player parity verification / additive
+extension upload using active production baseline 17, preserving unpublished editor
+source. Do not repeat the source/workbook audit, STRUCTURE/Results connectivity
+checks, create infrastructure, rerun score/Form setup, or dispatch Pages yet.
+After separately authorized validation of aliases/CLOSED/scoring/monthly/prizes,
+request separate player-data publication and Pages activation approval. Keep the
+current results-only version 17 / published commit 3d0af3a working until then.

@@ -116,3 +116,86 @@ return {
 No upload, deployment, production request, repository-variable update or GitHub
 setting change was performed. Original 3.0 and the owner reference deployment are
 unchanged. Real end-to-end scores cannot be certified before approved activation.
+
+## Player features — local candidate after the results-only release
+
+The results-only site is already published at commit 3d0af3a and the existing API
+is version 17 (prior owner-authorized activation). Do not repeat initial setup or
+create another API/hosting project. The following changes are local candidate
+source only; the default extension provider still returns null. No upload,
+production version change, live player read or Pages activation is authorized by
+this development work.
+
+Existing week/overall/prizes builders already provide the needed points, ranks,
+completed submitted picks, period definitions, pool overrides and rollover amounts.
+The sanitized extension continues using those original context/prize/latest-entry
+functions, and now calls the original scoreSubmissionForWeek_ only to confirm
+explicitly approved weekly perfect-winner allocations. Original API routes/writers
+are not patched again. Existing JSON outputs were live-tested during results-only
+activation; this task verifies additional player parity against those actual source
+functions with fabricated records, not new live player requests.
+
+Private perfectPick4JsonConfig_ authority (never browser/query configuration):
+
+- aliases: existing records with privateKey, independent public player key, alias,
+  approved:true and matching revision. Owner supplies each exact approved label;
+  the JSON path now requires first name + last initial, e.g. an invented Avery A.
+  No registry/submitted-name fallback or automatic first-name derivation. These
+  examples do not approve any actual entrant. The public alias envelope includes
+  only players actually disclosed in validated CLOSED-week picks. The browser also
+  rejects unused aliases or mismatched/incorrectly formatted labels.
+- closures: existing OWNER_VERIFIED_CLOSURE records with week, snapshotRevision,
+  closureRevision, status:CLOSED, verifiedClosed:true, checkedAt, validUntil,
+  deadline. Evidence must match the revision and remain within the existing
+  120-second freshness limit. Do not automatically renew checkedAt while reading
+  static configuration. Form Control's current flag, older weeks and elapsed
+  deadlines never create historical authority; OPEN/UPCOMING revokes current-week
+  disclosure. The owner must supply an independently verified evidence source or
+  accept that a manually verified preview expires. No Form access is added.
+- decisions: existing Map or JSON array of {key, snapshotRevision, complete,
+  verifiedAt}. Monthly completion authority remains independent of finalized
+  scores. The shared resolver handles points-first winners, missing predictions
+  and equal-distance unresolved ties; it never changes points/ranks or pays prizes.
+- poolStates: existing Map or JSON array of {key, state}, with reviewed scope
+  keys and state CONFIRMED or PROJECTED. Amounts come from original prize builders,
+  not participant counts or guessed allocations. Unknown money remains unavailable.
+- allocationApprovals: optional array of {week, snapshotRevision, verifiedAt,
+  approved:true}, fresh within 120 seconds. Together with a confirmed approved pool,
+  complete CLOSED scope, approved identities and finalized results, this permits
+  original PP3 perfect-week winners/payoutEach to populate allocations. Legacy
+  derived winner names/notes are never copied. Inconsistent counts, overallocated
+  rounding or invalid amounts fail closed. Allocation is not payment.
+- rolloverApprovals: optional array of {week, to, snapshotRevision, verifiedAt,
+  approved:true}, where to is the verified monthly period key. Explicit fresh
+  approval is required separately from pool approval. Original NEW-rule full-pot,
+  finalized no-perfect amount/destination is reconciled by the contract validator.
+- accounting: existing Map or JSON array of {key, snapshotRevision, verifiedAt,
+  value}; this remains the explicit accounting route when poolStates is absent.
+  Do not combine poolStates with unrelated accounting records: poolStates builds
+  the whole imported pool projection. Monthly/season allocations and settled
+  payments still require independently verified accounting records. PP3's monthly
+  zero payout placeholders never authorize a payout or payment confirmation.
+- form: existing {url, verified:true, approvedForPlayers:true} requires an actual
+  owner-verified canonical player-facing /viewform URL. No verified local published
+  URL was established; null keeps Submit Picks disabled. A link is not proof that
+  entries are OPEN/CLOSED. Never substitute the administrative Form identifier.
+
+Season totals retain all weeks discovered by the original response-game parser,
+not an automatically selected closed-only subset. Any unverified submitted-week
+scope withholds its season aggregate rather than misrepresenting partial totals.
+Monthly tables retain the existing complete configured-period contract; incomplete
+closure/alias evidence withholds the table, and missing completion proof prevents
+champion confirmation. Future questions are never fabricated. Accuracy everywhere
+uses points / completed submitted FINAL picks; zero completed picks displays an em
+dash. Perfect Week additionally needs every scheduled game picked, FINAL and correct.
+
+Minimum remaining activation: owner privately supplies/reviews alias, CLOSED,
+completion, allocation/rollover/pool and verified Form-link evidence; separately
+approves a privacy-safe player-level parity read and narrowly reviewed extension
+update using the current production baseline while preserving unpublished editor
+changes. Compare approved weekly/monthly/season totals, shared ranks, predictions,
+champions and prize facts privately with original builders. Report discrepancies
+as counts, never names/phones/picks. Only after these pass, separately approve
+publishing player scopes and the existing api-profile Pages workflow. Current
+version 17/results-only Pages continue operating throughout. No OAuth, trigger,
+Sheet/Form changes, new platform or custom submission form is needed or authorized.
