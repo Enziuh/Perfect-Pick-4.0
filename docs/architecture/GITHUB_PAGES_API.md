@@ -233,3 +233,26 @@ asset, submission handler or production operation. The exact six-file allowlist,
 manual develop workflow and integrity checks remain. Original API17 remains results-only
 until separately approved; the candidate changes only PerfectPick4_Json, not routing,
 manifest, original actions or writers. Unapproved private configuration is not deployable.
+
+## Approved player activation and estimated pools
+
+The owner has now approved the23 reconciled names under original PP3 formatting and
+attested Weeks1–8 CLOSED; Week9 remains OPEN. This supersedes the earlier pending-review
+status above. Private source labels/public alias approvals and explicit attestation
+records remain server-owned and Git-ignored; no contact keys enter public responses.
+Source control/reopening/integrity checks continue to apply on every snapshot.
+
+`prizeParticipants:23` selects pool-budget estimates using original weekly entry,
+NEW-mode no-perfect-week rollover, monthly/season shares and include-in-season rules.
+It does not change actual submissions, standings, accuracy, champions or Perfect Week.
+Strict public `estimateBasis:{kind:'ASSUMED_NOT_COLLECTED',participantsPerWeek:23}` marks
+all pool estimates; `estimatedRolloverCents` is null unless the relevant CLOSED/final
+outcome is verified. Estimates never contain confirmed financial allocations or actual
+payment records. The legacy required `paymentState:'UNKNOWN'` is a compatibility
+sentinel, not payment tracking; the live UI displays no payment statuses. Treasurer
+collections/disbursements remain external. Updating the assumed count is a later owner
+configuration decision, not automatic inference from submission counts.
+
+Historical Form cleanup is occasional manual owner maintenance. Missing historical
+questions/images do not invalidate historical Sheet records or prove entry closure;
+no Form cleanup automation is introduced or changed.

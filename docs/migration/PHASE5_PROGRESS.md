@@ -1711,3 +1711,37 @@ https://enziuh.github.io/Perfect-Pick-4.0/. Player/API release waits for the sin
 owner review above. Last successful source/deployed commit071dfc2; this following
 checkpoint-only commit records completion. No another diagnostic or deployment is
 needed before the owner reviews the23 proposed display names and remaining closure.
+
+## Owner-authorized final activation — in progress
+
+Resumed checkpoint a15677d (deployed source071dfc2). Owner explicitly approved all23
+reconciled names under original PP3 formatting, attested Weeks1–8 CLOSED (Week9 OPEN),
+and authorized dashboard4-only production API + existing Pages activation after tests.
+No missing initials required. Private approval/closure configuration stays Git-ignored.
+
+Owner directs prize estimates using23 participants/week, existing entry/rollover/share
+rules; actual submissions still determine scores/ranks/picks. Added strict estimated
+pool contract and frontend labels; no allocations/collection/payment records invented.
+Treasurer manages payments outside website. UNKNOWN protocol sentinel remains only
+for backward compatibility, not payment tracking. Missing outcome facts stay unknown.
+Form cleanup is occasional OWNER-MANUAL maintenance when accumulated questions/images
+slow the Form; no automatic deletion added or assumed. Historical Sheet records and
+explicit owner attestations, not remaining Form questions, establish historical scope.
+
+Initial full255 tests passed; a final full rerun includes live-browser estimate labels
+and omission of payment status. Existing owner-only staging HEAD has only the reviewed
+extension changed; original source/deployment backup is private. Live staging checks
+are in progress; production remains17 until their success and preserved-editor version
+operation. Exact next action: inspect live-activation/staging-checks.private.json and
+prize-final.log, then create clean17-baseline immutable version replacing only extension,
+restore editor exactly, promote existing deployment with rollback17 on failure, verify
+all six actions/closed-only disclosure and deploy existing manual api-profile workflow.
+Do not repeat identity/Form diagnostics or modify Sheets/Forms/writers/triggers.
+
+Final local rerun PASS:255/255, zero failed/skipped. Reviewed exact six-file API/Form
+artifact passes privacy scan + byte-integrity verification; new browser checks cover
+23-participant estimates and omission of live payment status. Staging original summary
+route encountered legacy LockService timeout after an earlier HTTP timeout; production
+is untouched at17. Uncached dashboard4 validation is in progress; do not promote until
+all original routes and player/privacy/parity checks pass. Safe implementation is ready
+for checkpoint commit; pending runtime validation is not claimed complete.

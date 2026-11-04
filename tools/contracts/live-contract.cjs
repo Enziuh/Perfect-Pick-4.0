@@ -162,13 +162,21 @@ function validatePublicInternal(snapshot,trust){
  for(const s of standings.values())if(s.scope==='MONTHLY')need(months.has(s.key));
  const prizeKeys=[];
  for(const p of list(snapshot.prizes,50)){
-  object(p,['key','currency','poolCents','poolState','allocationState','paymentState'],['allocations','rollover','funding','projectedPoolCents']);scopeKey(p.key);prizeKeys.push(p.key);
+  object(p,['key','currency','poolCents','poolState','allocationState','paymentState'],['allocations','rollover','funding','projectedPoolCents','estimateBasis','estimatedRolloverCents']);scopeKey(p.key);prizeKeys.push(p.key);
   const s=standings.get(p.key);need(s&&p.currency==='USD'&&['UNAVAILABLE','PROJECTED','CONFIRMED'].includes(p.poolState));
   need(p.poolCents===null||integer(p.poolCents));need((p.poolState==='UNAVAILABLE')===(p.poolCents===null));
   need(['UNAVAILABLE','PENDING','CONFIRMED'].includes(p.allocationState)&&['UNKNOWN','UNPAID','PAID'].includes(p.paymentState));
   if(p.poolCents!==null||p.projectedPoolCents!==undefined||p.funding!==undefined||p.allocationState==='CONFIRMED'||p.paymentState!=='UNKNOWN'||p.rollover!==undefined){
    // Private trust contains only an approved public accounting projection, no ledger IDs.
    need(same(p,trust.prizes.get(p.key)));
+  }
+  if(p.estimateBasis!==undefined){
+   object(p.estimateBasis,['kind','participantsPerWeek']);need(p.estimateBasis.kind==='ASSUMED_NOT_COLLECTED'&&integer(p.estimateBasis.participantsPerWeek)&&p.estimateBasis.participantsPerWeek>0&&p.estimateBasis.participantsPerWeek<=1000);
+   need(['PROJECTED','UNAVAILABLE'].includes(p.poolState)&&p.allocationState==='UNAVAILABLE'&&p.paymentState==='UNKNOWN'&&!p.allocations&&!p.rollover&&same(p,trust.prizes.get(p.key)));
+  }
+  if(p.estimatedRolloverCents!==undefined){
+   need(p.estimateBasis&&s.scope==='WEEKLY'&&(p.estimatedRolloverCents===null||integer(p.estimatedRolloverCents)));
+   if(p.estimatedRolloverCents!==null){need(closed(s.weeks)&&final(s.weeks)&&s.state==='AVAILABLE');const count=[...games.values()].filter(g=>s.weeks.includes(g.week)).length;const perfect=s.rows.some(r=>r.points===count&&r.completedGames===count&&r.totalPicks===count);need(p.estimatedRolloverCents===0||!perfect&&p.estimatedRolloverCents===p.poolCents);}
   }
   if(p.projectedPoolCents!==undefined)need(p.projectedPoolCents===null||integer(p.projectedPoolCents));
   if(p.funding!==undefined){
@@ -211,7 +219,7 @@ function comparePublic(a,b,trust,{legacyChampionOracle=false,candidateTrust=trus
  const canonical=(snapshot,code)=>{
   if(code==='SCORES')return sorted(snapshot.games.map(g=>[g.game,g.week,g.home,g.away,g.status,g.homeScore,g.awayScore,g.winner]));
   if(code==='RANKINGS')return sorted(snapshot.standings.map(s=>[s.scope,s.key,s.weeks.slice().sort((a,b)=>a-b),s.state,s.reason??null,sorted((s.rows||[]).map(r=>[r.player,r.rank,r.points,r.completedGames,r.totalPicks??null]))]));
-  if(code==='PRIZES')return sorted(snapshot.prizes.map(p=>[p.key,p.currency,p.poolCents,p.poolState,p.allocationState,p.paymentState,sorted((p.allocations||[]).map(a=>[a.player,a.cents])),p.rollover?[p.rollover.to,p.rollover.cents]:null,p.projectedPoolCents??null,p.funding?[p.funding.rolloverCents,p.funding.monthlyPrizeCents,p.funding.seasonContributionCents,p.funding.monthlyShareBasisPoints,p.funding.seasonShareBasisPoints]:null]));
+  if(code==='PRIZES')return sorted(snapshot.prizes.map(p=>[p.key,p.currency,p.poolCents,p.poolState,p.allocationState,p.paymentState,sorted((p.allocations||[]).map(a=>[a.player,a.cents])),p.rollover?[p.rollover.to,p.rollover.cents]:null,p.projectedPoolCents??null,p.estimateBasis??null,p.estimatedRolloverCents??null,p.funding?[p.funding.rolloverCents,p.funding.monthlyPrizeCents,p.funding.seasonContributionCents,p.funding.monthlyShareBasisPoints,p.funding.seasonShareBasisPoints]:null]));
   return sorted(snapshot.months.map(m=>[m.key,m.competitionComplete,m.designatedGame,m.state,m.winner,m.actualTotal,m.method,sorted((m.comparisons||[]).map(c=>[c.player,c.prediction,c.difference]))]));
  };
  const checks=codes.map(code=>({code,state:code==='CHAMPIONS'&&!legacyChampionOracle?'NOT_COMPARABLE':same(canonical(a,code),canonical(b,code))?'MATCH':'MISMATCH'}));

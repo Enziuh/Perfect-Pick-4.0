@@ -4,6 +4,7 @@ const {validatePublic}=require('../contracts/live-contract.cjs');
 const evidence=require('../verification/owner-evidence.cjs');
 const {normalizePhone}=require('../compatibility/pp3-identity.cjs');
 const {configuredMap,requireDisplayAliases,approvedAllocationWeeks,approvedRollovers,registryAliases}=require('./player-authority.cjs');
+const {estimatePrizes}=require('../compatibility/prize-estimates.cjs');
 const {mapApprovedPrizeFacts}=require('../compatibility/legacy-prize-facts.cjs');
 const {TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
@@ -62,19 +63,19 @@ function createLegacyProvider(deps){
     if(!policy.decisions.has(period.key)&&prizes.periods.find(p=>p.periodKey===period.key)?.allWeeksFinalized===true&&span.every(w=>policy.closures.has(w)&&policy.completeWeeks.get(w)&&games.some(g=>g.week===w)&&games.filter(g=>g.week===w).every(g=>norm(g.status)==='final')))policy.decisions.set(period.key,{snapshotRevision:revision,complete:true,verifiedAt:at});
    }
    // Preserve PP3 pots/overrides/NEW rollover/shares; require explicit accounting approval.
-   const calculated=authority?.calculatedOutcomeWeeks||[];
+   const calculated=cfg.prizeParticipants===undefined?(authority?.calculatedOutcomeWeeks||[]):[];
    if(!Array.isArray(calculated)||new Set(calculated).size!==calculated.length||!calculated.every(w=>weeks.includes(w)))throw Error();
    // Owner authorizes calculation scopes, not payment facts. Reverify the original
    // finalized outcome against current CLOSED/completeness/alias evidence each read.
    const qualified=calculated.filter(week=>policy.closures.has(week)&&policy.completeWeeks.get(week)&&prizes.weekly.find(w=>w.week===week)?.finalized===true&&latest.filter(s=>s.week===week).every(s=>policy.aliases.has(normalizePhone(s.phone))));
-   if(authority?.poolStates!==undefined){
+   if(cfg.prizeParticipants===undefined&&authority?.poolStates!==undefined){
     const rollovers=approvedRollovers(authority.rolloverApprovals,revision,now,maxAgeMs);
     for(const week of qualified){const row=prizes.weekly.find(w=>w.week===week);if(row.perfectPickWinners===0&&row.rolloverToMonthly>0){if(rollovers.has(week)&&rollovers.get(week)!==row.periodKey)throw Error();rollovers.set(week,row.periodKey);}}
     policy.accounting=mapApprovedPrizeFacts(prizes,{revision,verifiedAt:at,pools:configuredMap(authority.poolStates,'pool'),rollovers});
    }
    // Explicit, fresh allocation approval is separate from pool approval. Reuse PP3's
    // scored perfect-week result and payout amount, never its derived winner names.
-   const allocationWeeks=approvedAllocationWeeks(authority?.allocationApprovals,revision,now,maxAgeMs);
+   const allocationWeeks=approvedAllocationWeeks(cfg.prizeParticipants===undefined?authority?.allocationApprovals:undefined,revision,now,maxAgeMs);
    qualified.forEach(week=>allocationWeeks.add(week));
    for(const week of allocationWeeks){
     const account=policy.accounting.get('W'+week),row=prizes.weekly.find(w=>w.week===week);
@@ -89,7 +90,9 @@ function createLegacyProvider(deps){
     const each=cents(row.perfectPayoutEach);if(each===null||each*perfect.length>account.value.poolCents)throw Error();
     policy.accounting.set('W'+week,{...account,value:{...account.value,allocationState:'CONFIRMED',allocations:perfect.map(s=>({player:policy.aliases.get(normalizePhone(s.phone)).player,cents:each}))}});
    }
+   if(cfg.prizeParticipants!==undefined)policy.accounting=new Map();
    const snapshot=projectCompetition(source,policy);if(snapshot.state!=='READY')throw Error();
+   if(cfg.prizeParticipants!==undefined)snapshot.prizes=estimatePrizes(snapshot,prizes,cfg.prizeParticipants);
    const trust={now,maxAgeMs,aliases:new Map([...policy.aliases.values()].map(a=>[a.player,a.alias])),closures:new Map([...policy.closures].map(([w,c])=>[w,c.entry])),aliasCompleteness:new Map(snapshot.weeks.map(w=>[w.week,Array.isArray(w.picks)])),prizes:new Map(snapshot.prizes.map(p=>[p.key,p]))};
    validatePublic(snapshot,trust);
    const activeWeek=Number(prizes.activeWeek);if(!weeks.includes(activeWeek))throw Error();

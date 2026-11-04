@@ -158,7 +158,7 @@
     setText('seasonPot', money(prizes.projectedSeasonPot));
     setText(
       'confirmedSeasonPot',
-      `Confirmed after completed periods: ${money(prizes.confirmedSeasonPot)}`
+      prizes.estimateBasis ? `Estimate based on ${prizes.estimateBasis.participantsPerWeek} participants per week; not collected funds` : liveView ? 'Calculated pool information; collections handled separately' : `Confirmed after completed periods: ${money(prizes.confirmedSeasonPot)}`
     );
 
     const rolloverLines = (prizes.currentMonthlyRolloverBreakdown || [])
@@ -177,13 +177,13 @@
       <div class="breakdown-row">
         <span>Monthly prize portion</span>
         <strong>${money(prizes.projectedMonthlyWinnerPool)}</strong>
-        <small>${ownerView ? 'Amount requires verified accounting evidence' : '50% of the monthly rollover pot'}</small>
+        <small>${prizes.estimateBasis ? 'Estimate based on '+prizes.estimateBasis.participantsPerWeek+' participants; not collected funds' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
       </div>
       <div class="breakdown-arrow">+</div>
       <div class="breakdown-row">
         <span>Season pot portion</span>
         <strong>${money(projectedSeasonContribution)}</strong>
-        <small>${ownerView ? 'Amount requires verified accounting evidence' : '50% of the monthly rollover pot'}</small>
+        <small>${prizes.estimateBasis ? 'Estimate based on '+prizes.estimateBasis.participantsPerWeek+' participants; not collected funds' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
       </div>
     `;
 
@@ -268,7 +268,7 @@
       <h3>${resolution.winner ? escapeHtml(resolution.winner) : 'Monthly Champion decision'}</h3></div>
       <span class="pill champion-status" data-state="${resolution.status}">${resolution.status}</span></div>
       <p>${resolution.points === null ? '' : `<strong>${resolution.points} monthly points</strong> · `}${escapeHtml(championExplanation(resolution))}</p>
-      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${ownerView ? 'Payment status: ' + (period.paymentState || 'UNKNOWN') + '.' : resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
+      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${liveView ? 'Estimated allocation, not collected funds. The treasurer handles disbursements separately.' : ownerView ? 'Payment status: ' + (period.paymentState || 'UNKNOWN') + '.' : resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
       ${championComparisonsHtml(resolution)}`;
     renderChampionSpotlight(period, resolution);
     renderStandingsRows('monthlyStandingsBody', period.standings || [], true, resolution);
@@ -300,15 +300,16 @@
     const topPoints = Math.max(...prizes.overallStandings.map(player => player.points));
     const seasonLeaders = prizes.overallStandings.filter(player => player.points === topPoints).map(player => player.name);
     const seasonContext = seasonLeaders.length ? `Current points leaders: ${seasonLeaders.join(', ')} · ${topPoints} points. Season title not confirmed.` : 'Season standings unavailable.';
-    $('prizeSummary').innerHTML = `<article class="card"><span>Week ${prizes.activeWeek} pool · projected</span><strong>${money(current.pool)}</strong><small>${escapeHtml(current.status)}. ${current.payment}.</small></article>
-      <article class="card"><span>Season pool · confirmed</span><strong>${money(prizes.confirmedSeasonPot)}</strong><small>Projected total: ${money(prizes.projectedSeasonPot)}. Payout distribution and payment status unavailable.</small><a href="#standings/season">View season standings ↗</a><small>${escapeHtml(seasonContext)}</small></article>`;
+    const basis=prizes.estimateBasis;
+    $('prizeSummary').innerHTML = `${basis ? `<p class="state-message" style="grid-column:1/-1">Prize estimates assume ${basis.participantsPerWeek} participants per week, not verified collected funds. Actual submissions determine standings and picks. Collections and disbursements are handled separately by the treasurer.</p>` : ''}<article class="card"><span>Week ${prizes.activeWeek} pool · ${basis ? 'estimate' : 'projected'}</span><strong>${money(current.pool)}</strong><small>${escapeHtml(current.status)}${liveView ? '' : '. '+current.payment}.</small></article>
+      <article class="card"><span>${basis ? 'Season allocation estimate to date' : liveView ? 'Season prize pool' : 'Season pool · confirmed'}</span><strong>${money(basis ? prizes.projectedSeasonPot : prizes.confirmedSeasonPot)}</strong><small>${basis ? 'Calculated from estimated rollovers; not collected funds.' : liveView ? 'Calculated allocation; treasurer manages collections separately.' : 'Projected total: '+money(prizes.projectedSeasonPot)+'. Payout distribution and payment status unavailable.'}</small><a href="#standings/season">View season standings ↗</a><small>${escapeHtml(seasonContext)}</small></article>`;
     $('periodCards').innerHTML = (await Promise.all(prizes.periods.map(async p => {
       const resolution = await loadMonthlyResolution(p);
       return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
         <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
         <p><strong>${escapeHtml(resolution.winner || 'Champion not confirmed')}</strong>${resolution.points === null ? '' : ` · ${resolution.points} monthly points`}</p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
-        <div class="period-grid"><div><span>Monthly prize pool · ${ownerView ? p.poolState : p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
-        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. Champion confirmation is not a payment. ${ownerView ? 'Payment status: ' + (p.paymentState || 'UNKNOWN') : 'Payment status unavailable'}.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
+        <div class="period-grid"><div><span>Monthly prize pool · ${p.estimateBasis ? 'estimate · not collected' : ownerView ? p.poolState : p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
+        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. ${liveView ? 'Calculated pools are estimates, not collected funds. Champions are determined by game results.' : 'Champion confirmation is not a payment. '+(ownerView ? 'Payment status: ' + (p.paymentState || 'UNKNOWN') : 'Payment status unavailable')+'.'}</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
     }))).join('');
     $('periodCards').querySelectorAll('[data-prize-period]').forEach(link => link.addEventListener('click', () => {
       $('monthlyPeriodSelect').value = link.dataset.prizePeriod;
@@ -316,7 +317,7 @@
     }));
     $('weeklyPrizeBody').innerHTML = prizes.weekly.map((w,i) => {
       const view = weekly[i];
-      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">Allocation each: ${money(view.allocationEach)} · ${view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
+      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">${liveView ? 'Perfect Week' : 'Allocation each: '+money(view.allocationEach)+' · '+view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
     }).join('');
     $('recentWeeks').innerHTML = prizes.weekly.filter(w => w.week <= prizes.activeWeek).slice(-5).reverse().map(w => {
       const view = weekly[prizes.weekly.findIndex(row => row.week === w.week)];
