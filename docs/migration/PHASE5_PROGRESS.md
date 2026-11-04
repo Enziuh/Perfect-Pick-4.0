@@ -1372,3 +1372,66 @@ Git whitespace check PASS. Ignored private review inventory/modes verified; no p
 review contents staged. Files touched in Git: this checkpoint and
 PLAYER_ACTIVATION_APPROVAL.md only. Latest full implementation suite remains
 240/240 at 619d1de; no runtime changes require reimplementation or deployment.
+
+## Owner-authorized bounded verification — PARTIAL / access exception
+
+2026-11-04; resumed develop 7c283ae. Owner explicitly approved the checklist's
+bounded private read, including necessary identities/weekly predictions/rules/
+accounting comparison. This read permission persists; do not request it again for
+the same unfinished scope. No upload/deployment/new OAuth/publication authorized.
+Last tested runtime implementation remains 619d1de (full suite 240/240); no code
+changes in this verification task.
+
+Completed against existing read-only JSON actions:
+- Successful prizes/overall plus weeks 1–9 comparison; actual active week reported 9.
+  All 23 API display labels unique. Original overall equals prize overall; season
+  equals weekly score/completed-submitted-pick totals; all five monthly aggregates
+  match their covered weekly totals. This is API label-level parity only: private
+  phone joins, source quiescence/revision and last score-sync freshness NOT verified.
+- M1 complete with a single points leader; M2 complete with two points leaders and
+  a decisive combined-score tiebreaker. No equal-distance owner decision required.
+  M3–M5 incomplete. No real winner, identity, picks or prediction logged here.
+- Weekly count/entry/override-pot arithmetic, monthly shares, season contributions,
+  confirmed/projected season totals all match original JSON computations, no tested
+  arithmetic exceptions. No settled payment/accounting authority fabricated.
+- Ignored actual-API alias review prepared: 23 draft labels, zero duplicates;
+  six labels have only one name component and need an owner-approved initial after
+  registry verification. Every approval remains false. API-derived labels are NOT
+  verified registry identities. Reference draft collisions are not a production
+  finding and are superseded for API display review only.
+
+Concrete blocker: local Google grant has drive.file/metadata and script-management
+scopes but no dedicated Sheet/Form-body scope. Authorized minimal Sheets v4 metadata
+probe returned HTTP403 accessNotConfigured (service disabled for the local OAuth
+client's project), before returning any rows. File-specific access remains untested.
+No connector document session is connected. Enabling service/changing credentials/
+new OAuth would cross the read-only authorization boundary and was NOT performed.
+No browser credentials extracted. No source/deployment/Sheet/Form/trigger changes.
+
+Therefore still UNVERIFIED: linked Form's actual responder URL and acceptance,
+actual Players normalized-phone joins, historical closure records, direct financial
+row provenance. No historical CLOSED week or public alias approved; current Form
+Control status alone is not a grant. Existing static evidence expires normally.
+
+Private results are ONLY under ignored tmp/player-activation-review/, directory
+0700, private JSON0600: api-summary.private.json, api-reconciliation.private.json,
+prize-facts.private.json, aliases-live-api-review.private.json and read-access.private.json.
+No contacts/raw picks/notes stored in reconciliation; valid numeric leader comparisons
+and original API-derived labels remain private. An earlier rejected API-response batch
+is recorded privately; the successful summary supersedes that attempt. No repeat of
+completed comparisons is needed unless source revision changes or new exceptions arise.
+
+Exact resume: restore an existing authorized bounded Sheets/Form metadata connection,
+or obtain explicit owner authorization for necessary access configuration (no new
+backend/hosting). Then use the already approved scope to obtain linked published Form
+URL, current acceptance/control, actual registry joins and retained historical closure
+records privately. Resolve the six missing-initial draft labels and obtain alias
+approval; seek explicit historical attestation ONLY for weeks lacking retained positive
+proof. Retain fail-closed expiry and no deadline inference. No owner recalculation or
+M2 tie decision needed. Follow PLAYER_ACTIVATION_APPROVAL.md's remaining conditional
+publication/release item only after evidence/parity checks pass; version17 and Pages
+remain unchanged. This task is NOT claimed complete beyond the JSON comparisons.
+
+Post-read checks: 37/37 relevant JSON/PP3 compatibility tests PASS, no failed/skipped.
+Private draft approvals/permissions and Git ignore status checked. Only safe checklist/
+checkpoint documentation is intended for Git; no private records/URLs/IDs/grants.

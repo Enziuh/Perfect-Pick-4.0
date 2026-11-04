@@ -46,7 +46,7 @@ inspection only. API 17 and published results-only Pages are unchanged.
 
 ## Owner checklist — only unresolved permission or judgment
 
-- [ ] Authorize ONE bounded private read/review of existing linked Form published
+- [x] Owner authorized ONE bounded private read/review of existing linked Form published
   URL/current acceptance state, current Form Control, Players join/display columns,
   Results, configured Prize/Tiebreak Rules, necessary Weekly Prize Results count/
   override fields and approved weeks' response timestamp/join/pick/prediction fields.
@@ -72,3 +72,44 @@ inspection only. API 17 and published results-only Pages are unchanged.
   backups, routes/writers and rollback version 17. No release is authorized by this
   checklist itself; no further redesign/infrastructure work is needed. Abort on
   failed checks; reopen only the specific unresolved exception for owner decision.
+
+
+## Authorized verification outcome — 2026-11-04
+
+The owner approved the bounded read. Do not request the same read authorization
+again after access is restored. No upload, permission expansion or publication was
+approved. Existing JSON API comparisons succeeded; direct Sheet/Form work is partial.
+
+- Existing prizes/overall and weeks 1–9 reconcile: 23 unique API display labels;
+  overall versus prize overall MATCH; season versus summed weekly totals MATCH;
+  all five monthly aggregates MATCH. This is label-level consistency, not verified
+  private phone identity parity or a quiescent-source/fresh-score guarantee.
+- M1 results are complete with one points leader. M2 results are complete with two
+  leaders and a decisive combined-score tiebreaker, no equal-distance exception.
+  M3–M5 remain incomplete. No names/predictions/winners are approved for publication.
+- Weekly pool/override arithmetic, monthly allocations, season contributions and
+  confirmed/projected season-pool arithmetic reconcile with existing API facts.
+  No tested arithmetic exception; no settled-payment or missing-ledger conclusion.
+- Private actual-API alias drafts are in ignored
+  `tmp/player-activation-review/aliases-live-api-review.private.json`: 23 labels,
+  zero duplicates, six single-part labels that cannot supply a last initial. All
+  approved:false. These supersede redacted-reference drafts for display review,
+  but they are not verified Players-registry/phone mappings. Do not invent initials.
+- Direct bounded Sheets metadata request returned HTTP403 accessNotConfigured:
+  Sheets API is disabled for the local OAuth client's project. No rows were
+  returned. The existing local grant was inspected without granting permissions;
+  it has no dedicated Sheets/Form-body scope. Whether existing drive.file access
+  suffices for this target remains unverified because service availability failed
+  first. No connected document session is available. Do not enable APIs, expand
+  scopes, copy browser credentials, bulk-export the workbook or modify deployment
+  to work around this boundary.
+- Consequently linked responder URL, actual Players joins, direct historical closure
+  records and Form acceptance remain UNVERIFIED. No historical week has been granted
+  authoritative CLOSED status. Restore an already authorized bounded Sheet/Form
+  metadata connection; any new grant or service configuration needs owner approval.
+
+Remaining owner items are the direct-access exception, approval of the privately
+reconciled aliases (including six missing-initial cases), historical closure facts
+not established by retained records, and conditional publication/release approval.
+Do not ask the owner to recompute verified arithmetic or decide the already-decisive
+M2 tiebreaker. Preserve current freshness gates; no automatic static-proof renewal.
