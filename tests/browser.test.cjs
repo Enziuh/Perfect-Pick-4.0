@@ -6,6 +6,7 @@ const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),
 const {spawn}=require('node:child_process');
 const {STAGE,verify}=require('../tools/security/public-artifact.cjs');
 const {createScenario}=require('./support/monthly-scenarios.cjs');
+const {dashboardScenario}=require('./support/dashboard-scenarios.cjs');
 const {createMatchScenario}=require('./support/match-scenarios.cjs');
 const {validate}=require(path.join(STAGE,'preview-data.js'));
 const scenarioBase=JSON.parse(fs.readFileSync(path.join(STAGE,'fixtures/preview.json'),'utf8'));
@@ -33,10 +34,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
  verify(STAGE,true);
  const chrome=process.env.CHROME_PATH || (process.platform==='darwin'?'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome':'/usr/bin/google-chrome');
  assert(fs.existsSync(chrome),'Required Chrome unavailable; publication BLOCKED');
- let fault='',scenario='';const external=[],errors=[];
+ let fault='',scenario='',privateAssets=null;const external=[],errors=[];
  const server=http.createServer((req,res)=>{
   const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
   if(!['index.html','app.js','preview-data.js','styles.css','config.js','fixtures/preview.json'].includes(name)){res.writeHead(404).end();return;}
+  if(privateAssets){if(!Object.hasOwn(privateAssets,name)){res.writeHead(404).end();return;}res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':'text/html'}).end(privateAssets[name]);return;}
   if(name==='fixtures/preview.json'&&scenario){res.writeHead(200,{'Content-Type':'application/json'}).end(JSON.stringify(validate(scenario.startsWith('match:')?createMatchScenario(scenario.slice(6),scenarioBase):createScenario(scenario,scenarioBase))));return;}
   if(name==='fixtures/preview.json'&&fault){res.writeHead(fault==='missing'?404:200,{'Content-Type':'application/json'}).end(fault==='missing'?'':(fault==='malformed'?'{':JSON.stringify(fault==='invalid-prediction'?invalidPredictionScenario:{synthetic:false})));return;}
   res.writeHead(200,{'Content-Type':name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(path.join(STAGE,name)));
@@ -78,6 +80,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   }
   async function until(p,expression){for(let i=0;i<100;i++){if(await p.evaluate(expression))return;await pause(50);}throw new Error('Browser expectation timed out: '+expression);}
   const p=await page();await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
+  assert(await p.evaluate("document.getElementById('submitPicks').disabled && !document.getElementById('submitPicks').hasAttribute('href')"));
   assert(await p.evaluate("document.getElementById('dashboardResultsWeek').textContent.includes('Recent finals')"));
   const routes=['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules','guide/faq'];
   async function navigate(p,route){
@@ -311,6 +314,27 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await send('Target.closeTarget',{targetId:example.targetId});
   }
   scenario='';
+  for(const name of ['decisive','missing-alias','unknown']){
+   privateAssets=dashboardScenario(name);const owner=await page('#overview');
+   await until(owner,"document.getElementById('status')?.textContent.startsWith('Owner verification data loaded')");
+   assert(await owner.evaluate("document.querySelector('.preview-label').textContent.includes('Owner Verification')"));
+   assert(await owner.evaluate("document.getElementById('submitPicks').disabled"));
+   for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes']){
+    await navigate(owner,route);for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},owner.sessionId);assert(await owner.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}
+   }
+   await navigate(owner,'match-center');
+   if(name==='decisive'){
+    assert(await owner.evaluate("document.getElementById('championHeading').textContent.includes('Approved Atlas')"));
+    assert(await owner.evaluate("document.querySelectorAll('#pickPercentages .vote-option').length>0"));
+    assert(await owner.evaluate("document.getElementById('playerPickCards').textContent.includes('Approved Cedar')"));
+   }else{
+    assert.equal(await owner.evaluate("document.querySelectorAll('#pickPercentages .vote-option, #playerPickCards .player-pick-card, #playerPicksBody .pick-cell').length"),0);
+    assert(await owner.evaluate("document.getElementById('picksSubmissionCount').textContent.includes('unavailable')"));
+    assert(!await owner.evaluate("document.getElementById('picks').textContent.includes('0 votes') || document.getElementById('picks').textContent.includes('0 submission')"));
+   }
+   if(name==='decisive'){await send('Emulation.setVirtualTimePolicy',{policy:'advance',budget:310000},owner.sessionId);await until(owner,"document.getElementById('status').textContent.includes('snapshot expired')");await send('Emulation.setVirtualTimePolicy',{policy:'advance'},owner.sessionId);await navigate(owner,'guide/faq');await navigate(owner,'match-center');assert.equal(await owner.evaluate("document.querySelectorAll('#picks .vote-option, #picks .player-pick-card').length"),0);}
+   await send('Target.closeTarget',{targetId:owner.targetId});privateAssets=null;
+  }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");
    assert(await broken.evaluate("document.getElementById('dashboard').textContent.includes('No external connection attempted')"));

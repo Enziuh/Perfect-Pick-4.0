@@ -502,3 +502,15 @@ hide partial progress deliberately rather than return private error details.
    ending the session and reviewing only verification-specific grants. No data
    writes occurred, so no production data rollback is needed. Do not alter 3.0,
    Forms, triggers or existing production grants. Record only redacted outcomes.
+
+## Dashboard consumer continuation
+
+The validated connector-to-dashboard handoff is now implemented in
+WORKFLOW_DASHBOARD_INTEGRATION.md and tools/presentation/. An optional trusted
+consumeValidated callback receives ONLY a validated READY public DTO and public
+validation trust; the standard packaged entry does not supply or expose it.
+Private asset assembly is outside Apps Script/Pages, has no network listener or
+endpoint, and has been exercised only with fabricated data. This is not permission
+to export a real snapshot or run the first read. Follow the exact separate upload,
+OAuth/STRUCTURE, evidence/VERIFY, private comparison and transport/publication
+approvals in that document. Normal synthetic Pages remains the rollback build.

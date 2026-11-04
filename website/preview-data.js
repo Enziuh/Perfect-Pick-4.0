@@ -70,7 +70,7 @@
     const model = {game:label,teams,status:state,winner,isFinal:Boolean(winner),kickoff,
       scores:[readScore(result?.team1Score),readScore(result?.team2Score)],votes:null,selections:[]};
     // Stop before touching any selection-bearing fields when closure is unconfirmed.
-    if (data.entriesStatus !== 'CLOSED') return model;
+    if (data.entriesStatus !== 'CLOSED' || data.visibility === 'WITHHELD') return model;
     const rows = data.standings || [];
     const names = rows.map(p => p.name);
     if (new Set(names).size !== names.length || names.some(name => !APPROVED_ALIASES.includes(name))) return model;

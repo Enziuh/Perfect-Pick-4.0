@@ -48,6 +48,9 @@ function runPreparedDiagnostic(dependencies,config){
   const trust={now:ended,maxAgeMs:config.maxAgeMs,aliases:new Map([...policy.aliases.values()].map(a=>[a.player,a.alias])),closures:new Map([...policy.closures].map(([w,e])=>[w,e.entry])),aliasCompleteness:new Map(weeks.map(w=>[w,true])),prizes:new Map([...policy.accounting].map(([key,e])=>[key,e.value]))};
   validatePublic(snapshot,trust);
   if(snapshot.state!=='READY')return {state:'INCOMPLETE',validation:'UNAVAILABLE',readiness:'NOT_ESTABLISHED',counts:blocked().counts};
+  // Trusted in-process owner consumer only; the packaged entry supplies no consumer.
+  // Validation rejects private fields; raw source records/target never reach this callback.
+  if(typeof dependencies.consumeValidated==='function')dependencies.consumeValidated(snapshot,trust);
   const counts={weeks:snapshot.weeks.length,games:snapshot.games.length,finalGames:snapshot.games.filter(g=>g.status==='FINAL').length,availableScopes:snapshot.standings.filter(s=>s.state==='AVAILABLE').length,withheldScopes:snapshot.standings.filter(s=>s.state==='WITHHELD').length};
   return {state:counts.withheldScopes?'INCOMPLETE':'VALIDATED_READ',validation:'VALID',readiness:counts.withheldScopes?'WITHHELD':'PRIVATE_COMPARISON_REQUIRED',counts};
  }catch{return blocked();}

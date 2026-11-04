@@ -75,3 +75,6 @@ test('write requests, arbitrary dispatch and stale closure cannot be configured 
 test('header mismatch reports only safe progress counts and fixed schema status',()=>{
  const s=setup('STRUCTURE');s.e.matrix.Results[0][1]='FABRICATED_PRIVATE_HEADER';const r=s.run();safe(r);assert.equal(r.state,'BLOCKED');assert.equal(r.schema,'HEADER_MISMATCH');assert.equal(r.structure.discoveredTabs,2);assert.equal(r.structure.matchedColumns,1);assert.equal(r.comparison,'BLOCKED');assert.equal(r.records.results,null);
 });
+test('native connector can feed a separately authorized private dashboard without exporting source records',()=>{
+ const s=setup();const {createOwnerDashboard}=require('../tools/presentation/private-dashboard.cjs');const session=createOwnerDashboard(()=>s.config,()=>s.sheets,()=>s.e.state.clock,{activeWeek:2,authorizedPrivateInspection:true});const result=session();assert.equal(result.report.state,'VALIDATED_READ');assert(result.assets['index.html'].includes('Owner Verification'));assert(!result.assets['preview-data.js'].includes('FABRICATED_TARGET'));assert(!result.assets['preview-data.js'].includes('fabricated-entry'));assert.deepEqual(s.e.denied.attempts,[]);assert.equal(session().assets,null);
+});

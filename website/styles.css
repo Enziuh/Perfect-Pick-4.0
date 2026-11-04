@@ -1836,3 +1836,8 @@ tbody tr:last-child td {
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior:auto !important; transition:none !important; } }
 
 @media (max-width:600px) { #prizeSummary { grid-template-columns:1fr; } }
+
+.submit-entry { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.submit-picks { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .75rem 1.25rem; border-radius: .65rem; background: var(--emerald, #147a5f); color: white; font: inherit; font-weight: 700; border: 0; text-decoration: none; }
+.submit-picks:disabled { background: #e3e8e6; color: #40544d; cursor: not-allowed; }
+.submit-entry p { flex: 1 1 15rem; margin: 0; font-size: .9rem; }

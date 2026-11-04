@@ -1,5 +1,8 @@
 (() => {
   const preview = window.PerfectPickPreview;
+  const ownerView = preview?.kind === 'owner-contract';
+  const sourceLabel = ownerView ? 'Owner verification' : 'Synthetic';
+  const publicPicks = data => data.entriesStatus === 'CLOSED' && data.visibility !== 'WITHHELD';
   let picksRequest = 0;
   let monthlyRequest = 0;
   let activeWeek = null;
@@ -171,13 +174,13 @@
       <div class="breakdown-row">
         <span>Monthly prize portion</span>
         <strong>${money(prizes.projectedMonthlyWinnerPool)}</strong>
-        <small>50% of the monthly rollover pot</small>
+        <small>${ownerView ? 'Amount requires verified accounting evidence' : '50% of the monthly rollover pot'}</small>
       </div>
       <div class="breakdown-arrow">+</div>
       <div class="breakdown-row">
         <span>Season pot portion</span>
         <strong>${money(projectedSeasonContribution)}</strong>
-        <small>50% of the monthly rollover pot</small>
+        <small>${ownerView ? 'Amount requires verified accounting evidence' : '50% of the monthly rollover pot'}</small>
       </div>
     `;
 
@@ -261,7 +264,7 @@
       <h3>${resolution.winner ? escapeHtml(resolution.winner) : 'Monthly Champion decision'}</h3></div>
       <span class="pill champion-status" data-state="${resolution.status}">${resolution.status}</span></div>
       <p>${resolution.points === null ? '' : `<strong>${resolution.points} monthly points</strong> · `}${escapeHtml(championExplanation(resolution))}</p>
-      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
+      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${ownerView ? 'Payment status: ' + (period.paymentState || 'UNKNOWN') + '.' : resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
       ${championComparisonsHtml(resolution)}`;
     renderChampionSpotlight(period, resolution);
     renderStandingsRows('monthlyStandingsBody', period.standings || [], true, resolution);
@@ -288,7 +291,8 @@
   async function renderPrizes(prizes) {
     const weeks = await Promise.all(prizes.weekly.map(row => loadWeek(row.week)));
     const weekly = prizes.weekly.map((row,i) => preview.buildWeeklyPrize(row,weeks[i]));
-    const current = weekly[prizes.activeWeek-1];
+    const currentIndex = prizes.weekly.findIndex(w => w.week === prizes.activeWeek);
+    const current = weekly[currentIndex];
     const topPoints = Math.max(...prizes.overallStandings.map(player => player.points));
     const seasonLeaders = prizes.overallStandings.filter(player => player.points === topPoints).map(player => player.name);
     const seasonContext = seasonLeaders.length ? `Current points leaders: ${seasonLeaders.join(', ')} · ${topPoints} points. Season title not confirmed.` : 'Season standings unavailable.';
@@ -299,8 +303,8 @@
       return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
         <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
         <p><strong>${escapeHtml(resolution.winner || 'Champion not confirmed')}</strong>${resolution.points === null ? '' : ` · ${resolution.points} monthly points`}</p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
-        <div class="period-grid"><div><span>Monthly prize pool · ${p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
-        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct}% / ${p.seasonPct}%. Champion confirmation is not a payment. Payment status unavailable.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
+        <div class="period-grid"><div><span>Monthly prize pool · ${ownerView ? p.poolState : p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
+        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. Champion confirmation is not a payment. ${ownerView ? 'Payment status: ' + (p.paymentState || 'UNKNOWN') : 'Payment status unavailable'}.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
     }))).join('');
     $('periodCards').querySelectorAll('[data-prize-period]').forEach(link => link.addEventListener('click', () => {
       $('monthlyPeriodSelect').value = link.dataset.prizePeriod;
@@ -308,14 +312,14 @@
     }));
     $('weeklyPrizeBody').innerHTML = prizes.weekly.map((w,i) => {
       const view = weekly[i];
-      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${weeks[i].entriesStatus === 'CLOSED' ? w.activePlayers : 'Protected'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">Allocation each: ${money(view.allocationEach)} · ${view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
+      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">Allocation each: ${money(view.allocationEach)} · ${view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
     }).join('');
     $('recentWeeks').innerHTML = prizes.weekly.filter(w => w.week <= prizes.activeWeek).slice(-5).reverse().map(w => {
-      const view = weekly[w.week-1];
+      const view = weekly[prizes.weekly.findIndex(row => row.week === w.week)];
       return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover !== null ? 'Rollover confirmed' : 'Pending'}</td></tr>`;
     }).join('');
-    const completed = weeks[prizes.activeWeek-1].results.filter(game => game.status === 'Final').length;
-    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[prizes.activeWeek-1].games.length} games FINAL. Synthetic snapshot, not a live feed.`);
+    const completed = weeks[currentIndex].results.filter(game => game.status === 'Final').length;
+    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
     const highlights = prizes.currentWeekStandings.slice(0,3);
     setText('overviewLeaders', highlights.length ? highlights.map(p => `${p.name}: ${p.points} points`).join(' · ') : 'Weekly leaders unavailable until entries explicitly close.');
   }
@@ -358,9 +362,9 @@
       console.error(err);
       $('picksSubmissionCount').textContent = 'Could not load this week.';
       $('playerPickCards').innerHTML = '<p class="state-message">Synthetic player picks unavailable.</p>';
-      $('matchGameResults').textContent = 'Synthetic results unavailable.';
+      $('matchGameResults').textContent = `${sourceLabel} results unavailable.`;
       $('matchPrivacyNotice').hidden = false;
-      $('matchPrivacyNotice').textContent = 'Synthetic match data unavailable. Picks and voting remain protected.';
+      $('matchPrivacyNotice').textContent = 'Match data unavailable. Picks and voting remain protected.';
       $('playerPicksBody').innerHTML = `<tr><td>${escapeHtml(err.message || 'Could not load player picks.')}</td></tr>`;
     }
   }
@@ -380,10 +384,10 @@
     matchModels = (data.games || []).map(game => preview.buildMatchView(data, game, prizeData?.formControl));
     setText('matchResultsWeek', `Week ${data.week}`);
     $('matchSelect').innerHTML = '<option value="">All matchups</option>' + matchModels.map(model => `<option value="${escapeHtml(model.game)}">${escapeHtml(model.game)}</option>`).join('');
-    const closed = data.entriesStatus === 'CLOSED';
+    const closed = publicPicks(data);
     $('matchPrivacyNotice').hidden = closed;
-    $('matchPrivacyNotice').textContent = 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
-    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : `Synthetic entry status: ${data.entriesStatus || 'UNKNOWN'}`);
+    $('matchPrivacyNotice').textContent = data.visibility === 'WITHHELD' ? 'Player picks and voting unavailable; verified disclosure evidence is incomplete.' : 'Picks, voting percentages, and vote counts are hidden until entries are officially closed.';
+    setText('picksSubmissionCount', data.visibility === 'WITHHELD' ? 'Player picks and voting unavailable; verified disclosure evidence is incomplete.' : closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : `${sourceLabel} entry status: ${data.entriesStatus || 'UNKNOWN'}`);
     $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('') : '');
     $('playerSelect').disabled = !closed || !data.standings.length;
     renderMatchCards();
@@ -392,7 +396,7 @@
   }
 
   function votingHtml(model) {
-    if (!model.votes) return '';
+    if (!model.votes) return '<p class="pick-meta">Voting unavailable until disclosure is verified.</p>';
     const votes = model.votes;
     const description = votes.teams.map(p => `${p.team}: ${p.percentage}%, ${p.count} votes`).join('; ');
     return `<div class="match-voting"><p class="eyebrow">Selection share</p>
@@ -411,7 +415,7 @@
   function gameCardHtml(model, includeVoting = false) {
     return `<article class="game-result-card" data-game="${escapeHtml(model.game)}">
       <div class="game-result-status">${escapeHtml(model.status)}${model.winner === 'Tie' ? ' · Tie' : ''}</div>
-      <p class="kickoff-note">${model.kickoff ? `Synthetic kickoff · ${escapeHtml(formatPacificDateTime_(model.kickoff))}` : 'Kickoff unavailable'}</p>
+      <p class="kickoff-note">${model.kickoff ? `${ownerView ? 'Kickoff' : 'Synthetic kickoff'} · ${escapeHtml(formatPacificDateTime_(model.kickoff))}` : 'Kickoff unavailable'}</p>
       ${model.teams.map((team,index) => teamResultHtml_(team,model.scores[index],!model.isFinal ? 'pending' : model.winner === 'Tie' ? 'draw' : model.winner === team ? 'winner' : 'loser')).join('')}
       ${!model.isFinal && model.scores.some(score => score !== '') ? '<p class="pick-meta">Scores provisional · No pick result until FINAL.</p>' : ''}
       ${includeVoting ? votingHtml(model) : ''}
@@ -426,10 +430,10 @@
   }
 
   function renderPlayerPrediction(player, data) {
-    if (data.entriesStatus !== 'CLOSED' || !data.tiebreak?.enabled) return '';
+    if (!publicPicks(data) || !data.tiebreak?.enabled) return '';
     if (!data.tiebreak.revealed) return '<p class="player-prediction">Tiebreak prediction unavailable until publication is confirmed.</p>';
     const raw = player.tiebreakPrediction;
-    const valid = typeof raw === 'string' && /^\d{1,3}$/.test(raw);
+    const valid = typeof raw === 'string' && /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw));
     const model = matchModels.find(m => m.game === data.tiebreak.game);
     const actual = model?.isFinal && model.scores.every(score => score !== '') ? model.scores.reduce((sum,score) => sum+Number(score),0) : null;
     return `<div class="player-prediction"><p class="eyebrow">Period-ending tiebreaker</p><p>${escapeHtml(data.tiebreak.game || 'Designated game unavailable')}</p>
@@ -439,8 +443,8 @@
   }
 
   function renderPlayerPickCards(data) {
-    if (data.entriesStatus !== 'CLOSED') {
-      $('playerPickCards').innerHTML = '<div class="privacy-state"><strong>Picks stay private</strong>Player selections and predictions are unavailable until official closure.</div>';
+    if (!publicPicks(data)) {
+      $('playerPickCards').innerHTML = data.visibility === 'WITHHELD' ? '<div class="privacy-state"><strong>Player picks unavailable</strong>Verified disclosure evidence is incomplete.</div>' : '<div class="privacy-state"><strong>Picks stay private</strong>Player selections and predictions are unavailable until official closure.</div>';
       return;
     }
     const selected = $('playerSelect').value;
@@ -450,13 +454,13 @@
       <ul>${matchModels.map(model => {
         const pick = model.selections.find(p => p.name === player.name);
         return `<li><span>${escapeHtml(model.game)}</span>${pick ? `<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>` : '<span>No selection</span>'}</li>`;
-      }).join('')}</ul>${renderPlayerPrediction(player, data)}</details>`).join('') || '<p class="state-message">No synthetic picks for this week.</p>';
+      }).join('')}</ul>${renderPlayerPrediction(player, data)}</details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
   }
 
   function renderPlayerPicksTable(data) {
-    if (data.entriesStatus !== 'CLOSED') {
+    if (!publicPicks(data)) {
       $('playerPicksHead').innerHTML = '';
-      $('playerPicksBody').innerHTML = '<tr><td>Picks hidden until official closure.</td></tr>';
+      $('playerPicksBody').innerHTML = data.visibility === 'WITHHELD' ? '<tr><td>Player picks unavailable; disclosure evidence incomplete.</td></tr>' : '<tr><td>Picks hidden until official closure.</td></tr>';
       return;
     }
     $('playerPicksHead').innerHTML = `<tr><th>Player</th>${matchModels.map(model => `<th class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}</tr>`;
@@ -487,7 +491,7 @@
     setText('weeklyTitle', `Week ${weekData?.week || '—'} Standings`);
     setText(
       'weeklyStatusNote',
-      weekData?.outcome?.finalized ? 'This week is final.' : 'Synthetic standings; results pending.'
+      weekData?.visibility === 'WITHHELD' ? 'Standings withheld; disclosure evidence incomplete.' : weekData?.outcome?.finalized ? 'This week is final.' : `${sourceLabel} standings; results pending.`
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 
@@ -636,9 +640,9 @@
         const data = await loadWeek(week);
         if (Number(select.value) === week) renderWeeklyDetails(data);
       } catch (_) {
-        setText('weeklyStatusNote', 'Synthetic week unavailable. No external connection was attempted.');
+        setText('weeklyStatusNote', `${sourceLabel} week unavailable. No external connection was attempted.`);
         $('weeklyStandingsBody').innerHTML = '';
-        $('weeklyGameResults').textContent = 'Synthetic data unavailable.';
+        $('weeklyGameResults').textContent = `${sourceLabel} data unavailable.`;
       }
     });
   }
@@ -682,7 +686,7 @@
         else link.removeAttribute('aria-current');
       });
       const heading = $(destination).querySelector('.page-header h1');
-      document.title = `${heading.textContent} · Perfect Pick 4.0 — Synthetic Preview`;
+      document.title = `${heading.textContent} · Perfect Pick 4.0 — ${ownerView ? 'Owner Verification' : 'Synthetic Preview'}`;
       if (focus) heading.focus({preventScroll:true});
     }
     window.addEventListener('hashchange', () => applyRoute(true));
@@ -716,7 +720,7 @@
     setupNavigation();
 
     try {
-      setStatus('Loading synthetic preview…');
+      setStatus(ownerView ? 'Loading validated owner snapshot…' : 'Loading synthetic preview…');
       const prizes = await get('prizes');
       prizeData = prizes;
       renderDashboard(prizes);
@@ -732,15 +736,15 @@
       await Promise.all([renderStandings(prizes), renderPrizes(prizes), loadWeekPicks(activeWeek)]);
 
       const when = prizes.generatedAt ? new Date(prizes.generatedAt).toLocaleString() : '';
-      setStatus(`Synthetic data loaded${when ? ` • ${when}` : ''}`, 'ok');
+      setStatus(`${sourceLabel} data loaded${when ? ` • ${when}` : ''}`, 'ok');
     } catch (err) {
       console.error(err);
       setText('championHeading', 'Competition unavailable.');
-      setText('championSummary', 'Synthetic data unavailable. No champion or payout has been awarded.');
+      setText('championSummary', `${sourceLabel} data unavailable. No champion or payout has been awarded.`);
       setText('championState', 'Unavailable');
-      setStatus('Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
+      setStatus(ownerView ? 'Verified snapshot unavailable. Reverification required; no external connection attempted.' : 'Synthetic preview unavailable. Missing or invalid fixtures; no external connection attempted.', 'error');
       document.querySelectorAll('.legacy-section').forEach(panel => {
-        if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = '<div class="panel state-message">Synthetic data unavailable. No external connection attempted.</div>';
+        if (!['rules', 'faq'].includes(panel.id)) panel.innerHTML = `<div class="panel state-message">${sourceLabel} data unavailable. No external connection attempted.</div>`;
       });
     }
   }

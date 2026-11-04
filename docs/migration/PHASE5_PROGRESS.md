@@ -1,6 +1,6 @@
 # Phase 5 — resumable migration checkpoint
 
-Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector IMPLEMENTED and tested offline, DISABLED by default. Real reads and live integration NOT approved.
+Current status: Phase 5A COMPLETE; Phase 5B COMPLETE; Phase 5C COMPLETE; Phase 5D-1 COMPLETE; controlled-verification preparation COMPLETE; isolated package preparation COMPLETE; owner reports disabled package uploaded; functional native connector and validated dashboard bridge IMPLEMENTED/tested offline, packaged read entry DISABLED by default. Real reads and live integration NOT approved.
 Branch: develop. Audited baseline/checkpoint parent: 6cd85d1. The documentation
 commit containing this checkpoint is its checkpoint revision (see Git log).
 Phases 5B, 5C and 5D-1 authorized only within their recorded offline/fabricated
@@ -929,3 +929,72 @@ Resume: "Read AGENTS.md, PHASE5_PROGRESS.md and FIRST_LIVE_VERIFICATION.md. Conf
 the exact newly authorized owner operation. Connector is implemented; do not redo
 planning, bypass evidence, access Google, upload, authorize or run a diagnostic
 without the specific next approval. Keep public Pages synthetic and preserve 3.0."
+
+## Form entry point and validated dashboard bridge — implementation checkpoint
+
+Branch develop; baseline 638d241. Current task permits development/testing/commit/
+push only. Actual reads, Apps Script upload/run, OAuth, publication and deployment
+still require separate owner approval. No real Form/Sheet/3.0 interaction occurred.
+
+Milestone 1 COMPLETE: approved local configuration inspected without printing IDs.
+No verified canonical player-facing URL exists in apps-script/config or the local
+setup reference. No URL was guessed from IDs/backups or downloaded. Submit Picks
+now appears in the existing deadline card, disabled with an owner-verification
+explanation. Owner must privately provide the official published player view URL
+and explicitly approve navigation. Strict private Form-link validation rejects
+edit/admin, short redirects, alternate hosts, prefilling/query strings, fragments,
+unknown fields and non-fresh/non-official/non-OPEN status. Public assets contain
+no external URL; no custom submission form or production Form changes.
+
+Milestone 2 COMPLETE: tools/presentation/contract-dashboard.cjs maps strictly
+validated v1 records to Overview, Match Center, Weekly/Monthly/Season Standings,
+Prizes and the retained Guide/navigation. Approved aliases and points/ranks are
+preserved; FINAL-only correctness, vote basis points, shared monthly decisions,
+unknown accounting and payment status remain authoritative. Explicit activeWeek
+context is required; neither last/highest week nor time guesses choose authority.
+CLOSED-but-withheld now renders unavailable rather than zero votes/submissions.
+No duplicate winner algorithm or financial rule is introduced.
+
+Milestone 3 COMPLETE: optional trusted consumeValidated handoff in prepared
+coordinator/native connector, only after public-contract validation. Default
+packaged diagnostic supplies no consumer; globals/arguments cannot enable one.
+Private owner-process assembly in tools/presentation/private-dashboard.cjs connects
+that handoff to the approved interface entirely in memory, with no HTTP listener,
+endpoint, file write or deployment. Browser adapter fetches nothing; invalid/stale
+snapshots fail closed and expired private content is cleared. Normal six-file
+synthetic fixture adapter remains the only published data source. Private context
+flags are not authentication; actual owner access/transport must be verified.
+
+Milestone 4 COMPLETE: node --test tests/*.test.cjs: 189 passed, 0 failed,
+0 skipped (12 new). Includes native fake connector-to-consumer/model/asset path,
+Form URL/OPEN authority/freshness rejection, strict schema/aliases, zero versus
+withheld votes, pending results, monthly ties, unsupported money, source expiry,
+private browser navigation after expiry, all destinations and mobile/tablet/desktop
+checks with renamed fabricated approved aliases. Existing tests retained. A new
+virtual-time test required resuming Chrome's simulated clock after expiry; fixed
+without removing expiry/navigation assertions, then the full suite passed.
+
+No actual 3.0 comparison has been run. Existing deterministic comparator is reused
+with fabricated same-revision examples. Real normalization/baseline and independently
+approved champion/accounting oracles are missing; no actual MATCH is claimed.
+
+Final verification: both artifact seals/inventories and ES2020 package checks
+pass; upload payloads refreshed with ignored private target config unchanged.
+Six-file publication allowlist, synthetic config/fixture, CSP and manual-only
+workflow remain unchanged. Current/historical private-reference and whitespace
+checks cover all modified/untracked files. No real credentials or identifiers.
+
+Exact continuation: Owner next supplies canonical public
+player URL privately and separately authorizes the existing isolated source upload,
+then a precise STRUCTURE/OAuth verification as documented. Do not read real data,
+change 3.0/Forms/Sheets/triggers, publish an endpoint or deploy Pages automatically.
+Full steps: docs/architecture/WORKFLOW_DASHBOARD_INTEGRATION.md and
+FIRST_LIVE_VERIFICATION.md. Authenticated real browser transport remains an explicit
+security/access gate; no JSONP/public snapshot workaround was implemented.
+
+Additional boundary: the current native VERIFY mode deliberately requires CLOSED
+evidence for all requested weeks. The new view bridge handles valid OPEN/UNKNOWN
+contract outputs without selections, but current-week OPEN results/control transport
+needs a reviewed read plan/evidence before activation. No inferred OPEN status or
+elapsed-deadline closure is introduced. Private consumer assembly is in-process
+only, not an authenticated browser delivery implementation or a public endpoint.

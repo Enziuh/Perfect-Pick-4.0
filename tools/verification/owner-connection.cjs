@@ -16,7 +16,7 @@ const VALUE_FIELDS='valueRanges(range,majorDimension,values)';
 function empty(state='BLOCKED'){
  return {state,structure:{expectedTabs:2,discoveredTabs:0,expectedColumns:0,matchedColumns:0},records:{results:null,responses:null,completeness:'UNVERIFIED'},timeZone:'UNVERIFIED',timestamps:'NOT_CHECKED',closure:'UNVERIFIED',aliases:'UNVERIFIED',revision:'UNVERIFIED',schema:'NOT_CHECKED',comparison:'BLOCKED'};
 }
-function createOwnerDiagnostic(loadPrivateConfig,getSheets,now){
+function createOwnerDiagnostic(loadPrivateConfig,getSheets,now,consumeValidated=null){
  let attempted=false;
  return function diagnostic(){
   if(attempted)return empty();
@@ -81,7 +81,7 @@ function createOwnerDiagnostic(loadPrivateConfig,getSheets,now){
    for(const d of descriptors){const count=d.sheet==='Results'?capture.resultRows:capture.responseRows,guard=d.header==='Week'||d.header==='Timestamp';if(count||guard)allowed.add(range(d.sheet,d.column,2,count+1+Number(guard)));}
    let calls=0;
    const values={batchGet(target,options){active();need(target===c.target&&++calls<=4);exact(options,['ranges','majorDimension','valueRenderOption','dateTimeRenderOption']);need(Array.isArray(options.ranges)&&options.ranges.length>0&&options.ranges.length<=descriptors.length&&new Set(options.ranges).size===options.ranges.length&&options.ranges.every(r=>allowed.has(r)));need(options.majorDimension==='ROWS'&&options.valueRenderOption==='UNFORMATTED_VALUE'&&options.dateTimeRenderOption==='SERIAL_NUMBER');return sheets.Spreadsheets.Values.batchGet(target,{...options,fields:VALUE_FIELDS});}};
-   const report=runPreparedDiagnostic({values,now:active,identityKey:v=>{need(typeof v==='string'&&v.length>0);return v;},readEvidence(target){active();need(target===c.target&&stamp(capture.validUntil)>now());return {...capture};},authorize(stage,scope){active();return ['PREFLIGHT','BOUNDED_READ'].includes(stage)&&scope.target===c.target&&scope.revision===c.revision;}},c);
+   const report=runPreparedDiagnostic({values,now:active,consumeValidated,identityKey:v=>{need(typeof v==='string'&&v.length>0);return v;},readEvidence(target){active();need(target===c.target&&stamp(capture.validUntil)>now());return {...capture};},authorize(stage,scope){active();return ['PREFLIGHT','BOUNDED_READ'].includes(stage)&&scope.target===c.target&&scope.revision===c.revision;}},c);
    active();
    result.state=report.state;result.schema=report.validation;
    if(report.validation==='VALID'){
