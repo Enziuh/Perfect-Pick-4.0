@@ -1745,3 +1745,59 @@ route encountered legacy LockService timeout after an earlier HTTP timeout; prod
 is untouched at17. Uncached dashboard4 validation is in progress; do not promote until
 all original routes and player/privacy/parity checks pass. Safe implementation is ready
 for checkpoint commit; pending runtime validation is not claimed complete.
+
+## FINAL ACTIVATION COMPLETE — API18 / Pages6fad89d
+
+Owner's full activation approval applied:23 reconciled aliases under original PP3 rule,
+Weeks1–8 explicit owner-attested CLOSED, Week9 OPEN,23 participants/week for ESTIMATES
+only. Private owner-decisions/configuration updated; no private input committed.
+
+Source commit6fad89d pushed to develop. All255 local tests PASS, zero failed/skipped,
+including privacy, original scoring, submitted-FINAL accuracy, monthly/tiebreaker,
+API transport, browser/responsive and artifact checks. Staged extension matched current
+reviewed generator plus approved ignored configuration. Initial staging legacy-cache
+lock/timeouts/auth redirects were transient; final existing owner-only test succeeded
+for all five original actions and dashboard4. No permission/scope changes were made.
+
+Created immutable production18 from clean17 baseline, changing ONLY PerfectPick4_Json.
+Original routing/manifest/helpers/writers are byte-identical to17 (clean14 baseline).
+Recoverable editor backup16 and private pre-operation copy preserved. Temporarily loaded
+candidate, created18, restored original unpublished editor EXACTLY, then verified hashes.
+Updated ONLY the EXISTING API deployment17→18; named expected/actual assertions verified
+ID/URL/access/executeAs/other configuration unchanged. Original health/summary/week/
+overall/prizes and new dashboard4 passed after promotion; source editor unchanged.
+Version17 remains rollback. No writers, Form operations, Sheet updates, triggers,
+ESPN sync, new deployment or OAuth grants were executed/changed.
+
+Manual api-profile Pages workflow41920135557 SUCCESS, publishing source6fad89d. CI tests
+and fail-closed artifact verification passed before upload; deployed artifact was not
+rebuilt. Downloaded actual tar contains EXACTLY six approved files, no links/unexpected
+entries, matches reviewed source bytes and approved API/Form routing configuration.
+No actual aliases/player records/private configuration are embedded in frontend assets.
+
+Live published https://enziuh.github.io/Perfect-Pick-4.0/ verified in headless Chrome:
+272 games /121 FINAL /151 pending at verification (not future freshness guarantee);
+32 displayed Week1 score values match API. All five destinations and375/768/1440px
+layouts PASS, zero overflow/runtime errors/unexpected requests/fixture fetches. Official
+metadata-verified responder href works, current Form reports OPEN. Week8 shows23 approved
+player cards and voting; Week9 has no picks, predictions or votes in response or DOM.
+Actual weekly/season standings and M1/M2 tables display23 rows; both completed monthly
+champions match shared resolver, M2 shows designated FINAL combined-score comparisons.
+M3–M5 remain IN PROGRESS. Live monthly+season69 scored rows match original API's points,
+shared ranks and completed-pick denominators; prior authorized weekly/season207-row
+reconciliation also matched. NewAPI23-row Week8 parity and14 game-result comparisons PASS.
+Prize UI explicitly labels23-participant estimates, not collected funds; no payment
+statuses/tracking or confirmed allocations. Finalized no-perfect weeks use original
+NEW rollover/share rules; incomplete outcomes remain unknown. Staging source restored
+EXACTLY, owner-only deployments unchanged, temporary test configuration removed.
+
+Last successful implementation/deployed commit:6fad89d. This checkpoint-only commit
+records final activation. Private receipts:live-activation/{candidate,production-active,
+production-checks,period-parity,stage-restored}.private.json; browser result in
+pages-activation/browser-result.json. No further activation blocker or owner approval
+remains for approved scope. Future weeks need authoritative CLOSED evidence or explicit
+owner attestation; never infer from deadlines/history/removed Form questions. Any future
+API update preserves clean baseline/editor backup and rollback; no further phase started.
+Exact resume: read this FINAL ACTIVATION COMPLETE entry; maintain the working deployed
+site/API18. Do not repeat diagnostics, reapprove valid single names, or redeploy absent
+a new owner request. Occasional manual Form cleanup remains unchanged.
