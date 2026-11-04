@@ -366,6 +366,7 @@ small {
 
 .card strong {
   display:block;
+  overflow-wrap:anywhere;
   font-size:34px;
   line-height:1.2;
   margin:15px 0 3px;
