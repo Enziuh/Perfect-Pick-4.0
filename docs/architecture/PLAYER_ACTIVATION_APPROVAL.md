@@ -113,3 +113,43 @@ reconciled aliases (including six missing-initial cases), historical closure fac
 not established by retained records, and conditional publication/release approval.
 Do not ask the owner to recompute verified arithmetic or decide the already-decisive
 M2 tiebreaker. Preserve current freshness gates; no automatic static-proof renewal.
+
+## Existing-runtime access diagnosis — resumed from d4f99a5
+
+Read-only management queries confirmed the failure belongs to the **Google-provided
+clasp default OAuth client**, selected by initAuth userKey default, not to the
+competition's Apps Script runtime. Its client fingerprint is recorded privately;
+no client/Script/Sheet identifier or token is recorded here. Do not create a client
+or Cloud project or try to fix this by altering the working competition project.
+
+The existing separate 4.0 owner reference has Sheets v4 enabled, exactly the
+spreadsheets.readonly manifest grant, and MYSELF / USER_ACCESSING deployment access.
+Its only top-level functions are doGet and getPerfectPickDashboard. The RPC is a
+sanitized presentation surface, not an arbitrary Sheets reader or metadata executor.
+It has no existing published-Form getter or player-identity diagnostic. Reusing its
+credentials outside Apps Script or passing extra RPC arguments is not authorized.
+
+The **already-existing isolated staging** project remains MYSELF / USER_ACCESSING.
+Its prior owner-approved consent covers spreadsheets, forms, script.scriptapp and
+script.external_request. Its source has the existing health/summary/week/overall/
+prizes/dashboard4 routes, but no private player-verification entry point. Existing
+JSON results cannot reconstruct phone joins or the linked Form's responder metadata.
+Do not execute a writer or change production to fill that gap.
+
+Smallest remaining owner action: explicitly authorize a temporary, bounded,
+editor-only read diagnostic in that SAME private staging project and ONE owner
+execution, using its existing Sheets/Forms grants. Scope: linked Form published
+URL/acceptance, Players A:B, necessary response timestamp/private join columns,
+current Form Control and specifically identified retained closure records. Private
+joins stay server-side; only safe review output goes to the designated ignored
+private location. No HTTP route, new deployment, production editor/deployment change,
+new OAuth client/project, scope expansion, trigger or writer is required/proposed.
+The diagnostic source addition is a remote editor change and is NOT authorized or
+performed by the current read-only task. Prepare/review its exact source before any
+approved upload. If Google requests new consent, stop rather than grant it.
+
+Until that separate source/one-execution approval, the Form URL/actual registry joins
+remain blocked. The existing approved read scope remains valid. Do not repeat scoring/
+prize comparisons or ask for a manual M2 decision. The six single-name candidates,
+all 23 alias approvals, unproven historical closure and eventual publication approval
+remain the same private review items; none was approved by this diagnosis.

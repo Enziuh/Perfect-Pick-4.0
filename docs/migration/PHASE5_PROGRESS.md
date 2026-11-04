@@ -1435,3 +1435,54 @@ remain unchanged. This task is NOT claimed complete beyond the JSON comparisons.
 Post-read checks: 37/37 relevant JSON/PP3 compatibility tests PASS, no failed/skipped.
 Private draft approvals/permissions and Git ignore status checked. Only safe checklist/
 checkpoint documentation is intended for Git; no private records/URLs/IDs/grants.
+
+## Existing Apps Script connection diagnosis — no production changes
+
+Resumed from develop d4f99a5. Identified the exact credential class used by the
+failed probe: initAuth(default) selects clasp's Google-provided default OAuth
+client (verified with installed clasp getOAuthClientType, fingerprint saved only
+privately). This is distinct from the working Apps Script service authorization.
+No new API service, Cloud project, OAuth client, credentials or grants configured.
+Do not misdiagnose accessNotConfigured as a failure of 3.0's Sheet or score updates.
+
+Current read-only source/manifest/deployment checks:
+- Existing 4.0 owner-reference runtime has Sheets v4 enabled, sole
+  spreadsheets.readonly manifest grant and MYSELF / USER_ACCESSING access. AST
+  inspection confirms only two top-level functions: doGet/getPerfectPickDashboard.
+  No callable generic reader/player diagnostic/Form metadata getter exists; its
+  sanitized model cannot supply the still-private phone join or responder URL.
+- Existing isolated staging runtime still has MYSELF / USER_ACCESSING access.
+  Prior recorded four-scope owner consent includes Sheets and Forms, sufficient
+  services for the required read operations without a new OAuth scope. Current
+  staging source has no private identity/Form diagnostic route/helper. No writer,
+  Form setup/close, score sync, trigger function or diagnostic was executed.
+- No source was uploaded/changed and no deployment was created/modified. This was
+  management metadata/source inspection only; no live Sheet/Form rows were read.
+  Current published 4.0 and production17 remain untouched.
+
+Remaining boundary and exact owner action: approve ONE temporary bounded editor-only
+read diagnostic in the EXISTING private staging project, plus ONE owner execution
+under its existing grants. This requires a remote staging source addition, so it
+was not performed under read-only authorization. No HTTP route/new deployment,
+production source edit, new Cloud/OAuth project, scope expansion or trigger/writer
+is necessary. After approval, prepare/review the exact helper locally, read linked
+Form metadata and minimum Players/response joins/current control/identified closure
+records privately, then retain only safe ignored reconciliation output. Stop on any
+new consent request. Existing generic read authorization persists; only the source
+addition/one-execution boundary needs approval. Do not rebuild infrastructure or
+repeat completed 3.0 arithmetic comparisons.
+
+Previous successful results retained: season/monthly/weekly parity and prize
+arithmetic verified, M1 clear leader, M2 decisive tiebreaker; no manual tie decision
+needed. Actual Players phone joins/Form URL and historical CLOSED still unverified.
+Six existing single-name draft labels need private initial review; zero aliases or
+historical weeks approved. No private identifiers/names/values are in this checkpoint.
+
+Private diagnostic records: tmp/player-activation-review/existing-connection.private.json
+and entrypoint-check.private.json, mode0600; no credentials or source payload saved.
+Files touched in Git only: this checkpoint and PLAYER_ACTIVATION_APPROVAL.md.
+
+Checks: 37/37 relevant offline JSON/PP3 compatibility tests PASS, zero failed/skipped;
+safe-document private-reference scan and Git whitespace checks PASS. Private diagnostic
+files remain Git-ignored. Checkpoint is BLOCKED on the precise staging source/one-run
+approval above, not on another audit or new infrastructure. Runtime code unchanged.
