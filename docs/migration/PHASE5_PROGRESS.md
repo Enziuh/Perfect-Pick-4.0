@@ -1692,3 +1692,22 @@ private owner-decisions.private.json and production-candidate-config.private.jso
 use existing production17 rollback/editor-preservation procedure for any later approved
 API version. No another diagnostic, infrastructure phase or name-initial request.
 Frontend deployment/result status follows after the approved manual workflow.
+
+Non-sensitive frontend RELEASED: implementation commit 071dfc2 pushed to develop;
+manual api-profile workflow 41905471635 SUCCESS. CI ran all251 required tests and
+verified/sealed the exact six-file artifact before upload. Downloaded actual CI
+artifact matches reviewed bytes, contains no proposed names/private source IDs, and
+allows only the exact approved existing API route plus official Form responder route.
+No production API upload/version/deployment change occurred; existing API17 remains
+results-only. Form link is now usable, reported OPEN displayed independently of privacy.
+
+Published-site verification PASS: official Form href matches the private verified URL;
+272 games /121 FINAL /151 pending at this read (not a future freshness guarantee),
+all32 displayed Week1 score values equal dashboard4. All five destinations functional
+at1440/768/375px, no horizontal overflow/runtime error/unexpected external request,
+no fixture fetch and no player/prediction/voting disclosure. A same-origin favicon
+request is explicitly recognized in the private smoke harness. Public site remains
+https://enziuh.github.io/Perfect-Pick-4.0/. Player/API release waits for the single
+owner review above. Last successful source/deployed commit071dfc2; this following
+checkpoint-only commit records completion. No another diagnostic or deployment is
+needed before the owner reviews the23 proposed display names and remaining closure.
