@@ -1568,3 +1568,67 @@ proposed. If approved, preflight the complete file-capture mechanism with fabric
 data FIRST, then use the already-approved one additional execution; do not request
 another duplicate execution approval. Existing Form URL/registry/closure findings
 remain uncertified as recorded above. Production/Pages remain untouched.
+
+## Temporary owner-only route — COMPLETE private capture and exact cleanup
+
+Resumed d3d583d. Owner explicitly approved the temporary private staging HEAD route,
+fabricated capture first, one bounded real diagnostic, complete private-file validation,
+and exact source restoration. No production/publication changes authorized or made.
+
+Completed: fresh staging/production source+deployment backup; MYSELF/USER_ACCESSING
+HEAD access verified; one temporary staging routing branch/helper added with unchanged
+manifest and existing grants. Fabricated response (23 records plus long padding/end
+marker) captured directly over the authorized existing endpoint to an ignored file
+and compared exactly BEFORE enabling any real read. Then ONE real diagnostic request
+completed. Full JSON file parsed/read back, required sections/record count/end marker
+validated, hash retained. No debugger, console preview or truncated-output capture.
+
+Actual private findings: Players has 23 unique identities, all23 matched to response
+identity/timestamp records; duplicate identities0, response identities absent from
+registry0, invalid timestamps0, blank response identities0. Registry public labels
+match all23 labels from the prior verified original-API comparison. Seventeen draft
+aliases have first-name/last-initial format; six single-part labels need explicit owner
+initials. ALL23 approvals remain false. Private contacts were used only inside staging,
+not returned/stored/logged. Normalized identity matching preserves existing 3.0 logic.
+
+Official linked Form responder URL obtained from Form metadata, validated and retained
+privately. Form Control reports week9 OPEN. Historical verified CLOSED weeks remain
+empty; no recognized history tab was present. Search was known-title metadata only,
+not exhaustive execution-log/backup archaeology; do not claim all historical proof
+nonexistent, infer closure from old weeks/deadlines, or mint fresh static proof.
+No prior scores/monthly tiebreak/prize arithmetic comparisons repeated or changed.
+
+Private files (all ignored, private JSON0600):
+- tmp/player-activation-review/route-capture/live-report.private.json: complete source report.
+- same directory: fake-verified.private.json, live-verified.private.json and
+  restored.private.json, plus fresh backup/current hashes and capture source.
+- tmp/player-activation-review/verified-form.private.json: verified URL, public approval false.
+- aliases-registry-review.private.json: actual registry draft aliases with independent
+  candidate public keys/row references, approvals false; no phone values. These replace
+  the earlier API-only/reference drafts for owner review. Private-key binding is verified
+  server-side but not yet provisioned into production authority configuration.
+- activation-inputs.private.json and owner-decisions.private.json: pending approval
+  inputs and six unresolved entries. No real labels/URLs/IDs in tracked documentation.
+
+Cleanup VERIFIED after full-file checks: temporary helper/route removed, exact staging
+file hashes/manifest restored, staging deployments unchanged, production editor and
+existing API17 deployment metadata unchanged. No new deployment/grant/project/client,
+Sheet/Form/trigger write, ESPN sync or Pages operation. No additional execution needed
+for this capture. Current public results-only website remains untouched.
+
+ONE remaining owner review: approve the private23-alias list and provide the six
+missing initials; explicitly attest CLOSED historical weeks1–8 where retained proof
+is absent (week9 remains OPEN); approve using the verified Form link and reviewed
+standings/picks/voting/champions/pool/rollover scopes in a controlled existing API/Pages
+activation, with payments UNKNOWN. Do not auto-approve any identity or closure. Alias
+phone-key provisioning and authoritative freshness/revocation must be reviewed in
+that approved activation; a static attestation is not permission to fake fresh check
+timestamps. Preserve existing fail-closed gates and rollback17/editor backups.
+
+Exact resume: owner reviews owner-decisions.private.json / aliases-registry-review.private.json
+locally and supplies row-referenced initials/approvals (no contact data in chat/Git).
+Then prepare the existing additive API candidate using those explicit decisions, run
+required parity/privacy/artifact checks, and perform only separately approved activation.
+Do NOT repeat the completed capture, create infrastructure, redesign, or publish pending
+inputs. No full extra test suite run for this capture-only task; direct-file fake/live
+schema/privacy/completeness/integrity checks and exact cleanup passed.
