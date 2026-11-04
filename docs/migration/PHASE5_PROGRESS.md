@@ -1550,3 +1550,21 @@ fabricated bounded-read/privacy/error/ES2020 checks; 37/37 relevant regressions 
 zero failed/skipped. Documentation private-reference scan and Git whitespace checks
 PASS. Only the safe checklist/checkpoint are committed. Operational result remains
 REPORT_CAPTURE_FAILED_AND_STAGING_RESTORED, not successful identity verification.
+
+## Additional-run preflight — NOT EXECUTED
+
+Owner conditionally approved one additional run only if complete direct-to-private-file
+capture is verified before execution, without debugger/console previews. Inspection
+found the prepared chunked candidate still depends on debugger capture and therefore
+FAILS that prerequisite. No source upload, diagnostic execution, permission/deployment
+change or new data read occurred. The additional execution authorization is UNUSED.
+
+Minimum next owner decision: permit a temporary diagnostic-only routing branch in
+the EXISTING MYSELF/USER_ACCESSING staging HEAD test endpoint (not production), so
+its full JSON response can be saved directly to the ignored private file and checked
+before exact source restoration. This changes the earlier editor-only boundary;
+it was not performed automatically. No new deployment/project/OAuth client/scope is
+proposed. If approved, preflight the complete file-capture mechanism with fabricated
+data FIRST, then use the already-approved one additional execution; do not request
+another duplicate execution approval. Existing Form URL/registry/closure findings
+remain uncertified as recorded above. Production/Pages remain untouched.
