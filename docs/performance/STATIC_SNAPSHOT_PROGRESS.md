@@ -114,3 +114,8 @@ one explicit final static-profile release approval. Do not dispatch Pages yet.
 Files touched: tools/snapshots/*, tests/static*.test.cjs,
 tests/support/static-snapshot-example.cjs, tools/performance/browser-profile.cjs,
 and docs/performance/STATIC_* only. No website/API/backend/workflow edits.
+
+Last successful implementation commit:38554cc on develop. Final279/279 regression
+run and private real-source parity are complete; all non-sensitive source is ready
+for push. Documentation-only checkpoint follows. Publication remains UNCHANGED/API18;
+no static deployment is authorized. Resume with the three owner decisions above.
