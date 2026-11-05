@@ -55,8 +55,8 @@ never bypass owner authentication. Six-hour publisher and real-static Pages rema
 Validation on this resume: full293/293 tests PASS, zero failed/skipped; artifact/security
 stage PASS. This includes the new default ban on repository recovery exports. The prior
 full293 run also passed; no backend/frontend behavior was edited on this resume.
-Only safe local-state storage enforcement, fabricated regression test and documentation
-will be committed. Source implementation commit follows; public rollback e6e3e92/API18.
+Safe storage enforcement/test/checkpoint committed and pushed as e875c76 (293/293 PASS).
+Public rollback remains e6e3e92/API18; no publisher or static activation occurred.
 
 
 ## CURRENT CHECKPOINT — approved retention safeguards complete locally
