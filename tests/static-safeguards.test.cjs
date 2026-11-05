@@ -69,7 +69,7 @@ test('newly verified CLOSED Week9 still physically withholds picks/votes/predict
 });
 test('six-hour preparation is disabled by default; successful durable backup precedes sealed candidate and atomic history commit',async()=>{
  const {createRefresh}=require('../tools/snapshots/refresh.cjs'),local=require('../tools/snapshots/local-state.cjs'),s=example(),r=memoryRegistry(),root=path.resolve('tmp/retention-publisher-'+crypto.randomBytes(6).toString('hex'));fs.mkdirSync(root,{recursive:true,mode:0o700});r.service.save(s.store,0);let reads=0,source=s.reply,failBackup=false;
- const key=crypto.randomBytes(32),writeBackup=local.independentBackup(path.join(root,'private/recovery.json'),async()=>key),history=local.archive(path.join(root,'private/last-good.json'),()=>s.now);
+ const key=crypto.randomBytes(32),writeBackup=local.independentBackup(path.join(root,'private/recovery.json'),async()=>key,{testOnly:true}),history=local.archive(path.join(root,'private/last-good.json'),()=>s.now);
  const publisher=createRefresh({registry:r.service,backupAndVerify:state=>{if(failBackup)throw Error('PRIVATE_SECRET');return writeBackup(state);},readSource:async()=>{reads++;return source;},approvedAliases:s.approval.approvedAliases,archive:history,clock:()=>s.now,outputRoot:path.join(root,'candidates')});
  const config={prepareEnabled:true,publicationEnabled:false,expectedGames:272,expectedWeeks:18,expectedRosterSize:23};
  try{
@@ -106,4 +106,10 @@ test('independent backup generation is authenticated and cannot be relabeled to 
  assert.deepEqual(backup.decrypt(file,key,{expectedGeneration:1}),s.store);
  assert.throws(()=>backup.decrypt(file,key,{expectedGeneration:2}));
  assert.throws(()=>backup.decrypt({...file,generation:2},key,{expectedGeneration:2}));
+});
+
+test('production encrypted recovery exports reject repository storage before accessing a key',async()=>{
+ const {independentBackup}=require('../tools/snapshots/local-state.cjs');let keyReads=0;
+ const save=independentBackup(path.resolve('tmp/prohibited-real-recovery.json'),async()=>{keyReads++;return crypto.randomBytes(32);});
+ await assert.rejects(save({generation:1,store:{version:1,entries:[]}}),{message:'Independent private backup unavailable'});assert.equal(keyReads,0);assert(!fs.existsSync('tmp/prohibited-real-recovery.json'));
 });

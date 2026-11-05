@@ -1,5 +1,64 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — private helper installed; Google owner consent needed
+
+Resumed from0aba609 plus the preserved local outside-repository backup changes.
+Owner has now approved the helper's userinfo.email scope effect. No further scope
+approval is being requested. Production API18, all existing staging files/manifest,
+staging access/execution settings and all deployments are verified unchanged except
+for the exact ONE added OwnerIdentityRegistry file. Only-myself/USER_ACCESSING staging
+was verified via existing metadata; authenticated installer matches project creator.
+Helper source equals the reviewed ES2020 generator; provider remains null/DISABLED.
+No diagnostic route, new deployment, trigger or production code change was made.
+
+REAL local recovery completed before this resume and rechecked: all23 existing128-bit
+IDs preserved/unique. Mapping moved to owner-only Application Support outside repo;
+authenticated-generation AES-256-GCM exports decrypt/recover EXACT same records.
+Recovery key is in macOS Keychain only, never source/Git/Google/Actions. Outside files
+are0600 under0700 private directories. New production backup code rejects exports
+inside repo before accessing a key; fabricated tests explicitly opt into test paths.
+The old ignored map path now contains a NON-DATA tombstone; do not delete it or rerun
+legacy initialization. It deliberately fails closed rather than creating replacement IDs.
+
+Private files (outside repository, do not copy into Git/workflow artifacts):
+~/Library/Application Support/Perfect Pick/Private Registry/
+- identity-map.private.json (unchanged23 IDs)
+- identity-recovery-generation-1.enc.json and independent-recovery-generation-1.private.json
+  (verified encrypted exports; generation1 is intended bootstrap, NOT initialized cloud)
+- local/outside recovery verification receipts; activation/ contains staging source
+  backup/candidate, installed receipt, authorization status and OWNER_ACTION.md.
+The prepared candidate/staging backup include private source/configuration and remain
+outside the repository. No mapping or recovery key is stored in staging source.
+
+BLOCKER: native browser control returned no browsers and a native connection startup
+failure. A read-only existing staging health request returned an HTML authorization
+page, not a registry response. No registry operation was invoked. Existing local OAuth
+owner identity is verified, but Google runtime consent/effective-owner verification
+and private Properties initialization/persistence/recovery ARE STILL PENDING.
+Do not claim Google durability or static-publication readiness yet.
+
+EXACT OWNER ACTION: open the existing staging editor using the private link in
+activation/OWNER_ACTION.md, select pp4PrivateRegistry_, Run, and complete Google's
+Review permissions flow for the approved email scope plus the four previously reviewed
+staging scopes. Stop on any unrelated scope. A Private registry disabled error AFTER
+consent is expected: configuration deliberately remains disabled and writes nothing.
+Tell the agent consent is complete. No mapping/key needs to be pasted for this step.
+
+After consent: continue from the saved source/candidate without repeating audits or
+reconciliation. Configure only the authorized private helper; initialize from the
+outside-repo23-ID map; verify active/effective owner, exact persisted IDs and backup/
+recovery, then disable setup/remove bootstrap as appropriate while preserving primary/
+backup Properties. Do not invent routes/new deployments or silently broaden the reviewed
+helper. If browser control remains unavailable, state the minimum owner UI action;
+never bypass owner authentication. Six-hour publisher and real-static Pages remain OFF.
+
+Validation on this resume: full293/293 tests PASS, zero failed/skipped; artifact/security
+stage PASS. This includes the new default ban on repository recovery exports. The prior
+full293 run also passed; no backend/frontend behavior was edited on this resume.
+Only safe local-state storage enforcement, fabricated regression test and documentation
+will be committed. Source implementation commit follows; public rollback e6e3e92/API18.
+
+
 ## CURRENT CHECKPOINT — approved retention safeguards complete locally
 
 Supersedes the earlier pending-retention decision below. Owner approved historical

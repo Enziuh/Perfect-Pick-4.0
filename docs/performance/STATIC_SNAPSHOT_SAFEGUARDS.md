@@ -76,7 +76,8 @@ absent, and STOP if any broader permission is requested. No production scope cha
 injected256-bit key. The high-water generation is cryptographically authenticated
 with the ciphertext; relabeling an older export fails authentication. That key must live in the owner's existing secure key store,
 separately from ciphertext; there is no default key, source secret or Actions secret.
-`local-state.cjs` writes restricted0600 encrypted exports in ignored private storage,
+`local-state.cjs` writes restricted0600 encrypted exports outside the repository in owner-only
+Application Support (repository paths require an explicit fabricated-test opt-in),
 verifies decrypt/read-back BEFORE promotion, and retains the previous encrypted copy.
 Wrong keys, modified ciphertext, private-field extras and partial writes fail closed.
 
@@ -131,3 +132,21 @@ never fall back to an API in a way that bypasses disclosure.
    confirm parity/security and request FINAL real-static Pages activation approval.
    Existing Pages workflow remains api-only/synthetic; no static publication or new
    job is enabled here. Owner approval remains necessary to publish real snapshots.
+
+
+## Initialization authorization / current actual state
+
+The owner has approved installation and the exact userinfo.email scope effect. The
+reviewed disabled helper is now installed in the EXISTING private staging project;
+all original source/manifest/deployment/access settings are unchanged, production18
+is unchanged, and no registry operation has run. Current project scopes are inferred;
+adding this helper introduces owner-email access but no unrelated service. Native
+browser control is unavailable and the staging endpoint requires owner browser
+authorization. Follow the private OWNER_ACTION.md outside the repository; the current
+checkpoint records the exact consent action. Do not request the same scope approval
+again or claim cloud initialization before execution/read-back actually succeeds.
+
+Actual23-ID local recovery is verified. The real mapping and encrypted exports now
+live outside the repository; Keychain holds the key. The former ignored development
+map is only a fail-closed tombstone, preventing accidental replacement-ID generation.
+This local result is NOT proof that the Google primary/backups have been initialized.
