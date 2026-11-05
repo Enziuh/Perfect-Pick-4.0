@@ -52,7 +52,7 @@ registry, or enable publisher/Pages during this authorization-only task.
 
 Validation: focused4/4 wrapper tests PASS; full297/297 regressions PASS, zero
 failed/skipped; artifact/security staging PASS. Production/API18 and Pages remain unchanged. Registry cloud
-initialization is still NOT complete. Latest passing commit will follow this entry.
+initialization is still NOT complete. Latest passing implementation:fb5606c (297/297).
 
 
 ## CURRENT HOLD POINT — private helper installed; Google owner consent needed
