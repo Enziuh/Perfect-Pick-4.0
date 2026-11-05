@@ -49,3 +49,68 @@ unchanged dashboard against same-origin JSON under existing CDP conditions, add 
 browser/privacy/expiry/mobile tests, run full suite and artifact checks, record results.
 Then consolidate durable mapping/retention/final publication approvals. Never publish
 fabricated results or actual player mappings. Latest passing commit follows this entry.
+
+## Final milestone — prototype/parity complete, awaiting activation decisions
+
+Supersedes the unfinished next action above. Latest passing milestone f454720;
+final tested source/checkpoint commit follows this entry. Rollback/published frontend
+remains e6e3e92 (no deployment or production/source-profile change).
+
+Completed:
+- Full fabricated workload272 games/23 players,8 CLOSED/10 undisclosed weeks;
+  original scoring, aliases, champion/tie/prize contracts and responsive5 destinations
+  preserved. Exact static candidate38-file inventory excludes the unused fixture,
+  includes one data/snapshot.json, self-only CSP, original32 logos and sealed bytes.
+  Candidate remains local/test labeled and is NOT wired to the Pages workflow.
+- Browser360/390/430/768/1440 cold+repeat: no page overflow/external service fetch,
+  all32 SVGs decode under /Perfect-Pick-4.0/, matrix0 cells before open then345 cells,
+ 23 player rows, CLOSED selection/prediction/votes intact; OPEN Week9 values absent.
+  Refresh failure retains only unexpired success; expiry clears protected DOM.
+- Full279/279 tests PASS, zero failed/skipped, after final implementation. Includes
+  all existing scoring/privacy/browser/API/security/package/artifact suites and13
+  additional static checks (12 unit/artifact +1 multi-viewport browser). Synthetic
+  publication stage/privacy/history/seal checks PASS; existing API-profile tests PASS.
+- Source capture is bounded20s/2MB, only existing dashboard4 GET, safe generic errors.
+  CSPRNG IDs/collisions/approved roster/private paths, unknown fields, partial failure,
+  source revision rollback, initial missing/invalid/expired data all tested. Explicit
+  verified cross-season source rekey retains the same random public ID.
+- Final sequential measurements: STATIC_SNAPSHOT_MEASUREMENTS.md and numeric JSON.
+  Cold local static about545–574ms, repeat379–418ms, zero Google requests. Same-input
+  controlled200ms API cold646–668ms (static observed14–18% faster); not a real-Google
+  latency simulation. Current actual live cold13.45–18.81s, repeat15.42–15.58s; datasets
+  and CDN/loopback conditions differ, so no exact real-data speedup is claimed.
+
+Bounded REAL private verification subsequently completed successfully (read-only
+existing public dashboard4; no new permissions/credentials or private registry read).
+Matched the existing owner-approved private roster of23; generated independent IDs
+only in ignored restricted development storage. Source-to-projected dashboard model
+parity PASS for weeks, matchViews, prizes, prizeViews, resolutions and Form. Actual
+read272 games/121 FINAL,8 eligible CLOSED weeks,10 withheld/unverified scopes. No
+phone access needed. API18 unchanged. No source/private values printed or committed.
+Private receipt/development map/local generation remain under
+`tmp/static-snapshots-private/` (Git-ignored, restricted file/parent permissions).
+This is NOT a durable production identity store or a release-approved snapshot.
+Snapshot expiry remains original120s; do not publish that expired generation.
+
+## Exact remaining decisions / resume
+
+1. Owner authorizes and verifies durable owner-only encrypted/backed-up identity
+   storage, recovery and availability to the authorized publisher. Migrate the
+   development map rather than generating new IDs. Keep it outside Git/GitHub.
+2. Owner decides explicit irreversible retention for approved CLOSED historical
+   snapshots, scope/week list and display freshness. Static files may be cached or
+   copied after expiry. Without that decision, retain API or results-only static;
+   NEVER silently extend the existing120s evidence to six hours.
+3. Once those decisions are implemented/tested, present a fresh validated real static
+   artifact for final Pages activation approval. No new OAuth/client/backend needed.
+   Proposed publication cadence every6h after existing3.0 score updates, only reading
+   already-updated public dashboard4. No schedule or real publication enabled now.
+
+Resume exactly here: keep live e6e3e92/API18 working; do NOT repeat the audit, private
+reconciliation or measurements. Review the three decisions in
+STATIC_SNAPSHOT_DESIGN.md, implement only the approved retention/storage mechanism,
+reuse the private random map, revalidate fresh source/parity, run279+ tests and prepare
+one explicit final static-profile release approval. Do not dispatch Pages yet.
+Files touched: tools/snapshots/*, tests/static*.test.cjs,
+tests/support/static-snapshot-example.cjs, tools/performance/browser-profile.cjs,
+and docs/performance/STATIC_* only. No website/API/backend/workflow edits.

@@ -55,9 +55,9 @@ test('snapshot and private map staging rejects unsafe paths, links, unexpected f
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
 function client(s){
- const listeners={},events=[],timers=[];let requests=0,fail=false,file=s.build().file;
- const root={location:{href:'http://localhost/Perfect-Pick-4.0/'},AbortController,Event:class{constructor(type){this.type=type;}},setTimeout(fn,ms){if(ms<2000)queueMicrotask(fn);else timers.push({fn,ms});return timers.length;},clearTimeout(){},setInterval(){},document:{hidden:false,getElementById(){return null;},addEventListener(name,fn){listeners[name]=fn;},dispatchEvent(e){events.push(e.type);}},async fetch(url,options){requests++;assert.equal(url,'http://localhost/Perfect-Pick-4.0/data/snapshot.json');assert.equal(options.credentials,'omit');assert.equal(options.redirect,'error');if(fail)throw Error('PRIVATE_SECRET');return {ok:true,url,headers:{get:()=> 'application/json'},text:async()=>JSON.stringify(file)};}};
- return {root,listeners,events,timers,get requests(){return requests;},set fail(v){fail=v;},set file(v){file=v;}};
+ const listeners={},events=[],timers=[],intervals=[];let requests=0,fail=false,file=s.build().file;
+ const root={location:{href:'http://localhost/Perfect-Pick-4.0/'},AbortController,Event:class{constructor(type){this.type=type;}},setTimeout(fn,ms){if(ms<2000)queueMicrotask(fn);else timers.push({fn,ms});return timers.length;},clearTimeout(){},setInterval(fn){intervals.push(fn);},document:{hidden:false,getElementById(){return null;},addEventListener(name,fn){listeners[name]=fn;},dispatchEvent(e){events.push(e.type);}},async fetch(url,options){requests++;assert.equal(url,'http://localhost/Perfect-Pick-4.0/data/snapshot.json');assert.equal(options.credentials,'omit');assert.equal(options.redirect,'error');if(fail)throw Error('PRIVATE_SECRET');return {ok:true,url,headers:{get:()=> 'application/json'},text:async()=>JSON.stringify(file)};}};
+ return {root,listeners,events,timers,intervals,get requests(){return requests;},set fail(v){fail=v;},set file(v){file=v;}};
 }
 test('static browser coalesces requests, bounded retries retain only fresh data and never API-fallback',async()=>{
  const s=setup(),c=client(s),real=Date.now;let now=s.now;Date.now=()=>now;
@@ -75,3 +75,42 @@ test('public API capture uses only reviewed dashboard4 GET, caps bytes and never
  await assert.rejects(readPublicApi({approved:true,endpoint},async()=>{const r=new Response('x'.repeat(2000001),{headers:{'content-type':'application/json'}});Object.defineProperty(r,'url',{value:endpoint});return r;}));
 });
 module.exports={setup};
+
+test('full local static Pages candidate has exact38 files, no identity store, external transport or unused fixture',()=>{
+ const s=setup(),{file}=s.build(),artifact=require('../tools/snapshots/artifact.cjs'),dir=path.resolve('tmp/static-artifact-'+crypto.randomBytes(6).toString('hex'));
+ try{const hashes=artifact.stage(file,dir,s.now);assert.equal(Object.keys(hashes).length,38);artifact.verify(dir,s.now);
+ assert(!fs.existsSync(path.join(dir,'fixtures')));assert(!fs.existsSync(path.join(dir,'identity-store.cjs')));
+ const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');assert(html.includes("connect-src 'self'"));assert(!html.includes('https://script.google'));
+ const data=fs.readFileSync(path.join(dir,'data/snapshot.json'),'utf8');for(const a of s.reply.aliases)assert(!data.includes(a.player));
+ fs.writeFileSync(path.join(dir,'private.json'),'PRIVATE_MARKER');assert.throws(()=>artifact.verify(dir,s.now));fs.rmSync(path.join(dir,'private.json'));
+ fs.appendFileSync(path.join(dir,'app.js'),' ');assert.throws(()=>artifact.verify(dir,s.now));
+ }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(dir+'.seal.json',{force:true});}
+});
+
+test('static refresh retains an unexpired good model on malformed/older data and does not accept rollback',async()=>{
+ const s=setup(),c=client(s),real=Date.now;let now=s.now;Date.now=()=>now;
+ try{install(c.root,{snapshot:'./data/snapshot.json'});await c.root.PerfectPickPreview.get('prizes');
+ const old=s.build().file,newer=structuredClone(old);newer.payload.snapshot.revision=2;
+ c.file=newer;await c.intervals[0]();assert.equal(c.requests,2);
+ c.file=old;await c.intervals[0]();assert.equal(c.requests,5);assert(c.events.includes('perfectpick:degraded'));assert.equal((await c.root.PerfectPickPreview.get('prizes')).activeWeek,2);
+ c.file={schema:'PRIVATE_MARKER'};await c.intervals[0]();assert.equal(c.requests,8);assert.equal((await c.root.PerfectPickPreview.get('week','&week=1')).standings.length,2);
+ now+=120001;await c.intervals[0]();assert(c.events.includes('perfectpick:unavailable'));assert.throws(()=>c.root.PerfectPickPreview.buildMatchView({week:1},'Bears vs Lions'));
+ }finally{Date.now=real;}
+});
+
+test('verified cross-season source-key reconciliation preserves public ID without a name or phone derivation',()=>{
+ const initial=identity.assign({version:1,entries:[]},['p_seasonold01']).store;
+ assert.throws(()=>identity.rekey(initial,{previousSourceKey:'p_seasonold01',nextSourceKey:'p_seasonnew01'}));
+ const next=identity.rekey(initial,{previousSourceKey:'p_seasonold01',nextSourceKey:'p_seasonnew01',verifiedSamePlayer:true});
+ assert.equal(next.entries[0].publicId,initial.entries[0].publicId);assert.equal(next.entries[0].sourceKey,'p_seasonnew01');
+ assert.throws(()=>identity.rekey(next,{previousSourceKey:'p_unknownold',nextSourceKey:'p_anothernew',verifiedSamePlayer:true}));
+});
+test('initial missing, invalid or expired static data fails safely with bounded requests and no adapter disclosure',async()=>{
+ for(const mode of ['missing','invalid','expired']){
+  const s=setup(),c=client(s),real=Date.now;Date.now=()=>s.now+(mode==='expired'?120001:0);
+  try{if(mode==='missing')c.fail=true;if(mode==='invalid')c.file={schema:'PRIVATE_MARKER'};install(c.root,{snapshot:'./data/snapshot.json'});
+   await assert.rejects(c.root.PerfectPickPreview.get('prizes'),{message:'Competition data unavailable'});assert.equal(c.requests,3);assert(c.events.includes('perfectpick:unavailable'));assert(!c.events.includes('perfectpick:refresh'));
+   assert.throws(()=>c.root.PerfectPickPreview.buildWeeklyPrize({week:1}));
+  }finally{Date.now=real;}
+ }
+});

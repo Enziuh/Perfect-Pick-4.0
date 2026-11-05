@@ -17,7 +17,7 @@ const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
 function outputPath(dir){
  const root=path.resolve(__dirname,'../..','tmp'),target=path.resolve(dir);
  if(!target.startsWith(root+path.sep))throw Error('Local ignored prototype output required');
- for(let p=target;p!==root;p=path.dirname(p))if(fs.existsSync(p)&&fs.lstatSync(p).isSymbolicLink())throw Error('Unsafe output');
+ for(let p=target;;p=path.dirname(p)){if(fs.existsSync(p)&&fs.lstatSync(p).isSymbolicLink())throw Error('Unsafe output');if(p===root)break;}
  return target;
 }
 function verify(dir,now){
@@ -46,9 +46,11 @@ function stage(reply,mappingFile,dir,now,approval){
 // Caller must separately authorize a real capture; nothing runs at module load.
 async function readPublicApi(config,fetcher=fetch){
  if(!config||Object.keys(config).sort().join(',')!=='approved,endpoint'||config.approved!==true||!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(config.endpoint))throw Error('Reviewed source required');
+ try{
  const response=await fetcher(config.endpoint+'?action=dashboard4',{signal:AbortSignal.timeout(20000),credentials:'omit',cache:'no-store'});
  if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error('Source unavailable');
  const reader=response.body.getReader(),chunks=[];let size=0;
  try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>2000000){await reader.cancel();throw Error();}chunks.push(value);}return JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw Error('Source unavailable');}finally{reader.releaseLock();}
+ }catch{throw Error('Source unavailable');}
 }
 module.exports={generate,stage,verify,readPublicApi};
