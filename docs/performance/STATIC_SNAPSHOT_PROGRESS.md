@@ -67,7 +67,7 @@ The existing outside-repo mapping/recovery files and Keychain key are unchanged.
 Validation: new focused4/4 fail-closed transport tests and3/3 editor-initializer tests
 PASS. Full304/304 regression tests PASS, zero failed/skipped; privacy/artifact/security
 stage PASS. New tracked generators contain null bootstrap/defaults and fabricated
-tests only. Latest implementation commit follows this entry; public rollback unchanged.
+tests only. Latest tested implementation:ed0c327 (304/304 PASS); public rollback unchanged.
 
 
 ## CURRENT HOLD POINT — temporary public-named authorization wrapper
