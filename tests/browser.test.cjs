@@ -99,6 +99,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    return result;
   }
   async function until(p,expression){for(let i=0;i<100;i++){if(await p.evaluate(expression))return;await pause(50);}throw new Error('Browser expectation timed out: '+expression);}
+  async function openPlayerDetails(p){await p.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').forEach(card=>card.open=true)");await p.evaluate("new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))");}
   const p=await page();await until(p,"document.getElementById('status')?.textContent.startsWith('Synthetic data loaded')");
   assert(await p.evaluate("document.getElementById('submitPicks').disabled && !document.getElementById('submitPicks').hasAttribute('href')"));
   assert(await p.evaluate("document.getElementById('dashboardResultsWeek').textContent.includes('Recent finals')"));
@@ -186,6 +187,9 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   for(const week of [1,2,3,4]){
    await p.evaluate(`document.getElementById('weekSelect').value='${week}';document.getElementById('weekSelect').dispatchEvent(new Event('change'))`);
    await until(p,`document.getElementById('picksSubmissionCount').textContent.includes('for Week ${week}')`);
+   assert.equal(await p.evaluate("document.querySelectorAll('#playerPicksBody .pick-cell,#playerPickCards .selection-choice,#matchGameResults .match-comparison li').length"),0);
+   await p.evaluate("document.querySelector('#pickMatrix>summary').click()");await until(p,"document.querySelectorAll('#playerPicksBody .pick-cell').length>0");
+   await openPlayerDetails(p);
    assert(await p.evaluate("document.querySelectorAll('#playerPicksBody .pick-cell').length>0"));
    assert(await p.evaluate("document.querySelectorAll('#pickPercentages .vote-option').length>0"));
    assert.equal(await p.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),4);
@@ -210,6 +214,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .game-result-card').length"),1);
   await p.evaluate("document.querySelector('#matchGameResults .match-comparison summary').click()");
   assert(await p.evaluate("document.querySelector('#matchGameResults .match-comparison').open"));
+  await until(p,"document.querySelectorAll('#matchGameResults .match-comparison li').length===4");
   assert.equal(await p.evaluate("document.querySelectorAll('#matchGameResults .match-comparison li').length"),4);
   await p.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
   await until(p,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
@@ -318,6 +323,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
     await example.evaluate("document.getElementById('weekSelect').value='4';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
     await until(example,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 4')");
     await example.evaluate("document.getElementById('playerSelect').value='Synthetic Comet';document.getElementById('playerSelect').dispatchEvent(new Event('change'))");
+    await openPlayerDetails(example);
     assert(await example.evaluate("document.querySelector('#playerPickCards .player-prediction').textContent.includes('Actual FINAL combined score: 38. Off by 2.')"));
     await navigate(example,'standings/monthly');
    }
@@ -394,6 +400,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Avery A.')"));
    assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
    assert(await connected.evaluate("[...document.querySelectorAll('.accuracy-indicator')].every(e=>e.title.includes('submitted picks with FINAL results'))"));
+   await openPlayerDetails(connected);
    assert(await connected.evaluate("(()=>{const e=document.querySelector('#playerPickCards .selection-choice.wrong');return e && getComputedStyle(e).backgroundColor==='rgba(0, 0, 0, 0)' && e.textContent.includes('Incorrect');})()"));
    for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    await navigate(connected,'prizes');assert(await connected.evaluate("document.getElementById('prizeSummary').textContent.includes('23 participants per week') && document.getElementById('prizeSummary').textContent.includes('not verified collected funds')"));

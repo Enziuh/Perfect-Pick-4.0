@@ -450,7 +450,7 @@
         ${votes.total && p.count > votes.total / 2 ? '<span class="vote-popular">Most selected</span>' : ''}
       </div>`).join('')}</div>
       <p class="pick-meta">${votes.total ? `${votes.total} valid votes · Popularity is not a game result.` : 'No valid votes yet. Both teams have 0%.'}</p>
-      <details class="match-comparison"><summary>Compare picks for this matchup</summary><ul>${model.selections.map(p => `<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick)}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('') || '<li>No selections for this matchup.</li>'}</ul></details>
+      <details class="match-comparison" data-game="${escapeHtml(model.game)}"><summary>Compare picks for this matchup</summary><ul></ul></details>
     </div>`;
   }
 
@@ -497,19 +497,48 @@
     const selected = $('playerSelect').value;
     const players = data.standings.filter(p => !selected || p.name === selected);
     $('playerPickCards').innerHTML = players.map(player => `<details class="player-pick-card"${selected ? ' open' : ''}>
-      <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary>
-      <ul>${matchModels.map(model => {
-        const pick = model.selections.find(p => p.name === player.name);
-        return `<li><span>${escapeHtml(model.game)}</span>${pick ? `<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>` : '<span>No selection</span>'}</li>`;
-      }).join('')}</ul>${renderPlayerPrediction(player, data)}</details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
+      <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary><div class="player-pick-details"></div></details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
+    if(selected)populatePlayerDetails($('playerPickCards').querySelector('.player-pick-card'),data);
+  }
+
+  function currentMatchDisclosure(data) {
+    if(!data||data!==matchData||!publicPicks(data))return false;
+    // The adapter checks current snapshot/disclosure expiry before any deferred DOM work.
+    if(data.games.length)preview.buildMatchView(data,data.games[0],prizeData?.formControl);
+    return true;
+  }
+
+  function populatePlayerDetails(card,data) {
+    if(!card||!card.isConnected||!currentMatchDisclosure(data)||card.dataset.built)return;
+    const player=data.standings.find(p=>p.name===card.querySelector('summary>span').textContent);
+    if(!player)return;
+    card.querySelector('.player-pick-details').innerHTML=`<ul>${matchModels.map(model=>{
+      const pick=model.selections.find(p=>p.name===player.name);
+      return `<li><span>${escapeHtml(model.game)}</span>${pick?`<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>`:'<span>No selection</span>'}</li>`;
+    }).join('')}</ul>${renderPlayerPrediction(player,data)}`;
+    card.dataset.built='true';
+  }
+
+  function populateMatchComparison(details) {
+    if(!currentMatchDisclosure(matchData)||details.dataset.built)return;
+    const model=matchModels.find(m=>m.game===details.dataset.game);if(!model)return;
+    details.querySelector('ul').innerHTML=model.selections.map(p=>`<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick)}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('')||'<li>No selections for this matchup.</li>';
+    details.dataset.built='true';
   }
 
   function renderPlayerPicksTable(data) {
+    if(!$('pickMatrix').open){
+      $('playerPicksHead').textContent='';$('playerPicksBody').textContent='';
+      delete $('pickMatrix').dataset.built;return;
+    }
+    if($('pickMatrix').dataset.built===String(picksRequest)&&currentMatchDisclosure(data))return;
     if (!publicPicks(data)) {
       $('playerPicksHead').innerHTML = '';
       $('playerPicksBody').innerHTML = `<tr><td>${escapeHtml(pickPrivacyMessage(data))}</td></tr>`;
       return;
     }
+    if(!currentMatchDisclosure(data))return;
+    $('pickMatrix').dataset.built=String(picksRequest);
     const showPrediction=data.tiebreak?.enabled&&data.tiebreak.revealed;
     $('playerPicksHead').innerHTML = `<tr><th scope="col">Player</th>${matchModels.map(model => `<th scope="col" class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}${showPrediction?'<th scope="col">Tiebreak total</th>':''}<th scope="col">Correct</th><th scope="col">Accuracy</th></tr>`;
     $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><th scope="row" class="player-name">${escapeHtml(player.name)}</th>${matchModels.map(model => {
@@ -803,6 +832,19 @@
       });
     }
   }
+
+  document.addEventListener('toggle',event=>{
+    const details=event.target;if(!details.open)return;
+    try{
+      if(details.id==='pickMatrix'&&matchData)renderPlayerPicksTable(matchData);
+      else if(details.matches('.player-pick-card'))populatePlayerDetails(details,matchData);
+      else if(details.matches('.match-comparison'))populateMatchComparison(details);
+    }catch{
+      // Never reuse deferred player content after the validated snapshot expires.
+      if(details.id==='pickMatrix'){$('playerPicksHead').textContent='';$('playerPicksBody').textContent='Picks unavailable. Refresh to retry.';}
+      else details.querySelector('ul,.player-pick-details')?.replaceChildren();
+    }
+  },true);
 
   document.addEventListener('DOMContentLoaded', load);
   if (liveView) {

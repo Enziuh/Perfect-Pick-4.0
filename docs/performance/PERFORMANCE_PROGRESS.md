@@ -22,3 +22,14 @@ same-input replay plus live remeasurement. Do not rerun the completed baseline/a
 Remaining: rendering/cache changes, focused/full tests, honest before/after comparison,
 push tested frontend, existing manual api workflow, actual live/privacy/logo checks,
 results report/final checkpoint. Backend18/scoring/closure/prizes remain unchanged.
+
+Milestone1 COMPLETE: deferred player-card contents, matchup comparison lists and full
+matrix until native details opens; selecting one player renders only that player.
+Bounded same-week built flags avoid rebuilding on reopen; deferred paths call the
+existing adapter expiry check before reusing content. No contract/scoring changes.
+Focused full browser regression PASS, including all privacy/expiry/alias/matrix tests.
+Tests first assert no hidden matrix/pick details are built, then explicitly open the
+controls and retain all existing correctness/prediction/scrolling assertions.
+Files website/app.js, tests/browser.test.cjs. Next: active-destination rendering,
+all-hidden-private-content invalidation on refresh/expiry, stale async guards; then
+controlled replay/performance comparison and complete suite. Not deployed yet.
