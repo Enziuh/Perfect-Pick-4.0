@@ -4,7 +4,7 @@
 
 Supersedes the earlier pending-retention decision below. Owner approved historical
 retention for season2026 Weeks1–8 only. Baseline c68b376; public rollback still
- e6e3e92/API18, unchanged. Latest tested implementation commit follows this entry.
+ e6e3e92/API18, unchanged. Latest tested implementation commit:1595fc9 (292/292 PASS).
 
 Implemented: PP4_STATIC_V2, independent durable owner-policy record, immutable
 120s capture validation, separate six-hour score/display freshness; physical removal
