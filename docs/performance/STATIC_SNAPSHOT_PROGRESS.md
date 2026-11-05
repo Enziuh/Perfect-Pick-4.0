@@ -1,5 +1,74 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — failed initialization needs READ-ONLY runtime report
+
+Owner ran pp4InitializePrivateRegistryOnce once; execution ended at the generic catch
+(line18) with Private registry initialization blocked. That catch redacts the underlying
+exception; it does NOT establish the failed guard or prove zero/partial writes.
+Do not guess that the namespace is empty or claim initialization/recovery succeeded.
+
+Read-only source inspection COMPLETE: current remote files exactly match the saved
+initialization candidate. Configuration enabled, owner-review flag true, configured
+owner equals verified project creator, bootstrap present/strictly valid with23 entries,
+initializer unchanged. This rules out disabled/stale configuration and missing/invalid
+static input in the inspected source. The runtime actor/Properties state remains unknown.
+No IDs regenerated, backups/key untouched. API18/deployments/access/manifest unchanged.
+
+Installed ONLY one additional read-only diagnostic file in the SAME private staging:
+TemporaryRegistryReadOnlyInspection.gs
+public function pp4InspectPrivateRegistryReadOnly
+Google function index VERIFIED the function. Every pre-existing file, including the
+initializer and reviewed owner/registry security checks, is unchanged. No initializer
+or registry operation was invoked by installation. No new route, scope or deployment.
+
+This diagnostic returns/logs ONLY fixed prerequisite codes, identity availability/match
+booleans, counts, property-presence and integrity booleans. It never returns emails,
+source keys, public IDs, maps, hashes, records or raw errors. Both owner checks MUST
+pass before bootstrap/Properties reads. It reads only PRIMARY/BACKUP_A/BACKUP_B/HIGH_WATER
+in the registry namespace, checks a stable double-read, then verifies the reviewed
+core's read-only load when records are otherwise valid. There are NO setters,
+initialization, recovery, deletion, HTTP, Sheet/Form/score/trigger/publication operations.
+The diagnosticWrites field is0 by construction and tested. It distinguishes wrong
+owner/scope/context, empty vs partial namespace, malformed/checksum/mapping/high-water/
+backup failures, JSON-order-only mismatch and blocked core-load conditions.
+
+EXACT OWNER ACTION (not consent or another initialization attempt): in the SAME Google
+profile used for the failed run, open TemporaryRegistryReadOnlyInspection.gs, select
+pp4InspectPrivateRegistryReadOnly and Run once. Send ONLY the logged JSON report.
+Do NOT rerun initialization or change accounts/config until that report is captured.
+If ownership fails the diagnostic correctly stops before namespace inspection; do not
+weaken it to read the registry under a different actor. Private OWNER_ACTION.md updated.
+
+BLOCKER: native browser control remains unavailable; runtime inspection cannot safely
+be executed automatically through the known-failing direct-token active-owner context.
+Do not repeat HTTP/authorization experiments or request unrelated scopes for execution
+logs. A safe owner-editor result is required to identify the actual root cause and
+verify whether the failed run wrote any persistent registry keys. Initializer source
+is not changed as an unverified attempt to make it pass.
+
+After report: use the exact fixed code/flags to apply the MINIMUM verified correction,
+retain every owner/checksum/expected-generation/mapping/backup check, confirm any
+partial state and preserve original IDs. Prepare any necessary next bounded editor
+operation and verify its index/tests before requesting it. No random IDs may be
+regenerated and no namespace may be reset/cleared. Do not infer a historical cause if
+current evidence only shows a recovered/transient state.
+
+Private metadata/source backup/receipt OUTSIDE repo:
+Application Support/Perfect Pick/Private Registry/activation/
+failed-init-current-source.private.json and prerequisite-inspection-{before,candidate,
+installed}.private.json. No mapping/key moved back into repo. The later cleanup must
+remove BOTH temporary initialization/input and read-only inspection, restore the
+reviewed disabled helper and leave durable Properties intact. Existing restore script
+expects the prior candidate; update/verify its expected hash against the read-only
+inspection candidate before cleanup, never overwrite concurrent edits blindly.
+
+Validation: focused5/5 diagnostic tests PASS; full309/309 regression tests PASS, zero
+failed/skipped; artifact/privacy/security staging PASS. Other new tests from prior
+steps retained. No production or frontend change, no static/publication/publisher
+activation. Exact runtime root cause and prior write status are NOT YET VERIFIED.
+Latest tested implementation commit follows this entry.
+
+
 ## CURRENT HOLD POINT — authorized editor initialization prepared (no repeat consent)
 
 Owner confirmed pp4AuthorizePrivateRegistry ran and stopped with the expected
