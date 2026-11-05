@@ -1,5 +1,75 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — authorized editor initialization prepared (no repeat consent)
+
+Owner confirmed pp4AuthorizePrivateRegistry ran and stopped with the expected
+Private registry disabled error. Existing private health now returns authorized JSON.
+Removed authorization wrapper; verified its function index entry disappeared and the
+exact reviewed disabled helper/all baseline staging files were restored. No need to
+repeat that authorization step. Production18/deployments/access/manifest unchanged.
+
+A bounded private HTTP setup attempt then failed CLOSED at ACTIVE_OWNER_AVAILABLE
+before any registry read/write. Direct token-authenticated HTTP cannot establish the
+required active owner for this request; do not weaken the reviewed two-owner checks.
+The temporary POST handler/configuration were removed and exact reviewed disabled
+source restored, with Properties untouched. No HTTP diagnostic or new route remains.
+Native browser control is still unavailable (no apps/browsers; native startup failure).
+Reading execution metadata also returned403 with existing credentials; no new scopes
+were requested to inspect logs. Do not repeat either failed transport or consent.
+
+To complete the authorized initialization, ONE bounded owner-editor function is now
+installed in the SAME private staging project:
+file TemporaryOwnerRegistryInitialization.gs
+function pp4InitializePrivateRegistryOnce (no trailing underscore)
+Google function metadata VERIFIED this public-named function. No visual UI claim.
+The helper's authorized private configuration binds both active/effective identities
+to the verified project creator. All existing staging files except this configuration
+are byte-identical; manifests, access, deployments and production API18 are unchanged.
+Authorization wrapper/temporary POST are absent. No function was executed by upload.
+
+Initializer uses the EXACT preserved23-ID input, supplied ONLY inside the private
+Google project and outside-repository private setup candidate (never Git/source in
+this repo or logs). No phone or recovery key is in that input/source. The key stays
+in macOS Keychain. It only saves an empty private registry at generation1, refuses a
+different existing mapping, reads back exact IDs, recovers the latest verified cloud
+backup and checks exact IDs again. All owner checks precede property access. It logs
+ONLY a fixed safe counts/booleans receipt after all checks succeed. No ID generator,
+Sheet/Form/score/trigger/deployment/publication API or HTTP handler is present.
+
+EXACT OWNER ACTION: open the existing private staging editor; select
+TemporaryOwnerRegistryInitialization.gs, choose pp4InitializePrivateRegistryOnce,
+Run once. Send ONLY the logged REGISTRY_INITIALIZATION_VERIFIED JSON receipt, with
+players23/uniqueIds23/generation1 and exactIdsPreserved/cloudReadBack/cloudBackupRecovery/
+activeOwner/effectiveOwner all true. This is actual initialization, NOT authorization.
+No manual mapping/key copy is needed. Private OWNER_ACTION.md has the exact link.
+Do not run unrelated functions or send screenshots/source containing private input.
+
+CLOUD REGISTRY IS STILL PENDING until that execution succeeds. Local23-ID uniqueness,
+identity stability and authenticated encrypted backup/recovery remain verified. Do
+not claim cloud persistence, final publication readiness, or activate the six-hour
+publisher/real-static Pages yet. All are OFF; live e6e3e92/API18 remain unchanged.
+
+After successful safe receipt: verify unchanged private candidate/source and restore
+using tmp/private-registry-init/editor-init.mjs restore. It removes ONLY temporary
+initialization/input/config and restores the exact reviewed disabled helper, leaving
+all durable registry Properties untouched. This operation refuses concurrent edits.
+Then re-verify independent Keychain backup against the unchanged outside-repo mapping,
+update cloud-generation/durability receipts privately and prepare the final static
+snapshot publication/refresh activation request. No further alias/retention approval
+or backend architecture work is required.
+
+Private setup receipts/backups/candidates are OUTSIDE repository under
+~/Library/Application Support/Perfect Pick/Private Registry/activation/
+editor-init-{before,candidate,installed}.private.json, cloud-restored.private.json.
+These contain private configuration/input; NEVER copy into Git/Actions/artifacts.
+The existing outside-repo mapping/recovery files and Keychain key are unchanged.
+
+Validation: new focused4/4 fail-closed transport tests and3/3 editor-initializer tests
+PASS. Full304/304 regression tests PASS, zero failed/skipped; privacy/artifact/security
+stage PASS. New tracked generators contain null bootstrap/defaults and fabricated
+tests only. Latest implementation commit follows this entry; public rollback unchanged.
+
+
 ## CURRENT HOLD POINT — temporary public-named authorization wrapper
 
 The earlier instruction to select pp4PrivateRegistry_ in the Run dropdown was WRONG.
