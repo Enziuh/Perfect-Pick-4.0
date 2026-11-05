@@ -63,3 +63,13 @@ as rollback. Next exact action: push tested candidate; manual existing Pages wor
 profile=api; inspect actual38-file artifact, run actual site privacy/scoring/logo/mobile
 checks and same live profiler to after-measurements.json; regenerate results and record
 published commit/run. No backend/Sheet/Form/trigger/OAuth/deployment-setting operation.
+
+Candidate7049dbb pushed. First run42072966965 failed CLOSED before upload/deploy:265
+passed, browser functional assertions passed but teardown recorded two "Fetch domain
+is not enabled" protocol errors from late lazy-image interception after Fetch.disable.
+Live site remains22ea053. Harness now KEEPS network blocking through Target.closeTarget,
+asserts successful closure, and audits only exact closed-session cancellation messages
+against acknowledged closed sessions. All actual runtime/network errors and zero-external
+request assertions remain unchanged. Replay profiler also keeps interception through
+closure, avoiding any accidental live request at teardown. No application change.
+Full suite rerun required, then commit/push the harness fix and retry existing workflow.

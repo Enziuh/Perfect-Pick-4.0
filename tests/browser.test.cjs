@@ -63,13 +63,18 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   });
   socket=new WebSocket(endpoint);await new Promise((r,j)=>{socket.addEventListener('open',r,{once:true});socket.addEventListener('error',j,{once:true});});
   let seq=0;const callbacks=new Map();
-  const interceptionOps=new Set();
+  const interceptionOps=new Set(),closingSessions=new Set(),closedSessions=new Set(),closureCancellations=[];
+  function requestError(session,error){
+   if(closingSessions.has(session)&&error.message==='Session with given id not found.')closureCancellations.push(session);
+   else errors.push(error.message);
+  }
   const send=(method,params={},sessionId)=>{const task=new Promise((resolve,reject)=>{const id=++seq;callbacks.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params,...(sessionId?{sessionId}:{})}));});if(['Fetch.continueRequest','Fetch.fulfillRequest','Fetch.failRequest'].includes(method)){interceptionOps.add(task);task.then(()=>interceptionOps.delete(task),()=>interceptionOps.delete(task));}return task;};
   async function closePage(p){
-   // Stop interception and drain commands before detaching a page with lazy images.
-   // All request failures still reach the existing errors assertion.
-   await send('Fetch.disable',{},p.sessionId);await Promise.allSettled([...interceptionOps]);
-   await send('Target.closeTarget',{targetId:p.targetId});
+   // Keep fail-closed interception active until the page is actually destroyed.
+   // Disabling it first races late lazy-image events and resumes paused requests.
+   closingSessions.add(p.sessionId);await Promise.allSettled([...interceptionOps]);
+   const result=await send('Target.closeTarget',{targetId:p.targetId});assert.equal(result.success,true);
+   closedSessions.add(p.sessionId);await Promise.allSettled([...interceptionOps]);
   }
   socket.addEventListener('message',({data})=>{
    const m=JSON.parse(data);
@@ -77,11 +82,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    if(m.method==='Fetch.requestPaused'){
     const url=m.params.request.url;
     if(apiReply&&url===apiEndpoint+'?action=dashboard4'){
-     apiRequests.push(url);send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Access-Control-Allow-Origin',value:origin}],body:Buffer.from(JSON.stringify(apiReply)).toString('base64')},m.sessionId).catch(e=>errors.push(e.message));return;
+     apiRequests.push(url);send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Access-Control-Allow-Origin',value:origin}],body:Buffer.from(JSON.stringify(apiReply)).toString('base64')},m.sessionId).catch(e=>requestError(m.sessionId,e));return;
     }
     const local=url.startsWith(origin+'/');
     if(!local)external.push(url);
-    send(local?'Fetch.continueRequest':'Fetch.failRequest',local?{requestId:m.params.requestId}:{requestId:m.params.requestId,errorReason:'BlockedByClient'},m.sessionId).catch(e=>errors.push(e.message));
+    send(local?'Fetch.continueRequest':'Fetch.failRequest',local?{requestId:m.params.requestId}:{requestId:m.params.requestId,errorReason:'BlockedByClient'},m.sessionId).catch(e=>requestError(m.sessionId,e));
    }
    if(m.method==='Network.requestWillBeSent' && !m.params.request.url.startsWith(origin+'/') && !m.params.request.url.startsWith('about:') && !(apiReply&&m.params.request.url===apiEndpoint+'?action=dashboard4'))external.push(m.params.request.url);
    if(m.method==='Runtime.exceptionThrown')errors.push('Uncaught browser exception');
@@ -448,6 +453,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert(await broken.evaluate("document.getElementById('faq').querySelectorAll('details').length>=12"));
    await closePage(broken);
   }
+  assert(closureCancellations.every(session=>closedSessions.has(session)),'Protocol cancellation without confirmed page closure');
   assert.deepEqual(external,[],'External request attempted');assert.deepEqual(errors,[]);
  }catch(error){failure=error;
  }finally{
