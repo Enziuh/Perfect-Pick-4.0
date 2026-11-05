@@ -8,7 +8,7 @@ function install(root,config){
  if(!config||Object.keys(config).join(',')!=='snapshot'||config.snapshot!=='./data/snapshot.json')throw Error('Same-origin snapshot required');
  let degraded=false,current=null,pending=null,expiry=0,timer=null,acceptedAt=-1,acceptedRevision=-1;
  const emit=name=>root.document.dispatchEvent(new root.Event(name));
- const clear=()=>{current=null;emit('perfectpick:unavailable');};
+ const clear=()=>{current=null;const note=root.document.getElementById('staticSnapshotNotice');if(note)note.textContent='Competition snapshot expired or unavailable. Refresh to retry.';emit('perfectpick:unavailable');};
  const fresh=()=>current&&Date.now()<expiry;
  async function request(force=false){
   if(current&&!fresh())clear();
@@ -30,6 +30,7 @@ function install(root,config){
     }catch{if(attempt===2)throw Error('Snapshot unavailable');}
     finally{root.clearTimeout(timeout);}
    }
+   const freshness=root.document.getElementById('staticSnapshotNotice');if(freshness)freshness.textContent=model.prizes.staticFreshness?'Scores and entry status as of '+new Date(model.prizes.staticFreshness.scoresAsOf).toLocaleString()+'. Scheduled refresh about every six hours; historical disclosure uses owner-approved retention.':'Verified short-lived competition snapshot.';
    degraded=false;current=createViewAdapter(model,()=>Date.now());expiry=model.expiresAt;root.clearTimeout(timer);timer=root.setTimeout(clear,Math.max(1,expiry-Date.now()));
    const control=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
    if(control&&note){const form=model.form,link=root.document.createElement(form.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(form.available&&approvedPlayerDestination({url:form.url,verified:true,approvedForPlayers:true})){link.href=form.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');control.replaceWith(link);note.textContent=form.message;}

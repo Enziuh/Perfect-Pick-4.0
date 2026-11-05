@@ -64,3 +64,23 @@ activation. Current120s proof window and absent durable production identity stor
 remain blockers; the live API architecture stays active. Reproduce with
 `node tools/snapshots/benchmark.cjs`; live measurement uses the existing public profiler
 with captureDir omitted. No hidden data or raw records are benchmark outputs.
+
+## Retention safeguards follow-up measurements
+
+Final retained-snapshot implementation, fabricated23-player/272-game workload only.
+Same Chrome/throttling/gzip loopback settings as the earlier prototype, one cold and
+repeat sample per width; no concurrent tests. API control is intercepted fixed200ms,
+not a live Google response. Browser test clock is three hours after the original
+capture, while production runtime clock and evidence are never modified.
+
+|Width/visit|Controlled API usable ms|Retained static usable ms|Static API requests|
+|---|---:|---:|---:|
+|1440/cold|665.5|578.7|0|
+|1440/repeat|488.9|384.0|0|
+|390/cold|647.1|616.6|0|
+|390/repeat|498.1|417.2|0|
+
+Static remained sub-second in these samples; the independent retention and six-hour
+score validation adds work but does not restore the live API wait. This is not a
+real-publication speed guarantee. Raw numeric observations are in
+STATIC_SAFEGUARDS_MEASUREMENTS.json; no actual competition records/mapping included.

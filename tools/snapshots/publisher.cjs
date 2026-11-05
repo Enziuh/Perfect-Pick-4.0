@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {decode}=require('../api/browser-client.cjs'),{projectReply,scanText,validate}=require('./schema.cjs');
 const identity=require('./identity-store.cjs');
-function generate(reply,store,now,{approvedAliases}={}){
+function generate(reply,store,now,{approvedAliases,retention}={}){
  try{
   if(!(approvedAliases instanceof Map)||reply.aliases.some(a=>approvedAliases.get(a.player)!==a.alias))throw Error();
   decode(reply,now); // Reject unknown/unauthorized source fields, never copy blindly.
@@ -10,7 +10,7 @@ function generate(reply,store,now,{approvedAliases}={}){
   const payload=projectReply(reply,assigned.ids),model=decode(payload,now);
   const file={schema:'PP4_STATIC_V1',generatedAt:payload.snapshot.generatedAt,expiresAt:new Date(model.expiresAt).toISOString(),payload};
   validate(file,now);scanText(JSON.stringify(file),store.entries.map(e=>e.sourceKey).concat(reply.aliases.map(a=>a.player)));
-  return {file,store:assigned.store};
+  return {file:retention===undefined?file:require('./retention.cjs').create(file,now,retention),store:assigned.store};
  }catch{throw Error('Snapshot generation blocked');}
 }
 const hash=text=>crypto.createHash('sha256').update(text).digest('hex');

@@ -1,14 +1,7 @@
 'use strict';
 // Private publisher only. Never bundled into a browser or publication artifact.
 const crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
-const PUBLIC_ID=/^p_[a-f0-9]{32}$/;
-function validate(store){
- if(!store||Object.keys(store).sort().join(',')!=='entries,version'||store.version!==1||!Array.isArray(store.entries)||store.entries.length>10000)throw Error('Invalid private identity store');
- const sources=new Set(),ids=new Set();
- for(const e of store.entries){if(!e||Object.keys(e).sort().join(',')!=='publicId,sourceKey'||typeof e.sourceKey!=='string'||!/^p_[a-z0-9]{8,32}$/.test(e.sourceKey)||!PUBLIC_ID.test(e.publicId)||sources.has(e.sourceKey)||ids.has(e.publicId)||e.sourceKey===e.publicId)throw Error('Invalid private identity store');sources.add(e.sourceKey);ids.add(e.publicId);}
- if([...ids].some(id=>sources.has(id)))throw Error('Invalid private identity store');
- return store;
-}
+const {PUBLIC_ID,validate}=require('./identity-contract.cjs');
 function assign(store,sourceKeys,random=crypto.randomBytes){
  validate(store);const result=structuredClone(store),byKey=new Map(result.entries.map(e=>[e.sourceKey,e.publicId])),used=new Set(byKey.values());
  const forbidden=new Set([...sourceKeys,...store.entries.map(e=>e.sourceKey)]);

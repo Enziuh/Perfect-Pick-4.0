@@ -1,5 +1,71 @@
 # Static snapshot progress
 
+## CURRENT CHECKPOINT — approved retention safeguards complete locally
+
+Supersedes the earlier pending-retention decision below. Owner approved historical
+retention for season2026 Weeks1–8 only. Baseline c68b376; public rollback still
+ e6e3e92/API18, unchanged. Latest tested implementation commit follows this entry.
+
+Implemented: PP4_STATIC_V2, independent durable owner-policy record, immutable
+120s capture validation, separate six-hour score/display freshness; physical removal
+of unapproved/expired scopes, aggregates/decisions/allocations/unused aliases. Week9
+OPEN or newly CLOSED still has no static release. Actual previously verified season
+2026/Weeks1–8 checked from the existing private parity receipt/generation; no new
+production read or reconciliation. Existing23 random IDs were loaded/validated only,
+not changed. No real map or snapshot was uploaded, committed or published.
+
+Private storage: owner-only Script Properties primary/rotating backups/high-water
+recovery implementation, ES2020 editor helper disabled by default, authenticated
+AES-256-GCM independent export with authenticated generation and restricted atomic
+verified backup/preserved
+previous copy. Tests recover EXACT same IDs after corruption and block older recovery,
+rotation, unauthorized owner/lock access, malformed source and leaking exceptions.
+These were fabricated service/file tests. REAL private Google registry and secure
+backup key ARE NOT initialized. Existing development map alone remains insufficient.
+
+Permission gate: helper's active/effective owner check requires userinfo.email per
+Google's Session documentation; no grant/manifest edit/upload/execution occurred.
+The four previously reviewed staging scopes are not silently broadened. Need separate
+owner approval for this additional scope if absent and private-helper installation
+into the EXISTING owner-only staging project, plus secure backup-key provisioning.
+No production API18 changes are required or proposed.
+
+Six-hour worker: explicit coalesced prepare-only function, DISABLED by default,
+publication hard-disabled. Validates freshness,272 games/18 weeks, approved roster,
+complete historical coverage and monotonic source/references; verifies private
+registry/recovery before exact38-file sealed local candidate and atomic last-good
+archive update. Failure preserves existing historical records, never renews their
+score freshness. Cadence6h with2-minute preparation lead. No timer, Google trigger,
+workflow, secret, polling loop or unattended publisher is installed. Private registry
+publisher access must be verified after owner setup; do not claim an unconnected local
+mirror is a durable production store.
+
+Validation COMPLETE: full292/292 tests PASS, zero failed/skipped. All existing
+regressions plus owner/backup/retention/transition/failure tests; static browser at
+360/390/430/768/1440 and retained browser at390/1440 after3h; all32 SVGs,23 players,
+272 games, lazy matrix, OPEN confidentiality, expiry DOM clearing, monthly decisive/
+equal/missing tiebreaker parity and sealed artifact scans. Synthetic staging/security
+and existing API publication checks PASS. Conservative ES2020 helper compatibility
+PASS. Source performance remains sub-second locally: retained cold579–617ms,
+repeat384–417ms in final fabricated samples,0 Google requests. Numerical report in
+STATIC_SAFEGUARDS_MEASUREMENTS.json; no new live API timing claim.
+
+Prepared ignored helper: tmp/static-snapshot-safeguards/OwnerIdentityRegistry.gs
+plus source.seal.json. It is disabled, contains no real owner/project/mapping, and
+has no HTTP/Form/Sheet/trigger/ESPN operation. Real23-ID map remains under the prior
+restricted ignored tmp/static-snapshots-private location. No private values in Git,
+logs, public artifacts, scopes or this checkpoint. See STATIC_SNAPSHOT_SAFEGUARDS.md
+for exact owner-controlled initialization/recovery and permission source references.
+
+EXACT NEXT ACTION: obtain the one narrow private setup/scope approval above; verify
+existing staging ownership/access and scope request, preserve source, install ONLY
+the reviewed private helper, initialize the unchanged23 IDs, independently back up/
+restore-test them privately and verify publisher access. Stop if Google requests any
+unapproved scope. Then prepare/verify a fresh real retained candidate and request
+FINAL static Pages publication approval. Do not repeat completed audits, parity,
+reconciliation, redesign or API migration. No public/static deployment authorized yet.
+
+
 Baseline/published rollback: e6e3e92; latest prior checkpoint666abee on develop.
 No public source switch, real capture, API update, credentials, Google resource change,
 or deployment performed. Existing Pages API profile and38-file artifact unchanged.

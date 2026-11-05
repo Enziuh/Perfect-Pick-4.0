@@ -29,6 +29,7 @@ function scanText(text,forbidden=[]){
  if(/\b(?:phone|privateKey|sourceKey|rawResponses?|submissionId|access_token|refresh_token|password|secret)\b|PRIVATE_/i.test(text)||/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)||/-----BEGIN|\b(?:ya29\.|ghp_|github_pat_|AIza)/.test(text)||/\b(?:sheets|script)\.google\.|\/spreadsheets\//i.test(text)||/(?<!\d)(?:\+?1[- .]?)?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}(?!\d)/.test(contacts)||forbidden.some(v=>typeof v==='string'&&v.length>=6&&text.includes(v)))fail();
 }
 function validate(file,now){
+ if(file?.schema==='PP4_STATIC_V2')return require('./retention.cjs').validateRetained(file,now);
  try{
   if(!file||Object.keys(file).sort().join(',')!=='expiresAt,generatedAt,payload,schema'||file.schema!=='PP4_STATIC_V1'||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
   const model=decode(file.payload,now);if(file.expiresAt!==new Date(model.expiresAt).toISOString()||now>=model.expiresAt)fail();
