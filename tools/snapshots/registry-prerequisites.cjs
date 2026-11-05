@@ -1,8 +1,8 @@
 'use strict';
 // Pure READ-ONLY diagnostic. Only fixed labels/counts/booleans leave this module.
 const {validate:validateStore}=require('./identity-contract.cjs');
-function inspect({config,activeUser,effectiveUser,bootstrap,properties,digest,loadRegistry}){
- const report={state:'BLOCKED',code:'CONFIGURATION',configurationEnabled:false,ownerReviewFlag:false,expectedOwnerConfigured:false,activeIdentityReadSucceeded:false,activeIdentityAvailable:false,activeOwnerMatches:false,effectiveIdentityReadSucceeded:false,effectiveIdentityAvailable:false,effectiveOwnerMatches:false,bootstrapValid:false,bootstrapPlayers:null,namespaceInspected:false,namespaceStable:false,propertiesPresent:null,highWaterGeneration:null,primary:null,backups:null,coreLoadValid:false,coreStoreMatchesExpected:false,diagnosticWrites:0};
+function inspect({config,activeUser,effectiveUser,bootstrap,properties,digest,loadRegistry,prepareRegistry,verifyLock}){
+ const report={state:'BLOCKED',code:'CONFIGURATION',configurationEnabled:false,ownerReviewFlag:false,expectedOwnerConfigured:false,activeIdentityReadSucceeded:false,activeIdentityAvailable:false,activeOwnerMatches:false,effectiveIdentityReadSucceeded:false,effectiveIdentityAvailable:false,effectiveOwnerMatches:false,bootstrapValid:false,bootstrapPlayers:null,registryFactoryAvailable:false,digestAvailable:false,registryLockAvailable:false,namespaceInspected:false,namespaceStable:false,propertiesPresent:null,highWaterGeneration:null,primary:null,backups:null,coreLoadValid:false,coreStoreMatchesExpected:false,diagnosticWrites:0};
  const done=code=>({...report,code});
  try{
   const c=config();report.configurationEnabled=c?.enabled===true;report.ownerReviewFlag=c?.ownerOnlyEditorReviewed===true;report.expectedOwnerConfigured=typeof c?.ownerEmail==='string'&&c.ownerEmail.length>=6&&c.ownerEmail.trim()===c.ownerEmail;
@@ -17,6 +17,11 @@ function inspect({config,activeUser,effectiveUser,bootstrap,properties,digest,lo
   if(!report.effectiveOwnerMatches)return done('EFFECTIVE_OWNER_MISMATCH');
   const expected=bootstrap();try{validateStore(expected);report.bootstrapValid=true;report.bootstrapPlayers=expected.entries.length;}catch{return done('BOOTSTRAP_SCHEMA_INVALID');}
   if(report.bootstrapPlayers!==23)return done('BOOTSTRAP_COUNT_UNEXPECTED');
+  try{const core=prepareRegistry();if(!core||typeof core.load!=='function')return done('REGISTRY_FACTORY_UNAVAILABLE');report.registryFactoryAvailable=true;}catch{return done('REGISTRY_FACTORY_UNAVAILABLE');}
+  try{report.digestAvailable=digest('PP4_REGISTRY_PUBLIC_DIGEST_PROBE_V1')==='d5e37f8ecfca5b457a19860f924c4879164d065408c3150c2984d5ca1773f822';}catch{return done('DIGEST_SERVICE_UNAVAILABLE');}
+  if(!report.digestAvailable)return done('DIGEST_SERVICE_MISMATCH');
+  try{report.registryLockAvailable=verifyLock()===true;}catch{return done('REGISTRY_LOCK_UNAVAILABLE');}
+  if(!report.registryLockAvailable)return done('REGISTRY_LOCK_UNAVAILABLE');
   // No Properties/Bootstrap values are read until BOTH owner checks succeed.
   const service=properties(),names=['PRIMARY','BACKUP_A','BACKUP_B','HIGH_WATER'];
   const snapshot=()=>names.map(n=>service.getProperty('PP4_PRIVATE_RANDOM_IDS_V1_'+n));

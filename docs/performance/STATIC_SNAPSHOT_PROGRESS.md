@@ -30,7 +30,10 @@ core's read-only load when records are otherwise valid. There are NO setters,
 initialization, recovery, deletion, HTTP, Sheet/Form/score/trigger/publication operations.
 The diagnosticWrites field is0 by construction and tested. It distinguishes wrong
 owner/scope/context, empty vs partial namespace, malformed/checksum/mapping/high-water/
-backup failures, JSON-order-only mismatch and blocked core-load conditions.
+backup failures, JSON-order-only mismatch and blocked core-load conditions. It also
+checks the unchanged helper factory, a known PUBLIC digest probe, and acquisition/
+release of the existing ScriptLock before returning empty-namespace readiness;
+lock state is transient and no Properties/data is written.
 
 EXACT OWNER ACTION (not consent or another initialization attempt): in the SAME Google
 profile used for the failed run, open TemporaryRegistryReadOnlyInspection.gs, select
@@ -62,7 +65,7 @@ reviewed disabled helper and leave durable Properties intact. Existing restore s
 expects the prior candidate; update/verify its expected hash against the read-only
 inspection candidate before cleanup, never overwrite concurrent edits blindly.
 
-Validation: focused5/5 diagnostic tests PASS; full309/309 regression tests PASS, zero
+Validation: focused6/6 diagnostic tests PASS; full310/310 regression tests PASS, zero
 failed/skipped; artifact/privacy/security staging PASS. Other new tests from prior
 steps retained. No production or frontend change, no static/publication/publisher
 activation. Exact runtime root cause and prior write status are NOT YET VERIFIED.
