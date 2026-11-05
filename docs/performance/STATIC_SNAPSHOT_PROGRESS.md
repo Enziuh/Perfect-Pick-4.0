@@ -1,5 +1,62 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — owner identity/empty namespace VERIFIED; initialization READY
+
+Resumef40a183. Owner supplied successful editor reports: OWNER_IDENTITY_VERIFIED,
+emailScopeAuthorized/activeOwnerMatches/effectiveOwnerMatches true, writes0; read-only
+inspection READY/NAMESPACE_EMPTY_NO_INITIALIZATION_WRITES, valid23 bootstrap,
+factory/digest/lock available, stable namespace and all four keys absent, writes0.
+These establish no persistent initialization records existed at that inspection.
+Do not repeat consent or read-only diagnosis. Owner expressly authorized one-time
+initialization with the SAME preserved23 IDs; no rotations/new IDs.
+
+Completed preparation in SAME private staging: exact current-source hashes verified;
+restored the exact previously reviewed configured OwnerIdentityRegistry helper from
+private consent-before backup (both owner guards unchanged); initializer and23-entry
+private input byte-identical to reviewed source/unchanged outside-repo mapping.
+Removed TemporaryRegistryConsent and TemporaryRegistryReadOnlyInspection after
+successful owner verification. Manifest retains exact five approved scopes. Every
+other staging file, access/deployments and production18 deployment unchanged.
+Google function index confirms pp4InitializePrivateRegistryOnce is selectable.
+No function execution/registry writes performed by this preparation upload.
+
+READ-ONLY encrypted recovery verification COMPLETE: existing original AES-GCM export
+and existing independent generation1 recovery export each decrypted to EXACT23-ID
+mapping, unique23. Existing macOS Keychain key retrieved privately, not changed;
+key buffers cleared. No exports/maps moved into Git and no backups overwritten.
+Private receipts/source snapshots: activation/verified-init-{before,candidate,ready}
+.private.json outside repository. prerequisite-inspection-candidate updated to exact
+current source; do not restore an older candidate or inferred manifest.
+
+EXACT NEXT OWNER ACTION: reload existing private staging editor; open
+TemporaryOwnerRegistryInitialization.gs; select pp4InitializePrivateRegistryOnce;
+Run ONCE. No new authorization expected. Send ONLY the safe JSON receipt:
+REGISTRY_INITIALIZATION_VERIFIED, players23/uniqueIds23/generation1,
+exactIdsPreserved/cloudReadBack/cloudBackupRecovery/activeOwner/effectiveOwner true.
+If it fails, STOP without retry. No source/map/ID/key screenshots or private values.
+This is actual authorized initialization, not another diagnostic or consent step.
+Native editor execution cannot be safely replaced by direct-token HTTP because that
+context lacks the required active-owner identity. No bypass/new endpoint is permitted.
+
+CLOUD INITIALIZATION/PERSISTENCE/RECOVERY STILL PENDING until that receipt. Do not
+claim completed Google registry, enable publisher, or request publication yet.
+After receipt: compare current source against verified-init-candidate; restore reviewed
+DISABLED helper and remove temporary initialization/input, keeping explicit approved
+manifest and all other files unchanged. Verify temporary function index removed,
+deployments unchanged, Properties untouched by cleanup. Record generation1 success
+privately, retain encrypted independent recovery files/Keychain key, then prepare
+ONE activation request for real sanitized static snapshots and six-hour refresh.
+That final request must also identify any unproven unattended publisher access to the
+private registry; never place mapping or key in Actions/secrets/artifacts. Existing
+historical1–8 retention approval stands; new weeks still require independent CLOSED
+and disclosure authority. No API18/Sheet/Form/trigger/Pages/publisher changes.
+
+Focused15/15 tests PASS (initializer/consent/prerequisites/scopes), syntax compatibility
+included; full316/316 PASS, zero failed/skipped; artifact/privacy/security stage PASS.
+Git whitespace checks PASS. Latest source remains f40a183; this checkpoint records
+only authorized staging preparation and pending one-time owner execution.
+This task changes only the resumable tracked checkpoint, no frontend/backend source.
+
 ## CURRENT HOLD POINT — interactive editor email consent required (initialization DISABLED)
 
 Resume1409e0a. Owner's second report has ACTIVE_EMAIL_SCOPE_REQUIRED,
