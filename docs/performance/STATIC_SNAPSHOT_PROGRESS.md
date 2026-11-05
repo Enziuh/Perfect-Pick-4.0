@@ -1,5 +1,62 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — interactive editor email consent required (initialization DISABLED)
+
+Resume1409e0a. Owner's second report has ACTIVE_EMAIL_SCOPE_REQUIRED,
+emailScopeAuthorized:false,authorizationStatusKnown:true,diagnosticWrites0.
+Exact implementation reviewed: getAuthorizationInfo(FULL,[userinfo.email]) queries
+ONLY the email scope, so that scope is definitively ungranted for the executing user.
+It does NOT prove any of the other four scopes missing. Explicit manifest is verified
+current and unchanged. getAuthorizationInfo observes consent; it does not request it.
+No more inferred-scope/HTTP/debugger experiments or unrelated consent functions.
+
+INSTALLED temporary public-named editor helper, Google function index VERIFIED:
+TemporaryRegistryConsent.gs / pp4CompletePrivateRegistryConsent.
+It calls ScriptApp.requireScopes(FULL,[userinfo.email]) OUTSIDE catch, preserving
+Google's supported IDE interruption and interactive consent prompt. It requests only
+the already-approved missing scope, never prints a URL/token/email or reads registry.
+After consent, it rechecks authorized scopes and both exact owner identities, returning
+only safe booleans/state. No identity fallback/bypass. No extra scope/deployment/route.
+
+Registry writes DISABLED during troubleshooting: only OwnerIdentityRegistry changed
+among existing files; its reviewed owner guards/config/core are preserved, but its
+returned capability is now frozen {load} ONLY. No save/recover/restore is exposed.
+Existing initialization entry points cannot write through this factory; do NOT run
+them. All23 IDs, private input, encrypted backups and Keychain key unchanged. Source
+backup/candidate outside Git: activation/consent-{before,candidate}.private.json;
+prerequisite-inspection-candidate.private.json updated to exact current hashes.
+Manifest/all other staging files and exact production18/access/deployments unchanged.
+Installation executes no registry function, consent flow, live read or initialization.
+
+EXACT OWNER ACTION: reload existing private staging editor; select file
+TemporaryRegistryConsent.gs, function pp4CompletePrivateRegistryConsent, Run.
+Complete Google's interactive review using the authorized owner account; allow email
+identity access. STOP if permissions outside the five approved scopes are requested.
+If execution paused for consent, run the SAME helper again after approval. Send only
+JSON with OWNER_IDENTITY_VERIFIED/emailScopeAuthorized/activeOwnerMatches/
+effectiveOwnerMatches true. Then run pp4InspectPrivateRegistryReadOnly ONCE and send
+only its safe JSON. Do NOT initialize. This verifies scope/owner before bounded
+read-only namespace inspection. Prior failed initializer write status is still unknown
+until namespaceInspected:true; consent helper has no Properties access at all.
+
+After successful owner report, remove ONLY TemporaryRegistryConsent using exact
+current-source hash precondition and verify index removal/source preservation. Keep
+registry read-only; restoring initialization capabilities requires the later explicit
+initialization step. Do not blindly use old restore scripts/candidates or undo explicit
+approved manifest. No publisher/static/Pages activation. Current checkpoint waits
+for interactive owner action, which cannot be completed by source upload or local OAuth.
+
+Implementation: tools/snapshots/registry-consent-package.cjs; four fabricated tests
+prove interactive interruption not swallowed, email-only request, strict owner checks,
+redacted output, read-only facade and concurrent/unreviewed source refusal. ES2020 gate
+included. Google supported flow:
+https://developers.google.com/apps-script/reference/script/script-app#requirescopesauthmode,-oauthscopes
+
+Validation: focused4/4 PASS; complete316/316 PASS, zero failed/skipped.
+Artifact/privacy/security stage PASS; ES2020/syntax/whitespace checks PASS.
+No tests weakened. No production or public change. Safe source/checkpoint ready
+for normal develop commit/push; next unfinished task is owner interactive consent.
+
 ## CURRENT HOLD POINT — explicit approved identity scope installed; owner grant/read-only report pending
 
 Resume from e494629, preserving all local commits. Owner's diagnostic returned
