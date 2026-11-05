@@ -15,6 +15,9 @@
   let matchData = null;
   let matchModels = [];
   let eligiblePickWeeks = [];
+  let renderGeneration = 0;
+  const renderedViews = new Map();
+  let viewPreferences={week:null,player:'',match:''};
 
   const $ = (id) => document.getElementById(id);
   const setText = (id, value) => {
@@ -41,7 +44,7 @@
   function setStatus(text, type = '') {
     const el = $('status');
     if (!el) return;
-    el.textContent = text;
+    if(el.textContent!==text)el.textContent = text;
     el.className = `status ${type}`.trim();
   }
 
@@ -123,7 +126,8 @@
       const el = $('picksCountdown');
       if (!el) return;
       const text = countdownText_(closeAt);
-      el.textContent = status === 'CLOSED' ? 'Entries are closed' : text;
+      const label=status === 'CLOSED' ? 'Entries are closed' : text;
+      if(el.textContent!==label)el.textContent=label;
       el.classList.toggle('deadline-passed', text === 'Deadline reached');
     };
 
@@ -244,8 +248,7 @@
     return monthlyCache.get(period.periodKey);
   }
 
-  async function renderStandings(prizes, selectedPeriod = prizes.currentPeriod) {
-    await renderMonthlyPeriod(selectedPeriod);
+  function renderSeasonStandings(prizes) {
     renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
     if(liveView&&prizes.seasonCoverage){const heading=document.querySelector('#season h2');if(heading)heading.textContent='Season standings · covered weeks '+prizes.seasonCoverage;}
   }
@@ -295,8 +298,9 @@
   }
 
   async function renderPrizes(prizes) {
+    const generation=renderGeneration;
     const weeks = await Promise.all(prizes.weekly.map(row => loadWeek(row.week)));
-    updatePickWeekAvailability(weeks);
+    if(generation!==renderGeneration)return;
     const weekly = prizes.weekly.map((row,i) => preview.buildWeeklyPrize(row,weeks[i]));
     const currentIndex = prizes.weekly.findIndex(w => w.week === prizes.activeWeek);
     const current = weekly[currentIndex];
@@ -306,7 +310,7 @@
     const basis=prizes.estimateBasis;
     $('prizeSummary').innerHTML = `${basis ? `<p class="state-message" style="grid-column:1/-1">Prize estimates assume ${basis.participantsPerWeek} participants per week, not verified collected funds. Actual submissions determine standings and picks. Collections and disbursements are handled separately by the treasurer.</p>` : ''}<article class="card"><span>Week ${prizes.activeWeek} pool · ${basis ? 'estimate' : 'projected'}</span><strong>${money(current.pool)}</strong><small>${escapeHtml(current.status)}${liveView ? '' : '. '+current.payment}.</small></article>
       <article class="card"><span>${basis ? 'Season allocation estimate to date' : liveView ? 'Season prize pool' : 'Season pool · confirmed'}</span><strong>${money(basis ? prizes.projectedSeasonPot : prizes.confirmedSeasonPot)}</strong><small>${basis ? 'Calculated from estimated rollovers; not collected funds.' : liveView ? 'Calculated allocation; treasurer manages collections separately.' : 'Projected total: '+money(prizes.projectedSeasonPot)+'. Payout distribution and payment status unavailable.'}</small><a href="#standings/season">View season standings ↗</a><small>${escapeHtml(seasonContext)}</small></article>`;
-    $('periodCards').innerHTML = (await Promise.all(prizes.periods.map(async p => {
+    const periodCards = (await Promise.all(prizes.periods.map(async p => {
       const resolution = await loadMonthlyResolution(p);
       return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
         <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
@@ -314,6 +318,8 @@
         <div class="period-grid"><div><span>Monthly prize pool · ${p.estimateBasis ? 'estimate · not collected' : ownerView ? p.poolState : p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
         <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. ${liveView ? 'Calculated pools are estimates, not collected funds. Champions are determined by game results.' : 'Champion confirmation is not a payment. '+(ownerView ? 'Payment status: ' + (p.paymentState || 'UNKNOWN') : 'Payment status unavailable')+'.'}</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
     }))).join('');
+    if(generation!==renderGeneration)return;
+    $('periodCards').innerHTML=periodCards;
     $('periodCards').querySelectorAll('[data-prize-period]').forEach(link => link.addEventListener('click', () => {
       $('monthlyPeriodSelect').value = link.dataset.prizePeriod;
       renderMonthlyPeriod(link.dataset.prizePeriod);
@@ -322,26 +328,39 @@
       const view = weekly[i];
       return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">${liveView ? 'Perfect Week' : 'Allocation each: '+money(view.allocationEach)+' · '+view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
     }).join('');
-    $('recentWeeks').innerHTML = prizes.weekly.filter(w => w.week <= prizes.activeWeek).slice(-5).reverse().map(w => {
-      const view = weekly[prizes.weekly.findIndex(row => row.week === w.week)];
-      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) : view.rollover > 0 ? (view.estimateBasis ? 'Estimated rollover' : 'Rollover confirmed') : view.rollover === 0 ? 'No rollover' : 'Pending'}</td></tr>`;
+  }
+
+  async function renderOverview(prizes) {
+    const generation=renderGeneration;
+    const recent=prizes.weekly.filter(w=>w.week<=prizes.activeWeek).slice(-5);
+    const [currentWeek,...recentWeeks]=await Promise.all([loadWeek(prizes.activeWeek),...recent.map(w=>loadWeek(w.week))]);
+    if(generation!==renderGeneration)return;
+    const views=new Map(recent.map((row,i)=>[row.week,preview.buildWeeklyPrize(row,recentWeeks[i])]));
+    $('recentWeeks').innerHTML=recent.slice().reverse().map(w=>{
+      const view=views.get(w.week);
+      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length?escapeHtml(view.winners.join(', ')):view.rollover>0?(view.estimateBasis?'Estimated rollover':'Rollover confirmed'):view.rollover===0?'No rollover':'Pending'}</td></tr>`;
     }).join('');
-    const completed = weeks[currentIndex].results.filter(game => game.status === 'Final').length;
-    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${weeks[currentIndex].games.length} games FINAL. ${liveView ? 'Results refresh automatically; use Refresh results to check again.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
+    const completed = currentWeek.results.filter(game => game.status === 'Final').length;
+    setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${currentWeek.games.length} games FINAL. ${liveView ? 'Results refresh automatically; use Refresh results to check again.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
     const highlights = prizes.currentWeekStandings.slice(0,3);
     const leaders=highlights.length?prizes.currentWeekStandings:prizes.overallStandings;
     setText('overviewLeaders', leaders.length ? (highlights.length?'Current weekly leaders':'Season leaders · verified covered weeks') : 'Weekly leaders unavailable until entries explicitly close.');
     $('overviewLeaderCards').innerHTML=leaders.filter(p=>p.rank<=3).map(p=>`<article class="leader-card rank-${['','first','second','third'][p.rank]}"><span class="rank-badge">${p.rank}</span><div><strong>${escapeHtml(p.name)}</strong><small>${p.points} correct · ${formatAccuracy(p.points,p.completedGames)} accuracy</small></div></article>`).join('');
-    const upcoming=weeks[currentIndex];
+    const upcoming=currentWeek;
     $('dashboardUpcoming').innerHTML=upcoming.games.filter(game=>preview.buildMatchView(upcoming,game,prizes.formControl).isFinal===false).slice(0,3).map(game=>gameCardHtml(preview.buildMatchView(upcoming,game,prizes.formControl))).join('')||'<p class="state-message">No upcoming games in the current week.</p>';
 
+    await renderDashboardGameResults(currentWeek);
+    const period=prizes.periods.find(p=>p.periodKey===prizes.currentPeriod);
+    if(period){const resolution=await loadMonthlyResolution(period);if(generation===renderGeneration)renderChampionSpotlight(period,resolution);}
   }
+
 
 
   async function loadWeekPicks(week) {
     const request = ++picksRequest;
     const normalizedWeek = Number(week);
     if (!normalizedWeek) return;
+    if(viewPreferences.week!==normalizedWeek)viewPreferences={week:normalizedWeek,player:'',match:''};
 
     $('weekSelect').value = String(normalizedWeek);
     $('picksWeekTitle').textContent = `Week ${normalizedWeek} Picks`;
@@ -364,12 +383,7 @@
       const data = await loadWeek(normalizedWeek);
       if (request !== picksRequest) return;
       renderWeekPicks(data);
-      if (Number($('weeklyWeekSelect')?.value || activeWeek) === normalizedWeek) {
-        renderWeeklyDetails(data);
-      }
-      if (normalizedWeek === activeWeek) {
-        await renderDashboardGameResults(data);
-      }
+
     } catch (err) {
       if (request !== picksRequest) return;
       console.error(err);
@@ -404,7 +418,7 @@
   }
 
   function updatePickWeekAvailability(weeks) {
-    eligiblePickWeeks = weeks.filter(w=>publicPicks(w)&&w.standings.length).map(w=>w.week).sort((a,b)=>a-b);
+    eligiblePickWeeks = weeks.filter(w=>publicPicks(w)&&(w.hasPlayers??w.standings?.length)).map(w=>w.week).sort((a,b)=>a-b);
     for (const id of ['weekSelect','weeklyWeekSelect']) for (const option of $(id).options) {
       const data=weeks.find(w=>w.week===Number(option.value));
       if(data)option.textContent=`Week ${data.week} · ${publicPicks(data)?'Closed':isOpenWeek(data)?'Open':'Private'}`;
@@ -432,6 +446,7 @@
     setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : pickPrivacyMessage(data));
     $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('') : '');
     $('playerSelect').disabled = !closed || !data.standings.length;
+    for(const [id,value] of [['playerSelect',viewPreferences.player],['matchSelect',viewPreferences.match]])if(value&&[...$(id).options].some(o=>o.value===value))$(id).value=value;
     renderMatchCards();
     renderPlayerPickCards(data);
     renderPlayerPicksTable(data);
@@ -496,9 +511,9 @@
     }
     const selected = $('playerSelect').value;
     const players = data.standings.filter(p => !selected || p.name === selected);
-    $('playerPickCards').innerHTML = players.map(player => `<details class="player-pick-card"${selected ? ' open' : ''}>
-      <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary><div class="player-pick-details"></div></details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
-    if(selected)populatePlayerDetails($('playerPickCards').querySelector('.player-pick-card'),data);
+    if(selected&&!currentMatchDisclosure(data))return;
+    $('playerPickCards').innerHTML = players.map(player => `<details class="player-pick-card"${selected ? ' open data-built="true"' : ''}>
+      <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary><div class="player-pick-details">${selected?playerDetailsHtml(player,data):''}</div></details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
   }
 
   function currentMatchDisclosure(data) {
@@ -512,11 +527,15 @@
     if(!card||!card.isConnected||!currentMatchDisclosure(data)||card.dataset.built)return;
     const player=data.standings.find(p=>p.name===card.querySelector('summary>span').textContent);
     if(!player)return;
-    card.querySelector('.player-pick-details').innerHTML=`<ul>${matchModels.map(model=>{
+    card.querySelector('.player-pick-details').innerHTML=playerDetailsHtml(player,data);
+    card.dataset.built='true';
+  }
+
+  function playerDetailsHtml(player,data) {
+    return `<ul>${matchModels.map(model=>{
       const pick=model.selections.find(p=>p.name===player.name);
       return `<li><span>${escapeHtml(model.game)}</span>${pick?`<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>`:'<span>No selection</span>'}</li>`;
     }).join('')}</ul>${renderPlayerPrediction(player,data)}`;
-    card.dataset.built='true';
   }
 
   function populateMatchComparison(details) {
@@ -560,8 +579,8 @@
       const next = options[select.selectedIndex + (index === 0 ? -1 : 1)];
       if (next) loadWeekPicks(next.value);
     });
-    $('matchSelect').onchange = renderMatchCards;
-    $('playerSelect').onchange = () => { if (matchData) renderPlayerPickCards(matchData); };
+    $('matchSelect').onchange = ()=>{viewPreferences.match=$('matchSelect').value;renderMatchCards();};
+    $('playerSelect').onchange = () => { viewPreferences.player=$('playerSelect').value;if (matchData) renderPlayerPickCards(matchData); };
   }
 
   function renderWeeklyDetails(weekData) {
@@ -578,6 +597,7 @@
   }
 
   async function renderDashboardGameResults(weekData) {
+    const generation=renderGeneration;
     let results = weekData;
     if (!weekData.results.some(game => game.status === 'Final')) {
       const recent = prizeData.weekly.filter(row => row.week < weekData.week && row.finalized).at(-1);
@@ -586,6 +606,7 @@
         if (snapshot.results.some(game => game.status === 'Final')) results = snapshot;
       }
     }
+    if(generation!==renderGeneration)return;
     setText('dashboardResultsWeek', `Week ${results.week}${results !== weekData ? ' · Recent finals' : ''}`);
     renderGameResultsInto_('dashboardGameResults', results);
   }
@@ -713,10 +734,10 @@
     select.value = String(defaultWeek);
 
     select.onchange = async () => {
-      const week = Number(select.value);
+      const week = Number(select.value),generation=renderGeneration;
       try {
         const data = await loadWeek(week);
-        if (Number(select.value) === week) renderWeeklyDetails(data);
+        if (generation===renderGeneration&&Number(select.value) === week) renderWeeklyDetails(data);
       } catch (_) {
         setText('weeklyStatusNote', `${sourceLabel} week unavailable. No external connection was attempted.`);
         $('weeklyStandingsBody').innerHTML = '';
@@ -766,6 +787,7 @@
       const heading = $(destination).querySelector('.page-header h1');
       document.title = `${heading.textContent} · Perfect Pick 4.0 — ${liveView ? 'Competition' : ownerView ? 'Owner Verification' : 'Synthetic Preview'}`;
       if (focus) heading.focus({preventScroll:true});
+      if(prizeData){const generation=renderGeneration;renderActiveView().catch(()=>{if(generation===renderGeneration)setStatus('This view is unavailable. Refresh to retry.','error');});}
     }
     window.addEventListener('hashchange', () => applyRoute(true));
     document.querySelectorAll('.primary-nav, .subnav').forEach(nav => {
@@ -794,35 +816,64 @@
       .replaceAll("'", '&#039;');
   }
 
+  function resetRenderedData(message) {
+    document.querySelectorAll('[data-view-state]').forEach(panel=>{delete panel.dataset.viewState;panel.removeAttribute('aria-busy');});
+    weekCache.clear();monthlyCache.clear();renderedViews.clear();matchData=null;matchModels=[];eligiblePickWeeks=[];
+    picksRequest++;monthlyRequest++;if(deadlineTimer){clearInterval(deadlineTimer);deadlineTimer=null;}
+    document.querySelectorAll('.legacy-section tbody').forEach(body=>body.textContent='');
+    for(const id of ['playerPicksHead','playerPickCards','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','overviewLeaderCards','dashboardUpcoming','picksSubmissionCount','weeklyStatusNote','overviewProgress'])$(id).textContent=message;
+    for(const id of ['championHeading','championSummary','championState']){$(id).textContent=message;delete $(id).dataset.winner;}
+    document.querySelectorAll('[data-winner]').forEach(element=>delete element.dataset.winner);
+    $('pickMatrix').open=false;delete $('pickMatrix').dataset.built;
+    $('playerSelect').innerHTML='<option value="">All players</option>';$('playerSelect').disabled=true;
+    $('matchSelect').innerHTML='<option value="">All matchups</option>';
+    $('closedWeekShortcut').hidden=true;setText('selectedWeekPrivacy',message);
+  }
+
+  async function renderActiveView() {
+    if(!prizeData)return;
+    const destination=document.querySelector('.destination:not([hidden])')?.id;
+    const key=destination==='standings'?document.querySelector('#standings .legacy-section:not([hidden])')?.id:destination;
+    if(renderedViews.has(key))return renderedViews.get(key);
+    const generation=renderGeneration,prizes=prizeData;
+    const panel=$(key);panel.dataset.viewState='loading';panel.setAttribute('aria-busy','true');
+    const job=Promise.resolve().then(async()=>{
+      if(generation!==renderGeneration)return;
+      if(key==='overview')await renderOverview(prizes);
+      else if(key==='match-center'){
+        const weeks=prizes.weekAvailability||await Promise.all(prizes.weekly.map(w=>loadWeek(w.week)));
+        if(generation!==renderGeneration)return;updatePickWeekAvailability(weeks);
+        if(matchData?.week!==Number($('weekSelect').value))await loadWeekPicks(Number($('weekSelect').value));
+      }else if(key==='weekly'){
+        const week=await loadWeek(Number($('weeklyWeekSelect').value));if(generation===renderGeneration)renderWeeklyDetails(week);
+      }else if(key==='monthly')await renderMonthlyPeriod($('monthlyPeriodSelect').value);
+      else if(key==='season')renderSeasonStandings(prizes);
+      else if(key==='prizes')await renderPrizes(prizes);
+    }).then(()=>{if(generation===renderGeneration){panel.dataset.viewState='ready';panel.setAttribute('aria-busy','false');}}).catch(error=>{if(generation===renderGeneration){renderedViews.delete(key);panel.dataset.viewState='error';panel.setAttribute('aria-busy','false');}throw error;});
+    renderedViews.set(key,job);return job;
+  }
+
   async function load() {
     if (!navigationStarted) { setupNavigation(); navigationStarted=true; }
     const selected={week:$('weekSelect').value,weekly:$('weeklyWeekSelect').value,month:$('monthlyPeriodSelect').value,player:$('playerSelect').value,match:$('matchSelect').value};
-    weekCache.clear(); monthlyCache.clear();
-
+    viewPreferences={week:Number(selected.week),player:selected.player||viewPreferences.player,match:selected.match||viewPreferences.match};
+    const hadRenderedData=prizeData!==null||renderedViews.size>0;
+    const generation=++renderGeneration;prizeData=null;if(hadRenderedData)resetRenderedData('Waiting for this view.');
     try {
       setStatus(liveView ? 'Loading competition data…' : ownerView ? 'Loading validated owner snapshot…' : 'Loading synthetic preview…');
-      const prizes = await get('prizes');
-      prizeData = prizes;
-      renderDashboard(prizes);
-
+      const prizes = await get('prizes');if(generation!==renderGeneration)return;
+      prizeData = prizes;renderDashboard(prizes);
       activeWeek = Number(prizes.activeWeek || 1);
       const weeks = (prizes.weekly || []).map(w => Number(w.week)).filter(Boolean);
       const availableWeeks = weeks.length ? weeks : Array.from({ length: 18 }, (_, i) => i + 1);
-
       populateWeekSelector(availableWeeks, availableWeeks.includes(Number(selected.week))?Number(selected.week):activeWeek);
       populateWeeklySelector(availableWeeks, availableWeeks.includes(Number(selected.weekly))?Number(selected.weekly):activeWeek);
       populateMonthlySelector(prizes.periods || [], prizes.periods.some(p=>p.periodKey===selected.month)?selected.month:prizes.currentPeriod);
-
-      await Promise.all([renderStandings(prizes,$('monthlyPeriodSelect').value), renderPrizes(prizes), loadWeekPicks(Number($('weekSelect').value))]);
-      renderWeeklyDetails(await loadWeek(Number($('weeklyWeekSelect').value)));
-      await renderDashboardGameResults(await loadWeek(activeWeek));
-      for(const [id,value] of [['playerSelect',selected.player],['matchSelect',selected.match]])if(value&&[...$(id).options].some(o=>o.value===value))$(id).value=value;
-      if(matchData){renderMatchCards();renderPlayerPickCards(matchData);}
-
+      await renderActiveView();if(generation!==renderGeneration)return;
       const when = prizes.generatedAt ? new Date(prizes.generatedAt).toLocaleString() : '';
       setStatus(`${sourceLabel} data loaded${when ? ` • ${when}` : ''}`, 'ok');
     } catch (err) {
-      console.error(err);
+      if(generation!==renderGeneration)return;
       setText('championHeading', 'Competition unavailable.');
       setText('championSummary', `${sourceLabel} data unavailable. No champion or payout has been awarded.`);
       setText('championState', 'Unavailable');
@@ -851,11 +902,10 @@
     document.addEventListener('perfectpick:loading',()=>{const button=$('refreshResults');if(button){button.disabled=true;button.textContent='Updating…';}});
     document.addEventListener('perfectpick:settled',()=>{const button=$('refreshResults');if(button){button.disabled=false;button.textContent='Refresh results';}});
     document.addEventListener('perfectpick:degraded',()=>setStatus('Update unavailable. Showing still-valid snapshot; retry with Refresh results.','warning'));
+    document.addEventListener('perfectpick:invalid',()=>setStatus('Latest response could not be verified. Showing still-valid snapshot; retry with Refresh results.','warning'));
     document.addEventListener('perfectpick:refresh', load);
     document.addEventListener('perfectpick:unavailable', () => {
-      weekCache.clear(); monthlyCache.clear(); matchData=null; matchModels=[]; eligiblePickWeeks=[]; $('closedWeekShortcut').hidden=true; setText('selectedWeekPrivacy','Picks unavailable. Refresh to retry.'); picksRequest++; monthlyRequest++;
-      document.querySelectorAll('.legacy-section').forEach(panel => { if (!['rules','faq'].includes(panel.id)) { panel.querySelectorAll('tbody').forEach(body=>body.textContent=''); } });
-      for (const id of ['playerPickCards','playerPicksBody','matchGameResults','monthlyPrizeCallout','prizeSummary','periodCards','dashboardGameResults','weeklyGameResults','recentWeeks','prizeBreakdown','overviewLeaders','overviewLeaderCards','dashboardUpcoming','picksSubmissionCount','weeklyStatusNote','overviewProgress']) { const element=$(id); if(element)element.textContent='Competition data unavailable. Refresh to retry.'; }
+      renderGeneration++;viewPreferences.player='';viewPreferences.match='';prizeData=null;resetRenderedData('Competition data unavailable. Refresh to retry.');
       for (const id of ['championHeading','championSummary','championState','weeklyPot','monthlyPot','monthlyWinnerPool','seasonPot','confirmedSeasonPot']) { const element=$(id); if(element) { element.textContent='Unavailable'; delete element.dataset.winner; } }
       const privacy=$('matchPrivacyNotice');if(privacy){privacy.hidden=false;privacy.textContent='Competition data unavailable. Picks and voting remain protected.';}
       document.querySelectorAll('[data-winner]').forEach(element=>delete element.dataset.winner);

@@ -104,11 +104,15 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert(await p.evaluate("document.getElementById('submitPicks').disabled && !document.getElementById('submitPicks').hasAttribute('href')"));
   assert(await p.evaluate("document.getElementById('dashboardResultsWeek').textContent.includes('Recent finals')"));
   assert(await p.evaluate(`Promise.all(${JSON.stringify(require('../tools/security/team-assets.cjs').TEAM_FILES)}.map(src=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i.naturalWidth>0&&i.naturalHeight>0&&i.src.startsWith(location.origin+'/assets/teams/'));i.onerror=()=>resolve(false);i.src=src;}))).then(results=>results.length===32&&results.every(Boolean))`));
+  const cssSource=fs.readFileSync(path.join(__dirname,'../website/styles.css'),'utf8'),cssCompact=require('../tools/performance/static-assets.cjs').compactCss(cssSource);
+  const cssComparison=await p.evaluate(`(()=>{const a=new CSSStyleSheet(),b=new CSSStyleSheet();a.replaceSync(${JSON.stringify(cssSource)});b.replaceSync(${JSON.stringify(cssCompact)});const x=[...a.cssRules].map(r=>r.cssText),y=[...b.cssRules].map(r=>r.cssText);return {equal:JSON.stringify(x)===JSON.stringify(y),difference:x.map((rule,i)=>rule!==y[i]?{before:rule,after:y[i]}:null).find(Boolean)};})()`);
+  assert(cssComparison.equal,'Compacted CSS must preserve every parsed rule: '+JSON.stringify(cssComparison.difference));
   const routes=['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules','guide/faq'];
   async function navigate(p,route){
    await p.evaluate(`document.querySelector('a[href="#${route}"]').click()`);
    const [destination,subview]=route.split('/');
    await until(p,`location.hash==='#${route}' && !document.getElementById('${destination}').hidden${subview ? ` && !document.getElementById('${subview}').hidden` : ''}`);
+   if(destination!=='guide')await until(p,`document.getElementById('${subview||destination}').dataset.viewState==='ready'`);
    assert.equal(await p.evaluate('document.querySelectorAll(".destination:not([hidden])").length'),1);
    assert.equal(await p.evaluate('document.querySelectorAll(".primary-nav [aria-current=page]").length'),1);
   }
@@ -116,9 +120,12 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert.equal(await p.evaluate("document.querySelectorAll('.legacy-section').length"),8);
   assert.equal(await p.evaluate("document.querySelectorAll('table').length"),6);
   assert(await p.evaluate("(()=>{const ids=[...document.querySelectorAll('[id]')].map(el=>el.id);return new Set(ids).size===ids.length;})()"));
+  assert.equal(await p.evaluate("document.querySelectorAll('#periodCards .period-card,#playerPicksBody .pick-cell,#seasonStandingsBody tr').length"),0);
+  await navigate(p,'prizes');
   assert.equal(await p.evaluate("document.querySelectorAll('#periodCards .period-card').length"),5);
   assert.equal(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr').length"),18);
   assert(await p.evaluate("document.getElementById('prizeSummary').textContent.includes('Payment status unavailable')"));
+  await navigate(p,'overview');
   assert(await p.evaluate("document.querySelector('#weeklyPrizeBody tr').textContent.includes('Allocation each: $10.00')"));
   assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[1].textContent.includes('ROLLOVER CONFIRMED')"));
   assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[4].textContent.includes('PROJECTED')"));
@@ -155,7 +162,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   await p.evaluate("document.querySelector('.skip-link').click()");
   assert.equal(await p.evaluate('document.activeElement.id'),'main-content');
   assert.equal(await p.evaluate('location.hash'),'#match-center');
-  for(const width of [375,768,1280]){
+  for(const width of [360,375,390,430,768,1280,1440]){
    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);
    for(const route of routes){
     await navigate(p,route);
@@ -183,7 +190,10 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   await p.evaluate("document.querySelector('#pickMatrix>summary').click()");
   assert.equal(await p.evaluate("document.querySelectorAll('#playerPicksBody tr').length"),4);
   assert.equal(await p.evaluate("document.querySelectorAll('#playerPicksBody .matrix-total,#playerPicksBody .accuracy-indicator,#playerPicksBody .matrix-prediction').length"),12);
-  for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);assert(await p.evaluate(`document.documentElement.scrollWidth<=${width}+1`));if(width===375){assert(await p.evaluate("(()=>{const region=document.querySelector('#pickMatrix .table-region');region.scrollLeft=100;return region.scrollWidth>region.clientWidth&&region.scrollLeft>0;})()"));}}
+  for(const width of [360,375,390,430,768,1280,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},p.sessionId);assert(await p.evaluate(`document.documentElement.scrollWidth<=${width}+1`));if(width===375){assert(await p.evaluate("(()=>{const region=document.querySelector('#pickMatrix .table-region');region.scrollLeft=100;return region.scrollWidth>region.clientWidth&&region.scrollLeft>0;})()"));}}
+  await p.evaluate("window.__matrixRow=document.querySelector('#playerPicksBody tr');document.querySelector('#pickMatrix>summary').click()");
+  await p.evaluate("document.querySelector('#pickMatrix>summary').click()");await p.evaluate("new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))");
+  assert(await p.evaluate("document.querySelector('#playerPicksBody tr')===window.__matrixRow"),'Reopening a valid same-week matrix must reuse its rows');
   for(const week of [1,2,3,4]){
    await p.evaluate(`document.getElementById('weekSelect').value='${week}';document.getElementById('weekSelect').dispatchEvent(new Event('change'))`);
    await until(p,`document.getElementById('picksSubmissionCount').textContent.includes('for Week ${week}')`);
@@ -276,7 +286,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    }
    await example.evaluate("document.getElementById('playerSelect').value='Synthetic Comet';document.getElementById('playerSelect').dispatchEvent(new Event('change'));document.querySelector('#matchGameResults .match-comparison summary').click()");
    assert(await example.evaluate("document.querySelector('#playerPickCards .player-pick-card').open"));
-   for(const width of [375,768,1280]){
+   for(const width of [360,375,390,430,768,1280,1440]){
     await send('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<600},example.sessionId);
     assert(await example.evaluate(`document.documentElement.scrollWidth<=${width}+1 && innerWidth<=${width}+1`),`${name} at ${width}`);
     if(process.env.PP_SCREENSHOT_DIR && width!==768){
@@ -307,9 +317,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await example.evaluate("document.getElementById('monthlyPrizeCallout').dataset.winner"),winner,name);
    assert.equal(await example.evaluate("document.getElementById('championState').textContent"),state,name);
    assert.equal(await example.evaluate("document.getElementById('championHeading').dataset.winner"),winner,name);
+   await navigate(example,'prizes');
    assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.status"),state,name);
    assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.winner"),winner,name);
    assert(await example.evaluate("document.querySelector('#periodCards .period-card').textContent.includes('Payment status unavailable')"));
+   await navigate(example,'standings/monthly');
 
    assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody tr').children.length"),5);
    if(name==='decisive'){
@@ -334,7 +346,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    if(['awaiting-score','not-closed','in-progress','zero-completed'].includes(name))assert.equal(await example.evaluate("document.querySelectorAll('#monthlyPrizeCallout .champion-comparison').length"),0);
    if(name==='not-closed')assert(!await example.evaluate("/Winning prediction|combined points/.test(document.getElementById('monthlyPrizeCallout').textContent)"));
    if(name==='zero-completed')assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody .accuracy-indicator').textContent"),'—');
-   for(const width of [375,768,1280]){
+   for(const width of [360,375,390,430,768,1280,1440]){
     await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},example.sessionId);
     for(const route of ['standings/monthly','overview']){
      await navigate(example,route);
@@ -361,7 +373,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert(await owner.evaluate("document.querySelector('.preview-label').textContent.includes('Owner Verification')"));
    assert(await owner.evaluate("document.getElementById('submitPicks').disabled"));
    for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes']){
-    await navigate(owner,route);for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},owner.sessionId);assert(await owner.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}
+    await navigate(owner,route);for(const width of [360,375,390,430,768,1280,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},owner.sessionId);assert(await owner.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}
    }
    await navigate(owner,'match-center');
    if(name==='decisive'){
@@ -383,8 +395,8 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    const stub=`<script>window.__viewErrors=[];console.error=(e)=>window.__viewErrors.push(e.stack||String(e));window.__rpcCalls=0;window.__rpcFail=false;window.__rpcReply=${JSON.stringify(first).replace(/</g,'\\u003c')};window.google={script:{get run(){let ok,bad;return {withSuccessHandler(f){ok=f;return this},withFailureHandler(f){bad=f;return this},getPerfectPickDashboard(){window.__rpcCalls++;setTimeout(()=>window.__rpcFail?bad(Error('PRIVATE_RPC_DETAIL')):ok(window.__rpcReply),0)}}}}};</script>`;
    privateAssets={'index.html':presentation.renderHtml().replace('<script>('+require('../tools/presentation/live-client.js').startLiveClient.toString(),stub+'<script>('+require('../tools/presentation/live-client.js').startLiveClient.toString())};
    const connected=await page('#match-center');await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(await connected.evaluate('window.__rpcCalls'),1);
-   assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Synthetic Comet')"));
-   for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/faq']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
+   assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);await navigate(connected,'overview');assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Synthetic Comet')"));await navigate(connected,'match-center');
+   for(const width of [360,375,390,430,768,1280,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/faq']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    live.matrix.Results[1][6]='24';const updated=read();assert.equal(updated.state,'READY');await connected.evaluate('window.__rpcReply='+JSON.stringify(updated));await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,'window.__rpcCalls===2');await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");
    await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");assert(await connected.evaluate("document.getElementById('matchGameResults').textContent.includes('24')"));
    await connected.evaluate("window.__rpcFail=true;document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.includes('unavailable')");assert.equal(await connected.evaluate("document.querySelectorAll('#picks .player-pick-card, #picks .vote-option').length"),0);assert.equal(await connected.evaluate("document.querySelectorAll('[data-winner]').length"),0);assert(!await connected.evaluate("document.getElementById('main-content').textContent.includes('PRIVATE_RPC_DETAIL')"));
@@ -397,12 +409,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    api.cfg.prizeParticipants=23;api.matrix.Responses.slice(1).forEach(r=>r[0]=at);apiReply=api.get();assert.equal(apiReply.schema,'PP4_JSON_V1');
    privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
    await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(apiRequests.length,1);
+   await navigate(connected,'overview');
    assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Avery A.')"));
+   await navigate(connected,'match-center');
    assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
    assert(await connected.evaluate("[...document.querySelectorAll('.accuracy-indicator')].every(e=>e.title.includes('submitted picks with FINAL results'))"));
    await openPlayerDetails(connected);
    assert(await connected.evaluate("(()=>{const e=document.querySelector('#playerPickCards .selection-choice.wrong');return e && getComputedStyle(e).backgroundColor==='rgba(0, 0, 0, 0)' && e.textContent.includes('Incorrect');})()"));
-   for(const width of [375,768,1280]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
+   for(const width of [360,375,390,430,768,1280,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
    await navigate(connected,'prizes');assert(await connected.evaluate("document.getElementById('prizeSummary').textContent.includes('23 participants per week') && document.getElementById('prizeSummary').textContent.includes('not verified collected funds')"));
    await navigate(connected,'standings/monthly');assert(!await connected.evaluate("document.getElementById('monthlyPrizeCallout').textContent.includes('Payment status:')"));
    // A failed refresh must preserve still-valid disclosure, retry exactly twice,

@@ -1,6 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {bundle}=require('./bundle.cjs');
+const {compactJavaScript,compactCss}=require('../performance/static-assets.cjs');
 const {TEAM_FILES,validateLogo}=require('../security/team-assets.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
 const {FILES,inventory}=require('../security/public-artifact.cjs');
@@ -14,6 +15,7 @@ function render(config){
  assets['config.js']='Object.freeze(window.PERFECT_PICK_JSON='+JSON.stringify({endpoint:config.endpoint,...(config.form?{form:config.form}:{})})+');\n';
  assets['preview-data.js']='('+bundle(path.join(__dirname,'browser-client.cjs'))+').install(window,window.PERFECT_PICK_JSON);\n';
  assets['index.html']=assets['index.html'].replace("connect-src 'self'", "connect-src 'self' https://script.google.com https://script.googleusercontent.com").replaceAll('Perfect Pick 4.0 — Synthetic Preview','Perfect Pick 4.0 — Competition').replaceAll('SYNTHETIC COMPETITION','READ-ONLY COMPETITION').replace('Synthetic preview · Invented aliases and results · No live submissions','Competition results · Official Form remains the entry method').replace('Synthetic deadline example; official closure controls disclosure.','Official entry status controls disclosure.').replace('Monthly 1st Place Pool (50%)','Monthly prize pool').replace('Waiting for synthetic competition data.','Awaiting validated competition data.').replace('Synthetic accounting only.','Estimated pools only; not collected funds.').replace('<div id="deadlineNotice"','<p id="sourceStatusNote" class="muted"></p><div id="deadlineNotice"').replace('</div>\n<section id="overview"','<button id="refreshResults" class="submit-picks" type="button">Refresh results</button></div>\n<section id="overview"');
+ assets['app.js']=compactJavaScript(assets['app.js']);assets['preview-data.js']=compactJavaScript(assets['preview-data.js']);assets['styles.css']=compactCss(assets['styles.css']);
  return assets;
 }
 function verify(dir,config,seal=true){
