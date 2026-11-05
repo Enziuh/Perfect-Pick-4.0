@@ -1,5 +1,60 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — temporary public-named authorization wrapper
+
+The earlier instruction to select pp4PrivateRegistry_ in the Run dropdown was WRONG.
+Google's Apps Script product-manager documentation confirms trailing underscores hide
+helper functions from that dropdown:
+https://googleappsscript.blogspot.com/2010/06/hiding-helper-functions.html
+Do not repeat that instruction or ask the owner to run unrelated legacy functions.
+
+Temporary public name: pp4AuthorizePrivateRegistry (no trailing underscore).
+Installed ONLY as an appended function in OwnerIdentityRegistry in the existing
+owner-only staging project. Reviewed helper prefix is byte-identical, provider stays
+null/DISABLED; all other staging files/manifest, deployment/access settings and
+production18 deployment are verified unchanged. No new file, route, deployment,
+trigger, service/scope or private data was added to Google beyond this authorized
+function. No registry operation, initialization, write or publication was invoked.
+
+Wrapper behavior: require config EXACTLY null; call only pp4PrivateRegistry_. The
+reviewed helper then throws Private registry disabled BEFORE Session, Properties,
+lock or any read/write. Enabled/modified configuration is rejected before calling
+helper. Function cannot call the initializer, save/load/recover, Form/Sheet operations,
+writers, triggers or HTTP publishing. It adds no scopes beyond the already-approved
+helper. Four new focused tests prove these boundaries, ES2020 parsing and exact cleanup.
+
+Server verification: Google's functionSet index includes pp4AuthorizePrivateRegistry
+as a top-level function (alongside the three private underscore helpers). This confirms
+Google recognizes the installed wrapper; it is NOT a screenshot/observation of the
+editor dropdown. UI verification remains UNAVAILABLE: native control again returned
+no browsers/apps with a native connection startup failure. Honor the owner's explicit
+condition: do not ask them to RUN it while representing the dropdown as verified.
+The exact intended name is recorded above; no unrelated function is suggested.
+
+Private operation script (no embedded IDs/secrets):
+tmp/private-registry-init/wrapper.mjs add|remove
+It reads the existing private backup outside repo, verifies installer owner/target,
+compares all source/deployment baselines, applies ONLY the temporary append, and
+verifies Google's function index. Private source backup/receipt is outside repo under
+Application Support/Perfect Pick/Private Registry/activation/
+(authorization-wrapper-add-before.private.json, authorization-wrapper-add.private.json).
+No map or key was read/changed for this operation. Previous real23-ID recovery remains
+verified and stored outside repo with key in macOS Keychain.
+
+EXACT NEXT STEP: recover editor UI control and verify pp4AuthorizePrivateRegistry is
+actually offered, or accept an owner-provided observation of the dropdown. Only then
+request that exact function for consent. It is expected to stop disabled, writing
+nothing. After owner authorization confirmation, run the prepared remove operation;
+it refuses concurrent edits and restores the exact reviewed disabled helper while
+leaving durable Properties untouched. Verify remote source and function index after
+cleanup. Do not remove the wrapper prematurely before authorization, initialize the
+registry, or enable publisher/Pages during this authorization-only task.
+
+Validation: focused4/4 wrapper tests PASS; full297/297 regressions PASS, zero
+failed/skipped; artifact/security staging PASS. Production/API18 and Pages remain unchanged. Registry cloud
+initialization is still NOT complete. Latest passing commit will follow this entry.
+
+
 ## CURRENT HOLD POINT — private helper installed; Google owner consent needed
 
 Resumed from0aba609 plus the preserved local outside-repository backup changes.
