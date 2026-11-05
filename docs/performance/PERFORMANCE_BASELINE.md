@@ -30,3 +30,9 @@ Values are observed single samples, not percentiles or causal estimates; Apps Sc
 - No runtime errors in six measured visits. All benchmark captures containing actual competition data remain Git-ignored and private.
 
 A fixed-input, frozen-time test-only replay will isolate rendering gains from upstream latency if live before/after request times differ. It will not change public clock/evidence, create a proxy/API, or make simulated freshness claims.
+
+Metric clarification: byte values are the sum reported by CDP loadingFinished through
+usable+200ms, not full network transport overhead. Full TLS/DNS/unreported redirect
+or header overhead is unavailable. The initial JSON method label "redirects included"
+was overly broad; no numeric observation has been changed. Cache clear resets HTTP
+cache per viewport, not the operating system DNS cache or all existing connections.

@@ -73,3 +73,56 @@ against acknowledged closed sessions. All actual runtime/network errors and zero
 request assertions remain unchanged. Replay profiler also keeps interception through
 closure, avoiding any accidental live request at teardown. No application change.
 Full suite rerun required, then commit/push the harness fix and retry existing workflow.
+
+## PERFORMANCE RELEASE COMPLETE
+
+Latest passing/published frontend e6e3e92 (application7049dbb; lazy milestone f8caccd).
+Existing manual api Pages run42074208911 SUCCESS:266/266 CI tests, zero skipped/failed;
+local full266 also passed. Failed run42072966965 never uploaded/deployed. Deployment
+uses unchanged API18 URL and exact38-file artifact; no production backend operations.
+Rollback remains22ea053. Latest checkpoint commit follows this entry.
+
+Actual public-site check PASS at360/390/430/768/1440: all five destinations, real272
+NFL games/121 FINAL at that read,32 displayed scores equal API, weekly/monthly/season
+rankings and shared champion/tiebreaker decisions,23 approved CLOSED Week8 players,
+correct/incorrect picks, predictions, votes and comparisons. Matrix starts with0 cells,
+builds23 rows only on open; totals/accuracy/predictions exactly match API. Selected
+player details and matchup lists build on demand. Week9/future unverified scopes have
+no picks/predictions/voting exposure. Official Form link and estimated pools retained.
+Zero runtime errors/unexpected external requests/fixture fetches. All32 original SVG
+paths decode. Actual published38 files byte-match reviewed artifact with privacy and
+integrity validation; no private records/configuration in artifacts.
+
+Final measurements COMPLETE: live after-measurements.json collected sequentially with
+same browser/throttling as untouched numeric baseline, without concurrent test work.
+PERFORMANCE_RESULTS.md contains full tables, absolute differences and meaningful
+percentages; all raw numeric observations retained. Controlled rendering: cold usable
+771.1→730.9ms (5.2%), initial DOM1875→822 (-56.2%), CLOSED-week opening141.3→88ms,
+week switching86.5→53.35ms; no matrix cells built before opening. Real-site observed
+week-switch median72.2→48.2ms (33.2%). Initial API calls remain1, interaction API calls0.
+Live data-ready times are mixed (cold desktop16.7→17.2s, tablet14.4→15.3s, mobile12.4→
+10.7s); no universal network/startup gain is claimed. Unchanged Apps Script/Internet
+response wait dominates (10–17s observed), while script execution is about34–41ms.
+Sub-frame differences and slower samples remain visible. Full TLS/DNS/unreported
+redirect overhead is unavailable; the CDP byte-metric label was clarified without
+changing numeric baseline observations. No backend permissions/update requested.
+
+Caches: memory-only18 week/5 month/8 rendered-view maxima and one selected matrix;
+all hidden protected DOM/cache entries reset on a new validated model or expiry.
+Old generatedAt/revision responses rejected, forced refresh coalesced, expired proof
+never extended. No local/session storage, new endpoints, database, proxy, service
+worker, analytics or framework. Replay server is loopback STATIC test assets only;
+fixed snapshot stays ignored/private and browser interception prevents Google reads.
+
+All authorized frontend improvements completed. No remaining functional/deployment
+blocker. Known scope limit: the existing API response wait cannot be eliminated by
+these frontend changes; no scoring/privacy weakening used to mask it. Exact resume:
+start here, keep e6e3e92/API18 working. Do not repeat the baseline, optimize the backend,
+or begin unrelated redesign. New owner-directed work only. Reports are in this folder;
+private validation receipts/screenshots/captures remain ignored under tmp/performance/.
+
+Final checkpoint validation: full266/266 local tests passed again after adding explicit
+refresh-on-Guide coverage for destination/week/month/player/matchup preservation. No
+runtime/publication-source changes since published e6e3e92. Final documentation/tool
+commit records numeric after-measurements and transport-metric limitations only, plus
+this additional browser regression. No second deployment needed for these files.

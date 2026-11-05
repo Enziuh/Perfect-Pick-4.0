@@ -32,7 +32,37 @@ Positive deltas mean less time/data/work. The first matrix now constructs on dem
 
 Same browser/network/CPU settings and visit order as PERFORMANCE_BASELINE.md. HTTP cache cleared per viewport; DNS/TLS connections may remain warm within a browser run. Actual Apps Script and Internet timings fluctuate between runs. These are observed values, not attributed frontend speedups.
 
-Post-publication live measurements pending; no deployment is claimed yet.
+|Width/visit|FCP before→after ms|LCP before→after ms|Static load before→after ms|Usable before→after ms|API calls before→after|Bytes before→after|
+|---|---:|---:|---:|---:|---:|---:|
+|1440/cold|984→572|984→572|1390.3→733|16686.8→17208.2|1→1|95532→108212|
+|1440/repeat|164→172|164→172|178.6→185.6|11862.9→11901.3|1→1|16585→22008|
+|768/cold|328→520|328→520|521.7→928.1|14363.1→15272.1|1→1|79158→78726|
+|768/repeat|164→164|164→164|176.9→180.2|7397.2→10923.2|1→1|14668→14658|
+|390/cold|568→288|568→288|967.7→487.8|12404.1→10697.1|1→1|59204→58725|
+|390/repeat|156→200|156→200|175.1→224.1|13546.4→15443.1|1→1|14673→14661|
+
+|Width/visit|Week switch ms B→A|Standings ms B→A|CLOSED week ms B→A|Player ms B→A|Matrix ms B→A|JS ms B→A|Style/layout ms B→A|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|1440/cold|97.4→48.6|29.1→43|110.1→117.1|33.9→49.8|42.6→48.7|39.1→36.4|110.8→113.4|
+|1440/repeat|74.2→47.7|74.6→73.8|105.9→101.6|28.4→42.6|55.9→45.8|35.9→34|109.1→116.8|
+|768/cold|104.1→73.4|37.3→27.9|133.8→78.3|35.8→43.1|36.2→51.7|35.7→37.4|113.3→125.2|
+|768/repeat|70.2→47.8|71.4→64.3|108.7→90.1|25.9→32.8|43.8→57.2|33.7→35.7|108.4→109.5|
+|390/cold|55.2→40.7|28.9→29.2|87.6→82.2|44.6→42.3|37.9→66.6|38→37.1|109.7→111.4|
+|390/repeat|70→67.3|39.9→71.1|104.4→87.3|35.6→38.8|52.1→46|35.5→41.1|108.5→144.7|
+
+Live interaction medians (six observed visits, not population percentiles):
+
+|Metric|Before ms|After ms|Difference ms|Improvement|
+|---|---:|---:|---:|---:|
+|weekSwitch|72.2|48.2|24|33.2%|
+|standings|38.6|53.6|-15.1|sub-frame|
+|closedWeek|107.3|88.7|18.6|17.3%|
+|player|34.8|42.4|-7.7|sub-frame|
+|matrix|43.2|50.2|-7|sub-frame|
+
+Live cold dashboard readiness was mixed: desktop16.7→17.2s, tablet14.4→15.3s, mobile12.4→10.7s. Do not interpret these API-bound single samples as a universal startup improvement. Script execution remained about34–41ms and page task work below400ms; seconds-long response waits dominate. No API/backend optimization or unsafe persistent player cache was attempted.
+
+Bytes are the browser-reported sum of CDP Network.loadingFinished encodedDataLength. Full transport overhead including TLS/DNS and any unreported redirect/header bytes is unavailable; the early baseline JSON method label saying redirects included was overly broad. Numeric observations are unchanged.
 
 ## Caching, logos and integrity
 
