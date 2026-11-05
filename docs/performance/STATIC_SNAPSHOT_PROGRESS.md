@@ -1,5 +1,57 @@
 # Static snapshot progress
 
+## CURRENT HOLD POINT — explicit approved identity scope installed; owner grant/read-only report pending
+
+Resume from e494629, preserving all local commits. Owner's diagnostic returned
+ACTIVE_EMAIL_SCOPE_REQUIRED; both identity reads failed, namespaceInspected false,
+diagnosticWrites0. False bootstrap/factory flags mean NOT INSPECTED, not invalid input.
+Verified current staging source matched the prior saved candidate. Manifest had NO
+oauthScopes field: scope inference was still being used. The runtime report proves
+userinfo.email unavailable to that execution; metadata alone cannot distinguish failed
+inference from an ungranted/granular consent scope. Earlier disabled-helper execution
+stopped before Session access and did NOT prove identity authorization effective.
+Do not claim wrong owner, corrupt registry or verified cloud initialization.
+
+Minimal authorized correction APPLIED in EXISTING private staging only: explicit
+manifest lists the four previously reviewed staging permissions (spreadsheets, forms,
+script.scriptapp, script.external_request) plus already-approved userinfo.email. All
+other manifest settings preserved. Only appsscript and TemporaryRegistryReadOnlyInspection
+changed; every other file including private bootstrap/initializer/owner checks unchanged.
+Added bounded getAuthorizationInfo(FULL,[userinfo.email]).getAuthorizedScopes() probe;
+output ONLY emailScopeAuthorized/authorizationStatusKnown booleans. No consent URL,
+email, private record or token is returned. Both exact active/effective owner checks
+still precede all private input/Properties reads. No helper/init executed by this task.
+Google index confirms pp4InspectPrivateRegistryReadOnly remains selectable. Existing
+MYSELF/USER_ACCESSING staging settings and exact production18 deployment unchanged.
+
+EXACT NEXT OWNER ACTION: reload the same private staging editor; select
+TemporaryRegistryReadOnlyInspection.gs / pp4InspectPrivateRegistryReadOnly, Run once.
+If prompted, grant only the already-approved email permission alongside existing four;
+STOP if Google requests anything outside those five scopes. Send only logged JSON.
+Do NOT run initializer yet. The diagnostic will verify actual grant, both owner matches,
+and bounded namespace integrity without writes. Earlier failed initializer's persistent
+write status remains UNKNOWN until that report; latest diagnostic made zero writes.
+No IDs regenerated, no backup/key changed, no publisher/static/Pages activation.
+
+Implementation: tools/snapshots/registry-scopes.cjs pins approved scope list, rejecting
+unreviewed scopes; registry-prerequisites-package.cjs adds safe authorization probe.
+Tests cover manifest preservation, unknown-scope rejection, granted/ungranted/unknown
+scope reports, no namespace access when identity fails, redaction and ES2020 syntax.
+Private before/installed receipts and current updated candidate are OUTSIDE Git under
+Application Support/Perfect Pick/Private Registry/activation/identity-scope-*.private.json.
+Cleanup must preserve this approved explicit manifest while restoring disabled helper
+and removing both temporary files; do NOT blindly restore the old inferred manifest.
+
+References: https://developers.google.com/apps-script/reference/base/session confirms
+userinfo.email is required for both Session identity methods;
+https://developers.google.com/apps-script/reference/script/authorization-info documents
+the read-only authorized-scope probe. A metadata read cannot verify a user grant.
+Validation: focused8/8 PASS; full312/312 PASS, zero failed/skipped after rerun
+with loopback permissions (initial sandbox run had three browser EPERM errors).
+Artifact/privacy/security stage PASS; syntax and git diff whitespace checks PASS.
+No test was skipped or disabled. Remote develop still3943dfa at read-only check;
+normal synchronization will be retried without force/history/rule changes.
+
 ## CURRENT HOLD POINT — failed initialization needs READ-ONLY runtime report
 
 Owner ran pp4InitializePrivateRegistryOnce once; execution ended at the generic catch

@@ -19,7 +19,7 @@ test('JSON formatting/order differences are reported without weakening field/val
  const f=fixture();f.core.save(f.store,0);f.deps.bootstrap=()=>({entries:f.store.entries,version:1});const r=inspect(f.deps);assert.equal(r.code,'JSON_ORDER_ONLY_MISMATCH');assert.equal(r.primary.mappingMatchesExpected,true);assert.equal(r.primary.jsonMatchesExpected,false);
 });
 test('read-only inspection package is ES2020 compatible with no setters, recovery/init, HTTP or unrelated operations',()=>{
- const pkg=require('../tools/snapshots/registry-prerequisites-package.cjs'),source=pkg.render();assert(!pkg.NAME.endsWith('_'));assert(!/setProperty|deleteProperty|\.save\(|\.recover\(|\.restore\(|doGet|doPost|SpreadsheetApp|FormApp|ScriptApp|UrlFetchApp/.test(source));
+ const pkg=require('../tools/snapshots/registry-prerequisites-package.cjs'),source=pkg.render();assert(!pkg.NAME.endsWith('_'));assert.equal((source.match(/ScriptApp\./g)||[]).length,2);assert(source.includes('ScriptApp.getAuthorizationInfo(ScriptApp.AuthMode.FULL,[identityScope])'));assert(source.includes('info.getAuthorizedScopes()'));assert(!/setProperty|deleteProperty|\.save\(|\.recover\(|\.restore\(|doGet|doPost|SpreadsheetApp|FormApp|UrlFetchApp/.test(source));
 });
 
 test('factory, public digest probe and lock prerequisites fail with fixed labels before property reads',()=>{
