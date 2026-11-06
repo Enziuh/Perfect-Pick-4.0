@@ -249,3 +249,73 @@ Final full359/359 PASS, zero failures/skips, including scoring, privacy, compati
 browser, logos, responsive layouts and artifact integrity. Log:
 /private/tmp/pp41-final-activation-tests.log. Static tests use fabricated local data;
 static delivery and unattended publication remain disabled in production.
+
+## Production API activation verified
+
+Clean production version20 created from immutable18 plus ONLY the two approved
+changes; version19 preserves the unpublished editor as an immutable backup. The
+editor was restored byte-for-byte and verified. Existing deployment URL/ID, execution
+identity/access settings and manifest are unchanged; immutable18 remains rollback.
+No original writer, trigger, Sheet, Form or registry Property was modified.
+
+An immediate metadata read-back initially returned18 after the update, so the guard
+restored18 before any Pages change. The corrected verification records the update
+response, requires all configuration invariants on every observation, allows only a
+bounded18-to20 propagation window and requires two consecutive actual20 read-backs.
+No security/configuration comparison was removed. The controlled subsequent update
+passed all named metadata checks and live API verification.
+
+Live health, summary, week, overall and prizes matched their pre-operation legacy
+baselines. Negotiated dashboard4 passed contract, privacy, scoring and unchanged
+Weeks1–8 checks. The specifically approved Week9 adjustment matches the reviewed
+private impact. Current Form/control verification authorized only that closed week;
+future weeks remain withheld. No incomplete monthly champion or payout was invented.
+Private activation receipts/configuration/backups are outside Git under the restricted
+late-entry-production-activation directory. Static publishing remains disabled.
+
+Frontend release commit3a9c331 is pushed and the existing manual Pages workflow was
+dispatched with api profile. Do not claim Pages success until verify/deploy jobs and
+the actual published browser checks pass. If these fail, restore API18 and retain or
+restore the previous Pages release e6e3e92. No further backend source change is needed.
+
+## FINAL — coordinated 4.1 activation COMPLETE
+
+Published website: https://enziuh.github.io/Perfect-Pick-4.0/
+Published runtime commit:3a9c331dd30dab736fc8caac3df205dc837d1314.
+GitHub Actions run42244169397: verify SUCCESS; deploy SUCCESS. CI confirms
+359 tests passed, zero failed/skipped. Same full359 tests passed locally.
+
+Production API20 is active on the original deployment URL/ID with unchanged execution
+identity, access settings and manifest. All original API actions passed comparison;
+new dashboard4 verified the approved Week9 adjustment and unchanged Weeks1–8 results,
+standings, champions and prizes. Week9 disclosure is subject to verified closure and
+approved aliases; current Form and Form Control agreed CLOSED at verification. Future
+weeks remain withheld. Incomplete monthly outcomes and unverified payouts stay unknown.
+
+Actual published Chrome verification PASS: live results (272 games,122 FINAL at the
+verification snapshot), crossed-out MISSED DEADLINE choices and optional matrix,
+weekly/season standings, preserved completed monthly champions,23-participant estimated
+prizes, active4.1 Rules/FAQ, future-week confidentiality, all32 supplied SVG logos and
+360/390/430/768/1440 widths. Zero browser exceptions or unexpected network requests.
+Deferred player cards were opened before checking their details; lazy rendering remains.
+The downloaded deployed artifact contained exactly38 allowlisted files with no links,
+extra paths, private references or credentials. Every asset byte matched reviewed API
+profile source. No real snapshots, identity mapping or raw submissions enter Git.
+
+Final read-only metadata/source confirmation PASS after published browser verification:
+immutable20 equals sealed candidate; production and private staging editors restored
+exactly; staging deployments unchanged. API18 remains rollback, editor backup19 is
+recoverable, and prior working Pages runtime is e6e3e92e7668930217b7e0bb4cba9e8f5f55923e.
+No original writers/ESPN triggers, Sheet/Form resources, registry Properties, OAuth
+permissions or production URL were changed. Static publication/refresh remain OFF.
+
+Private complete receipts are outside Git in the restricted activation/
+late-entry-production-activation directory. Safe CI log is ignored at
+ tmp/late-entry/activation-ci.log; deployed artifact reference under
+ tmp/late-entry/published-artifact-3a9c331. Do not commit those generated directories.
+
+Latest passing source/runtime commit:3a9c331. This final checkpoint is documentation
+only and does not require another Pages deployment. Exact resume: read this FINAL
+section on develop; activation is complete. Do not rerun initialization, private impact
+captures, version creation, promotion or dispatch merely to resume. Continue only with
+new owner instructions; do not enable the separate static publisher.
