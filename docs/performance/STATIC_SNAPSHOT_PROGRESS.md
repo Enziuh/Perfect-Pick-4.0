@@ -1,6 +1,63 @@
 # Static snapshot progress
 
-## CURRENT RESUME — CLOUD FILE INSTALLED; one-time private owner entry required
+## CURRENT RESUME — PUBLIC_WRITE isolated; redacted correction installed, NO retry
+
+Owner supplied first manual tick11:42:10–11:42:25 Pacific, ending PUBLIC_WRITE.
+Read-only investigation onNov6 verified:
+- No new snapshot commit: public-data/snapshot.json latest remains7b93c23,18:41:48Z.
+  develop is unprotected, branch rules list EMPTY. Existing file/path/branch exist.
+- Exact installed cloud source matched the original reviewed package before changes;
+  production API20/editor and other staging files/scopes/deployments unchanged.
+- The failing generated line132 was the blanket rethrow, NOT the underlying failure.
+  PUBLIC_WRITE covered validation, private intent save, Contents PUT and pending save.
+  Original code discarded HTTP status/message. Exact past GitHub rejection CANNOT be
+  recovered from this log; do not claim a confirmed403 or permission diagnosis.
+- Source/baseline/identity/history gates passed before PUBLIC_WRITE. Workflow dispatch
+  was not reached; Actions permission does not explain this write-stage failure.
+  Request method/body/path/SHA handling match reviewed Contents API requirements.
+  Token Contents-write/selected-repository configuration is possible, not verified.
+  Public reads or repository push-role metadata do NOT prove token write permission.
+
+Minimal correction completed locally and installed in the SAME private project at
+19:52:00Z, changing ONLY CloudSnapshotPublisher:
+- github-error.cjs classifies fixed HTTP status/reason enums, never body/header/URL,
+  credential/contact values or arbitrary error text. Core distinguishes PUBLIC_VALIDATION,
+  INTENT_SAVE, GITHUB_PUT and PENDING_SAVE; safe detail persists only in private state.
+- New editor-only pp4InspectCloudGitHubReadOnly confirmed selectable: requires owner,
+  reads existing token privately, performs ONLY repo/branch/file GET requests; returns
+  booleans/fixed labels and diagnosticWrites:0/publicationAttempts:0. No source or
+  registry reads, PUT/POST, state writes, dispatch or trigger changes. It logs ONLY
+  the allowlisted safe report so owner need not use a debugger.
+- Tested18/18 PASS (14 cloud/security diagnostics +4 production scope), zero failures/
+  skips. Conservative Apps Script syntax and package seal PASS. Prior full389 suite
+  remains recorded; focused changes did not alter frontend/scoring/privacy contracts.
+- No token read by agent, no Properties/configuration/mapping changes, no retry,
+  new GitHub commit/deployment or clock installation. Production API20 unchanged.
+  Private prepatch backup/receipt in existing activation/cloud-static directory;
+  corrected sealed local package tmp/cloud-publisher-public-write-fix.
+
+Exact owner next action:
+1. Run pp4InspectCloudGitHubReadOnly ONCE in the existing private editor; share ONLY
+   its safe JSON. Browser control is still unavailable, so direct token-setting
+   inspection by agent is blocked. Never send a token/config to chat.
+2. In GitHub Settings > Developer settings > Fine-grained tokens > publisher token,
+   verify resource owner Enziuh, ONLY Perfect-Pick-4.0 selected, Contents Read/write,
+   Actions Read/write (+automatic Metadata read). Correct ONLY missing reviewed
+   permissions/repository selection; do not add Workflows/Admin/all repositories.
+   If already correct, leave unchanged and do not guess; return the safe report.
+3. After configuration is confirmed/corrected, ONE owner-controlled pp4CloudSnapshotTick
+   may verify the fix; no automatic retry. A failed retry will now expose only a
+   specific safe status/boundary. Existing intent can resume safely; do NOT reset
+   registry/state or regenerate IDs. Verify new commit/CI/CDN/privacy before any clock.
+
+Exact cause remains pending safe diagnostic/token UI review. No claim of successful
+cloud publication or scheduled operation. All23 IDs,1–8 retention and9+ exclusion
+unchanged. Public monitor HEALTHY at19:46Z,292min remaining; snapshot expiry still
+2026-11-07T00:39:05.315Z (Nov6,4:39PM Pacific). No immediate rollback required at
+inspection; refresh before expiry or use approved pages.yml profile=api rollback.
+
+
+## Previous activation — owner setup now completed; see PUBLIC_WRITE above
 
 Owner approved activation after4e51c0c. Completed bounded operations onNov6:
 - Fresh API20 health/schema/scoring parity PASS at19:14:54Z:272 games/122 FINAL,

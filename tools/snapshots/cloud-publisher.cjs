@@ -1,10 +1,11 @@
 'use strict';
 // Private Google execution only. GitHub dependency accepts a validated public file, never source/store.
+const {safeCode}=require('./github-error.cjs');
 const {project,historicalEqual,stableContent}=require('./cloud-projector.cjs'),{production}=require('./production-policy.cjs'),{plan}=require('./activity.cjs');
 function createCloudPublisher(d){
  function tick(){
   const config=d.config();if(!config||config.enabled!==true)return {state:'DISABLED'};
-  let held=false,phase='OWNER';
+  let held=false,phase='OWNER',boundary=null;
   try{
    if(config.cloudPublicationApproved!==true||d.owner()!==config.ownerEmail)throw Error();
    if(!d.lock.acquire())return {state:'BUSY'};held=true;
@@ -33,16 +34,17 @@ function createCloudPublisher(d){
    production(previous.file,Date.parse(previous.file.capturedAt));
    if(!historicalEqual(previous.file,file)||JSON.stringify(previous.file.payload.aliases)!==JSON.stringify(file.payload.aliases)||Date.parse(file.generatedAt)<Date.parse(previous.file.generatedAt)||file.payload.snapshot.revision<previous.file.payload.snapshot.revision)throw Error();
    if(state.lastSuccessAt&&stableContent(previous.file)===stableContent(file)&&Date.parse(previous.file.expiresAt)-d.now()>activity.intervalMs+900000){d.state.save({...state,nextRunAt});return {state:'UNCHANGED',nextRunAt};}
-   phase='PUBLIC_WRITE';production(file,d.now());const hash=d.digest(JSON.stringify(file));
+   phase='PUBLIC_WRITE';boundary='PUBLIC_VALIDATION';production(file,d.now());const hash=d.digest(JSON.stringify(file));
    // Save a public-only intent before the network write so a crash is recoverable.
-   d.state.save({...state,nextRunAt,expiresAt:file.expiresAt,intent:{hash,previousSha:previous.sha}});
-   const commit=d.github.write(file,previous.sha);if(!/^[a-f0-9]{40}$/.test(commit))throw Error();
-   d.state.save({...state,nextRunAt,pending:{commit,hash},expiresAt:file.expiresAt});
-   phase='DISPATCH';d.github.dispatch();return {state:'QUEUED',nextRunAt,players:23,games:272};
-  }catch{
-   if(held)try{const prior=d.state.load()||{};d.state.save({...prior,lastError:{code:phase,at:new Date(d.now()).toISOString()}});}catch{}
+   boundary='INTENT_SAVE';d.state.save({...state,nextRunAt,expiresAt:file.expiresAt,intent:{hash,previousSha:previous.sha}});
+   boundary='GITHUB_PUT';const commit=d.github.write(file,previous.sha);if(!/^[a-f0-9]{40}$/.test(commit))throw Error();
+   boundary='PENDING_SAVE';d.state.save({...state,nextRunAt,pending:{commit,hash},expiresAt:file.expiresAt});
+   phase='DISPATCH';boundary=null;d.github.dispatch();return {state:'QUEUED',nextRunAt,players:23,games:272};
+  }catch(error){
+   const detail=safeCode(error);
+   if(held)try{const prior=d.state.load()||{};d.state.save({...prior,lastError:{code:phase,boundary,detail,at:new Date(d.now()).toISOString()}});}catch{}
    // Fixed label only: native failure notification must not contain inputs or exception text.
-   throw Error('Cloud snapshot publication blocked: '+phase);
+   throw Error('Cloud snapshot publication blocked: '+phase+(boundary?'/'+boundary:'')+(detail?'/'+detail:''));
   }finally{if(held)d.lock.release();}
  }
  return Object.freeze({tick});

@@ -20,7 +20,7 @@ function pp4CloudSnapshotTick(){
   const token=properties.getProperty('PP4_CLOUD_GITHUB_TOKEN');if(typeof token!=='string'||token.length<20)throw Error('Publisher credential unavailable');
   const options={method:method||'get',followRedirects:false,muteHttpExceptions:true,headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
   if(body!==undefined){options.contentType='application/json';options.payload=JSON.stringify(body);}
-  const r=UrlFetchApp.fetch(api+path,options),status=r.getResponseCode();if(status<200||status>=300)throw Error('GitHub publication unavailable');const text=r.getContentText();if(text.length>2000000)throw Error('GitHub publication unavailable');return text?JSON.parse(text):null;
+  const r=UrlFetchApp.fetch(api+path,options),status=r.getResponseCode();if(status<200||status>=300)throw (${bundle(path.join(__dirname,'github-error.cjs'))}).rejection(status,r.getContentText());const text=r.getContentText();if(text.length>2000000)throw Error('GitHub publication unavailable');return text?JSON.parse(text):null;
  }
  function read(){const r=request('/contents/public-data/snapshot.json?ref=develop');if(r.encoding!=='base64'||r.type!=='file')throw Error();const text=Utilities.newBlob(Utilities.base64Decode(r.content.replace(/\s/g,''))).getDataAsString('UTF-8');if(text.length>2000000)throw Error();const commits=request('/commits?sha=develop&path=public-data/snapshot.json&per_page=1');return {file:JSON.parse(text),sha:r.sha,commit:commits[0].sha};}
  const deps={config:()=>c,owner,now:()=>Date.now(),digest:pp4CloudDigest_,lock:{acquire:()=>lock.tryLock(1000),release:()=>lock.releaseLock()},
@@ -32,6 +32,18 @@ function pp4CloudSnapshotTick(){
  status:commit=>{const r=request('/actions/workflows/pages.yml/runs?branch=develop&head_sha='+commit+'&per_page=20'),runs=r.workflow_runs.filter(r=>r.head_sha===commit&&r.event==='workflow_dispatch');if(!runs.length)return 'MISSING';const run=runs[0];return run.status!=='completed'?'PENDING':run.conclusion==='success'?'SUCCESS':'FAILED';},
  published:()=>{const r=UrlFetchApp.fetch('https://enziuh.github.io/Perfect-Pick-4.0/data/snapshot.json',{method:'get',followRedirects:false,muteHttpExceptions:true});if(r.getResponseCode()!==200)throw Error();const t=r.getContentText();if(t.length>2000000)throw Error();return JSON.parse(t);}}};
  return (${bundle(path.join(__dirname,'cloud-publisher.cjs'))}).createCloudPublisher(deps).tick();
+}
+// Editor-only GET diagnostics. No registry/source read, state setter, PUT, POST or dispatch.
+function pp4InspectCloudGitHubReadOnly(){
+ const report={state:'BLOCKED',code:'OWNER_REQUIRED',diagnosticWrites:0,publicationAttempts:0};
+ try{
+  const c=pp4CloudSnapshotConfig_();if(!c||Session.getActiveUser().getEmail()!==c.ownerEmail||Session.getEffectiveUser().getEmail()!==c.ownerEmail)throw Error();
+  const properties=PropertiesService.getScriptProperties(),token=properties.getProperty('PP4_CLOUD_GITHUB_TOKEN');if(typeof token!=='string'||token.length<20){report.code='TOKEN_MISSING';throw Error();}
+  function get(path){const r=UrlFetchApp.fetch('https://api.github.com/repos/Enziuh/Perfect-Pick-4.0'+path,{method:'get',followRedirects:false,muteHttpExceptions:true,headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});const status=r.getResponseCode();if(status!==200)throw (${bundle(path.join(__dirname,'github-error.cjs'))}).rejection(status,r.getContentText());const t=r.getContentText();if(t.length>2000000)throw Error();return JSON.parse(t);}
+  const repo=get(''),branch=get('/branches/develop'),file=get('/contents/public-data/snapshot.json?ref=develop'),text=properties.getProperty('PP4_CLOUD_PUBLISHER_STATE'),state=text?JSON.parse(text):{};
+  report.state='READ_ACCESS_VERIFIED';report.code='OWNER_MUST_REVIEW_CONTENTS_WRITE_AND_SELECTED_REPOSITORY';report.repositoryMatched=repo.full_name==='Enziuh/Perfect-Pick-4.0';report.branchMatched=branch.name==='develop';report.branchProtected=branch.protected===true;report.snapshotReadable=file.type==='file'&&file.encoding==='base64';report.intentShaMatchesCurrent=state.intent?state.intent.previousSha===file.sha:null;report.pendingPublicationRecorded=Boolean(state.pending);report.repositoryPushRole=typeof repo.permissions?.push==='boolean'?repo.permissions.push:null;report.writePermissionProven=false;
+ }catch(error){const code=(${bundle(path.join(__dirname,'github-error.cjs'))}).safeCode(error);if(code)report.code=code;}
+ console.log(JSON.stringify(report));return report;
 }
 // Explicit owner approval required before running this installer. Existing triggers untouched.
 function pp4InstallCloudSnapshotClock(){

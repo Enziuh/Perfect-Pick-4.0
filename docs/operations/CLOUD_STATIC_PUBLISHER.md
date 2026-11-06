@@ -1,24 +1,42 @@
-# Cloud static publisher — installed; private owner configuration pending
+# Cloud static publisher — PUBLIC_WRITE investigation; trigger OFF
 
 
-## Activation status — November6
+## Current incident — PUBLIC_WRITE; publication retry/clock remain OFF
 
-Owner authorization granted. The sealed additive publisher was installed and verified
-in the existing private project at19:17Z; existing source/manifest/access/Properties
-and production API20/editor unchanged. Both tick/installer are selectable. No cloud
-execution or clock installation has occurred. Token/configuration entry remains
-pending because browser/native UI control is unavailable; no broader CLI token was
-reused. Exact instructions are in the restricted private activation/cloud-static/
-OWNER_ACTION.md; no token or config belongs in chat/Git. Owner performs only token/
-property entry and ONE pp4CloudSnapshotTick execution, then reports Done. No debugger
-or return-value capture is needed; inspect the resulting GitHub commit/CI independently.
+Owner entered private token/config and ran the first tick once at11:42AM Pacific.
+No snapshot commit was created. develop has no protection/ruleset blocker, but the
+original blanket rethrow discarded the exact error. Do NOT diagnose a specific HTTP
+status or permission failure from PUBLIC_WRITE alone. Source/registry/privacy/history
+checks passed; dispatch had not yet executed.
 
-Public monitor IS installed as the sole-file main commit796efdef, workflow run
-42278582488 SUCCESS (HEALTHY at19:19:26Z). It has no private Google or publish access.
-The publisher trigger remains OFF until first cloud publication is fully verified.
-Subsequent scheduled publisher execution is still required for completion. Current
-static snapshot expiresNov6,4:39PM Pacific; approved API-profile rollback remains
-available if this one-time owner setup cannot finish before expiry.
+At19:52Z only the private publisher file was updated with tested, redacted HTTP
+classification and finer state/write boundaries. No execution/retry or configuration/
+registry/trigger change. API20/editor and all other staging source/manifest/access
+remain unchanged.18 targeted tests PASS; new sealed candidate is local ignored
+ tmp/cloud-publisher-public-write-fix (source and adjacent seal).
+
+Run **pp4InspectCloudGitHubReadOnly** once in the owner editor and share only its
+safe JSON report (GET-only,zero writes/attempts). It does not prove write permission.
+Review the existing fine-grained token privately: Enziuh resource owner, only
+Perfect-Pick-4.0 repository, Contents Read/write and Actions Read/write. Correct only
+missing already-approved settings. No Workflows/Admin/all-repository grant. Never
+send secrets or overwrite registry/state. If these settings are already correct,
+leave them unchanged and use diagnostic evidence before another write.
+
+After verification/correction, prepare ONE owner-run pp4CloudSnapshotTick. Updated
+errors distinguish GITHUB_HTTP_403_TOKEN_PERMISSION_DENIED,401 authentication,409
+SHA conflict,422 validation,branch policy/rate-limit and local intent/pending save
+boundaries. Raw GitHub responses/headers/request IDs are never logged. Successful
+GETs and repository push-role metadata cannot establish fine-grained write access.
+[GitHub troubleshooting](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api)
+explains permission errors and required-permission headers; headers list endpoint
+requirements, not the token's actual grants. The [Contents API](https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents)
+requires Contents write; Actions write is used later for dispatch, not this PUT.
+
+Public monitor remains active (main796efdef; first run42278582488 passed). Snapshot
+is healthy at current inspection and expiresNov6,4:39PM Pacific; no immediate rollback
+required, but refresh/approved API rollback must precede expiry. No first cloud
+publication or scheduled publisher execution is verified yet.
 
 ## Decision and boundary
 
