@@ -25,7 +25,12 @@ function install(root,config){
  const endpoint=config.endpoint;if(!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(endpoint))throw Error('Approved JSON endpoint required');
  let current=null,pending=null,expiryTimer=null,refreshTimer=null,failed=false,last=0,expiresAt=0,degraded=false,acceptedAt=-1,acceptedRevision=-1;
  const notice=name=>root.document.dispatchEvent(new root.Event(name));
- const clear=()=>{current=null;failed=true;notice('perfectpick:unavailable');};
+ const clear=()=>{current=null;failed=true;notice('perfectpick:unavailable');
+  // A separately owner-approved responder URL is public navigation, not authority
+  // to disclose picks or to claim the Form is open. Keep entry access during outage.
+  const official=approvedPlayerDestination(config.form),button=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
+  if(official&&button&&note){const link=root.document.createElement('a');link.id='submitPicks';link.className='submit-picks';link.textContent='Open official Form';link.href=official;link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-describedby','submitPicksNote');button.replaceWith(link);note.textContent='Check entry availability on the official Form. Competition data is temporarily unavailable.';}
+ };
  const fresh=()=>current&&Date.now()<expiresAt;
  const wait=ms=>new Promise(resolve=>root.setTimeout(resolve,ms));
  const invalid=()=>Object.assign(Error('Competition data unavailable'),{kind:'INVALID'});

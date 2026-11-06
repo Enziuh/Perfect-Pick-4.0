@@ -76,9 +76,9 @@
   }
 
   function countdownText_(deadlineValue) {
-    if (!deadlineValue) return 'Deadline not scheduled';
+    if (!deadlineValue) return 'Deadline unavailable';
     const deadline = new Date(deadlineValue);
-    if (Number.isNaN(deadline.getTime())) return 'Deadline not scheduled';
+    if (Number.isNaN(deadline.getTime())) return 'Deadline unavailable';
 
     const diff = deadline.getTime() - Date.now();
     if (diff <= 0) return 'Deadline reached';

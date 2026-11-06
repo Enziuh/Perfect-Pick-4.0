@@ -105,3 +105,12 @@ content. No API writer or existing ESPN/Form trigger is part of the publisher.
 4. Approve the private publisher input/access arrangement, tested adaptive scheduling,
    new static Pages profile and first exact sanitized JSON artifact. Until then the
    API profile and worker remain unchanged. Keep API20 and published frontend rollback.
+
+## Existing writer cadence (source inspection only)
+
+The unchanged reference installer in apps-script/src/40_Cache_Helpers.js:140 schedules
+Thursday22:00; Sunday14:00,18:00,22:00; Monday22:00; Tuesday07:00 in PP3.TIMEZONE.
+This is source-defined behavior, NOT a new inspection/claim of installed trigger state.
+The publisher cannot make scores newer by polling between those updates. It must skip
+unchanged content and retain unknown underlying-update time. No trigger was invoked,
+installed, modified or used as a publication/disclosure permission.

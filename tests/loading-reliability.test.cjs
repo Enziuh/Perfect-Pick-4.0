@@ -27,3 +27,8 @@ test('availability metadata labels only approved CLOSED scopes and never carries
  for(const w of prizes.weekAvailability)assert.deepEqual(Object.keys(w).sort(),['entriesStatus','hasPlayers','visibility','week']);
  assert(prizes.weekAvailability.every(w=>!w.hasPlayers||w.entriesStatus==='CLOSED'&&w.visibility==='AVAILABLE'));
 }));
+test('outage keeps only the separately approved responder link, without granting entry status or exposing picks',async()=>{
+ const h=harness(),form={url:'https://docs.google.com/forms/d/e/FABRICATED_APPROVED_RESPONDER/viewform',verified:true,approvedForPlayers:true},note={};let button={replaceWith(node){button=node;}};
+ h.root.document.getElementById=id=>id==='submitPicks'?button:id==='submitPicksNote'?note:null;h.root.document.createElement=tag=>({tagName:tag.toUpperCase(),setAttribute(){},replaceWith(node){button=node;}});h.setMode('network');install(h.root,{endpoint,form});await assert.rejects(h.root.PerfectPickPreview.get('prizes'));assert.equal(button.tagName,'A');assert.equal(button.href,form.url);assert.equal(button.textContent,'Open official Form');assert(note.textContent.includes('Check entry availability'));assert.throws(()=>h.root.PerfectPickPreview.buildMatchView({week:1},'x'));await assert.rejects(h.root.PerfectPickPreview.get('week','&week=1'));assert.equal(h.calls(),3);
+ for(const bad of [{...form,verified:false},{...form,url:form.url.replace('/viewform','/edit')}])assert.throws(()=>install(harness().root,{endpoint,form:bad}));
+});

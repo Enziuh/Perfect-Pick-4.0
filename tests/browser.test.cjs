@@ -481,6 +481,12 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await connected.evaluate("document.querySelectorAll('#picks .missed,#picks .vote-option,#playerPicksBody .pick-cell').length"),0);
    await closePage(connected);privateAssets=null;apiReply=null;
   }
+  {
+   const officialForm={url:'https://docs.google.com/forms/d/e/FABRICATED_PLAYER_FORM/viewform',verified:true,approvedForPlayers:true};apiReply={state:'UNAVAILABLE'};privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true,form:officialForm});const offline=await page('#overview');
+   await until(offline,"document.getElementById('status').textContent.includes('Competition data unavailable')");assert.equal(await offline.evaluate("document.getElementById('submitPicks').getAttribute('href')"),officialForm.url);assert.equal(await offline.evaluate("document.getElementById('formStatusBadge').textContent"),'Status unavailable');assert.equal(await offline.evaluate("document.getElementById('picksCountdown').textContent"),'Deadline unavailable');assert.equal(await offline.evaluate("document.querySelectorAll('.pick-cell,.vote-option,.player-pick-card').length"),0);
+   for(const width of [360,390,430,768,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},offline.sessionId);for(const route of ['overview','match-center','standings/weekly','prizes','guide/faq']){await offline.evaluate(`location.hash=${JSON.stringify('#'+route)}`);await until(offline,`location.hash===${JSON.stringify('#'+route)}&&!document.getElementById(${JSON.stringify(route.split('/')[0])}).hidden`);assert(await offline.evaluate(`document.documentElement.scrollWidth<=${width}+1`));assert(await offline.evaluate("document.querySelectorAll('[aria-busy=\"true\"]').length===0"));}}
+   await closePage(offline);privateAssets=null;apiReply=null;
+  }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){
    fault=mode;const broken=await page();await until(broken,"document.getElementById('status')?.textContent.includes('Synthetic preview unavailable')");
    assert(await broken.evaluate("document.getElementById('dashboard').textContent.includes('No external connection attempted')"));

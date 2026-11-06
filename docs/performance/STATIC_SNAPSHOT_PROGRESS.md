@@ -750,3 +750,12 @@ from the public renderer and clarifies the player selector introduction. Interna
 schema/diagnostic wording is preserved. Full371/371 PASS again, no failures/skips:
 /private/tmp/pp-v20-copy-all-tests.log. Final api-profile publication follows; no
 backend upload, static JSON, private mapping or publisher scheduling is authorized.
+
+Final outage polish preserves the separately approved public responder link even if
+competition data cannot load, labelled Open official Form / check availability there.
+This does NOT assert OPEN, reopen a Form or disclose any player data. Default unavailable
+handlers still remove untrusted links; only the owner-approved canonical config URL
+is restored afterward. Unknown deadlines say unavailable, not falsely not scheduled.
+New browser coverage verifies this outage scenario, privacy clearing, stopped loading,
+all five destinations and360/390/430/768/1440 widths. Full372/372 PASS, zero failed/skipped:
+/private/tmp/pp-v20-release3-all-tests.log. Production20 and static publication unchanged.
