@@ -1,5 +1,60 @@
 # API v20 static preparation measurements
 
+## LIVE static Pages release — verified November6,2026
+
+Published commit7b93c23; workflow42273079410 verify/deploy SUCCESS,377/377 tests
+PASS,zero skips/failures. All38 downloaded files matched the reviewed artifact
+byte-for-byte. Production now uses same-origin PP4_STATIC_V2 JSON with historical
+protected retention1–8 only; Week9 safe aggregates remain, protected data is absent.
+This is REAL GitHub Pages/Google CDN delivery, not loopback/replay. Same Chrome156,
+40ms/10Mbps/4xCPU method as earlier live API baseline; one sample per width/visit,
+not percentiles or guaranteed future latency. Static source contains fewer protected
+records because Week9 retention is NOT authorized; aggregate totals remain identical.
+
+|Viewport/visit|Usable ms|FCP ms|LCP ms|Page load ms|Bytes*|Google requests|JSON requests|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|1440/cold|1075.4|556.0|556.0|713.9|101167|0|1|
+|1440/repeat|425.0|192.0|192.0|214.5|20141|0|1|
+|768/cold|742.4|340.0|340.0|530.8|74005|0|1|
+|768/repeat|419.4|188.0|188.0|207.9|20142|0|1|
+|390/cold|732.4|364.0|364.0|522.1|69414|0|1|
+|390/repeat|396.4|172.0|172.0|196.0|20143|0|1|
+
+|Viewport/visit|Standings ms|Week switch ms|Player View ms|Compare matrix ms|
+|---|---:|---:|---:|---:|
+|1440/cold|35.2|66.6|79.6|46.6|
+|1440/repeat|37.5|57.3|38.9|55.0|
+|768/cold|38.0|67.2|56.4|76.6|
+|768/repeat|41.3|65.8|33.8|42.2|
+|390/cold|38.6|47.6|45.4|54.3|
+|390/repeat|35.8|50.8|31.7|40.1|
+
+*CDP encoded bytes through usable+200ms including visible assets; excludes complete
+TLS/DNS/redirect overhead. Snapshot340,242 bytes raw/18,716 gzip. API baseline cold
+usable15,199ms desktop/17,313ms mobile versus actual static1,075ms/732ms: observed
+92.9%/95.8% improvement. Different observations/time/authorized disclosure scope mean
+this is not a statistical experiment or promise. Stable template FCP/LCP precede
+asynchronous data readiness; usable time is the meaningful player-facing improvement.
+
+Zero runtime exceptions/interaction API calls; matrix lazy until opened. Actual DOM
+checked at1440/768/390 across all five destinations,32 logos, Form link, historical
+player views and comparison,21 Week9 aggregate/23 season rows and absent Week9 picks/
+votes. Five-width real-candidate local preflight also completed successfully. Live
+same-origin refresh was separately verified to preserve route/week/player, with no
+Google calls. That additional mobile cold/repeat probe measured1509ms/416ms usable,
+showing real single-run variability rather than guaranteeing the faster sample.
+Malformed-response/expiry fail-closed behavior passed the existing browser suite;
+no production fault was injected. No unsafe API fallback exists. Browser/source
+receipts remain ignored in tmp/performance/static-production-live.
+
+Scheduler is prepared but NOT loaded: Mac sleeps after1minute; awake/logged-in/network/
+Keychain availability requires owner confirmation before reliable unattended use.
+First snapshot expires2026-11-07T00:39:05.315Z (Nov6,4:39PM Pacific); refresh needs
+completion before expiry. No automated refresh is claimed. Underlying ESPN/Sheets
+score-write time remains unknown, distinct from source observation/generation and
+actual Actions deployment completion2026-11-06T18:43:24Z. API20/writers untouched.
+
+
 ## Fresh recovered API20 versus matching static data — November6,2026
 
 API20 is healthy following the owner's restoration of standard timestamp display.

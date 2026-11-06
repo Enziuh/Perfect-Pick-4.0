@@ -1,7 +1,8 @@
-# Static v20 candidate — NOT activated
+# Static v20 delivery — LIVE; unattended scheduler pending
 
-Production remains API20 on the existing URL. Pages stays on its API profile.
-No real JSON, mapping, credential, recovery export or raw submission belongs in Git.
+Production API20 remains unchanged on its existing URL. Pages uses the verified
+static profile from7b93c23 (workflow42273079410). Only sanitized approved JSON is
+in Git; mappings, credentials, recovery exports and raw submissions remain private.
 
 ## Timestamp resolution — API20 unchanged
 
@@ -41,10 +42,11 @@ recovery mirror/key remain outside Git in restricted Application Support/Keychai
 
 Durable retention is STILL limited to explicitly approved Weeks1–8. Week9 live API
 permission is NOT automatic irreversible static retention. Its picks, predictions,
-votes and dependent player aggregates are physically stripped from the durable
-candidate. Public schedule/scores and supported projected pools remain. This prevents
-full current-week/season feature parity until Week9 retention is separately approved.
-No schema-validator exception is used to copy unverifiable aggregate rows.
+votes and protected decisions are physically stripped. Separately allowlisted
+aggregateStandings preserves approved Week9 weekly/season totals and source ranks/
+accuracy without selections, predictions, per-game eligibility or votes. Generation
+first validates the original source contract and proves exact aggregate projection
+parity. No new scoring calculation or Week9 protected retention is authorized.
 
 Exact proposed file inventory: the existing static artifact's38-file allowlist,
 replacing unused fixtures/preview.json with `data/snapshot.json`; all32 supplied SVGs
@@ -71,19 +73,18 @@ Clients check same-origin static updates at bounded activity intervals, with a6h
 fallback, bounded retries/coalescing, memory-only protected records and expiry clearing.
 The owner-approved retention permission is separate from120-second API capture proof.
 
-`refresh.cjs` remains preparation-only: publicationEnabled must be false; no timers,
+`refresh.cjs` remains the preparation-only service: publicationEnabled must be false; no timers,
 triggers, launch agents, Git pushes, uploads or Actions dispatches are installed.
 Opt-in skipUnchanged avoids artifacts/history/backup churn while the previous authorized
 snapshot remains valid. Its content digest includes retention authority and all public
 score/closure/eligibility changes, excludes only observation-token churn. Partial,
 stale, malformed or unsafe generations never replace last-good data.
 
-Proposed actual publisher: existing owner Mac/private Google environment with existing
+Implemented owner-publisher.cjs uses the existing owner Mac/private environment and existing
 GitHub CLI authentication. Decrypt/verify the pinned generation1 recovery input in
 private memory; never pass mapping/key to Actions. Cloud remains primary; new identity
-references must stop for owner reconciliation. A read-only unattended registry-access
-arrangement or explicit approval to use the verified encrypted recovery mirror as the
-publisher input is still needed. No new OAuth client/project/service is proposed.
+references must stop for owner reconciliation. The owner approved the verified encrypted recovery mirror/Keychain as private
+publisher input. No mapping goes to Actions. No new OAuth client/project/service is proposed.
 GitHub-hosted schedules cannot read the owner's private registry safely by themselves;
 GitHub Actions may verify/deploy ONLY already-sanitized public artifacts after approval.
 Cron has no exact-time guarantee; retain honest age/expiry labels and skip unchanged
@@ -95,11 +96,13 @@ content. No API writer or existing ESPN/Form trigger is part of the publisher.
    restoration. No backend repair, new scope or deployment is required.
 2. Fresh live-versus-static measurements are recorded in STATIC_V20_MEASUREMENTS.md.
    Restricted local snapshots are not public CDN performance guarantees.
-3. Explicitly approve irreversible Week9 retention if full current player/season views
-   are required. Never extend approval to future weeks automatically.
-4. Approve the private publisher input/access arrangement, tested adaptive scheduling,
-   new static Pages profile and first exact sanitized JSON artifact. Until then the
-   API profile and worker remain unchanged. Keep API20 and published frontend rollback.
+3. Week9 protected retention is explicitly NOT approved. It stays excluded; aggregate
+   standings remain available. Do not request scope expansion for this release.
+4. Static profile/first exact artifact are approved, published and verified. The
+   owner-Mac worker and private config are ready but scheduler is NOT loaded: pmset
+   reports sleep1. Owner must confirm reliable awake/logged-in availability (or
+   approve a specific power change) before launch-agent activation. No power setting
+   was changed. Keep API20 and api-profile rollback6d1adea unchanged.
 
 ## Existing writer cadence (source inspection only)
 

@@ -1,62 +1,103 @@
 # Static snapshot progress
 
-## CURRENT ACTIVATION — controlled static release prepared
+## CURRENT RESUME — STATIC LIVE; owner-Mac availability blocks scheduler only
 
-Owner approved static production activation with historical retention **Weeks1–8
-ONLY**. Week9 may reopen; it and all future weeks NEVER acquire durable protected
-publication authority from Form closure. No Week9 picks, predictions, votes or
-per-game eligibility enter public JSON. Aggregate weekly/season totals are approved.
-API20, its URL/editor, Sheets/Forms, writers and triggers remain unchanged.
+### Published release and authorization
 
-Recovered interrupted local suite:376/376 PASS, zero skips/failures. Repeated complete
-suite after Form-link adjustment:376/376 PASS. Final publisher scheduling-margin
-regression and related privacy/snapshot suites:29/29 PASS. New suite total expected
-377; CI must confirm before upload. Actual real-candidate Chrome checks recorded10
-cold/repeat samples at360/390/430/768/1440: all DOM assertions passed, historical
-player/matrix working, Week9 protected DOM absent,21 weekly aggregate/23 season rows,
-all32 logos and approved Form link work, no external browser data requests/overflow.
-The local profiler reached all samples but its teardown did not complete; do not
-confuse that harness cleanup with a fully completed standalone browser process.
-Existing full-suite browser tests completed successfully independently.
+Static production release **7b93c23** on develop. Pages workflow **42273079410**:
+verify SUCCESS (377/377 tests,0 failures/skips), deploy SUCCESS completed
+2026-11-06T18:43:24Z. Actual CDN files and JavaScript DOM verified afterward.
+The documentation/publisher-receipt correction checkpoint follows this release;
+resolve latest working commit via `git log -1 --format='%h %s'`.
 
-Implemented existing static profile activation in pages.yml, with strict38-file
-allowlist/seal immediately before upload and unchanged deployment job. Sanitized
-public input is public-data/snapshot.json; deployed path data/snapshot.json.
-PP4_STATIC_V2 adds strict aggregateStandings allowlist (approved aliases/random IDs,
-rank,points,completedGames,totalPicks,accuracyBasisPoints ONLY) to preserve safe
-Week9/season totals without protected selections. Source decode and exact projection
-parity precede retention. Monthly comparison predictions afterWeek8 remain absent;
-no winner/payment invented. All23 existing random128-bit IDs preserved.
+Weeks1–8 ONLY have protected historical retention. Week9 may reopen: its picks,
+predictions, per-game eligibility and voting are physically ABSENT, as are future
+protected records. Week9 aggregate standings (21 rows) and season standings (23 rows)
+are explicitly authorized and present, without selection fields. Do NOT request or
+assume Week9 durable protected retention for this release. All23 stable random128-bit
+IDs preserved using existing pinned generation1 private recovery materials.
+Production API20/URL/editor, Sheets/Forms, ESPN/Form triggers and scoring unchanged.
+Historical1–8 and approved Week9 source scoring parity verified before generation.
 
-Fresh owner publisher preparation privately verifies pinned generation1 encrypted
-recovery copies against existing mirror using existing Keychain; no reinitialization
-or cloud writes. Private config, mappings, keys and source references remain outside
-Git/Actions. Owner publisher is tools/snapshots/owner-publisher.cjs --publish. It
-coalesces via exclusive private lock, checks source/projection/IDs/historical parity,
-skips unchanged data with sufficient lifetime, atomically writes ONLY sanitized
-public input, and dispatches existing Pages static workflow. Subsequent invocation
-checks queued Actions success and downloaded snapshot hash before calling it verified.
-Refresh planning is15/30/~6h with30-minute expiry safety margin; source score-write
-and publication timestamps are never fabricated.
+### Exact public artifact and freshness
 
-SCHEDULER NOT LOADED: pmset reports sleep1 on AC and battery. Existing login domain
-and Keychain/GitHub access work, but reliable awake/logged-in Mac availability is
-NOT established. Prepared private static-publisher.launchagent.plist (15-minute
-wake-up; adaptive due check) under restricted owner Application Support registry
-directory. Do not alter power settings or load it without resolving availability.
-No Terminal/browser window must remain open; login/keychain/network/Mac availability
-are required. Snapshot expires after6h and frontend fails closed; scheduler must be
-resolved for continuous service. No scheduled refresh is yet claimed.
+Public source: public-data/snapshot.json; deployed data/snapshot.json.
+PP4_STATIC_V2, source revision1;340,242 raw bytes/18,716 gzip bytes.
+SHA25652488355a66ee11591eef08f59332f6c19f8276e82241084ac234d31dead8fc2.
+Source observation2026-11-06T18:39:15.438Z; generation/capture18:39:18.971Z.
+Expiry2026-11-07T00:39:05.315Z (**Nov6,4:39PM Pacific**). Do not artificially extend it.
+Underlying ESPN/Sheet score-write time remains unknown; publishedAt stays null in
+immutable JSON. Actual deployment/verification times are recorded separately.
+Schedule/results:272 games,122 FINAL. All source scores/projected pools and approved
+aggregate rows match validated API20; no invented payment/monthly outcome.
 
-Next: validate fresh public snapshot and exact artifact, commit/push safe release,
-dispatch pages.yml profile=static, require verify+deploy success, download/validate
-actual JSON and every published file, measure production browser cold/repeat/mobile.
-Update this entry with release SHA, workflow, snapshot revision/expiry/size and
-production measurements. If CI fails, do NOT publish. Current live rollback is
-API profile6d1adea; API20 stays unchanged. Immediate rollback command using reviewed
-API profile: gh workflow run pages.yml --ref develop -f profile=api. Preserve cached
-public history awareness; rollback never revokes downloaded data.
+Exact38-file manifest: index.html,styles.css,config.js,preview-data.js,app.js,
+data/snapshot.json and assets/teams/{ari,atl,bal,buf,car,chi,cin,cle,dal,den,det,gb,
+hou,ind,jax,kc,lac,lar,lv,mia,min,ne,no,nyg,nyj,phi,pit,sea,sf,tb,ten,was}.svg.
+All38 files DOWNLOADED from Pages and matched exact reviewed bytes. Strict schema,
+allowlists, private-reference/phone scans, seal, scope and expiry checked before
+upload and against actual downloaded JSON. No mappings/phone/source keys/secrets,
+raw submissions or unsupported Week9 monthly comparisons are public.
 
+### Validation and actual performance
+
+Recovered interrupted complete suite376/376 PASS; repeated full local suite376/376
+PASS; final relevant snapshot/privacy/publisher tests29/29 PASS. CI current release
+**377/377 PASS** includes the added expiry-margin regression. Later publisher-only
+receipt metadata correction (actual deployment vs verification timestamp)4/4 tests
+PASS; it changes no published bytes. Local real-candidate browser preflight completed
+at360/390/430/768/1440 cold+repeat; delayed Chrome cleanup eventually completed with
+exit0. No browser test was skipped or weakened.
+
+Actual published production measured at1440/768/390 cold+repeat (Chrome156,40ms,
+10Mbps down,4xCPU): usable desktop1075ms/425ms; tablet742ms/419ms; mobile732ms/396ms.
+One same-origin JSON request per initial visit, ZERO Google/API or interaction API
+requests, no runtime exceptions/overflow. All32 logos, five destinations, historical
+picks/matrix, Week9 protection and aggregate rows verified. Separate actual mobile
+refresh preserved route/week/player (additional cold1509ms/repeat416ms sample shows
+variability). No fault injected into production. Compare old live API baseline:
+desktop15199ms/mobile17313ms cold; observations, not latency guarantees. Details in
+STATIC_V20_MEASUREMENTS.md; numeric receipts in ignored tmp/performance/static-production-live.
+
+### Publisher and scheduler
+
+Existing owner-Mac publisher implemented in tools/snapshots/owner-publisher.cjs.
+Private approved config, encrypted recovery files/mirror and Keychain remain outside
+Git in owner Application Support. Existing generation1 IDs/both backups verified in
+private memory; no registry reinitialization/rotation/Google writes. No new OAuth or
+credential. The publisher only calls reviewed read-only dashboard4 rules=LATE_ENTRY_V1.
+It validates/remaps/retains before atomic public-file promotion, checks historical
+history, bounded freshness, safe aggregates, exact artifact and clean develop/remote;
+pushes ONLY sanitized input and dispatches existing static workflow. Queued releases
+must subsequently pass CI+downloaded snapshot hash before marking VERIFIED. Last
+successful publication is recorded privately; no successful automated refresh claimed.
+
+SCHEDULER **PREPARED, NOT LOADED**. Read-only pmset check shows sleep1 on AC and
+battery. Login domain/Keychain/existing GitHub credentials work, but reliable awake,
+logged-in, network-connected Mac availability is NOT established. No power settings
+or OS permissions changed. Owner must confirm this dependency or separately approve
+a specific power-setting change before background activation. No permanently open
+Terminal/browser is needed, but a login LaunchAgent cannot run on a sleeping/logged-out
+Mac. Private prepared plist: owner registry directory/static-publisher.launchagent.plist.
+15-minute wake-up with adaptive15min LIVE/30min game-day/~6h non-game-day due checks,
+plus30-minute expiry margin; unchanged content skips when lifetime permits. No new
+GitHub secret/mapping upload. Static expires/fails closed if owner refresh is not run.
+Next refresh should start no later thanNov6,4:09PM Pacific, before4:39PM expiry.
+
+### Exact next action / rollback
+
+Do NOT repeat audits, registry setup, generation or completed release. Confirm owner
+Mac can remain awake/logged-in/networked, then install the prepared plist into the
+owner's Library/LaunchAgents and bootstrap the existing user domain. Verify an actual
+scheduled run, CI success and downloaded snapshot hash before claiming automated
+refresh. If immediate refresh needed: `node tools/snapshots/owner-publisher.cjs --publish
+--force` from clean develop (private Keychain must be unlocked). Preserve private state.
+No new production backend action is authorized or necessary.
+
+Rollback: disable/unload owner scheduler if later enabled; run
+`gh workflow run pages.yml --ref develop -f profile=api`, require verify/deploy success
+and check real API-backed site. Known-good API frontend baseline6d1adea; API20 unchanged.
+No force/reset/history rewrite. Public cached data cannot be revoked by rollback.
 
 ## Previous verification — restored format; API20 HEALTHY
 

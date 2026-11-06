@@ -26,10 +26,11 @@ async function run({publish=false,force=false}={}){
  try{
   let previous=fs.existsSync(STATE)?JSON.parse(fs.readFileSync(target(STATE))):null;
   if(previous?.state==='QUEUED'){
-   const runs=JSON.parse(exec('gh',['run','list','--workflow','pages.yml','--branch','develop','--commit',previous.commit,'--json','status,conclusion','--limit','5']));
+   const runs=JSON.parse(exec('gh',['run','list','--workflow','pages.yml','--branch','develop','--commit',previous.commit,'--json','databaseId,status,conclusion','--limit','5']));
    if(!runs.length||runs[0].status!=='completed')return {state:'WAITING_FOR_VERIFICATION'};assert.equal(runs[0].conclusion,'success');
    const response=await fetch('https://enziuh.github.io/Perfect-Pick-4.0/data/snapshot.json',{cache:'no-store',signal:AbortSignal.timeout(20000)});assert(response.ok);const text=await response.text();production(JSON.parse(text),Date.now());assert.equal(require('node:crypto').createHash('sha256').update(text).digest('hex'),previous.snapshotHash);
-   previous={...previous,state:'VERIFIED',lastPublishedAt:new Date().toISOString()};atomic(STATE,previous);
+   const deployment=JSON.parse(exec('gh',['run','view',String(runs[0].databaseId),'--json','jobs'])).jobs.find(j=>j.name==='deploy'&&j.conclusion==='success');assert(deployment&&Number.isFinite(Date.parse(deployment.completedAt)));
+   previous={...previous,state:'VERIFIED',lastPublishedAt:deployment.completedAt,lastVerifiedAt:new Date().toISOString()};atomic(STATE,previous);
   }
   if(!force&&previous?.nextRunAt&&Date.parse(previous.nextRunAt)>Date.now())return {state:'NOT_DUE'};
   const {cfg,store}=privateInputs();const aliases=new Map(cfg.approvedAliases.map(a=>[a.player,a.alias]));assert.equal(aliases.size,23);
