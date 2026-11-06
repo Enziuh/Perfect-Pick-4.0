@@ -186,3 +186,9 @@ as rollback targets, same API URL/access/identity, original actions/writers/trig
 No production upload/activation, new scope, static publication or refresh-worker enable
 is authorized by this checkpoint. Do not repeat historical deadline reconstruction,
 identity setup, previous private captures or completed scoring/UI implementation.
+
+Validated implementation commit: cd154c7 (develop), full357 tests passing. This
+checkpoint follow-up records the resumable commit; no runtime/source change follows
+that verification. Resume with `git switch develop` and read this final section;
+next operation is owner review/approval of the private Week9 impact and coordinated
+release, not a repeat read or a production deployment.
