@@ -119,3 +119,9 @@ test('schedule observations obtained during a read use the post-read clock and r
  x.matrix.Responses.slice(1).forEach(r=>r[0]=new Date(start-10800000));let r=x.get();assert.equal(r.snapshot.state,'READY');assert(r.snapshot.weeks.every(w=>w.picks.every(p=>p.selections.every(s=>s.eligibility==='ELIGIBLE'))));assert(r.snapshot.games.every(g=>g.kickoff!==null));
  const read=x.deps.cutoffEvidence;x.deps.cutoffEvidence=(...args)=>read(...args).map(e=>({...e,verifiedAt:new Date(clock+1).toISOString()}));r=x.get();assert.equal(r.snapshot.state,'READY');assert(r.snapshot.weeks.every(w=>w.picks.every(p=>p.selections.every(s=>s.eligibility==='UNVERIFIED_CUTOFF'))));assert(r.snapshot.games.every(g=>g.kickoff===null));
 });
+
+test('approved current-week disclosure also verifies actual Form acceptance for legacy-query clients after activation',()=>{
+ const x=require('./support/pp3-api-example.cjs').lateExample();x.cfg.authority=x.e.authority;x.cfg.verifyCurrentForm=true;x.deps.formState=()=>({acceptingResponses:true,responderMatchesVerified:true});let r=x.get();assert.equal(r.snapshot.state,'READY');assert(!r.snapshot.weeks.find(w=>w.week===10).picks);assert.equal(r.control.reportedStatus,'OPEN');
+ x.deps.formState=()=>({acceptingResponses:false,responderMatchesVerified:true});r=x.get();assert(r.snapshot.weeks.find(w=>w.week===10).picks);assert.equal(r.control.reportedStatus,'CLOSED');
+ x.deps.formState=()=>{throw Error('PRIVATE_READ_FAILURE');};r=x.get();assert(!r.snapshot.weeks.find(w=>w.week===10).picks);assert.equal(r.control.reportedStatus,'UNKNOWN');
+});

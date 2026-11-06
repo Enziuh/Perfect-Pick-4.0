@@ -234,3 +234,18 @@ Updated full358/358 tests PASS, zero failures/skips, including local browser tes
 Log:/private/tmp/pp41-production-clock-tests.log. Production remains18 during this
 correction; staging source was restored exactly. Next: retest the corrected candidate
 against the approved private Week9 impact before creating/promoting its clean version.
+
+Corrected private staging verified the owner-approved Week9 point/rank adjustment
+against legacy calculations, with unchanged Weeks1–8 and all five original actions
+passing. The private conditional Week9 configuration includes only that verified
+closed week and its season contribution; future weeks remain unapproved. A final
+privacy guard also checks current Form acceptance for legacy-query clients when the
+activation configuration requires it, preventing stale Form Control from unlocking
+reopened current-week picks in either client generation. A fabricated regression
+covers closed, reopened and inaccessible-Form cases. Final exact-candidate staging
+and full-suite verification precede any production promotion.
+
+Final full359/359 PASS, zero failures/skips, including scoring, privacy, compatibility,
+browser, logos, responsive layouts and artifact integrity. Log:
+/private/tmp/pp41-final-activation-tests.log. Static tests use fabricated local data;
+static delivery and unattended publication remain disabled in production.
