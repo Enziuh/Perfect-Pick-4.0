@@ -1,4 +1,24 @@
-# Cloud static publisher — prepared, NOT activated
+# Cloud static publisher — installed; private owner configuration pending
+
+
+## Activation status — November6
+
+Owner authorization granted. The sealed additive publisher was installed and verified
+in the existing private project at19:17Z; existing source/manifest/access/Properties
+and production API20/editor unchanged. Both tick/installer are selectable. No cloud
+execution or clock installation has occurred. Token/configuration entry remains
+pending because browser/native UI control is unavailable; no broader CLI token was
+reused. Exact instructions are in the restricted private activation/cloud-static/
+OWNER_ACTION.md; no token or config belongs in chat/Git. Owner performs only token/
+property entry and ONE pp4CloudSnapshotTick execution, then reports Done. No debugger
+or return-value capture is needed; inspect the resulting GitHub commit/CI independently.
+
+Public monitor IS installed as the sole-file main commit796efdef, workflow run
+42278582488 SUCCESS (HEALTHY at19:19:26Z). It has no private Google or publish access.
+The publisher trigger remains OFF until first cloud publication is fully verified.
+Subsequent scheduled publisher execution is still required for completion. Current
+static snapshot expiresNov6,4:39PM Pacific; approved API-profile rollback remains
+available if this one-time owner setup cannot finish before expiry.
 
 ## Decision and boundary
 
@@ -51,7 +71,7 @@ No registry setter/recovery/initialization method is available through that adap
    Store it ONLY in private staging Script Properties as PP4_CLOUD_GITHUB_TOKEN.
    Never put it or private mappings/recovery exports into GitHub Secrets/Actions.
    Choose an owner-reviewed finite expiration; record renewal privately. No token
-   has been created or stored by this preparation task.
+   has been created or stored yet.
 3. Privately set PP4_CLOUD_SNAPSHOT_CONFIG with enabled:true,
    cloudPublicationApproved:true, ownerEmail, existing endpoint, approvedAliases
    (23 existing `{player,alias}` source-reference approvals), and initially
@@ -76,7 +96,7 @@ No registry setter/recovery/initialization method is available through that adap
    main change is needed. It checks out develop with contents-read/no persisted
    credentials, inspects public JSON every15minutes, and cannot publish or call
    the raw API. Confirm GitHub failure notifications and Apps Script trigger failure
-   notifications reach the owner. No monitor has been installed/activated.
+   notifications reach the owner. The monitor is now installed and its first run passed.
 
 The existing pages.yml stays manual/develop-only. Google commits sanitized JSON to
 public-data/snapshot.json on develop using the Contents API with optimistic SHA,

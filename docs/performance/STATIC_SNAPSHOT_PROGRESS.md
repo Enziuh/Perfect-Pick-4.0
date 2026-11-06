@@ -1,6 +1,66 @@
 # Static snapshot progress
 
-## CURRENT RESUME — ZERO-MAC CLOUD CANDIDATE; activation approval pending
+## CURRENT RESUME — CLOUD FILE INSTALLED; one-time private owner entry required
+
+Owner approved activation after4e51c0c. Completed bounded operations onNov6:
+- Fresh API20 health/schema/scoring parity PASS at19:14:54Z:272 games/122 FINAL,
+  all23 IDs/aliases unchanged;1–8 history exact, Week9 approved scoring exact
+  (9 missed-opening selections), future protected data withheld. No backend repair.
+- At19:17:00Z added ONLY the reviewed sealed CloudSnapshotPublisher.gs to the
+  existing private registry project using verified owner access. Backed up the
+  complete editor first. All prior source/manifest/five scopes/access/deployments
+  unchanged; production API20 deployment AND editor hashes unchanged. No Properties
+  or registry writes and no Google cloud function/trigger executed. Both public-named
+  pp4CloudSnapshotTick and pp4InstallCloudSnapshotClock confirmed selectable by API.
+- Reviewed monitor copied EXACTLY to default main as its ONLY changed file:
+  commit796efdef99eeca641f79e3c065cfdcad48e9c2bc,
+  .github/workflows/static-monitor.yml. No other main source/settings changed.
+  First manual monitor run42278582488 SUCCESS: HEALTHY,319min remaining at19:19:26Z.
+  The configured public cron is7/22/37/52 minutes. No private data/Google credentials
+  or publication permissions are given to this monitor.
+- Targeted cloud tests12/12 PASS; prior complete389/389 suite remains valid (no
+  runtime source modifications this activation). Sealed package verified before
+  and after installation. Working branch remains develop.
+
+NOT COMPLETE: no fine-grained cloud token created/stored; private cloud config entry
+not yet verified; no initial cloud publication, publisher clock or subsequent
+scheduled publisher execution. Do not claim automatic publishing is operational.
+No broader CLI credential was copied to Google. No new scopes/public endpoint.
+
+Exact blocker: browser/native automation repeatedly failed startup (no accessible
+browser/session). GitHub personal fine-grained token creation and Google Script
+Properties entry require owner UI access. Script source/deployment API permits the
+verified additive installation but does not provide a Script Properties setter.
+Do NOT solve this by adding an administrative HTTP route, broader OAuth/client,
+public registry endpoint, or using a broad CLI credential as the publisher token.
+
+The minimal private owner instructions/config are OUTSIDE Git under the existing
+restricted owner registry directory: activation/cloud-static/OWNER_ACTION.md and
+owner-config.private.json. They include a verified private editor link and exact
+property contents. Owner creates token for ONLY Enziuh/Perfect-Pick-4.0, Contents RW
+and Actions RW (+automatic Metadata read); stores it directly in Google property
+PP4_CLOUD_GITHUB_TOKEN. Those permissions are necessary for reviewed Contents PUT
+and pages.yml dispatch. No other permission/repository. Then set
+PP4_CLOUD_SNAPSHOT_CONFIG from private JSON (installer flag stays false) and run
+pp4CloudSnapshotTick ONCE. Return only Done or a fixed error label, NEVER secrets.
+The normal editor does not show return objects; no debugger/logging needed.
+
+Exact next resume after owner Done: inspect the new develop JSON commit and static
+Pages workflow; validate all23 IDs,1–8 history, Week9 safe aggregates and absent
+protected data, exact38-file published artifact/fresh expiry; measure real site.
+Only after success set installPublisherTriggerApproved true and execute the reviewed
+installer (owner UI if browser still unavailable). Observe an actual later scheduled
+pp4CloudSnapshotTick execution before marking automation ACTIVE. No Mac service.
+Keep production API20/URL/football writers/triggers unchanged.
+
+Installed snapshot remains manual static7b93c23 with expiry2026-11-07T00:39:05.315Z
+(Nov6,4:39PM Pacific). No new cloud publication timestamp exists yet. Do not extend
+expiry artificially. If setup cannot finish in time use the approved API rollback:
+gh workflow run pages.yml --ref develop -f profile=api, verify/deploy and inspect site;
+API20 remains untouched, known-good baseline6d1adea. Registry/backups remain intact.
+
+
+## Previous preparation — approval now granted; see current resume
 
 Owner's latest requirement supersedes ALL previous Mac scheduler instructions:
 **never load the LaunchAgent; no ongoing Mac/Keychain dependency**. Existing local
