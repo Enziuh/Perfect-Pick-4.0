@@ -192,3 +192,45 @@ checkpoint follow-up records the resumable commit; no runtime/source change foll
 that verification. Resume with `git switch develop` and read this final section;
 next operation is owner review/approval of the private Week9 impact and coordinated
 release, not a repeat read or a production deployment.
+
+## Owner-approved production activation — in progress
+
+Owner approved the reviewed Week9 scoring impact, dashboard4-only API promotion and
+coordinated Pages4.1 release. Weeks1–8 remain protected legacy results. The existing
+production18 deployment and its exact editor source have recoverable private backups;
+previous published Pages rollback is e6e3e92e7668930217b7e0bb4cba9e8f5f55923e.
+The existing Pages artifact was downloaded privately for rollback reference.
+
+Full357/357 regression tests PASS again, zero failures/skips, before activation.
+Log:/private/tmp/pp41-production-tests.log. No tests, routes or publication allowlists
+were weakened. The clean candidate still differs from immutable18 only in
+00_Config_Setup's dashboard4 event-forwarding branch and PerfectPick4_Json; original
+writer/ESPN/Form source and manifest remain byte-identical to18.
+
+Private activation configuration limits new scoring to Week9 onward. The owner's
+conditional Week9 activation is represented privately only after matching official
+Form Control CLOSED and independently observed linked Form not accepting responses.
+Runtime linked-Form/responder verification remains mandatory and withholds current-week
+protected data on reopening, mismatch or access failure. No future week disclosure is
+approved. Season scope may include the specifically approved Week9 contribution;
+Weeks1–8 source selections, ranks, champions and prize outcomes remain unchanged.
+Actual source configuration, identities, endpoints and per-player records stay outside
+Git. Existing private staging will be restored exactly after read-only candidate tests.
+No production promotion is considered successful until metadata, original actions,
+privacy, scoring and published desktop/mobile browser checks pass. Static publisher
+and static delivery remain disabled. If a coordinated check fails, restore18 and the
+previous working Pages release; do not change scoring records, Forms or triggers.
+
+### Staging-caught clock ordering corrected before promotion
+
+The first activation test correctly stopped before production: schedule evidence read
+inside the request was timestamped after the provider's original scoring clock, so it
+was treated as future-dated and eligibility was unverified. The provider now takes a
+post-schedule-read scoring clock. Genuine future evidence is still rejected; no clock
+skew allowance, privacy bypass or relaxed freshness window was added. A fabricated
+regression covers both delayed valid observation and truly future-dated evidence.
+
+Updated full358/358 tests PASS, zero failures/skips, including local browser tests.
+Log:/private/tmp/pp41-production-clock-tests.log. Production remains18 during this
+correction; staging source was restored exactly. Next: retest the corrected candidate
+against the approved private Week9 impact before creating/promoting its clean version.

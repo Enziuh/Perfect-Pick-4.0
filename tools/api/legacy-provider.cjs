@@ -19,7 +19,7 @@ function createLegacyProvider(deps){
   try{
    const cfg=deps.config();if(cfg?.enabled!==true)return {state:'DISABLED'};
    if(cfg.publicationApproved!==true)throw Error();
-   const now=deps.now(),at=new Date(now).toISOString(),revision=cfg.revision;
+   let now=deps.now();const at=new Date(now).toISOString(),revision=cfg.revision;
    if(!Number.isSafeInteger(revision)||revision<0)throw Error();
    const ctx=deps.context(),prizes=deps.prizes(ctx),games=[],definitions=new Map();
    const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ').replace(/\s+vs\.?\s+/g,' vs ');
@@ -47,7 +47,7 @@ function createLegacyProvider(deps){
    policy.periods=(prizes.periods||[]).map(p=>({key:p.periodKey,startWeek:p.startWeek,endWeek:p.endWeek,designatedGame:p.tiebreakRule?.method==='Combined Points'?definitions.get(p.endWeek+'|'+norm(p.tiebreakRule.game))?.game??null:null}));
    let observedForm=null;
    if(late.applies(policy,Number(prizes.formControl?.activeWeek))){try{observedForm=deps.formState(ctx);}catch{}if(observedForm?.responderMatchesVerified!==true||observedForm.acceptingResponses!==false)policy.closures.delete(Number(prizes.formControl?.activeWeek));}
-   if(policy.lateEntryRules===late.RULE&&typeof deps.cutoffEvidence==='function'){const records=deps.cutoffEvidence(ctx,definitions,[...policy.closures.keys()].filter(w=>late.applies(policy,w)));if(!Array.isArray(records)||records.length>18||records.some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryEvidence=new Map(records.map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==records.length)throw Error();}
+   if(policy.lateEntryRules===late.RULE&&typeof deps.cutoffEvidence==='function'){const records=deps.cutoffEvidence(ctx,definitions,[...policy.closures.keys()].filter(w=>late.applies(policy,w)));if(!Array.isArray(records)||records.length>18||records.some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryEvidence=new Map(records.map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==records.length)throw Error();now=deps.now();policy.now=now;}
    const latest=policy.closures.size?(policy.lateEntryRules===late.RULE&&[...policy.closures.keys()].some(w=>late.applies(policy,w))?deps.nativeResponses(ctx).flatMap(response=>{let time;try{time=Date.parse(policy.timeParser.parse(response.Timestamp));}catch{return [];}if(!Number.isFinite(time)||time<=0||time>now)return [];return [...new Set(ctx.games.filter(g=>String(response[g.header]??'').trim()).map(g=>g.week))].map(week=>({phone:normalizePhone(response['Phone Number']),week,timestamp:time,response})).filter(r=>r.phone&&late.applies(policy,r.week));}).concat(Object.values(deps.latest(ctx.responses,ctx.games)).filter(r=>!late.applies(policy,r.week))):Object.values(deps.latest(ctx.responses,ctx.games))):[];
    // Match the original season scope: every created response-game week, not just disclosed weeks.
    const seasonWeeks=[...new Set(ctx.games.map(g=>g.week))].sort((a,b)=>a-b);
