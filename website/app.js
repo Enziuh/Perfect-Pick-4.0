@@ -821,6 +821,7 @@
   }
 
   function resetRenderedData(message) {
+    renderFormControl_({reportedStatus:'UNKNOWN',status:'UNKNOWN'});
     document.querySelectorAll('[data-view-state]').forEach(panel=>{delete panel.dataset.viewState;panel.removeAttribute('aria-busy');});
     weekCache.clear();monthlyCache.clear();renderedViews.clear();matchData=null;matchModels=[];eligiblePickWeeks=[];
     picksRequest++;monthlyRequest++;if(deadlineTimer){clearInterval(deadlineTimer);deadlineTimer=null;}

@@ -728,3 +728,11 @@ publication and adaptive publisher remain OFF. Preserve published3a9c331 as roll
 Then consolidate owner approval for the narrow timestamp repair/type verification;
 static activation must wait for fresh parity/performance, explicit Week9 retention
 (if full current/season views desired), and private publisher access/input approval.
+
+Frontend milestone ba8c16c committed/pushed; API-profile Pages run42253115006 verify
+and deploy SUCCESS. No static data or Apps Script source was uploaded. The existing
+API20 timestamp blocker is unchanged by that frontend-only release. Final small UI
+correction clears stale entry badges/deadline timers on unavailable data and avoids
+an endless initial Checking label. Full371/371 tests passed again, zero failed/skipped:
+/private/tmp/pp-v20-status-all-tests.log. Next publish this tested status correction
+through the same api profile, then verify actual rendered error-state copy/layouts.
