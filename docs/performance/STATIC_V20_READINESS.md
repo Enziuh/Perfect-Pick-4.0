@@ -1,8 +1,18 @@
-# Static v20 delivery — LIVE; unattended scheduler pending
+# Static v20 delivery — LIVE; ZERO-MAC cloud activation pending
 
 Production API20 remains unchanged on its existing URL. Pages uses the verified
 static profile from7b93c23 (workflow42273079410). Only sanitized approved JSON is
 in Git; mappings, credentials, recovery exports and raw submissions remain private.
+
+## Latest owner requirement — no Mac dependency
+
+Do NOT load the prepared local LaunchAgent or use Keychain for ongoing production.
+The disabled cloud candidate reuses the existing private Google Properties registry,
+projects/validates public JSON inside Google, and sends only sanitized data to the
+existing GitHub Pages pipeline. No new public endpoint or API20 change is needed.
+All23 IDs are preserved; Week9 protected retention remains forbidden. See
+[cloud activation and operations](../operations/CLOUD_STATIC_PUBLISHER.md).
+388 regression tests passed. No cloud upload, token, trigger or monitor is activated.
 
 ## Timestamp resolution — API20 unchanged
 
@@ -80,7 +90,7 @@ snapshot remains valid. Its content digest includes retention authority and all 
 score/closure/eligibility changes, excludes only observation-token churn. Partial,
 stale, malformed or unsafe generations never replace last-good data.
 
-Implemented owner-publisher.cjs uses the existing owner Mac/private environment and existing
+Superseded local prototype owner-publisher.cjs used the existing owner Mac/private environment and existing
 GitHub CLI authentication. Decrypt/verify the pinned generation1 recovery input in
 private memory; never pass mapping/key to Actions. Cloud remains primary; new identity
 references must stop for owner reconciliation. The owner approved the verified encrypted recovery mirror/Keychain as private
@@ -98,11 +108,11 @@ content. No API writer or existing ESPN/Form trigger is part of the publisher.
    Restricted local snapshots are not public CDN performance guarantees.
 3. Week9 protected retention is explicitly NOT approved. It stays excluded; aggregate
    standings remain available. Do not request scope expansion for this release.
-4. Static profile/first exact artifact are approved, published and verified. The
-   owner-Mac worker and private config are ready but scheduler is NOT loaded: pmset
-   reports sleep1. Owner must confirm reliable awake/logged-in availability (or
-   approve a specific power change) before launch-agent activation. No power setting
-   was changed. Keep API20 and api-profile rollback6d1adea unchanged.
+4. Static profile/first artifact are published and verified. The local worker is
+   retired from the activation plan; do NOT enable its scheduler. Approve the
+   additive private Google cloud publisher, repository-scoped credential, publisher
+   clock and independent default-main public monitor described in the operations
+   document. Keep API20 and api-profile rollback6d1adea unchanged.
 
 ## Existing writer cadence (source inspection only)
 

@@ -1,6 +1,87 @@
 # Static snapshot progress
 
-## CURRENT RESUME — STATIC LIVE; owner-Mac availability blocks scheduler only
+## CURRENT RESUME — ZERO-MAC CLOUD CANDIDATE; activation approval pending
+
+Owner's latest requirement supersedes ALL previous Mac scheduler instructions:
+**never load the LaunchAgent; no ongoing Mac/Keychain dependency**. Existing local
+recovery materials remain untouched. Live Pages remains static release7b93c23,
+workflow42273079410 success, current API20/URL and football writers unchanged.
+Last prior checkpoint9aa477b. New candidate changes are nonproduction only.
+
+Implemented, not activated:
+- Pure cloud-projector reuses existing decode/projectReply/retention/aggregate gates;
+  production-policy extracted unchanged from pages-artifact for Google+CI reuse.
+- Existing private Google project can read its existing generation1 registry with a
+  get-only adapter, owner identity/lock/checksum/high-water checks, no initialization,
+  recovery writes, new IDs, phone data transfer or Keychain. Exactly23 IDs required.
+- Additive CloudSnapshotPublisher.gs generator: conservative Apps Script ES2020,
+  disabled without private config. No HTTP handler, new public endpoint/web deployment,
+  direct Sheet/Form access, scoring writer, or modification of API20. Never upload
+  one-file candidate as a replacement project/clasp push that deletes staging files.
+- Private Google clock state machine: fresh read-only API20 source -> strict public
+  V2 projection -> exact safe aggregate/retention checks -> sanitized GitHub Contents
+  commit on develop -> existing manual pages.yml profile=static dispatch. GitHub
+  receives ONLY public snapshot; private registry/source payload never goes there.
+- Token proposal: one-repository fine-grained Contents-write+Actions-write credential
+  in private Google Properties only. No new credential has been created/installed.
+-15-minute Google publisher wake-up, existing adaptive15/30/~6h planner with30-minute
+  expiry margin; first cloud publication exercised, later unchanged generations skip
+  when safe. Public-only pre-write intent recovers lost write acknowledgments;
+  missing dispatch retries; CI gets one bounded retry. Expired pending candidates
+  never re-dispatch: missed-clock recovery reads a fresh source with the same IDs. Verification needs successful
+  CI plus exact downloaded public hash; errors are fixed labels without private data.
+- Independent public-monitor tool/candidate checks only Pages JSON, alerts under15min
+  remaining/invalid/expired. Default branch read-only verified MAIN, repo PUBLIC.
+  Candidate workflow is inert tools/snapshots/cloud-monitor.workflow.yml, not active
+  .github content. Adding ONLY that monitor to main needs explicit owner approval.
+
+Historical protected retention **Weeks1–8 ONLY**. Week9/future selections, predictions,
+voting and per-game eligibility remain absent regardless of Form closure/reopening.
+Safe weekly/season aggregates remain. No scoring recomputation or historical changes.
+A retained snapshot can contain approved aliases/random IDs, never raw source keys.
+
+Verification completed: initial focused tests passed; full pre-final suite387/387
+PASS,0 failures/skips. Final pre-recovery cloud suite11/11 PASS (native Apps Script execution
+mock, disabled/owner boundaries, read-only registry, public-only HTTP bodies, schema,
+retention, crash/CI recovery, monitoring, package seal/ES2020). Complete pre-recovery suite **388/388 PASS**,0 failures/skips (60.4s).
+Final cloud suite **12/12 PASS** includes missed-clock expiry recovery; final complete suite **389/389 PASS**,0 failures/skips (59.9s). Captured REAL source comparison
+PASSED against existing generator byte-for-byte and all23 CURRENT published IDs;
+this used existing private captured input/mirror, no new cloud registry read/live
+Google execution. Native emulation cannot substitute for the separately approved
+first real Google-clock end-to-end run.
+
+Sealed additive candidate: tmp/cloud-publisher-package-final/CloudSnapshotPublisher.gs;
+adjacent seal stays local. Actual property config/token/mapping are NOT in candidate
+or Git. Candidate inspection and regeneration are offline only. Existing frontend,
+public-data snapshot, pages.yml and Apps Script sources are unchanged by this task.
+Docs/operations/CLOUD_STATIC_PUBLISHER.md contains exact activation/recovery steps,
+permissions, quota math, failure monitoring and primary-source references.
+
+Outstanding ONE owner authorization group:
+1. Add only sealed cloud file to EXISTING private registry project (preserve full
+   current source/manifest/Properties), configure approved owner/aliases/source,
+   create/store the repository-scoped token privately, perform first cloud publication
+   + CI/CDN verification. No new Google scopes expected; stop if more are requested.
+2. Install ONLY pp4CloudSnapshotTick's15-minute trigger using reviewed guarded
+   installer AFTER successful cloud verification. Existing football triggers untouched.
+3. Add ONLY independent public monitor workflow to default main; no other main edits.
+   Confirm Google trigger/GitHub failure notifications. No scheduled workflow active now.
+
+Do NOT restart audits/registry setup or change production while waiting. Exact next:
+check latest git status/log; read CLOUD_STATIC_PUBLISHER.md; after authorization
+verify private target/editor backup and one-file diff, privately set config/token,
+exercise pp4CloudSnapshotTick, verify all23 IDs/retention and CI/CDN, then install
+publisher clock and independent monitor. No Mac power/login requirement remains.
+
+Live static first snapshot still expires2026-11-07T00:39:05.315Z (Nov6,4:39PM Pacific).
+No stale token renewal or silent fallback. If activation cannot finish before expiry,
+request/execute reviewed API-profile rollback as authorized; do not claim continuous
+service from an unactivated candidate. Rollback remains existing API20 + api Pages
+profile, known-good frontend6d1adea: gh workflow run pages.yml --ref develop -f profile=api.
+Do not rewrite history or delete registry/recovery data; public caches remain public.
+
+
+## Superseded Mac checkpoint — DO NOT ACTIVATE LOCAL SCHEDULER
 
 ### Published release and authorization
 
