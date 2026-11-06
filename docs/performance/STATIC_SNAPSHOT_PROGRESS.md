@@ -736,3 +736,10 @@ correction clears stale entry badges/deadline timers on unavailable data and avo
 an endless initial Checking label. Full371/371 tests passed again, zero failed/skipped:
 /private/tmp/pp-v20-status-all-tests.log. Next publish this tested status correction
 through the same api profile, then verify actual rendered error-state copy/layouts.
+
+Final privacy review preserved retention expiry separately from volatile API tokens in
+the unchanged-content digest. A shortened authorization now forces revalidation rather
+than being treated as unchanged observation time. No publisher was enabled. Full371
+regressions passed again, zero failed/skipped:
+/private/tmp/pp-v20-retention-final-tests.log. Latest frontend status source2699043;
+final static-helper correction/checkpoint commit follows before api-profile dispatch.
