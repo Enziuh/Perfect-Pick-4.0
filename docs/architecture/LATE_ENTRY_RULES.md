@@ -48,11 +48,16 @@ ranks remain points-based. Perfect Week requires ALL games eligible, selected, F
 and correct. Only eligible submitted team picks enter vote counts/percentages.
 
 Unverified cutoffs block monthly confirmation. Points remain unchanged by tiebreakers.
-A clear finalized points leader needs no prediction decision. Existing rules define
-closest absolute combined-score difference but NO late-entry prediction cutoff.
-Pending the owner's decision, late-first predictions are withheld as timing unverified;
-if relevant tied leaders include them, no monthly champion/payout is confirmed. No
-new tiebreaker deadline has been invented. The owner decision is pending separately.
+A clear finalized points leader needs no prediction decision. Owner-approved late
+monthly prediction policy: the retained first late entry's valid prediction is eligible
+when submitted AT OR BEFORE the designated game's verified official kickoff. This is
+independent of the opening game's earlier weekly deadline. A submission one millisecond
+after designated kickoff is ineligible (MISSED_DEADLINE,total:null). Unknown kickoff,
+unresolved rescheduling, or unverifiable entry retention is UNVERIFIED_CUTOFF,total:null;
+relevant tied championships remain unconfirmed. Late resubmissions cannot replace the
+retained prediction; a valid on-time entry remains protected. Missing/invalid numerical
+predictions are still ineligible; equal closest distances remain UNRESOLVED TIE. No
+points/ranks change because of a prediction result. CLOSED-only disclosure still applies.
 
 Pool arithmetic/23-participant estimate assumption stay unchanged. Legacy accounting
 allocations are not reauthorized under a new scorer. Only estimates are calculated;
@@ -89,7 +94,8 @@ schedule evidence through existing ESPN reads, using PP3.TIMEZONE.
 `pp4-public/1` adds discriminated scoringBasis ELIGIBLE_SUBMITTED_FINAL_PICKS. Only
 this basis permits per-selection eligibility ELIGIBLE/MISSED_DEADLINE/UNVERIFIED_CUTOFF;
 one record per scheduled game is required, with nullable team for a missing pick.
-Prediction timing may be UNVERIFIED_CUTOFF only with total:null. No submission times,
+Prediction timing is required for the new basis: ELIGIBLE, MISSED_DEADLINE or
+UNVERIFIED_CUTOFF. Ineligible/unknown timing requires total:null. No submission times,
 phones, keys or raw records are public. Validator reconciles eligible-only points,
 denominators and voting. Static projection allowlists these fields but is NOT enabled.
 
@@ -106,7 +112,8 @@ Before activation: complete a bounded private native-timestamp/identity comparis
 verified historical deadlines and schedule revisions. `compare-late-entry.cjs` returns
 only affected-entry counts and aggregate point/denominator/Perfect Week deltas; missing
 cutoffs produce BLOCKED,not zero changes. Review all affected weeks before approving
-retroactive scoring. Decide late monthly prediction eligibility. Then explicitly approve
+retroactive scoring. Late monthly prediction cutoff is now owner-approved as designated
+game kickoff. Then explicitly approve
 the tested additive dashboard4 production candidate (extension plus narrow event-forwarding
 routing patch) AND synchronized Pages release. Both client generations remain usable;
 Rules/FAQ become active only when the validated new scoring basis is returned.

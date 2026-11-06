@@ -28,10 +28,17 @@ function selectEntry(rows,evidence,now,maxAgeMs){
  return {entry:tied[0],state:deadline===null?'UNVERIFIED CUTOFF':ontime.length?'ON TIME':'LATE FIRST ENTRY',ignored:valid.length-1};
 }
 function eligibility(timestamp,game,evidence,now,maxAgeMs){const time=instant(timestamp),limit=cutoff(game,evidence,now,maxAgeMs);return time===null||limit===null?'UNVERIFIED_CUTOFF':time<=limit?'ELIGIBLE':'MISSED_DEADLINE';}
+function predictionEligibility(timestamp,game,evidence,now,maxAgeMs){
+ const time=instant(timestamp);
+ if(time===null||!verified(evidence,now,maxAgeMs)||!Array.isArray(evidence.schedule))return 'UNVERIFIED_CUTOFF';
+ const matches=evidence.schedule.filter(g=>g.game===game),row=matches[0];
+ if(matches.length!==1||row.verified!==true||row.revision!==evidence.revision||row.unresolvedReschedule===true||instant(row.kickoff)===null)return 'UNVERIFIED_CUTOFF';
+ return time<=instant(row.kickoff)?'ELIGIBLE':'MISSED_DEADLINE';
+}
 function score(entry,games,evidence,now,maxAgeMs){
  if(!entry)return {state:'NO SUBMISSION',points:0,completedGames:0,totalPicks:0,perfectWeek:false,selections:[]};
  const selections=games.map(g=>{const matches=entry.selections.filter(s=>s.game===g.game);if(matches.length>1)throw Error('Duplicate selection');const pick=matches[0]?.pick??null,eligible=eligibility(entry.timestamp,g.game,evidence,now,maxAgeMs);const state=eligible==='MISSED_DEADLINE'?'MISSED DEADLINE':eligible==='UNVERIFIED_CUTOFF'?'UNVERIFIED CUTOFF':!pick?'NO PICK':g.status!=='FINAL'?'PENDING':pick===g.winner?'CORRECT':'INCORRECT';return {game:g.game,pick,eligibility:eligible,state,points:state==='CORRECT'?1:0};});
  const eligible=selections.filter(s=>s.eligibility==='ELIGIBLE'&&s.pick),completed=eligible.filter(s=>games.find(g=>g.game===s.game).status==='FINAL'),points=selections.reduce((n,s)=>n+s.points,0);
  return {points,completedGames:completed.length,totalPicks:eligible.length,perfectWeek:games.length>0&&points===games.length&&completed.length===games.length&&eligible.length===games.length,selections};
 }
-module.exports={RULE,instant,verified,cutoff,selectEntry,eligibility,score};
+module.exports={RULE,instant,verified,cutoff,selectEntry,eligibility,predictionEligibility,score};

@@ -22,8 +22,9 @@ Week9 diagnostics as part of this scoring task; their checkpoints remain separat
 - Rules/FAQ include Thursday/Friday/Sunday examples and reopening/resubmission policy.
   These sections stay hidden unless validated data declares eligibility-aware scoring.
 - Estimated23-participant pools unchanged; old accounting not silently reapproved.
-  Unknown cutoffs block finalized rollover/monthly confirmation. Late-tiebreak timing
-  is explicitly unverified until owner decides; no new deadline is invented.
+  Unknown cutoffs block finalized rollover/monthly confirmation. Owner-approved monthly
+  prediction cutoff is the designated game kickoff, inclusive, for the retained entry.
+  After kickoff is ineligible; unverifiable entry/kickoff evidence remains unknown.
 - Existing dashboard4 query negotiates rules=LATE_ENTRY_V1; server must also explicitly
   opt in. Narrow router proposal forwards its existing event only. Old clients/API18
   retain legacy output; new Rules remain hidden on legacy responses. No new endpoint.
@@ -47,17 +48,19 @@ Need bounded owner-authorized native Responses/private identity comparison plus 
 weekly deadlines and authoritative schedule revisions. No actual private records or
 identifiers have been copied into Git/public artifacts.
 
-Existing3.0 rules define combined-score tiebreaker comparison but not late prediction
-timing. One consolidated owner question is pending: weekly deadline vs designated-game
-kickoff for late-first monthly predictions. No production activation until decided and
-implemented/tested. Original3.0 actions remain legacy references; only dashboard4 opt-in
-has new rules, so any desired legacy-site scoring adoption needs separate review.
+Owner decision RECEIVED: a late first-entry prediction may count at or before the
+designated game's verified official kickoff. Implemented in pure scoring, projector,
+strict validator, player/matrix display and gated Rules/FAQ. It cannot be changed by a
+later prohibited resubmission. Shared ranks/points and equal-distance unresolved ties
+remain unchanged. No further tiebreaker policy approval is needed. Production/history
+review and deployment authorization remain pending. Original3.0 actions remain legacy
+references; only dashboard4 opt-in has new rules.
 
 ## Verification complete
 
-Final full341/341 PASS, zero failed/skipped, in isolated validation worktree:
+Previous full341/341 PASS, zero failed/skipped, in isolated validation worktree:
 /private/tmp/pp4-late-entry-validation. Source-only scratch copy; no private datasets.
-20 focused late-entry tests PASS; full suite includes browser missed labels/matrix/
+Previous20 focused late-entry tests PASS; full suite includes browser missed labels/matrix/
 comparison,360/390/430/768/1440 widths, Rules/FAQ basis gating, old API compatibility,
 retry/coalescing/privacy/scoring/champion/registry/static artifact regressions.
 Artifact/privacy/security stage and syntax/whitespace checks PASS. Exact publication
@@ -80,9 +83,9 @@ Implementation/test milestone COMPLETE;8191922 committed and pushed normally.
 No API upload, Google execution, Pages deployment or static publication occurred.
 Resume in ORIGINAL project on develop, not the detached validation worktree. Read this
 checkpoint and LATE_ENTRY_RULES.md; do not rebuild completed scoring/UI or rerun consent.
-Pending owner question: late monthly prediction cutoff (official weekly deadline vs
-designated game's kickoff). Current implementation withholds unknown late predictions;
-relevant tied championships remain unconfirmed. Implement/test only the chosen policy.
+Tiebreaker decision implemented: designated-game kickoff, inclusive, on retained entry.
+Do not ask it again. Final346-test verification complete; continue only with
+missing historical evidence and explicit controlled deployment approval.
 
 Obtain missing authoritative historical weekly deadlines and schedule revisions, then
 run bounded private native-entry comparison using compare-late-entry.cjs. Missing
@@ -99,3 +102,12 @@ Coordinated Pages release then activates the already-gated Rules/FAQ with new sc
 API18 can still serve the new frontend safely with legacy rules hidden. No new host/API
 or permissions required by prepared source. Do NOT deploy, enable static publication,
 reopen a Form or change triggers on the basis of this local milestone.
+
+## Current follow-up validation
+
+Owner-approved late-prediction update has25 focused tests PASS, including before/exact/
+after kickoff, missing/postponed evidence, protected on-time/first-late predictions,
+equal-distance unresolved ties, unchanged points/shared ranks and OPEN privacy.
+Final full346/346 PASS, zero failed/skipped, plus artifact/privacy/security checks.
+Syntax and whitespace checks PASS. Logs:/private/tmp/pp4-late-tiebreak-all-tests.log
+and pp4-late-tiebreak-stage.log. No live operation or deployment.

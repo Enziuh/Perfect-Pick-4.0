@@ -75,7 +75,7 @@ function validatePublicInternal(snapshot,trust){
     object(p,['player','alias','selections'],['prediction']);approved(p);
     const selections=list(p.selections,32);unique(selections.map(s=>s.game));if(snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS')need(selections.length===[...games.values()].filter(g=>g.week===w.week).length);
     for(const s of selections){object(s,['game','team'],snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'?['eligibility']:[]);const g=games.get(s.game);need(g&&g.week===w.week&&([g.home,g.away].includes(s.team)||snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'&&s.team===null));if(snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS')need(['ELIGIBLE','MISSED_DEADLINE','UNVERIFIED_CUTOFF'].includes(s.eligibility));}
-    if(p.prediction!==undefined){object(p.prediction,['game','total'],snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'?['eligibility']:[]);if(p.prediction.eligibility!==undefined)need(p.prediction.eligibility==='UNVERIFIED_CUTOFF'&&p.prediction.total===null);const g=games.get(p.prediction.game);need(g&&g.week===w.week&&(p.prediction.total===null||integer(p.prediction.total)));}
+    if(p.prediction!==undefined){object(p.prediction,['game','total'],snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'?['eligibility']:[]);if(snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS')need(['ELIGIBLE','MISSED_DEADLINE','UNVERIFIED_CUTOFF'].includes(p.prediction.eligibility)&&(p.prediction.eligibility==='ELIGIBLE'||p.prediction.total===null));const g=games.get(p.prediction.game);need(g&&g.week===w.week&&(p.prediction.total===null||integer(p.prediction.total)));}
    }
   }
   if(w.votes!==undefined){

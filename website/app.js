@@ -495,7 +495,8 @@
   function renderPlayerPrediction(player, data) {
     if (!publicPicks(data) || !data.tiebreak?.enabled) return '';
     if (!data.tiebreak.revealed) return '<p class="player-prediction">Tiebreak prediction unavailable until publication is confirmed.</p>';
-    if(player.tiebreakTimingUnverified)return '<p class="player-prediction">Tiebreaker eligibility unavailable: the late-entry timing rule needs confirmation.</p>';
+    if(player.tiebreakEligibility==='MISSED_DEADLINE')return '<p class="player-prediction">◷ Tiebreaker MISSED DEADLINE: your retained entry arrived after the designated game’s kickoff.</p>';
+    if(player.tiebreakTimingUnverified)return '<p class="player-prediction">Tiebreaker eligibility unavailable: verified entry or kickoff evidence is missing.</p>';
     const raw = validTiebreakPrediction(player);
     const valid = raw !== null;
     const model = matchModels.find(m => m.game === data.tiebreak.game);
@@ -565,7 +566,7 @@
     $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><th scope="row" class="player-name">${escapeHtml(player.name)}</th>${matchModels.map(model => {
       const pick = model.selections.find(p => p.name === player.name);
       return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick || '—')}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
-    }).join('')}${showPrediction?`<td class="num matrix-prediction">${validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
+    }).join('')}${showPrediction?`<td class="num matrix-prediction">${player.tiebreakEligibility==='MISSED_DEADLINE'?'MISSED DEADLINE':player.tiebreakTimingUnverified?'UNVERIFIED CUTOFF':validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
   }
 
   function populateWeekSelector(weeks, defaultWeek) {

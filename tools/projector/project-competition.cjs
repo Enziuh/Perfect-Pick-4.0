@@ -117,9 +117,10 @@ function weeklyProjection(rawWeek, entry, policy, games) {
       if(period){
         let total=null;
         try{if(gameDefinition(rawWeek.week,raw.prediction?.game,policy)?.game===period.designatedGame)total=normalizeScore(raw.prediction.value);}catch{/* Missing/invalid predictions are ineligible, never zero. */}
-        // No new late-tiebreak deadline is invented. Unknown late policy blocks decisions.
-        if(lateRules&&entryState!=='ON TIME')total=null;
-        pick.prediction={game:period.designatedGame,total,...(lateRules&&entryState!=='ON TIME'?{eligibility:'UNVERIFIED_CUTOFF'}:{})};
+        // Owner-approved: retained entry prediction is eligible through designated kickoff.
+        const timing=lateRules?(entryState==='UNVERIFIED CUTOFF'?'UNVERIFIED_CUTOFF':late.predictionEligibility(raw.timestamp,period.designatedGame,cutoffs,policy.now,policy.maxAgeMs)):null;
+        if(lateRules&&timing!=='ELIGIBLE')total=null;
+        pick.prediction={game:period.designatedGame,total,...(lateRules?{eligibility:timing}:{})};
       }
       return pick;
     }).sort((a,b)=>a.player.localeCompare(b.player));
@@ -134,7 +135,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
       const total=counts[0]+counts[1],home=total?Math.round(counts[0]/total*10000):0;
       return {game:g.game,total,teams:[g.home,g.away].map((team,i)=>({team,count:counts[i],basisPoints:total?(i===0?home:10000-home):0}))};
     });
-    return {table:{scope:'WEEKLY',key:base.key,weeks:base.weeks,state:'AVAILABLE',rows},picks,votes,complete:true,tiebreakUnverifiedPlayers:lateRules?[...latest.values()].flatMap((c,i)=>c.entryState!=='ON TIME'?[approvals[i].player]:[]):[],cutoffUnverified:lateRules&&picks.some(p=>p.selections.some(s=>s.eligibility==='UNVERIFIED_CUTOFF'))};
+    return {table:{scope:'WEEKLY',key:base.key,weeks:base.weeks,state:'AVAILABLE',rows},picks,votes,complete:true,tiebreakUnverifiedPlayers:lateRules?picks.filter(p=>p.prediction?.eligibility==='UNVERIFIED_CUTOFF').map(p=>p.player):[],cutoffUnverified:lateRules&&picks.some(p=>p.selections.some(s=>s.eligibility==='UNVERIFIED_CUTOFF'))};
   }catch{return {table:{...base,reason:'INCOMPLETE'},complete:false};}
 }
 function aggregate(scope,key,weeks,tables) {
