@@ -1,3 +1,66 @@
+## WEEK9 CLOSURE INVESTIGATION — API18 unchanged, owner metadata check pending
+
+Live uncached dashboard4 and summary checked2026-11-06T03:49Z. Both report activeWeek9,
+Form Control CLOSED; official deadline2026-11-06T00:15Z and control Updated00:15:26.672Z
+(Nov5 4:15:26 PM Pacific). dashboard4 Week9 disclosure entry remains UNKNOWN/UNVERIFIED;
+picks/votes absent. Current LIVE Pages browser also labels Picks Closed, selects9,
+playerCards0/voteBars0/privacyProtected:true. No stale frontend payload assumption.
+
+Exact immutable production18 source inspected PRIVATELY: dashboard4 authority has
+approved CLOSED attestations for Weeks1–8 ONLY. No9 record. Verified root cause of
+hidden9 picks is missing independently approved disclosure evidence in backend config,
+not aliases, frontend mapping or a passed deadline. Relevant reviewed source:
+tools/api/legacy-provider.cjs:37–39 and tools/verification/owner-evidence.cjs:37–49.
+Form Control alone intentionally does not authorize disclosure. Preserve this gate.
+
+ACTUAL FORM STATE NOT YET AUTHORITATIVELY CONFIRMED. Verified existing responder URL
+loaded without submitting: HTTP200, browser response form present, no closed notice
+or closedform redirect. This conflicts with control status; do NOT claim actual Form
+closed/open from HTML alone. Trigger execution read via existing OAuth returned403;
+no permission change requested. CLOSED update26s after deadline is CONSISTENT with
+successful scheduled close, not proof of execution. Do not repair/delete/reinstall
+triggers or run closing functions on speculation. Local original closing callback
+apps-script/src/50_Form_Weekly_Setup.js:367–427 verifies Form closure before writing
+PP_FORM_STATUS and control, but actual trigger history still needs owner UI evidence.
+
+Prepared ONE bounded read-only owner-editor function in existing MYSELF/USER_ACCESSING
+staging: TemporaryWeek9ClosureInspection.gs / pp4InspectWeek9ClosureReadOnly, Google
+function index verified. Both exact owner checks precede reads. Reads ONLY Form Control
+A1:H2 (exact headers), linked Form metadata/isAcceptingResponses/getPublishedUrl and
+compares responder to privately verified official URL. Returns only booleans/week/status/
+counts; no private identifiers, question data, raw records or responses. No Properties,
+writers, triggers, endpoints or new scopes. Disabled registry helper remains exact;
+all existing files unchanged. Private source backups/capture/receipts outside repository:
+Application Support/Perfect Pick/Private Registry/activation/week9-closure/.
+
+EXACT NEXT OWNER ACTION: reload private staging, select pp4InspectWeek9ClosureReadOnly
+in TemporaryWeek9ClosureInspection.gs, Run once; send ONLY safe JSON. In original
+production editor's Executions, filter PP_closeFormAtDeadline_ near Nov5 4:15 PM Pacific;
+report status and any redacted error (do NOT run a production function). This metadata
+is inaccessible to current local OAuth. No new OAuth grant is proposed.
+
+SMALLEST CORRECTION PREPARED, NOT ACTIVATED: if Form check confirms9 CLOSED and current
+linked responder matches, obtain owner approval to add ONLY Week9's verified closure
+record to the existing private dashboard4 authority. Reuse current revision and approved
+23 aliases; all original routes/writers/triggers/score/Form logic unchanged. Build from
+immutable18, preserve current editor and deployment settings, test closed9/open-next,
+then require explicit production deployment approval. No false owner attestation is
+created now. If Form is accepting or link mismatched, first reconcile that discrepancy
+and obtain separate approval for ANY production writer/trigger correction; do not
+publish picks on contradictory evidence. No API update or Pages build was deployed.
+
+Registry cleanup COMPLETE per latest STATIC_SNAPSHOT_PROGRESS entry: owner confirmed23
+IDs/generation1/read-back/recovery, initializer/bootstrap removed, exact disabled helper
+restored without Properties access/modification. Never initialize again.
+
+Tests: new fabricated tests exercise original close early/success/failure behavior,
+FormControl/disclosure separation, OPEN privacy, strict owner/metadata read bounds and
+private-output filtering. Full321/321 PASS, zero failed/skipped; artifact/privacy/
+security stage PASS; live responder/Pages checks completed as described above.
+Next task is owner's bounded metadata result + trigger history; do not repeat broad
+audits/setup. No production correction or newly identifiable publication authorized.
+
+
 # Phase 5 — resumable migration checkpoint
 
 Latest state: see **Player-facing completion** at the end. Earlier phase/activation

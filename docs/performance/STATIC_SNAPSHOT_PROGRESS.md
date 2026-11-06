@@ -1,5 +1,36 @@
 # Static snapshot progress
 
+## REGISTRY INITIALIZED AND CLEANED — no further initialization
+
+Owner confirmed successful REGISTRY_INITIALIZATION_VERIFIED receipt:23 unique IDs,
+generation1, exact mapping preserved, cloud read-back and backup recovery successful,
+both owner checks passed. Record this as OWNER-EXECUTED runtime evidence, not an agent
+execution. Do NOT initialize/recover/save again or regenerate/rotate IDs.
+
+Completed safe source-only cleanup: compared remote against verified-init-candidate,
+removed TemporaryOwnerRegistryInitialization (including private bootstrap), verified
+all temporary initialization/bootstrap/consent/inspection function names absent from
+Google function index. Restored EXACT reviewed OwnerIdentityRegistry with null config
+(DISABLED). Explicit five-scope manifest/all other files/access/deployments unchanged.
+No Properties APIs were accessed or modified by cleanup; initialized durable records
+remain separate from source. Backups and macOS Keychain key untouched. Production18,
+ESPN/Forms/Sheets/scoring/Pages and publisher/static delivery unchanged.
+Private receipt: activation/cleanup-verified.private.json and safe owner execution
+receipt cloud-initialization-owner-receipt.private.json outside repository.
+
+A SEPARATE Week9 metadata diagnostic was subsequently added for the owner's new closure
+investigation: TemporaryWeek9ClosureInspection / pp4InspectWeek9ClosureReadOnly.
+This does not access registry Properties or enable the registry. All existing cleaned
+staging files unchanged. See migration checkpoint's WEEK9 CLOSURE INVESTIGATION entry.
+Remove that new temporary file after its safe owner receipt; do not rerun registry setup.
+
+Static activation remains OFF. Durable registry initialization is complete per owner
+receipt; unattended authorized publisher access still requires validation before final
+static refresh/publication approval. Do not confuse Week9 live disclosure with previously
+approved historical1–8 static retention. No new static retention/disclosure approval9.
+Validation: full321/321 PASS, zero failed/skipped; artifact/privacy/security stage PASS.
+Registry source hash/function-index cleanup assertions passed; no Properties API used.
+
 ## CURRENT HOLD POINT — owner identity/empty namespace VERIFIED; initialization READY
 
 Resumef40a183. Owner supplied successful editor reports: OWNER_IDENTITY_VERIFIED,
