@@ -1,6 +1,64 @@
 # Static snapshot progress
 
-## CURRENT RESUME — restored format; API20 HEALTHY
+## CURRENT ACTIVATION — controlled static release prepared
+
+Owner approved static production activation with historical retention **Weeks1–8
+ONLY**. Week9 may reopen; it and all future weeks NEVER acquire durable protected
+publication authority from Form closure. No Week9 picks, predictions, votes or
+per-game eligibility enter public JSON. Aggregate weekly/season totals are approved.
+API20, its URL/editor, Sheets/Forms, writers and triggers remain unchanged.
+
+Recovered interrupted local suite:376/376 PASS, zero skips/failures. Repeated complete
+suite after Form-link adjustment:376/376 PASS. Final publisher scheduling-margin
+regression and related privacy/snapshot suites:29/29 PASS. New suite total expected
+377; CI must confirm before upload. Actual real-candidate Chrome checks recorded10
+cold/repeat samples at360/390/430/768/1440: all DOM assertions passed, historical
+player/matrix working, Week9 protected DOM absent,21 weekly aggregate/23 season rows,
+all32 logos and approved Form link work, no external browser data requests/overflow.
+The local profiler reached all samples but its teardown did not complete; do not
+confuse that harness cleanup with a fully completed standalone browser process.
+Existing full-suite browser tests completed successfully independently.
+
+Implemented existing static profile activation in pages.yml, with strict38-file
+allowlist/seal immediately before upload and unchanged deployment job. Sanitized
+public input is public-data/snapshot.json; deployed path data/snapshot.json.
+PP4_STATIC_V2 adds strict aggregateStandings allowlist (approved aliases/random IDs,
+rank,points,completedGames,totalPicks,accuracyBasisPoints ONLY) to preserve safe
+Week9/season totals without protected selections. Source decode and exact projection
+parity precede retention. Monthly comparison predictions afterWeek8 remain absent;
+no winner/payment invented. All23 existing random128-bit IDs preserved.
+
+Fresh owner publisher preparation privately verifies pinned generation1 encrypted
+recovery copies against existing mirror using existing Keychain; no reinitialization
+or cloud writes. Private config, mappings, keys and source references remain outside
+Git/Actions. Owner publisher is tools/snapshots/owner-publisher.cjs --publish. It
+coalesces via exclusive private lock, checks source/projection/IDs/historical parity,
+skips unchanged data with sufficient lifetime, atomically writes ONLY sanitized
+public input, and dispatches existing Pages static workflow. Subsequent invocation
+checks queued Actions success and downloaded snapshot hash before calling it verified.
+Refresh planning is15/30/~6h with30-minute expiry safety margin; source score-write
+and publication timestamps are never fabricated.
+
+SCHEDULER NOT LOADED: pmset reports sleep1 on AC and battery. Existing login domain
+and Keychain/GitHub access work, but reliable awake/logged-in Mac availability is
+NOT established. Prepared private static-publisher.launchagent.plist (15-minute
+wake-up; adaptive due check) under restricted owner Application Support registry
+directory. Do not alter power settings or load it without resolving availability.
+No Terminal/browser window must remain open; login/keychain/network/Mac availability
+are required. Snapshot expires after6h and frontend fails closed; scheduler must be
+resolved for continuous service. No scheduled refresh is yet claimed.
+
+Next: validate fresh public snapshot and exact artifact, commit/push safe release,
+dispatch pages.yml profile=static, require verify+deploy success, download/validate
+actual JSON and every published file, measure production browser cold/repeat/mobile.
+Update this entry with release SHA, workflow, snapshot revision/expiry/size and
+production measurements. If CI fails, do NOT publish. Current live rollback is
+API profile6d1adea; API20 stays unchanged. Immediate rollback command using reviewed
+API profile: gh workflow run pages.yml --ref develop -f profile=api. Preserve cached
+public history awareness; rollback never revokes downloaded data.
+
+
+## Previous verification — restored format; API20 HEALTHY
 
 Owner restored standard24-hour/seconds timestamp display (e.g.10/1/2026 8:41:28)
 and reported a Sheet filter. Fresh bounded read-only verification now PASSED:

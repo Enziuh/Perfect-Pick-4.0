@@ -22,4 +22,4 @@ function independentBackup(file,getKey,{testOnly=false}={}){return async state=>
  }catch{throw Error('Independent private backup unavailable');}finally{if(pending)fs.rmSync(pending,{force:true});}
  };}
 function archive(file,clock=Date.now){return Object.freeze({async load(){try{const p=target(file);if(!fs.existsSync(p))return null;const value=JSON.parse(fs.readFileSync(p,'utf8'));validate(value,Date.parse(value.capturedAt));return value;}catch{throw Error('Private archive unavailable');}},async commit(value){validate(value,clock());atomic(file,value);}});}
-module.exports={independentBackup,archive};
+module.exports={independentBackup,archive,target,atomic};

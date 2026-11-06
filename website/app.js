@@ -591,7 +591,7 @@
     setText('weeklyTitle', `Week ${weekData?.week || '—'} Standings`);
     setText(
       'weeklyStatusNote',
-      weekData?.visibility === 'WITHHELD' ? 'Standings are not published for this week yet.' : weekData?.outcome?.finalized ? 'This week is final.' : `${sourceLabel} standings; results pending.`
+      weekData?.visibility === 'WITHHELD' && !weekData?.aggregateAvailable ? 'Standings are not published for this week yet.' : weekData?.outcome?.finalized ? 'This week is final.' : `${sourceLabel} standings; results pending.`
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 

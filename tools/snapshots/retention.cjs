@@ -18,7 +18,7 @@ function restrict(payload,allowed){
  const used=new Set(s.weeks.flatMap(w=>(w.picks||[]).map(p=>p.player)));p.aliases=p.aliases.filter(a=>used.has(a.player));
  return p;
 }
-function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??null}={}){
+function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??null,publicAggregates=false}={}){
  // Validate source at the ACTUAL capture time, while its original short-lived
  // evidence is valid. No proof/game timestamp is modified or renewed.
  const {validate}=require('./schema.cjs');validate(v1,now);
@@ -27,11 +27,12 @@ function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??nul
  const payload=restrict(v1.payload,allowed),scoreValidUntil=new Date(Math.min(Date.parse(payload.snapshot.generatedAt),...payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS).toISOString();
  const expiresAt=new Date(Math.min(Date.parse(scoreValidUntil),allowed.size&&authorizationUntil!==null?Date.parse(authorizationUntil):Infinity)).toISOString();
  const retention={policyId:policy?.id??null,revision:policy?.revision??0,weeks:[...allowed].sort((a,b)=>a-b),validUntil:authorizationUntil};
- const file={schema:'PP4_STATIC_V2',generatedAt:payload.snapshot.generatedAt,capturedAt:new Date(now).toISOString(),scoreValidUntil,expiresAt,retention,freshness:{sourceObservedAt:payload.snapshot.generatedAt,scoreUpdatedAt:null,generatedAt:new Date(now).toISOString(),publishedAt:null},payload};validateRetained(file,now);return file;
+ const file={...(publicAggregates?{aggregateStandings:require('./aggregate-standings.cjs').project(v1.payload)}:{}),schema:'PP4_STATIC_V2',generatedAt:payload.snapshot.generatedAt,capturedAt:new Date(now).toISOString(),scoreValidUntil,expiresAt,retention,freshness:{sourceObservedAt:payload.snapshot.generatedAt,scoreUpdatedAt:null,generatedAt:new Date(now).toISOString(),publishedAt:null},payload};validateRetained(file,now);return file;
 }
 function validateRetained(file,now){
  try{
-  if(!(exact(file,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,payload')||exact(file,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,freshness,payload'))||file.schema!=='PP4_STATIC_V2'||!Number.isSafeInteger(now)||!iso(file.generatedAt)||!iso(file.capturedAt)||!iso(file.scoreValidUntil)||!iso(file.expiresAt)||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
+  const shape={...file};delete shape.aggregateStandings;
+  if(!(exact(shape,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,payload')||exact(shape,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,freshness,payload'))||file.schema!=='PP4_STATIC_V2'||!Number.isSafeInteger(now)||!iso(file.generatedAt)||!iso(file.capturedAt)||!iso(file.scoreValidUntil)||!iso(file.expiresAt)||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
   if(file.freshness){const f=file.freshness;if(!exact(f,'sourceObservedAt,scoreUpdatedAt,generatedAt,publishedAt')||f.sourceObservedAt!==file.generatedAt||f.generatedAt!==file.capturedAt||f.scoreUpdatedAt!==null||f.publishedAt!==null)fail();}
   const captured=Date.parse(file.capturedAt);if(captured>now||captured<Date.parse(file.generatedAt))fail();
   const r=file.retention;if(!exact(r,'policyId,revision,weeks,validUntil')||!Array.isArray(r.weeks)||new Set(r.weeks).size!==r.weeks.length||JSON.stringify(r.weeks)!==JSON.stringify([...r.weeks].sort((a,b)=>a-b))||r.validUntil!==null&&!iso(r.validUntil))fail();
@@ -46,6 +47,7 @@ function validateRetained(file,now){
   // its recorded observation time. API decode's120s policy remains UNCHANGED.
   // Display after that point is authorized only by the independent policy above.
   const model=decode(file.payload,captured);
+  if(Object.hasOwn(file,'aggregateStandings'))require('./aggregate-standings.cjs').apply(file.aggregateStandings,file.payload,model);
   const scoreExpiry=Math.min(Date.parse(file.generatedAt),...file.payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS;
   const expiry=Math.min(scoreExpiry,allowed.size&&r.validUntil!==null?Date.parse(r.validUntil):Infinity);
   if(file.scoreValidUntil!==new Date(scoreExpiry).toISOString()||file.expiresAt!==new Date(expiry).toISOString()||now>=expiry)fail();

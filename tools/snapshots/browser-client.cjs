@@ -16,7 +16,7 @@ function install(root,config){
   if(pending)return pending;if(fresh()&&!force)return current;
   emit('perfectpick:loading');
   pending=(async()=>{
-   let model,refreshInterval=21600000;
+   let model,official=null,refreshInterval=21600000;
    for(let attempt=0;attempt<3;attempt++){
     if(attempt)await new Promise(r=>root.setTimeout(r,attempt===1?400:1200));
     const controller=new root.AbortController(),timeout=root.setTimeout(()=>controller.abort(),10000);
@@ -25,13 +25,14 @@ function install(root,config){
      const res=await root.fetch(expected.href,{signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'error'});
      if(!res.ok||res.url!==expected.href||!/^application\/json\b/i.test(res.headers.get('content-type')||''))throw Error();
      const text=await res.text();if(text.length>2000000)throw Error();
-     const file=JSON.parse(text);model=validate(file,Date.now());refreshInterval=plan(file.payload,Date.now()).intervalMs;
+     const file=JSON.parse(text);model=validate(file,Date.now());official=approvedPlayerDestination(file.payload.form);refreshInterval=plan(file.payload,Date.now()).intervalMs;
      const at=Date.parse(file.generatedAt),revision=file.payload.snapshot.revision;
      if(at<acceptedAt||revision<acceptedRevision)throw Error();acceptedAt=at;acceptedRevision=revision;break;
     }catch{if(attempt===2)throw Error('Snapshot unavailable');}
     finally{root.clearTimeout(timeout);}
    }
    const freshness=root.document.getElementById('staticSnapshotNotice');if(freshness)freshness.textContent=model.prizes.staticFreshness?'Snapshot checked '+new Date(model.prizes.staticFreshness.sourceObservedAt).toLocaleString('en-US',{timeZone:'America/Los_Angeles',timeZoneName:'short'})+'. Scores reflect the latest available Sheet read; score-update time is not provided. Valid for up to six hours.':'Verified short-lived competition snapshot.';
+   if(official&&!model.form.available)model.form={available:true,url:official,label:'Open official Form',message:'Check entry availability on the official Form. Reopening does not reset game cutoffs or authorize public picks.'};
    degraded=false;current=createViewAdapter(model,()=>Date.now());expiry=model.expiresAt;root.clearTimeout(timer);timer=root.setTimeout(clear,Math.max(1,expiry-Date.now()));
    const control=root.document.getElementById('submitPicks'),note=root.document.getElementById('submitPicksNote');
    if(control&&note){const form=model.form,link=root.document.createElement(form.available?'a':'button');link.id='submitPicks';link.className='submit-picks';link.textContent='Submit Picks';if(form.available&&approvedPlayerDestination({url:form.url,verified:true,approvedForPlayers:true})){link.href=form.url;link.target='_blank';link.rel='noopener noreferrer';}else link.disabled=true;link.setAttribute('aria-describedby','submitPicksNote');control.replaceWith(link);note.textContent=form.message;}

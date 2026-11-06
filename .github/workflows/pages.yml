@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       profile:
-        description: 'Synthetic rollback or separately approved existing JSON API'
+        description: 'Reviewed synthetic, API rollback or sanitized static delivery'
         type: choice
-        options: [synthetic, api]
+        options: [synthetic, api, static]
         default: synthetic
 
 permissions: {}
@@ -46,6 +46,9 @@ jobs:
           PP4_PUBLIC_FORM_URL: ${{ vars.PP4_PUBLIC_FORM_URL }}
           PP4_FORM_PUBLICATION_APPROVAL: ${{ vars.PP4_FORM_PUBLICATION_APPROVAL }}
         run: node tools/api/pages-artifact.cjs stage
+      - name: Build approved public static profile
+        if: inputs.profile == 'static'
+        run: node tools/snapshots/pages-artifact.cjs stage
       - name: Verify unchanged staged artifact immediately before upload
         env:
           PROFILE: ${{ inputs.profile }}
@@ -56,6 +59,8 @@ jobs:
         run: |
           if [ "$PROFILE" = "api" ]; then
             node tools/api/pages-artifact.cjs verify
+          elif [ "$PROFILE" = "static" ]; then
+            node tools/snapshots/pages-artifact.cjs verify
           elif [ "$PROFILE" = "synthetic" ]; then
             node tools/security/public-artifact.cjs verify
           else
