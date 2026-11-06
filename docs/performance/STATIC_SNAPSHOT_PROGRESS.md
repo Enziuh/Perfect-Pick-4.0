@@ -743,3 +743,10 @@ than being treated as unchanged observation time. No publisher was enabled. Full
 regressions passed again, zero failed/skipped:
 /private/tmp/pp-v20-retention-final-tests.log. Latest frontend status source2699043;
 final static-helper correction/checkpoint commit follows before api-profile dispatch.
+
+Latest tested source137935b is published via run42255482532 (verify/deploy SUCCESS).
+Final player-facing provenance cleanup removes read-only/validated loading jargon
+from the public renderer and clarifies the player selector introduction. Internal
+schema/diagnostic wording is preserved. Full371/371 PASS again, no failures/skips:
+/private/tmp/pp-v20-copy-all-tests.log. Final api-profile publication follows; no
+backend upload, static JSON, private mapping or publisher scheduling is authorized.
