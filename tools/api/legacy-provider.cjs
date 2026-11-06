@@ -21,7 +21,18 @@ function createLegacyProvider(deps){
    if(cfg.publicationApproved!==true)throw Error();
    let now=deps.now();const at=new Date(now).toISOString(),revision=cfg.revision;
    if(!Number.isSafeInteger(revision)||revision<0)throw Error();
-   const ctx=deps.context(),prizes=deps.prizes(ctx),games=[],definitions=new Map();
+   const rawContext=deps.context();let ctx=rawContext,nativeSource=null;
+   // A displayed date format is presentation, not an instant. Opt-in reads use
+   // native timestamps for historical selection too; no Sheet/form values change.
+   if(cfg.nativeTimestampCompatibility===true){
+    if(typeof deps.nativeResponses!=='function'||typeof deps.timezone!=='function')throw Error();
+    const parser=createParser(deps.timezone(rawContext)),native=nativeSource=deps.nativeResponses(rawContext);
+    const fingerprint=r=>JSON.stringify([normalizePhone(r['Phone Number']),...rawContext.games.map(g=>String(r[g.header]??''))]);
+    const keyed=new Map();for(const row of native){const key=fingerprint(row),list=keyed.get(key)||[];list.push(parser.parse(row.Timestamp));keyed.set(key,list);}
+    ctx={...rawContext,responses:rawContext.responses.map(row=>{const values=keyed.get(fingerprint(row));if(!values?.length)throw Error();return {...row,Timestamp:values.shift()};})};
+    if([...keyed.values()].some(values=>values.length))throw Error();
+   }
+   const prizes=deps.prizes(ctx),games=[],definitions=new Map();
    const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ').replace(/\s+vs\.?\s+/g,' vs ');
    const team=v=>{const matches=Object.entries(TEAM_NAMES).filter(([abbr,name])=>norm(v)===abbr.toLowerCase()||norm(v).split(' ').pop()===norm(name).split(' ').pop());if(matches.length!==1)throw Error();return matches[0][0];};
    for(const [week,lookup] of Object.entries(ctx.resultLookup))for(const r of Object.values(lookup)){
@@ -33,7 +44,7 @@ function createLegacyProvider(deps){
    const weeks=[...new Set(games.map(g=>g.week))].sort((a,b)=>a-b);
    const maxAgeMs=120000;
    const policy={now,revision,maxAgeMs,aliases:new Map(),closures:new Map(),completeWeeks:new Map(),games:definitions,teams:new Map(Object.entries(TEAM_NAMES).map(([a,n])=>[n,a])),periods:[],decisions:new Map(),accounting:new Map(),seasonWeeks:weeks};
-   if(cfg.lateEntryRules!==undefined){if(cfg.lateEntryRules!==late.RULE||!(Array.isArray(cfg.lateEntryEvidence)||typeof deps.cutoffEvidence==='function'))throw Error();if(typeof deps.timezone!=='function'||typeof deps.nativeResponses!=='function')throw Error();policy.timeParser=createParser(deps.timezone());if((cfg.lateEntryEvidence||[]).some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryRules=late.RULE;policy.lateEntryStartWeek=cfg.lateEntryStartWeek??9;if(!Number.isInteger(policy.lateEntryStartWeek)||policy.lateEntryStartWeek<9||policy.lateEntryStartWeek>18)throw Error();policy.lateEntryEvidence=new Map((cfg.lateEntryEvidence||[]).map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==(cfg.lateEntryEvidence||[]).length)throw Error();}
+   if(cfg.lateEntryRules!==undefined){if(cfg.lateEntryRules!==late.RULE||!(Array.isArray(cfg.lateEntryEvidence)||typeof deps.cutoffEvidence==='function'))throw Error();if(typeof deps.timezone!=='function'||typeof deps.nativeResponses!=='function')throw Error();policy.timeParser=createParser(deps.timezone(ctx));if((cfg.lateEntryEvidence||[]).some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryRules=late.RULE;policy.lateEntryStartWeek=cfg.lateEntryStartWeek??9;if(!Number.isInteger(policy.lateEntryStartWeek)||policy.lateEntryStartWeek<9||policy.lateEntryStartWeek>18)throw Error();policy.lateEntryEvidence=new Map((cfg.lateEntryEvidence||[]).map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==(cfg.lateEntryEvidence||[]).length)throw Error();}
    const authority=cfg.authority;
    if(authority){
     if(authority.aliases!==undefined&&authority.registryAliases!==undefined)throw Error();
@@ -48,7 +59,7 @@ function createLegacyProvider(deps){
    let observedForm=null;const verifyCurrentForm=cfg.verifyCurrentForm===true||late.applies(policy,Number(prizes.formControl?.activeWeek));
    if(verifyCurrentForm){try{observedForm=deps.formState(ctx);}catch{}if(observedForm?.responderMatchesVerified!==true||observedForm.acceptingResponses!==false)policy.closures.delete(Number(prizes.formControl?.activeWeek));}
    if(policy.lateEntryRules===late.RULE&&typeof deps.cutoffEvidence==='function'){const records=deps.cutoffEvidence(ctx,definitions,[...policy.closures.keys()].filter(w=>late.applies(policy,w)));if(!Array.isArray(records)||records.length>18||records.some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryEvidence=new Map(records.map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==records.length)throw Error();now=deps.now();policy.now=now;}
-   const latest=policy.closures.size?(policy.lateEntryRules===late.RULE&&[...policy.closures.keys()].some(w=>late.applies(policy,w))?deps.nativeResponses(ctx).flatMap(response=>{let time;try{time=Date.parse(policy.timeParser.parse(response.Timestamp));}catch{return [];}if(!Number.isFinite(time)||time<=0||time>now)return [];return [...new Set(ctx.games.filter(g=>String(response[g.header]??'').trim()).map(g=>g.week))].map(week=>({phone:normalizePhone(response['Phone Number']),week,timestamp:time,response})).filter(r=>r.phone&&late.applies(policy,r.week));}).concat(Object.values(deps.latest(ctx.responses,ctx.games)).filter(r=>!late.applies(policy,r.week))):Object.values(deps.latest(ctx.responses,ctx.games))):[];
+   const latest=policy.closures.size?(policy.lateEntryRules===late.RULE&&[...policy.closures.keys()].some(w=>late.applies(policy,w))?(nativeSource||deps.nativeResponses(ctx)).flatMap(response=>{let time;try{time=Date.parse(policy.timeParser.parse(response.Timestamp));}catch{return [];}if(!Number.isFinite(time)||time<=0||time>now)return [];return [...new Set(ctx.games.filter(g=>String(response[g.header]??'').trim()).map(g=>g.week))].map(week=>({phone:normalizePhone(response['Phone Number']),week,timestamp:time,response})).filter(r=>r.phone&&late.applies(policy,r.week));}).concat(Object.values(deps.latest(ctx.responses,ctx.games)).filter(r=>!late.applies(policy,r.week))):Object.values(deps.latest(ctx.responses,ctx.games))):[];
    // Match the original season scope: every created response-game week, not just disclosed weeks.
    const seasonWeeks=[...new Set(ctx.games.map(g=>g.week))].sort((a,b)=>a-b);
    if(seasonWeeks.length)policy.seasonWeeks=seasonWeeks;

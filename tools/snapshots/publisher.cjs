@@ -2,10 +2,11 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {decode}=require('../api/browser-client.cjs'),{projectReply,scanText,validate}=require('./schema.cjs');
 const identity=require('./identity-store.cjs');
-function generate(reply,store,now,{approvedAliases,retention}={}){
+function generate(reply,store,now,{approvedAliases,retention,preserveIds=false}={}){
  try{
   if(!(approvedAliases instanceof Map)||reply.aliases.some(a=>approvedAliases.get(a.player)!==a.alias))throw Error();
   decode(reply,now); // Reject unknown/unauthorized source fields, never copy blindly.
+  if(preserveIds&&reply.aliases.some(a=>!store.entries.some(e=>e.sourceKey===a.player)))throw Error();
   const assigned=identity.assign(store,reply.aliases.map(a=>a.player));
   const payload=projectReply(reply,assigned.ids),model=decode(payload,now);
   const file={schema:'PP4_STATIC_V1',generatedAt:payload.snapshot.generatedAt,expiresAt:new Date(model.expiresAt).toISOString(),payload};
@@ -45,9 +46,9 @@ function stage(reply,mappingFile,dir,now,approval){
 // Private local publisher input. No credentials, registry or phone data needed.
 // Caller must separately authorize a real capture; nothing runs at module load.
 async function readPublicApi(config,fetcher=fetch){
- if(!config||Object.keys(config).sort().join(',')!=='approved,endpoint'||config.approved!==true||!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(config.endpoint))throw Error('Reviewed source required');
+ if(!config||!['approved,endpoint','approved,endpoint,rules'].includes(Object.keys(config).sort().join(','))||config.rules!==undefined&&config.rules!=='LATE_ENTRY_V1'||config.approved!==true||!/^https:\/\/script\.google\.com\/macros\/s\/AKfycb[A-Za-z0-9_-]{14,194}\/exec$/.test(config.endpoint))throw Error('Reviewed source required');
  try{
- const response=await fetcher(config.endpoint+'?action=dashboard4',{signal:AbortSignal.timeout(20000),credentials:'omit',cache:'no-store'});
+ const response=await fetcher(config.endpoint+'?action=dashboard4'+(config.rules==='LATE_ENTRY_V1'?'&rules=LATE_ENTRY_V1':''),{signal:AbortSignal.timeout(20000),credentials:'omit',cache:'no-store'});
  if(!response.ok||!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw Error('Source unavailable');
  const reader=response.body.getReader(),chunks=[];let size=0;
  try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>2000000){await reader.cancel();throw Error();}chunks.push(value);}return JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw Error('Source unavailable');}finally{reader.releaseLock();}

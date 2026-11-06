@@ -27,11 +27,12 @@ function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??nul
  const payload=restrict(v1.payload,allowed),scoreValidUntil=new Date(Math.min(Date.parse(payload.snapshot.generatedAt),...payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS).toISOString();
  const expiresAt=new Date(Math.min(Date.parse(scoreValidUntil),allowed.size&&authorizationUntil!==null?Date.parse(authorizationUntil):Infinity)).toISOString();
  const retention={policyId:policy?.id??null,revision:policy?.revision??0,weeks:[...allowed].sort((a,b)=>a-b),validUntil:authorizationUntil};
- const file={schema:'PP4_STATIC_V2',generatedAt:payload.snapshot.generatedAt,capturedAt:new Date(now).toISOString(),scoreValidUntil,expiresAt,retention,payload};validateRetained(file,now);return file;
+ const file={schema:'PP4_STATIC_V2',generatedAt:payload.snapshot.generatedAt,capturedAt:new Date(now).toISOString(),scoreValidUntil,expiresAt,retention,freshness:{sourceObservedAt:payload.snapshot.generatedAt,scoreUpdatedAt:null,generatedAt:new Date(now).toISOString(),publishedAt:null},payload};validateRetained(file,now);return file;
 }
 function validateRetained(file,now){
  try{
-  if(!exact(file,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,payload')||file.schema!=='PP4_STATIC_V2'||!Number.isSafeInteger(now)||!iso(file.generatedAt)||!iso(file.capturedAt)||!iso(file.scoreValidUntil)||!iso(file.expiresAt)||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
+  if(!(exact(file,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,payload')||exact(file,'schema,generatedAt,capturedAt,scoreValidUntil,expiresAt,retention,freshness,payload'))||file.schema!=='PP4_STATIC_V2'||!Number.isSafeInteger(now)||!iso(file.generatedAt)||!iso(file.capturedAt)||!iso(file.scoreValidUntil)||!iso(file.expiresAt)||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
+  if(file.freshness){const f=file.freshness;if(!exact(f,'sourceObservedAt,scoreUpdatedAt,generatedAt,publishedAt')||f.sourceObservedAt!==file.generatedAt||f.generatedAt!==file.capturedAt||f.scoreUpdatedAt!==null||f.publishedAt!==null)fail();}
   const captured=Date.parse(file.capturedAt);if(captured>now||captured<Date.parse(file.generatedAt))fail();
   const r=file.retention;if(!exact(r,'policyId,revision,weeks,validUntil')||!Array.isArray(r.weeks)||new Set(r.weeks).size!==r.weeks.length||JSON.stringify(r.weeks)!==JSON.stringify([...r.weeks].sort((a,b)=>a-b))||r.validUntil!==null&&!iso(r.validUntil))fail();
   const policy=r.policyId===null&&r.revision===0?null:r.policyId===POLICY.id&&r.revision===POLICY.revision?POLICY:undefined;if(policy===undefined)fail();
@@ -48,7 +49,7 @@ function validateRetained(file,now){
   const scoreExpiry=Math.min(Date.parse(file.generatedAt),...file.payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS;
   const expiry=Math.min(scoreExpiry,allowed.size&&r.validUntil!==null?Date.parse(r.validUntil):Infinity);
   if(file.scoreValidUntil!==new Date(scoreExpiry).toISOString()||file.expiresAt!==new Date(expiry).toISOString()||now>=expiry)fail();
-  model.expiresAt=expiry;model.prizes.staticFreshness={scoresAsOf:file.generatedAt,scoresValidUntil:file.scoreValidUntil,retentionPolicy:r.policyId};return model;
+  model.expiresAt=expiry;model.prizes.staticFreshness={scoresAsOf:file.generatedAt,sourceObservedAt:file.generatedAt,scoreUpdatedAt:null,generatedAt:file.capturedAt,publishedAt:null,scoresValidUntil:file.scoreValidUntil,retentionPolicy:r.policyId};return model;
  }catch{fail();}
 }
 module.exports={create,validateRetained,restrict};

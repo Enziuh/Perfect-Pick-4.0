@@ -26,7 +26,7 @@
 
         <div class="deadline-grid">
           <div class="deadline-main">
-            <span class="deadline-label">Picks close</span>
+            <span class="deadline-label">Opening-game cutoff</span>
             <strong id="picksCloseTime">—</strong>
             <span id="picksCountdown" class="deadline-countdown">—</span>
           </div>
@@ -37,7 +37,7 @@
           </div>
           <div class="deadline-detail">
             <span>How it works</span>
-            <strong id="deadlineRuleLabel">3 hours before first kickoff</strong>
+            <strong id="deadlineRuleLabel">Official opening-game deadline</strong>
             <small>Other players’ picks become visible once the week is closed.</small>
           </div>
         </div>
@@ -99,7 +99,7 @@
         <label class="match-filter">Matchup<select id="matchSelect" aria-label="Filter matchups"><option value="">All matchups</option></select></label>
         <div id="pickPercentages"><div id="matchPrivacyNotice" class="privacy-state">Picks and voting stay private until entries are officially closed.</div><div id="matchGameResults" class="game-results-grid"></div></div>
       </div>
-      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">Player view</p><h3>Picks &amp; predictions</h3><p class="muted">Explore an approved alias’s week, including the period-ending prediction.</p></div><label class="match-filter">Player<select id="playerSelect" aria-label="Filter players" disabled><option value="">All players</option></select></label></div><div id="playerPickCards" class="player-card-grid"><p class="state-message">Loading synthetic picks…</p></div></div>
+      <div class="panel"><div class="section-heading-row"><div><p class="eyebrow">Player view</p><h3>Picks &amp; predictions</h3><p class="muted">Explore an approved alias’s week, including the period-ending prediction.</p></div><label class="match-filter">Player<select id="playerSelect" aria-label="Filter players" disabled><option value="">All players</option></select></label></div><div id="playerPickCards" class="player-card-grid"><p class="state-message">Loading picks…</p></div></div>
       <details class="panel comparison-matrix" id="pickMatrix"><summary>Compare All Players</summary><p class="muted">Optional full-week comparison with correct-pick totals and accuracy. On mobile, open a matchup’s player list above for an easier view.</p>
         <div class="table-scroll">
           <div class="table-region" role="region" aria-label="Compare all players for the selected week" tabindex="0"><table id="playerPicksTable" class="wide-table">
@@ -173,14 +173,14 @@
       </div>
 </section></section>
 <section id="prizes" class="destination" aria-label="The prize room" hidden><header class="page-header"><p class="eyebrow">Know the stakes</p><h1 tabindex="-1">The prize room</h1><p class="page-intro">A clear view of each pool, every rollover, and the road to the season pot.</p></header><section id="prize-details" class="legacy-section">
-      <div id="prizeSummary" class="card-grid" aria-label="Prize accounting summary"></div><p class="state-message">Synthetic accounting only. Pending amounts are not zero; allocations are not proof of payment. A finalized week without a perfect winner rolls into its monthly pot. Unresolved monthly ties cannot award a prize.</p>
+      <div id="prizeSummary" class="card-grid" aria-label="Prize pool summaries"></div><p class="state-message">Pools follow the competition prize rules. Unavailable amounts stay pending, not zero. Weekly rollovers are determined after all results are final. Unresolved monthly ties remain pending.</p>
       <div id="periodCards" class="periods"></div>
       <details class="panel transparency-panel"><summary>How monthly rollovers fund prizes</summary><div id="prizeBreakdown" class="prize-breakdown"></div></details>
       <div class="panel">
         <h2>Weekly Prize Tracker</h2>
         <div class="table-region" role="region" aria-label="prizes data table" tabindex="0"><table>
           <thead>
-            <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Allocation status</th><th>Confirmed winner / allocation</th><th class="num">Monthly Rollover</th></tr>
+            <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Pool status</th><th>Perfect Week winners</th><th class="num">Monthly Rollover</th></tr>
           </thead>
           <tbody id="weeklyPrizeBody"></tbody>
         </table></div>
@@ -265,11 +265,11 @@
 
         <details open>
           <summary>Where can I see my picks?</summary>
-          <p>Open the Picks tab. It defaults to the current week, and you can use the week dropdown to review earlier weeks.</p>
+          <p>Open Match Center. It defaults to the current week, and you can use the week dropdown to review earlier weeks.</p>
         </details>
         <details>
           <summary>How do I see how everyone picked?</summary>
-          <p>After official closure, the Picks tab shows synthetic picks and team voting. Both remain hidden before closure.</p>
+          <p>Once a week is officially closed, published player picks and team voting appear in Match Center. They stay private while entries are open.</p>
         </details>
         <details>
           <summary>When do correct and incorrect picks update?</summary>

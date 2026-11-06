@@ -31,6 +31,16 @@ var PerfectPickTimestamp = (function(){
         if(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(value)){
           const result=instant(Date.parse(value));if(result!==value)fail();return result;
         }
+        // Explicit English Sheets display format; never browser-local Date parsing.
+        const display=value.replace(/[\u00a0\u202f]/g,' ').replace(/\s+/g,' ').trim();
+        const human=display.match(/^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), (January|February|March|April|May|June|July|August|September|October|November|December) (\d{1,2}), (\d{4}) at (\d{1,2}):(\d{2}):(\d{2}) (AM|PM)$/i);
+        if(human){
+          const months=['january','february','march','april','may','june','july','august','september','october','november','december'],days=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+          const h=Number(human[5]);if(h<1||h>12)fail();
+          const wall={year:Number(human[4]),month:months.indexOf(human[2].toLowerCase())+1,day:Number(human[3]),hour:h%12+(human[8].toUpperCase()==='PM'?12:0),minute:Number(human[6]),second:Number(human[7]),millisecond:0};
+          if(new Date(Date.UTC(wall.year,wall.month-1,wall.day)).getUTCDay()!==days.indexOf(human[1].toLowerCase()))fail();
+          return localToIso(wall);
+        }
         const m=value.match(/^(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d):(\d\d)(?:\.(\d{3}))?$/);if(!m)fail();
         return localToIso({year:Number(m[1]),month:Number(m[2]),day:Number(m[3]),hour:Number(m[4]),minute:Number(m[5]),second:Number(m[6]),millisecond:Number(m[7]||0)});
       }catch{fail();}

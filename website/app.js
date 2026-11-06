@@ -105,7 +105,7 @@
     setText('picksCloseTime', formatPacificDateTime_(closeAt));
     setText('firstGameLabel', data.firstGame || '—');
     setText('firstKickoffTime', kickoffAt ? `Kickoff: ${formatPacificDateTime_(kickoffAt)}` : '—');
-    setText('deadlineRuleLabel', 'Picks close at the official deadline.');
+    setText('deadlineRuleLabel', prizeData?.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS' ? 'Opening game: one hour before kickoff.' : 'Official opening-game deadline.');
 
     const badge = $('formStatusBadge');
     if (badge) {
@@ -117,7 +117,7 @@
         badge.textContent = 'Picks Closed';
         badge.classList.add('is-closed');
       } else {
-        badge.textContent = 'Not Scheduled';
+        badge.textContent = 'Status unavailable';
         badge.classList.add('is-unknown');
       }
     }
@@ -142,7 +142,7 @@
       const firstGameDay = pacificWeekday_(kickoffAt);
       if (firstGameDay && firstGameDay !== 'Thursday') {
         notice.hidden = false;
-        notice.innerHTML = `<strong>Early schedule this week:</strong> the first game is ${escapeHtml(firstGameDay)}, so picks close ${escapeHtml(formatPacificDateTime_(closeAt))}.`;
+        notice.innerHTML = `<strong>Early schedule this week:</strong> the first game is ${escapeHtml(firstGameDay)}, so the opening-game cutoff is ${escapeHtml(formatPacificDateTime_(closeAt))}.`;
       } else {
         notice.hidden = true;
         notice.textContent = '';
@@ -591,7 +591,7 @@
     setText('weeklyTitle', `Week ${weekData?.week || '—'} Standings`);
     setText(
       'weeklyStatusNote',
-      weekData?.visibility === 'WITHHELD' ? 'Standings withheld; disclosure evidence incomplete.' : weekData?.outcome?.finalized ? 'This week is final.' : `${sourceLabel} standings; results pending.`
+      weekData?.visibility === 'WITHHELD' ? 'Standings are not published for this week yet.' : weekData?.outcome?.finalized ? 'This week is final.' : `${sourceLabel} standings; results pending.`
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 

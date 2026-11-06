@@ -3,6 +3,8 @@
 // credentials or Google calls at import. Existing3.0 writers remain the only writers.
 const crypto=require('node:crypto'),path=require('node:path');
 const {generate}=require('./publisher.cjs'),artifact=require('./artifact.cjs');
+const {plan}=require('./activity.cjs');
+const {contentHash}=require('./content.cjs');
 const {validate}=require('./schema.cjs'),{POLICY,SCORE_MAX_AGE_MS}=require('./retention-policy.cjs');
 function createRefresh({registry,backupAndVerify,readSource,approvedAliases,archive,clock=Date.now,outputRoot}){
  let pending=null;
@@ -18,7 +20,7 @@ function createRefresh({registry,backupAndVerify,readSource,approvedAliases,arch
     if(previous){validate(previous,Date.parse(previous.capturedAt));if(Date.parse(previous.generatedAt)>now)fail();}
     const privateState=registry.load(),reply=await readSource();
     if(reply.snapshot.games.length!==config.expectedGames||reply.snapshot.weeks.length!==config.expectedWeeks)fail();
-    const result=generate(reply,privateState.store,clock(),{approvedAliases,retention:{policy:POLICY}}),file=result.file;
+    const result=generate(reply,privateState.store,clock(),{approvedAliases,retention:{policy:POLICY},preserveIds:true}),file=result.file;
     if(file.payload.aliases.length!==config.expectedRosterSize)fail();
     // The approved historical baseline must remain complete. A new CLOSED week
     // without separate approval is stripped, never silently added to this list.
@@ -30,6 +32,10 @@ function createRefresh({registry,backupAndVerify,readSource,approvedAliases,arch
       if(file.retention.weeks.includes(old.week)&&old.picks){for(const p of old.picks){const n=next.picks?.find(n=>n.player===p.player);if(!n||n.selections.length<p.selections.length)fail();}}
      }
     }
+    const refreshPlan=plan(reply,clock());
+    if(config.skipUnchanged===true&&previous&&contentHash(previous)===contentHash(file)&&Date.parse(previous.expiresAt)-clock()>refreshPlan.intervalMs){
+     return {state:'UNCHANGED_NOT_PUBLISHED',nextRunAt:refreshPlan.nextCheckAt,refreshPlan};
+    }
     // Persist identity additions in the private Google registry, then verify an
     // independent encrypted recovery copy BEFORE exposing a local public candidate.
     let generation=privateState.generation;
@@ -37,7 +43,7 @@ function createRefresh({registry,backupAndVerify,readSource,approvedAliases,arch
     const checked=registry.load();if(checked.generation!==generation||JSON.stringify(checked.store)!==JSON.stringify(result.store))fail();
     const backup=await backupAndVerify(checked);if(!backup||backup.verified!==true||backup.generation!==generation)fail();
     const dir=path.join(outputRoot,'generation-'+crypto.randomBytes(10).toString('hex'));artifact.stage(file,dir,clock());artifact.verify(dir,clock());
-    await archive.commit(file);return {state:'PREPARED_NOT_PUBLISHED',players:file.payload.aliases.length,games:file.payload.snapshot.games.length,nextRunAt:new Date(Date.parse(file.generatedAt)+SCORE_MAX_AGE_MS-120000).toISOString()};
+    await archive.commit(file);return {state:'PREPARED_NOT_PUBLISHED',players:file.payload.aliases.length,games:file.payload.snapshot.games.length,nextRunAt:plan(reply,clock()).nextCheckAt,refreshPlan:plan(reply,clock())};
    }catch{throw Error('Snapshot preparation blocked');}
   })().finally(()=>{pending=null;});return pending;
  }

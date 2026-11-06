@@ -1,5 +1,41 @@
 # Static snapshot progress
 
+## CURRENT TASK — v20 polish/static adaptation; timestamp blocker verified
+
+Resume baseline4dc41f1 (published3a9c331/API20). Owner requested frontend wording
+polish plus existing static-system adaptation; real static publication/worker remain
+OFF. Read the FINAL late-entry checkpoint; do not repeat registry initialization.
+
+New Responses display format exposed a legacy dependency: original response context
+uses getDisplayValues(), parseTimestamp_ calls new Date(displayText), and the new
+weekday/month/"at" format is rejected. Native Week9 timestamps remain a separate
+getValues() path, but invalid historical timestamp0 causes the complete dashboard4
+provider to fail closed. Actual public v20 returned UNAVAILABLE and the live browser
+could not reach usable state. No fabricated performance baseline is substituted.
+Direct bounded timestamp-type read using existing credentials failed403
+accessNotConfigured; no service, OAuth or Sheet setting was changed. Underlying cell
+types therefore remain unverified (do not assert every cell is a Date).
+
+Prepared LOCAL ONLY: explicit timezone English-format/Unicode-space parser regressions
+and an opt-in nativeTimestampCompatibility context normalization. This matches native
+rows privately, replaces only in-memory Timestamp values with their authoritative
+instants, retains original historical entry selection and does not write the Sheet.
+Prepared extension reads the Sheet's actual timezone. Production20 remains unchanged.
+Any Google upload/test/promotion of this narrow compatibility fix needs owner approval;
+static publication cannot bypass an unavailable live source.
+
+Safe frontend wording corrections underway: remove obsolete initial three-hour text,
+neutral loading copy and synthetic-picks/Picks-tab FAQ wording. Preserve synthetic
+labels in the synthetic profile and all internal diagnostic terminology.
+
+Exact next work: run new timestamp checks; complete local v20 snapshot contract,
+retention/refresh tests and conservative freshness metadata; benchmark equivalent
+captured real public data with explicit frozen-clock/replay limitations. Do not claim
+current live v20 usable-time metrics while it is unavailable. Request one consolidated
+activation approval including the timestamp repair and existing private publisher
+access gap; do not request or expose registry mappings.
+
+
 ## REGISTRY INITIALIZED AND CLEANED — no further initialization
 
 Owner confirmed successful REGISTRY_INITIALIZATION_VERIFIED receipt:23 unique IDs,
@@ -645,3 +681,50 @@ Last successful implementation commit:38554cc on develop. Final279/279 regressio
 run and private real-source parity are complete; all non-sensitive source is ready
 for push. Documentation-only checkpoint follows. Publication remains UNCHANGED/API18;
 no static deployment is authorized. Resume with the three owner decisions above.
+
+### v20 preparation milestone — tested, not activated
+
+Prepared native-timestamp compatibility and columnA count-only inspection; five
+fabricated timestamp tests cover Unicode spaces, Sheet-timezone vs host-timezone,
+DST ambiguity/nonexistence, native subseconds, exact cutoffs and original/first-late
+selection. Private one-file extension candidate is sealed against20 outside Git and
+has NOT been uploaded. No original source, trigger, Form, Sheet or OAuth change.
+
+Static projection negotiates LATE_ENTRY_V1 and preserves all v20 scoring/eligibility
+fields without recomputation. Production-oriented preparation requires existing IDs;
+missing mapping entries block instead of generating replacements.23 generation1 IDs
+and both independent encrypted recoveries were privately verified; cloud helper stays
+disabled and was not read/modified. Current unattended cloud access remains unproven.
+
+Durable output retains ONLY Weeks1–8; Week9 picks/predictions/votes and dependent
+player aggregates are absent. Full original v20 DTO parity was verified separately
+using the short-lived last-known-good public capture in a restricted frozen-clock
+benchmark. That is not a fresh live read, new publication authority or replacement
+for the unavailable API. No actual records/maps/keys have entered Git or Pages.
+
+Adaptive15m LIVE /30m game-day /6h non-game-day scheduling is preparation-only;
+unknown evidence uses a conservative interval, never invents LIVE from elapsed kickoff.
+Underlying score-write timestamp remains unknown; generation/observation/publication
+are distinguished. Static client uses bounded same-origin refresh, no API fallback,
+memory-only cache and expiry clearing. Unchanged content skips generation churn while
+previous authority is valid, including retention policy in the content comparison.
+
+Full371/371 tests PASS, zero failed/skipped, plus artifact/security stage. Logs:
+/private/tmp/pp-v20-final-all-tests.log and pp-v20-final-stage.log.
+Measurements and limits: STATIC_V20_MEASUREMENTS.md. Same real captured v20 input,
+fixed200ms API replay vs static: desktop cold724ms vs599ms; mobile685ms vs555ms.
+These are local replay observations, NOT current live speedup. Static JSON17,927 gzip
+bytes. Actual live API currently UNAVAILABLE, so live usable-time comparison is blocked.
+
+Frontend corrections verified against actual error-state DOM: obsolete three-hour
+initial text and synthetic-picks/Picks-tab FAQ were visible. Local source now uses
+opening-game cutoff/Match Center wording, neutral loading, clearer unavailable status
+and prize-pool labels. No layout redesign or scoring calculation changed.
+
+Next: commit/push passing safe changes; deploy ONLY frontend polish with existing API
+profile, verify CI/deploy and actual DOM at five widths/all32 logos. API20 remains
+untouched/unavailable pending separate timestamp-compatibility approval. Real static
+publication and adaptive publisher remain OFF. Preserve published3a9c331 as rollback.
+Then consolidate owner approval for the narrow timestamp repair/type verification;
+static activation must wait for fresh parity/performance, explicit Week9 retention
+(if full current/season views desired), and private publisher access/input approval.
