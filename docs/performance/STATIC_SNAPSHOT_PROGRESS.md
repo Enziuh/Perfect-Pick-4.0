@@ -1,5 +1,70 @@
 # Static snapshot progress
 
+## RESUME HERE — clean usage-limit checkpoint
+
+Latest passing implementation and PUBLISHED frontend: **6d1adea** on develop.
+Final documentation-only checkpoint follows this entry. Worktree was clean before
+this checkpoint. No implementation or private dataset is left uncommitted.
+
+Completed:
+- Frontend copy/status/Form-outage polish published through existing **api** profile.
+  Run **42259072216** verify/deploy SUCCESS. Local and CI **372/372 PASS**, no skips.
+- Actual published DOM checked at360/390/430/768/1440 across five destinations:
+  no obsolete three-hour/synthetic-picks/Picks-tab wording, no overflow, zero runtime
+  exceptions, all32 supplied SVGs load. Verified official responder link remains
+  available during outage without asserting OPEN or granting player disclosure.
+- All38 downloaded deployed files exactly match reviewed source and privacy scans.
+  No real static snapshots, mappings, secrets or unexpected files were published.
+- Existing static generator/adapter supports v20 eligibility/scoring fields; strict
+  projection/retention, preserved IDs, separate freshness timestamps, adaptive refresh
+  planning and unchanged-content safeguards implemented/tested. Worker remains OFF.
+- Exact23 generation1 IDs recovered/compared against both existing encrypted backups
+  privately. No rotation, initialization, cloud read/write or Keychain modification.
+- Same captured-real-v20 DTO parity PASS. Controlled replay benchmark and its limits
+  are in STATIC_V20_MEASUREMENTS.md; readiness/source references in
+  STATIC_V20_READINESS.md. Do NOT claim current live speedup from replay figures.
+
+CRITICAL existing live blocker — not a frontend deployment regression:
+API20 currently returns UNAVAILABLE after the owner's Responses display-format change.
+The preserved historical path still parses getDisplayValues() text with new Date;
+the new English weekday/month/"at" format fails. Week9's separate native path cannot
+make the overall response available while that historical gate fails. Actual cell
+Date-versus-string types remain UNVERIFIED: one bounded timestamp-column-only direct
+Sheets read failed403 accessNotConfigured. No service/permission was changed.
+Consequently fresh Week9 parity and live API-vs-static usable-time benchmarking are
+blocked. The last-good v20 capture is for restricted replay only, not a fresh read.
+
+Prepared, NOT UPLOADED: the smallest opt-in native timestamp compatibility candidate
+against immutable20, changing ONLY PerfectPick4_Json. It normalizes native instants
+in memory using actual Sheet timezone; original dates, phones, scoring writers,
+ESPN/Form automation, original API actions, manifest and URL remain untouched. Tests
+cover Unicode spaces, native subseconds, DST, host timezone, cutoffs/resubmissions and
+legacy parity. A disabled editor-only columnA type-count helper is prepared; empty or
+unverified owner identity blocks before reads. Private candidate/seals are outside Git
+under Application Support / Perfect Pick / Private Registry / activation /
+v20-timestamp-format-candidate. No Google upload/execution happened in this task.
+
+Exact next step AFTER RESET:
+1. `git switch develop`; inspect status, then read THIS entry. Do not restart audits,
+   registry initialization, consent, completed benchmarks or full browser suites.
+2. Obtain separate owner approval for the prepared one-file timestamp repair, bounded
+   owner-only type verification and staging parity tests. Only promote a clean version
+   after Weeks1–8 unchanged and Week9 approved-impact parity pass; preserve current
+   unpublished editor and API20 rollback. Current instruction still forbids API20 changes.
+3. Once fresh data works, repeat actual live/static equivalent-data measurements and
+   fresh private parity. Do NOT fake freshness, infer cell types or modify Sheet dates.
+4. Static activation remains separately blocked by Week9 durable retention (only1–8
+   approved), private unattended publisher access/input approval, fresh validation and
+   final exact-artifact/Pages-profile approval. Never upload mappings/keys to Actions.
+
+Production remains API20; no Sheet/Form/trigger/scoring/OAuth/property changes.
+Static source, real JSON publication and adaptive publisher remain DISABLED.
+Frontend rollback reference:3a9c331; latest verified polish:6d1adea.
+Final logs:/private/tmp/pp-v20-release3-all-tests.log and ignored
+ tmp/late-entry/polish-final-ci.log. Private actual DOM/artifact verification receipts
+remain outside Git; no personal records or private identifiers are in this checkpoint.
+
+
 ## CURRENT TASK — v20 polish/static adaptation; timestamp blocker verified
 
 Resume baseline4dc41f1 (published3a9c331/API20). Owner requested frontend wording
