@@ -1,6 +1,80 @@
 # Static snapshot progress
 
-## CURRENT RESUME — PUBLIC_WRITE isolated; redacted correction installed, NO retry
+## CURRENT RESUME — FIRST CLOUD PUBLICATION VERIFIED; clock still OFF
+
+Owner corrected fine-grained token permissions (Contents RW + Actions RW, selected
+ONLY Perfect-Pick-4.0) and ran pp4CloudSnapshotTick once11:57:26–11:57:44 Pacific.
+Independent checks, NOT the completion message alone, now confirm success:
+
+- Snapshot commit **110cfa94144d4f7d81e1e7f8dd3e32bf20087cf4**,19:57:42Z
+  (11:57:42AM Pacific), message Refresh validated public competition snapshot.
+  Exactly public-data/snapshot.json changed. Clean local develop fast-forwarded to it.
+- Pages run **42284191632** verification SUCCESS, **391/391 PASS**,0 failures/skips;
+  deployment SUCCESS19:59:27Z (11:59:27AM Pacific). No new deployment was dispatched
+  by this verification task.
+- All38 LIVE Pages files downloaded and matched reviewed render byte-for-byte;
+  JSON schema/allowlists/expiry checks PASS. Current public snapshot is PP4_STATIC_V2,
+  source revision1,340242 bytes, SHA256
+  f55f0ca3831cd64833d956ba55fb993a266010d04d9cddf6573aa4b715fb1528.
+  Observed source19:57:37.121Z; generated/captured19:57:40.320Z. Expiry
+  **2026-11-07T01:57:29.219Z = Nov6,5:57:29PM Pacific**. No timestamp extended.
+- All23 public IDs/aliases EXACTLY match prior published7b93c23. Historical1–8
+  selections/votes/results/standings/prizes/monthly outcomes unchanged. Fresh bounded
+  API20 read compared against approved legacy/Week9 baseline and current public
+  projection: semantic parity PASS (only legitimate proof/generation times differ).
+  Week9 weekly aggregates21 rows, season23;9 missed opening selections in approved
+  SOURCE scoring. NO9+ individual selections, predictions, per-game eligibility,
+  votes or monthly comparisons in public JSON. Retention remains1–8 ONLY.
+- Actual JavaScript DOM checked desktop1440/tablet768/mobile390, cold+repeat:
+  five destinations, historic player view/matrix, Week9 withholding, aggregate rows,
+  approved Form link,32 logos, no overflow/runtime errors. Usable desktop1202ms/
+  repeat398ms; tablet730/394; mobile837/420. ONE same-origin snapshot request;
+  ZERO Apps Script requests/interaction API calls. Single observations, not an SLA.
+- Read-only Google preservation checks PASSED: production API20 deployment URL,
+  metadata and EDITOR HASHES unchanged; private cloud code exactly reviewed corrected
+  file; all other private files/manifest/access unchanged. No Sheet/Form/football-
+  trigger operations performed; publisher has no such writer interface. A full
+  physical Sheet/Form/installed-trigger inventory was NOT read or claimed frozen
+  against legitimate ongoing ESPN updates.
+- Public health monitor remains configured on main; latest observed successful
+  monitor is42278582488. Current public JSON independently validates as healthy.
+
+Clock has NOT been enabled. First scheduled publisher execution is NOT yet observed.
+Owner authorization exists, but runtime installPublisherTriggerApproved must be
+explicitly set/verified by owner before guarded installer. Do not reinitialize IDs,
+retry initial publication, add scopes, or introduce Mac dependencies.
+
+Exact next owner action in EXISTING private registry project:
+1. Project Settings > Script properties > PP4_CLOUD_SNAPSHOT_CONFIG: change ONLY
+   installPublisherTriggerApproved:false to true; keep all other fields and token.
+2. Editor: run **pp4InstallCloudSnapshotClock** ONCE. Existing code checks both owner
+   identities, reuses an existing single clock and blocks duplicates. Stop on any
+   unapproved scope request. No production football triggers are touched.
+3. Triggers panel: exactly one pp4CloudSnapshotTick time-driven15-minute clock.
+   Do NOT manually run pp4CloudSnapshotTick to simulate scheduling.
+4. After the next real clock invocation (approximately15minutes, can be delayed),
+   Executions must show pp4CloudSnapshotTick, Type Time-driven, Status Completed.
+   Share ONLY timestamp/type/status, never token/config/private state. Initial
+   scheduled tick may correctly return NOT_DUE: it verifies pending CI/CDN, records
+   cloud success and retains the adaptive next-due time, without an unnecessary commit.
+
+Scheduled observation limitation: existing authorized Script Processes API returned
+403, no scopes were added or requested. Use the owner Executions page receipt instead
+of broadening permissions or adding admin/diagnostic endpoints. After owner reports
+scheduled completion, independently recheck live JSON/monitor and source cadence
+before marking automation operational. Expected next renewal begins by~5:27PM Pacific
+(30-minute expiry margin, clock jitter applies). No Mac must remain running.
+
+Ignored receipts: tmp/performance/cloud-first-live (parity,all38file match,browser);
+private backend preservation receipt in existing activation/cloud-static directory.
+Exact private owner clock instructions will be saved there as CLOCK_ACTIVATION.md.
+Next working checkpoint is documentation-only after110cfa9; published SHA stays110cfa9.
+Rollback unchanged: gh workflow run pages.yml --ref develop -f profile=api; verify
+CI/deploy and live API site. Known-good API baseline6d1adea; API20 unchanged. Disable
+only publisher clock/config if needed; never delete registry Properties/backups.
+
+
+## Resolved incident — PUBLIC_WRITE; see verified publication above
 
 Owner supplied first manual tick11:42:10–11:42:25 Pacific, ending PUBLIC_WRITE.
 Read-only investigation onNov6 verified:

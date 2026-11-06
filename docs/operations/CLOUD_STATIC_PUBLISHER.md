@@ -1,42 +1,42 @@
-# Cloud static publisher — PUBLIC_WRITE investigation; trigger OFF
+# Cloud static publisher — first publication verified; clock activation pending
 
 
-## Current incident — PUBLIC_WRITE; publication retry/clock remain OFF
+## First cloud publication — VERIFIED; clock awaiting owner flag/installation
 
-Owner entered private token/config and ran the first tick once at11:42AM Pacific.
-No snapshot commit was created. develop has no protection/ruleset blocker, but the
-original blanket rethrow discarded the exact error. Do NOT diagnose a specific HTTP
-status or permission failure from PUBLIC_WRITE alone. Source/registry/privacy/history
-checks passed; dispatch had not yet executed.
+Owner corrected the existing repository-scoped token permissions and ran one tick.
+Snapshot commit110cfa9 at2026-11-06T19:57:42Z; Pages run42284191632 verified391/391
+ tests and deployed successfully19:59:27Z. All38 downloaded live files match the
+reviewed artifact. All23 IDs/scoring/history preserved,9+ protected data absent,
+Week9/season safe aggregates retained. Fresh API20 semantic parity passed; API20
+editor/deployment hashes and private project access/other source unchanged.
 
-At19:52Z only the private publisher file was updated with tested, redacted HTTP
-classification and finer state/write boundaries. No execution/retry or configuration/
-registry/trigger change. API20/editor and all other staging source/manifest/access
-remain unchanged.18 targeted tests PASS; new sealed candidate is local ignored
- tmp/cloud-publisher-public-write-fix (source and adjacent seal).
+Current snapshot expires2026-11-07T01:57:29.219Z (Nov6,5:57:29PM Pacific). Real cold
+usable desktop1.20s/mobile0.84s; zero Google browser requests. Clock is still OFF.
 
-Run **pp4InspectCloudGitHubReadOnly** once in the owner editor and share only its
-safe JSON report (GET-only,zero writes/attempts). It does not prove write permission.
-Review the existing fine-grained token privately: Enziuh resource owner, only
-Perfect-Pick-4.0 repository, Contents Read/write and Actions Read/write. Correct only
-missing already-approved settings. No Workflows/Admin/all-repository grant. Never
-send secrets or overwrite registry/state. If these settings are already correct,
-leave them unchanged and use diagnostic evidence before another write.
+### Exact owner-only clock activation
 
-After verification/correction, prepare ONE owner-run pp4CloudSnapshotTick. Updated
-errors distinguish GITHUB_HTTP_403_TOKEN_PERMISSION_DENIED,401 authentication,409
-SHA conflict,422 validation,branch policy/rate-limit and local intent/pending save
-boundaries. Raw GitHub responses/headers/request IDs are never logged. Successful
-GETs and repository push-role metadata cannot establish fine-grained write access.
-[GitHub troubleshooting](https://docs.github.com/en/rest/using-the-rest-api/troubleshooting-the-rest-api)
-explains permission errors and required-permission headers; headers list endpoint
-requirements, not the token's actual grants. The [Contents API](https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents)
-requires Contents write; Actions write is used later for dispatch, not this PUT.
+In the SAME private registry project, change ONLY installPublisherTriggerApproved
+to true inside PP4_CLOUD_SNAPSHOT_CONFIG (leave token/other fields untouched), then
+run **pp4InstallCloudSnapshotClock once**. Confirm exactly one time-driven15-minute
+pp4CloudSnapshotTick in Triggers. This installer does not create/modify any football
+trigger, invokes no scoring/Form functions, and blocks duplicates. Existing owner
+approval covers this after successful publication verification; stop on unexpected
+OAuth scopes. No Mac/Terminal/browser session is needed afterward.
 
-Public monitor remains active (main796efdef; first run42278582488 passed). Snapshot
-is healthy at current inspection and expiresNov6,4:39PM Pacific; no immediate rollback
-required, but refresh/approved API rollback must precede expiry. No first cloud
-publication or scheduled publisher execution is verified yet.
+Wait for a REAL scheduled execution, then inspect Executions: function
+pp4CloudSnapshotTick, Type Time-driven, Status Completed. Share only timestamp/type/
+status. A first scheduled NOT_DUE is correct: it verifies the pending Pages hash and
+records success without needlessly publishing unchanged data. Do not manually run
+the tick and call it scheduled. Next source generation follows adaptive cadence;
+current renewal margin begins~5:27PM Pacific. Observing at least one scheduled
+execution is required before declaring automation fully operational.
+
+The existing Script Processes API credential returned403 during optional observation;
+no permission was broadened. Use the owner Executions page rather than adding scopes.
+The independent main public monitor remains installed; no private credential/data
+access. Publisher errors now retain fixed status/boundary codes only. The former
+PUBLIC_WRITE was resolved following owner token correction; its original HTTP code
+was not preserved, so no retrospective403 claim is made.
 
 ## Decision and boundary
 
