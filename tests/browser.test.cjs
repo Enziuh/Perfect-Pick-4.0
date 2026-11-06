@@ -81,14 +81,14 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    if(m.id){const p=callbacks.get(m.id);callbacks.delete(m.id);if(m.error)p.reject(new Error(m.error.message));else p.resolve(m.result);return;}
    if(m.method==='Fetch.requestPaused'){
     const url=m.params.request.url;
-    if(apiReply&&url===apiEndpoint+'?action=dashboard4'){
+    if(apiReply&&url===apiEndpoint+'?action=dashboard4&rules=LATE_ENTRY_V1'){
      apiRequests.push(url);send('Fetch.fulfillRequest',{requestId:m.params.requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'},{name:'Access-Control-Allow-Origin',value:origin}],body:Buffer.from(JSON.stringify(apiReply)).toString('base64')},m.sessionId).catch(e=>requestError(m.sessionId,e));return;
     }
     const local=url.startsWith(origin+'/');
     if(!local)external.push(url);
     send(local?'Fetch.continueRequest':'Fetch.failRequest',local?{requestId:m.params.requestId}:{requestId:m.params.requestId,errorReason:'BlockedByClient'},m.sessionId).catch(e=>requestError(m.sessionId,e));
    }
-   if(m.method==='Network.requestWillBeSent' && !m.params.request.url.startsWith(origin+'/') && !m.params.request.url.startsWith('about:') && !(apiReply&&m.params.request.url===apiEndpoint+'?action=dashboard4'))external.push(m.params.request.url);
+   if(m.method==='Network.requestWillBeSent' && !m.params.request.url.startsWith(origin+'/') && !m.params.request.url.startsWith('about:') && !(apiReply&&m.params.request.url===apiEndpoint+'?action=dashboard4&rules=LATE_ENTRY_V1'))external.push(m.params.request.url);
    if(m.method==='Runtime.exceptionThrown')errors.push('Uncaught browser exception');
   });
   async function page(route=''){
@@ -415,7 +415,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
    await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");assert.equal(apiRequests.length,1);
    await navigate(connected,'overview');
-   assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Avery A.')"));
+   assert(await connected.evaluate("document.getElementById('championHeading').textContent.includes('Avery A.')"));assert(await connected.evaluate("[...document.querySelectorAll('[data-late-entry-policy]')].every(e=>e.hidden)"));
    await navigate(connected,'match-center');
    assert.equal(await connected.evaluate("document.querySelectorAll('#playerPickCards .player-pick-card').length"),2);
    assert(await connected.evaluate("[...document.querySelectorAll('.accuracy-indicator')].every(e=>e.title.includes('submitted picks with FINAL results'))"));
@@ -453,6 +453,32 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    assert.equal(await connected.evaluate("document.getElementById('formStatusBadge').textContent"),'Picks Open');
    assert(await connected.evaluate("document.getElementById('submitPicks').rel.includes('noopener')"));
    assert.equal(await connected.evaluate("document.querySelectorAll('#picks .vote-option,#picks .player-pick-card').length"),0);assert.equal(apiRequests.length,8);
+   await closePage(connected);privateAssets=null;apiReply=null;
+  }
+  {
+   const api=legacyApiExample(),now=Date.now(),at=new Date(now).toISOString();api.e.policy.now=now;api.cfg.authority=api.e.authority;api.cfg.prizeParticipants=23;
+   api.e.authority.closures.forEach(c=>{c.checkedAt=at;c.validUntil=new Date(now+120000).toISOString();});
+   const legacy=api.get();api.cfg.lateEntryRules='LATE_ENTRY_V1';
+   api.cfg.lateEntryEvidence=legacy.snapshot.weeks.map(w=>({week:w.week,verified:true,revision:1,verifiedAt:at,timezone:'America/Los_Angeles',deadline:new Date(now-7200000).toISOString(),firstGame:legacy.snapshot.games.find(g=>g.week===w.week).game,schedule:legacy.snapshot.games.filter(g=>g.week===w.week).map(g=>({game:g.game,kickoff:new Date(now-3600000).toISOString(),verified:true,revision:1}))}));
+   api.matrix.Responses.slice(1).forEach(r=>r[0]=new Date(now-5400000).toISOString());
+   api.deps.formState=()=>({acceptingResponses:api.matrix['Form Control'][1][5]==='OPEN',responderMatchesVerified:true});api.deps.timezone=()=> 'America/Los_Angeles';api.deps.nativeResponses=ctx=>require('../tools/scoring/native-responses.cjs').readNativeResponses(ctx.ss.getSheetByName('Responses'),ctx.games.map(g=>g.header));
+   apiReply=api.get();assert.equal(apiReply.schema,'PP4_JSON_V1');assert.equal(apiReply.snapshot.scoringBasis,'ELIGIBLE_SUBMITTED_FINAL_PICKS');
+   privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
+   await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");
+   await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+   await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
+   await connected.evaluate("document.getElementById('playerSelect').selectedIndex=1;document.getElementById('playerSelect').dispatchEvent(new Event('change'))");
+   await until(connected,"document.querySelectorAll('#playerPickCards .missed').length>0");
+   assert(await connected.evaluate("[...document.querySelectorAll('#playerPickCards .missed')].every(e=>e.textContent.includes('MISSED DEADLINE')&&e.textContent.includes('0 points')&&getComputedStyle(e.querySelector('strong')).textDecorationLine.includes('line-through'))"));
+   await connected.evaluate("document.querySelector('#pickMatrix>summary').click();document.querySelector('#matchGameResults .match-comparison>summary').click()");
+   assert(await connected.evaluate("document.querySelectorAll('#playerPicksBody .missed').length===2 && document.querySelectorAll('#matchGameResults .match-comparison .missed').length===2"));
+   assert.equal(await connected.evaluate("document.querySelectorAll('#picks .selection-choice.correct,#playerPicksBody .correct').length"),0);
+   for(const width of [360,390,430,768,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}
+   await navigate(connected,'guide/rules');assert(await connected.evaluate("!document.querySelector('#rules [data-late-entry-policy]').hidden"));
+   await navigate(connected,'guide/faq');assert.equal(await connected.evaluate("document.querySelectorAll('#faq [data-late-entry-policy]:not([hidden])').length"),4);
+   api.matrix['Form Control'][1][5]='OPEN';apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && !document.getElementById('refreshResults').disabled");
+   await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='2';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('playerSelect').disabled");
+   assert.equal(await connected.evaluate("document.querySelectorAll('#picks .missed,#picks .vote-option,#playerPicksBody .pick-cell').length"),0);
    await closePage(connected);privateAssets=null;apiReply=null;
   }
   for(const mode of ['missing','invalid','malformed','invalid-prediction']){

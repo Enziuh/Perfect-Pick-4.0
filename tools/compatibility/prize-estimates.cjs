@@ -11,7 +11,7 @@ function estimatePrizes(snapshot,facts,participants){
   const p=prize('W'+w.week,amount),games=snapshot.games.filter(g=>g.week===w.week),table=snapshot.standings.find(s=>s.key===p.key);
   const final=games.length>0&&games.every(g=>g.status==='FINAL');
   p.estimatedRolloverCents=null;
-  if(final&&table?.state==='AVAILABLE')p.estimatedRolloverCents=rules[0].ruleMode==='NEW'&&!table.rows.some(r=>r.points===games.length&&r.completedGames===games.length&&r.totalPicks===games.length)?amount:0;
+  if(final&&table?.state==='AVAILABLE'&&!snapshot.weeks.find(r=>r.week===w.week)?.picks?.some(p=>p.selections.some(s=>s.eligibility==='UNVERIFIED_CUTOFF')))p.estimatedRolloverCents=rules[0].ruleMode==='NEW'&&!table.rows.some(r=>r.points===games.length&&r.completedGames===games.length&&r.totalPicks===games.length)?amount:0;
   weekly.set(w.week,p);
  }
  for(const rule of facts.periods){

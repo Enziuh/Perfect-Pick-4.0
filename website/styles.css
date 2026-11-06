@@ -1995,3 +1995,10 @@ select,button:not(.submit-picks) {background:var(--panel2);color:var(--text);bor
 #playerPicksTable .pick-outcome {font-size:11px;margin:4px 0 0}
 #playerPicksTable .matrix-total {font-weight:800}
 @media(max-width:700px){.team-winner .team-result-right {flex-direction:column;align-items:flex-end;gap:4px}.team-winner .team-result-score {font-size:32px}.team-winner .team-result-right>strong {font-size:10px}.comparison-matrix>summary{font-size:16px}}
+
+/* Late-entry states are supplied only by validated eligibility-aware contracts. */
+.selection-choice.missed,.pick-cell.missed{color:var(--muted,#aeb9cb);background:transparent;border-color:currentColor}
+.selection-choice.missed strong,.pick-cell.missed strong{text-decoration:line-through;text-decoration-thickness:2px}
+.selection-choice.unverified,.pick-cell.unverified,.selection-choice.no-submission,.pick-cell.no-submission,.selection-choice.no-selection,.pick-cell.no-selection{color:var(--muted,#aeb9cb);background:transparent}
+.deadline-label-short{display:none}
+@media(max-width:600px){.deadline-label-full{display:none}.deadline-label-short{display:inline}}

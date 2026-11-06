@@ -12,7 +12,7 @@ function projectReply(r,map){
   ...pick(s,['version','revision','generatedAt','state','season','scoringBasis']),
   games:s.games.map(g=>pick(g,['game','week','home','away','kickoff','status','homeScore','awayScore','winner','verifiedAt'])),
   weeks:s.weeks.map(w=>({...pick(w,['week']),entry:pick(w.entry,['status','authority','revision','checkedAt','validUntil','deadline']),
-   ...(w.picks?{picks:w.picks.map(p=>({player:player(p.player),alias:p.alias,selections:p.selections.map(t=>pick(t,['game','team'])),...(p.prediction?{prediction:pick(p.prediction,['game','total'])}:{})}))}:{}),
+   ...(w.picks?{picks:w.picks.map(p=>({player:player(p.player),alias:p.alias,selections:p.selections.map(t=>pick(t,['game','team','eligibility'])),...(p.prediction?{prediction:pick(p.prediction,['game','total','eligibility'])}:{})}))}:{}),
    ...(w.votes?{votes:w.votes.map(v=>({...pick(v,['game','total']),teams:v.teams.map(t=>pick(t,['team','count','basisPoints']))}))}:{})})),
   standings:s.standings.map(t=>({...pick(t,['scope','key','weeks','state','reason']),...(t.rows?{rows:t.rows.map(r=>({...pick(r,['alias','rank','points','completedGames','totalPicks','accuracyBasisPoints']),player:player(r.player)}))}:{})})),
   months:s.months.map(m=>({...pick(m,['key','startWeek','endWeek','competitionComplete','designatedGame','state','actualTotal','method']),winner:m.winner===null?null:player(m.winner),...(m.comparisons?{comparisons:m.comparisons.map(c=>({player:player(c.player),...pick(c,['prediction','difference'])}))}:{})})),

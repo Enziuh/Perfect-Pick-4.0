@@ -37,7 +37,7 @@ function validatePublicInternal(snapshot,trust){
  }
  need(snapshot.state==='READY');
  for(const field of ['season','scoringBasis','weeks','games','standings','months','prizes'])need(Object.prototype.hasOwnProperty.call(snapshot,field));
- need(Number.isInteger(snapshot.season)&&snapshot.season>=2000&&snapshot.season<=2200&&snapshot.scoringBasis==='SUBMITTED_FINAL_PICKS');
+ need(Number.isInteger(snapshot.season)&&snapshot.season>=2000&&snapshot.season<=2200&&['SUBMITTED_FINAL_PICKS','ELIGIBLE_SUBMITTED_FINAL_PICKS'].includes(snapshot.scoringBasis));
  const fresh=value=>{const t=time(value);need(t<=generated&&trust.now-t<=trust.maxAgeMs);};
  const approved=row=>{key(row.player);need(row.player.startsWith('p_')&&trust.aliases.get(row.player)===row.alias&&safeAlias(row.alias));};
  const weeks=new Map();
@@ -73,9 +73,9 @@ function validatePublicInternal(snapshot,trust){
    const players=list(w.picks);unique(players.map(p=>p.player));
    for(const p of players){
     object(p,['player','alias','selections'],['prediction']);approved(p);
-    const selections=list(p.selections,32);unique(selections.map(s=>s.game));
-    for(const s of selections){object(s,['game','team']);const g=games.get(s.game);need(g&&g.week===w.week&&[g.home,g.away].includes(s.team));}
-    if(p.prediction!==undefined){object(p.prediction,['game','total']);const g=games.get(p.prediction.game);need(g&&g.week===w.week&&(p.prediction.total===null||integer(p.prediction.total)));}
+    const selections=list(p.selections,32);unique(selections.map(s=>s.game));if(snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS')need(selections.length===[...games.values()].filter(g=>g.week===w.week).length);
+    for(const s of selections){object(s,['game','team'],snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'?['eligibility']:[]);const g=games.get(s.game);need(g&&g.week===w.week&&([g.home,g.away].includes(s.team)||snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'&&s.team===null));if(snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS')need(['ELIGIBLE','MISSED_DEADLINE','UNVERIFIED_CUTOFF'].includes(s.eligibility));}
+    if(p.prediction!==undefined){object(p.prediction,['game','total'],snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'?['eligibility']:[]);if(p.prediction.eligibility!==undefined)need(p.prediction.eligibility==='UNVERIFIED_CUTOFF'&&p.prediction.total===null);const g=games.get(p.prediction.game);need(g&&g.week===w.week&&(p.prediction.total===null||integer(p.prediction.total)));}
    }
   }
   if(w.votes!==undefined){
@@ -83,7 +83,7 @@ function validatePublicInternal(snapshot,trust){
    for(const v of votes){
     object(v,['game','total','teams']);const g=games.get(v.game);need(g&&g.week===w.week&&integer(v.total));
     list(v.teams,2);need(v.teams.length===2);unique(v.teams.map(t=>t.team));
-    const counts=[g.home,g.away].map(team=>w.picks.reduce((sum,p)=>sum+Number(p.selections.some(s=>s.game===g.game&&s.team===team)),0));
+    const counts=[g.home,g.away].map(team=>w.picks.reduce((sum,p)=>sum+Number(p.selections.some(s=>s.game===g.game&&s.team===team&&(snapshot.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS'||s.eligibility==='ELIGIBLE'))),0));
     need(v.total===counts[0]+counts[1]);
     for(const t of v.teams){object(t,['team','count','basisPoints']);const index=[g.home,g.away].indexOf(t.team);need(index>=0&&t.count===counts[index]&&integer(t.basisPoints));
      const home=v.total?Math.round(counts[0]/v.total*10000):0;
@@ -119,10 +119,11 @@ function validatePublicInternal(snapshot,trust){
     need(same(s.rows.map(r=>r.player).sort(),w.picks.map(p=>p.player).sort()));
     for(const r of s.rows){
      const selections=w.picks.find(p=>p.player===r.player).selections;
-     const completed=selections.filter(p=>games.get(p.game).status==='FINAL');
+     const eligible=selections.filter(p=>p.team!==null&&(snapshot.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS'||p.eligibility==='ELIGIBLE'));
+     const completed=eligible.filter(p=>games.get(p.game).status==='FINAL');
      const correct=completed.filter(p=>{const g=games.get(p.game);return p.team===(g.winner==='HOME'?g.home:g.winner==='AWAY'?g.away:null);});
      need(r.points===correct.length&&r.completedGames===completed.length);
-     if(r.totalPicks!==undefined)need(r.totalPicks===selections.length);
+     if(r.totalPicks!==undefined)need(r.totalPicks===eligible.length);
     }
    }
   }else{
@@ -142,6 +143,7 @@ function validatePublicInternal(snapshot,trust){
   let expected='IN PROGRESS',winner=null,actual=null,method='NONE',comparisons;
   const g=games.get(m.designatedGame);
   if(g)need(g.week===Math.max(...s.weeks));
+  if(m.competitionComplete&&snapshot.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS'){need(!snapshot.weeks.filter(w=>s.weeks.includes(w.week)).some(w=>w.picks?.some(p=>p.selections.some(v=>v.eligibility==='UNVERIFIED_CUTOFF'))));const leaders=s.rows?.filter(r=>r.points===s.rows[0]?.points)||[];if(leaders.length>1)need(!weeks.get(games.get(m.designatedGame)?.week)?.picks?.some(p=>leaders.some(r=>r.player===p.player)&&p.prediction?.eligibility==='UNVERIFIED_CUTOFF'));}
   if(m.competitionComplete&&closed(s.weeks)&&s.state==='AVAILABLE'&&s.rows.some(r=>r.completedGames>0)){
    const leaders=s.rows.filter(r=>r.points===s.rows[0].points);
    if(final(s.weeks)){

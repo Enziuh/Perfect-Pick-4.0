@@ -151,6 +151,7 @@
   }
 
   function renderDashboard(prizes) {
+    document.querySelectorAll('[data-late-entry-policy]').forEach(node=>{node.hidden=prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
     if(liveView)setText('sourceStatusNote','Entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. Player picks appear only after verified closure.');
@@ -403,7 +404,7 @@
   }
 
   function selectionLabel(state) {
-    return state === 'correct' ? '✓ Correct' : state === 'wrong' ? '✕ Incorrect' : 'Pending';
+    return state === 'missed' ? '<span aria-label="MISSED DEADLINE · 0 points. The cutoff passed before submission."><span class="deadline-label-full">◷ MISSED DEADLINE</span><span class="deadline-label-short" aria-hidden="true">◷ MISSED</span> · 0 points</span>' : state === 'unverified' ? 'UNVERIFIED CUTOFF · Eligibility withheld' : state === 'no-submission' ? 'NO SUBMISSION · 0 points' : state === 'no-selection' ? 'NO PICK · 0 points' : state === 'correct' ? '✓ Correct' : state === 'wrong' ? '✕ Incorrect' : 'Pending';
   }
 
   // Reported OPEN improves messaging only; it never authorizes disclosure.
@@ -494,6 +495,7 @@
   function renderPlayerPrediction(player, data) {
     if (!publicPicks(data) || !data.tiebreak?.enabled) return '';
     if (!data.tiebreak.revealed) return '<p class="player-prediction">Tiebreak prediction unavailable until publication is confirmed.</p>';
+    if(player.tiebreakTimingUnverified)return '<p class="player-prediction">Tiebreaker eligibility unavailable: the late-entry timing rule needs confirmation.</p>';
     const raw = validTiebreakPrediction(player);
     const valid = raw !== null;
     const model = matchModels.find(m => m.game === data.tiebreak.game);
@@ -534,14 +536,14 @@
   function playerDetailsHtml(player,data) {
     return `<ul>${matchModels.map(model=>{
       const pick=model.selections.find(p=>p.name===player.name);
-      return `<li><span>${escapeHtml(model.game)}</span>${pick?`<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${teamBadgeHtml_(pick.pick,true,'pick-team-badge')}<strong>${escapeHtml(pick.pick)}</strong><small>${selectionLabel(pick.state)}</small></span>`:'<span>No selection</span>'}</li>`;
+      return `<li><span>${escapeHtml(model.game)}</span>${pick?`<span class="selection-choice ${pick.state}" style="${teamColorStyle_(pick.pick)}">${pick.pick?teamBadgeHtml_(pick.pick,true,'pick-team-badge'):''}<strong>${escapeHtml(pick.pick || '—')}</strong><small>${selectionLabel(pick.state)}</small></span>`:'<span>No selection</span>'}</li>`;
     }).join('')}</ul>${renderPlayerPrediction(player,data)}`;
   }
 
   function populateMatchComparison(details) {
     if(!currentMatchDisclosure(matchData)||details.dataset.built)return;
     const model=matchModels.find(m=>m.game===details.dataset.game);if(!model)return;
-    details.querySelector('ul').innerHTML=model.selections.map(p=>`<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick)}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('')||'<li>No selections for this matchup.</li>';
+    details.querySelector('ul').innerHTML=model.selections.map(p=>`<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick || '—')}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('')||'<li>No selections for this matchup.</li>';
     details.dataset.built='true';
   }
 
@@ -562,7 +564,7 @@
     $('playerPicksHead').innerHTML = `<tr><th scope="col">Player</th>${matchModels.map(model => `<th scope="col" class="game-th">${matchupHeaderHtml_(model.game)}</th>`).join('')}${showPrediction?'<th scope="col">Tiebreak total</th>':''}<th scope="col">Correct</th><th scope="col">Accuracy</th></tr>`;
     $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><th scope="row" class="player-name">${escapeHtml(player.name)}</th>${matchModels.map(model => {
       const pick = model.selections.find(p => p.name === player.name);
-      return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick)}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
+      return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick || '—')}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
     }).join('')}${showPrediction?`<td class="num matrix-prediction">${validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
   }
 

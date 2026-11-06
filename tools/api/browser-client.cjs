@@ -39,7 +39,7 @@ function install(root,config){
     if(attempt)await wait(attempt===1?400:1200);
     const controller=new root.AbortController(),timeout=root.setTimeout(()=>controller.abort(),20000);
     try{
-     const response=await root.fetch(endpoint+'?action=dashboard4',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
+     const response=await root.fetch(endpoint+'?action=dashboard4&rules=LATE_ENTRY_V1',{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',redirect:'follow',signal:controller.signal});
      if(!response.ok)throw Error('Network unavailable');
      if(!/^https:\/\/(?:script\.google\.com|script\.googleusercontent\.com)\//.test(response.url)||!/^application\/json\b/i.test(response.headers.get('content-type')||''))throw invalid();
      const text=await response.text();if(text.length>2000000)throw invalid();

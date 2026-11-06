@@ -1,4 +1,5 @@
 'use strict';
+const late=require('../scoring/late-entry.cjs');
 const {safeAlias}=require('../compatibility/pp3-display-name.cjs');
 const {VERSION,normalizeScore,validatePublic} = require('../contracts/live-contract.cjs');
 const {monthlyDecision} = require('./monthly-decision.cjs');
@@ -88,14 +89,17 @@ function weeklyProjection(rawWeek, entry, policy, games) {
   if(entry.status!=='CLOSED')return {table:base,complete:false}; // Do not read submissions before closure.
   if(policy.completeWeeks.get(rawWeek.week)!==true)return {table:{...base,reason:'INCOMPLETE'},complete:false};
   try {
-    const latest=new Map();
+    const latest=new Map(),candidates=new Map();
+    const lateRules=policy.lateEntryRules===late.RULE,cutoffs=policy.lateEntryEvidence?.get(rawWeek.week);
     for(const raw of array(rawWeek.submissions)) {
       requireValue(typeof raw.identity==='string' && raw.identity.length>0);
       if(!array(raw.selections,32).some(s=>s.pick!==null&&s.pick!==undefined&&String(s.pick).trim()!==''))continue;
-      const when=timestamp(raw.timestamp);requireValue(when<=policy.now); // Same legacy rule: no game selections means no weekly entry.
+      let when;try{when=timestamp(raw.timestamp);requireValue(when<=policy.now);}catch(e){if(lateRules)continue;throw e;} // Same legacy rule: no game selections means no weekly entry.
+      if(lateRules){try{selectionsProjection(raw,rawWeek.week,policy,games);}catch{continue;}const items=candidates.get(raw.identity)||[];items.push(raw);candidates.set(raw.identity,items);continue;}
       const previous=latest.get(raw.identity);
       if(!previous || when>=previous.when)latest.set(raw.identity,{raw,when});
     }
+    if(lateRules)for(const [identity,items] of candidates){const chosen=late.selectEntry(items,cutoffs,policy.now,policy.maxAgeMs);if(chosen.entry)latest.set(identity,{raw:chosen.entry,when:timestamp(chosen.entry.timestamp),entryState:chosen.state});}
     for(const candidate of latest.values())candidate.selections=selectionsProjection(candidate.raw,rawWeek.week,policy,games);
     const approvals=[];
     for(const identity of latest.keys()){
@@ -106,27 +110,31 @@ function weeklyProjection(rawWeek, entry, policy, games) {
       approvals.push(a);
     }
     if(new Set(approvals.map(a=>a.player)).size!==approvals.length || new Set(approvals.map(a=>a.alias)).size!==approvals.length)return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
-    const picks=[...latest.values()].map(({raw,selections},i)=>{
+    const picks=[...latest.values()].map(({raw,selections,entryState},i)=>{
+      if(lateRules)selections=games.filter(g=>g.week===rawWeek.week).map(g=>({game:g.game,team:selections.find(s=>s.game===g.game)?.team??null,eligibility:late.eligibility(raw.timestamp,g.game,cutoffs,policy.now,policy.maxAgeMs)}));
       const a=approvals[i],pick={player:a.player,alias:a.alias,selections};
       const period=policy.periods.find(p=>p.endWeek===rawWeek.week && p.designatedGame!==null);
       if(period){
         let total=null;
         try{if(gameDefinition(rawWeek.week,raw.prediction?.game,policy)?.game===period.designatedGame)total=normalizeScore(raw.prediction.value);}catch{/* Missing/invalid predictions are ineligible, never zero. */}
-        pick.prediction={game:period.designatedGame,total};
+        // No new late-tiebreak deadline is invented. Unknown late policy blocks decisions.
+        if(lateRules&&entryState!=='ON TIME')total=null;
+        pick.prediction={game:period.designatedGame,total,...(lateRules&&entryState!=='ON TIME'?{eligibility:'UNVERIFIED_CUTOFF'}:{})};
       }
       return pick;
     }).sort((a,b)=>a.player.localeCompare(b.player));
     const rows=ranked(picks.map(p=>{
-      const completed=p.selections.filter(s=>games.find(g=>g.game===s.game).status==='FINAL');
+      const eligible=p.selections.filter(s=>(!lateRules||s.eligibility==='ELIGIBLE')&&s.team!==null);
+      const completed=eligible.filter(s=>games.find(g=>g.game===s.game).status==='FINAL');
       const correct=completed.filter(s=>{const g=games.find(g=>g.game===s.game);return s.team===(g.winner==='HOME'?g.home:g.winner==='AWAY'?g.away:null);});
-      return {player:p.player,alias:p.alias,points:correct.length,completedGames:completed.length,totalPicks:p.selections.length};
+      return {player:p.player,alias:p.alias,points:correct.length,completedGames:completed.length,totalPicks:eligible.length};
     }));
     const votes=games.filter(g=>g.week===rawWeek.week).map(g=>{
-      const counts=[g.home,g.away].map(team=>picks.filter(p=>p.selections.some(s=>s.game===g.game && s.team===team)).length);
+      const counts=[g.home,g.away].map(team=>picks.filter(p=>p.selections.some(s=>s.game===g.game && s.team===team && (!lateRules||s.eligibility==='ELIGIBLE'))).length);
       const total=counts[0]+counts[1],home=total?Math.round(counts[0]/total*10000):0;
       return {game:g.game,total,teams:[g.home,g.away].map((team,i)=>({team,count:counts[i],basisPoints:total?(i===0?home:10000-home):0}))};
     });
-    return {table:{scope:'WEEKLY',key:base.key,weeks:base.weeks,state:'AVAILABLE',rows},picks,votes,complete:true};
+    return {table:{scope:'WEEKLY',key:base.key,weeks:base.weeks,state:'AVAILABLE',rows},picks,votes,complete:true,tiebreakUnverifiedPlayers:lateRules?[...latest.values()].flatMap((c,i)=>c.entryState!=='ON TIME'?[approvals[i].player]:[]):[],cutoffUnverified:lateRules&&picks.some(p=>p.selections.some(s=>s.eligibility==='UNVERIFIED_CUTOFF'))};
   }catch{return {table:{...base,reason:'INCOMPLETE'},complete:false};}
 }
 function aggregate(scope,key,weeks,tables) {
@@ -142,6 +150,7 @@ function aggregate(scope,key,weeks,tables) {
 }
 function accountingProjection(key,policy) {
   const unavailable={key,currency:'USD',poolCents:null,poolState:'UNAVAILABLE',allocationState:'UNAVAILABLE',paymentState:'UNKNOWN'};
+  if(policy.lateEntryRules===late.RULE)return unavailable; // Legacy accounting is not reauthorized by a scoring update.
   const evidence=policy.accounting.get(key);
   if(!evidence || evidence.snapshotRevision!==policy.revision || !fresh(evidence.verifiedAt,policy))return unavailable;
   const raw=evidence.value;
@@ -167,11 +176,14 @@ function projectCompetition(source,policy) {
     if(source.revision!==policy.revision)return unavailable('INCONSISTENT');
     const rawWeeks=array(source.weeks,18),numbers=rawWeeks.map(w=>w.week);unique(numbers);
     let games;try{games=gamesProjection(source,policy,numbers);}catch{return unavailable('INVALID_RESULTS');}
-    const snapshot={version:VERSION,revision:policy.revision,generatedAt,state:'READY',season:source.season,scoringBasis:'SUBMITTED_FINAL_PICKS',weeks:[],games,standings:[],months:[],prizes:[]};
+    const snapshot={version:VERSION,revision:policy.revision,generatedAt,state:'READY',season:source.season,scoringBasis:policy.lateEntryRules===late.RULE?'ELIGIBLE_SUBMITTED_FINAL_PICKS':'SUBMITTED_FINAL_PICKS',weeks:[],games,standings:[],months:[],prizes:[]};
+    const unverifiedTiebreakWeeks=new Map(),unverifiedCutoffWeeks=new Set();
     const trust={now:policy.now,maxAgeMs:policy.maxAgeMs,aliases:new Map(),closures:new Map(),aliasCompleteness:new Map(),prizes:new Map()};
     for(const rawWeek of rawWeeks){
       const entry=entryProjection(policy.closures.get(rawWeek.week),policy);
       const projected=weeklyProjection(rawWeek,entry,policy,games);
+      if(projected.tiebreakUnverifiedPlayers?.length)unverifiedTiebreakWeeks.set(rawWeek.week,projected.tiebreakUnverifiedPlayers);
+      if(projected.cutoffUnverified)unverifiedCutoffWeeks.add(rawWeek.week);
       const publicWeek={week:rawWeek.week,entry};
       if(projected.complete){publicWeek.picks=projected.picks;publicWeek.votes=projected.votes;for(const p of projected.picks)trust.aliases.set(p.player,p.alias);}
       snapshot.weeks.push(publicWeek);snapshot.standings.push(projected.table);
@@ -183,7 +195,9 @@ function projectCompetition(source,policy) {
       const weeks=Array.from({length:period.endWeek-period.startWeek+1},(_,i)=>period.startWeek+i);
       const table=aggregate('MONTHLY',period.key,weeks,snapshot.standings);snapshot.standings.push(table);
       const evidence=policy.decisions.get(period.key);
-      const complete=evidence?.snapshotRevision===policy.revision && evidence?.complete===true && fresh(evidence?.verifiedAt,policy);
+      const leaders=table.rows?.filter(r=>r.points===table.rows[0]?.points)||[];
+      const tiebreakUnknown=leaders.length>1&&leaders.some(r=>unverifiedTiebreakWeeks.get(period.endWeek)?.includes(r.player));
+      const complete=!weeks.some(w=>unverifiedCutoffWeeks.has(w)) && !tiebreakUnknown && evidence?.snapshotRevision===policy.revision && evidence?.complete===true && fresh(evidence?.verifiedAt,policy);
       snapshot.months.push(monthlyDecision(period,complete,snapshot,table));
     }
     snapshot.standings.push(aggregate('SEASON','S'+source.season,array(policy.seasonWeeks,18),snapshot.standings));
