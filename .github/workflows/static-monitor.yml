@@ -1,0 +1,25 @@
+# CANDIDATE ONLY. Owner approval required to install this ONE file on default main.
+name: Monitor public static snapshot
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: public-static-monitor
+  cancel-in-progress: false
+jobs:
+  public-health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: develop
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tools/snapshots/public-monitor.cjs
+# No credentials, raw API call, artifact upload or deployment capability.
