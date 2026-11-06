@@ -1,12 +1,75 @@
 # API v20 static preparation measurements
 
-Current production usable-time/FCP/LCP baseline: **unavailable**. The actual API
-returns UNAVAILABLE after the Responses display-format change; no usable dashboard
-or live performance improvement is claimed. Actual error-state DOM was checked at
-360/390/430/768/1440: no page overflow; obsolete three-hour and synthetic-picks FAQ
-copy was observed and corrected locally.
+## Fresh recovered API20 versus matching static data — November6,2026
 
-## Equivalent captured-real-data comparison
+API20 is healthy following the owner's restoration of standard timestamp display.
+No backend repair was uploaded. Both comparison profiles use the same frontend
+assets hosted on the same gzip loopback server, Chrome156,40ms network latency,
+10Mbps down/5Mbps up and4x CPU slowdown. The API profile makes REAL Google API20
+requests; static reads same-origin JSON. No CDP replay or frozen clock was used.
+All four API captures match the fresh source apart from verification timestamps.
+Projection/decoded model parity passed; all23 existing random IDs are preserved.
+Cold uses cleared HTTP cache; repeat uses a new page with retained HTTP cache.
+One observation per viewport/visit; sequential runs, not percentiles or an SLA.
+
+|Viewport/visit|Live Google usable ms|Local static usable ms|Saved ms|Observed reduction|
+|---|---:|---:|---:|---:|
+|1440/cold|15269.3|593.6|14675.7|96.1%|
+|1440/repeat|13373.5|427.7|12945.8|96.8%|
+|390/cold|13711.0|589.9|13121.1|95.7%|
+|390/repeat|14460.2|429.5|14030.7|97.0%|
+
+|Viewport/visit|API/static FCP ms|API/static LCP ms|API/static page load ms|API/static transferred bytes|
+|---|---:|---:|---:|---:|
+|1440/cold|264.0/276.0|264.0/276.0|379.6/400.3|88477/91768|
+|1440/repeat|256.0/236.0|256.0/236.0|255.5/251.4|25359/25026|
+|390/cold|276.0/260.0|276.0/260.0|396.1/397.8|62154/65727|
+|390/repeat|244.0/240.0|244.0/240.0|262.8/254.8|23417/25026|
+
+Static does not reduce this already-small API transfer: the benefit is avoiding
+Google request latency. Each visit makes one API request OR one static JSON request;
+interactions make zero extra requests in either profile. Static JSON is327,920 raw /
+17,929 gzip bytes. Reported bytes are CDP encoded bytes through usable+200ms, not
+complete TLS/DNS/redirect overhead. LCP is last observed before interactions.
+
+|Viewport/visit|Static standings ms|Week switch ms|Player ms|Matrix ms|API/static JS ms|API/static layout ms|
+|---|---:|---:|---:|---:|---:|---:|
+|1440/cold|36.5|66.1|77.2|64.3|38.2/38.2|119.0/123.7|
+|1440/repeat|35.0|67.3|50.9|54.9|36.1/35.8|132.7/128.0|
+|390/cold|48.4|62.3|50.1|49.5|40.1/42.9|134.4/125.6|
+|390/repeat|52.0|63.7|30.4|43.7|40.8/35.4|134.6/130.7|
+
+Matrix cells remain unbuilt until Compare All Players opens. Both profiles retain
+working23-player views, standings and week switching. Zero runtime exceptions;
+static desktop/mobile checks found no page-wide overflow. This is a restricted
+local full-model benchmark, not a production static deployment. Its Week9 records
+were used only during the original short-lived API proof. Durable1–8 candidate
+physically strips Week9 protected data and dependent aggregates. Full current-season
+static feature parity therefore still requires separate Week9 retention approval.
+
+## Actual published API-backed website
+
+The existing Pages website was measured separately, with real Google responses under
+the same browser throttling. Different asset hosting prevents treating this table
+as the controlled comparison above.
+
+|Viewport|Cold usable ms|Repeat usable ms|Cold FCP/LCP ms|Cold bytes|
+|---|---:|---:|---:|---:|
+|1440|15199.0|14171.9|644.0/644.0|93656|
+|768|15487.4|16924.7|572.0/572.0|66276|
+|390|17312.9|13206.8|324.0/324.0|62612|
+
+All six published samples loaded real competition data, had zero runtime exceptions
+and no interaction API requests. Local static subsecond observations are NOT a
+GitHub Pages load guarantee; final CDN checks require approved static publication.
+Underlying ESPN/Sheets score-write time is unavailable inAPI20, so observed capture
+and generation times are not presented as score freshness. No real JSON was published.
+Numeric reports/captures are ignored under tmp/performance/restored-v20-live and
+restored-v20-comparable. Private registry material remains outside the repository.
+
+## Earlier controlled replay — historical, superseded by fresh comparison
+
+
 
 Both profiles use the SAME last verified real v20 dataset and preserved random IDs,
 272 games/23 approved aliases, same dashboard assets, Chrome156,4x CPU,40ms latency,
@@ -38,7 +101,7 @@ Matrix is empty until opened. Filter/navigation/rendering remain on demand.
 
 These measurements show the existing static path is viable with real captured data.
 They do NOT establish a current live API comparison or a GitHub Pages load-time
-guarantee. After timestamp repair, repeat fresh equivalent-data live and CDN checks;
+guarantee. The fresh comparison above supersedes the former live-data blocker; final CDN checks require approval;
 a provisional cold usable target under2s should be tested, not promised.
 Numeric samples remain in ignored tmp/performance/v20-comparable-final, without
 raw submissions, contacts, mappings or recovery keys in this report. No real data

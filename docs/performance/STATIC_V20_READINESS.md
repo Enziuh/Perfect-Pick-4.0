@@ -3,30 +3,25 @@
 Production remains API20 on the existing URL. Pages stays on its API profile.
 No real JSON, mapping, credential, recovery export or raw submission belongs in Git.
 
-## Timestamp dependency and narrowly prepared repair
+## Timestamp resolution — API20 unchanged
 
-The new readable Responses display format is rejected by the original legacy
-`new Date(displayText)` parser. The live dashboard4 currently returns UNAVAILABLE.
-Its historical selection path rejects timestamp0 even though the Week9 eligibility
-path already uses native Dates. The exact native cell types are not yet independently
-read: the existing direct Sheets client returns403 accessNotConfigured. No OAuth,
-service settings, data values or number formats were changed.
+Fresh read-only verification on November6 after the owner restored the standard
+24-hour/seconds display PASSED: API20 READY,272 games/122 FINAL, all23 identities
+unchanged, Weeks1–8 historical results and Week9 approved classifications/standings
+exactly match the approved API20 capture. The verified Form responder URL is unchanged.
+Weeks1–9 currently disclose with verified CLOSED evidence; future weeks remain withheld.
+Incomplete monthly periods remain unavailable rather than inventing results.
 
-The prepared opt-in dashboard4 compatibility context uses the existing native reader,
-privately matches row identity/selections, normalizes native instants in memory, and
-passes the same original historical selection/prize helpers their original instants.
-The source response records are untouched. New explicit English-text parsing supports
-spaces, NBSP and narrow NBSP using the Sheet timezone; weekday/calendar errors and
-ambiguous/nonexistent DST wall times fail closed. Native subseconds are retained.
-A bounded count-only `timestamp-health.cjs` inspection reads columnA only. Its local
-owner-editor wrapper is disabled, has no HTTP handler and has NOT been uploaded.
-
-A private sealed candidate against immutable20 changes ONLY PerfectPick4_Json, enabling
-`nativeTimestampCompatibility:true`. It reads the actual spreadsheet timezone. Original
-API routes, writer/ESPN/Form code, manifest, deployment URL and registry are unchanged.
-Separate owner approval is needed before staging upload/read and production promotion.
-Rollback would be20; unpublished editor state must again be backed up/restored exactly.
-A new API version is NOT authorized by the current frontend/static-preparation task.
+The prepared native-timestamp compatibility repair is NOT required for current
+activation and must remain undeployed. The prior UNAVAILABLE result is historical.
+Actual Date/text cell types remain unverified: the existing direct Sheets client403
+blocker was not retried or bypassed. Recovery after a display-only restoration is
+consistent with the legacy display parser dependency; no new cell-type inspection
+is claimed. Native Week9 timestamps and exact scoring parity pass. Range reads include
+filtered rows; no filter state or source values were changed. A regression verifies
+that standard24-hour display and filter presence do not omit native timestamp records.
+Existing tests cover authoritative Pacific interpretation, DST, subsecond precision,
+exact cutoff eligibility and protected first-entry/resubmission selection.
 
 ## Public contract and physical disclosure filtering
 
@@ -96,10 +91,10 @@ content. No API writer or existing ESPN/Form trigger is part of the publisher.
 
 ## Activation gates
 
-1. Authorize/verify the narrow timestamp compatibility repair and native cell types;
-   regain fresh API20-compatible data and privately recheck Week9 approved scoring.
-2. Repeat fresh live-vs-static measurements; the current usable-time baseline is
-   unavailable. Existing captured-data results do not prove current production speedup.
+1. Fresh API20 schema/scoring parity verification PASSED after the owner's display
+   restoration. No backend repair, new scope or deployment is required.
+2. Fresh live-versus-static measurements are recorded in STATIC_V20_MEASUREMENTS.md.
+   Restricted local snapshots are not public CDN performance guarantees.
 3. Explicitly approve irreversible Week9 retention if full current player/season views
    are required. Never extend approval to future weeks automatically.
 4. Approve the private publisher input/access arrangement, tested adaptive scheduling,

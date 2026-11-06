@@ -1,6 +1,102 @@
 # Static snapshot progress
 
-## RESUME HERE — clean usage-limit checkpoint
+## CURRENT RESUME — restored format; API20 HEALTHY
+
+Owner restored standard24-hour/seconds timestamp display (e.g.10/1/2026 8:41:28)
+and reported a Sheet filter. Fresh bounded read-only verification now PASSED:
+API20 active, health/schema READY,272 games/122 FINAL,23 identical IDs/aliases.
+Weeks1–8 selections/standings/prizes and completed monthly champions EXACTLY match
+last approved v20. Week9 classifications/selections/weekly+season totals/ranks also
+match exactly (including9 missed opening selections). Weeks1–9 CLOSED/disclosed;
+future weeks remain physically withheld. M1/M2 and season available; incomplete
+M3–M5 remain withheld, not fabricated. Verified responder URL unchanged.
+
+The prepared native-timestamp compatibility repair is NOT REQUIRED for current
+activation. Do not upload it merely because it exists. API20/editor/deployments,
+Sheet cells/formats/filter, Forms, triggers, OAuth and registry remain untouched.
+Actual underlying Date/text cell types still UNVERIFIED: the known direct Sheets
+client403 blocker was not retried or bypassed. Restored successful native Week9
+scoring and exact parity support a display-format resolution; do not claim a new
+cell-type inspection. Range getValues/getDisplayValues reads include filtered rows;
+no visible-row-only operation exists in the source. DST/cutoff regressions remain.
+
+### Completed fresh verification and measurements
+
+Starting HEAD0d74e66; published frontend/rollback6d1adea unchanged. This focused
+checkpoint changes only the three static performance documents and one timestamp
+regression. No production code, frontend runtime, Pages workflow, registry or private
+configuration changed. The next documentation/test commit is the latest successful
+checkpoint; resolve it with `git log -1 --format=%h` (avoid a self-referential hash).
+
+- Fresh read-only API/schema/approved scoring parity PASS; private receipt outside
+  Git under activation/late-entry-production-activation/restored-format-verification.
+-99 targeted tests PASS (57 timestamp/late-entry/static schema/privacy +42 registry
+  safeguards/security/API compatibility/static assets); zero failures/skips. Previous
+  complete372-test suite remains the latest full run; it was not unnecessarily rerun
+  for documentation and one test-only addition. New regression verifies standard
+  24-hour display/filter presence preserves native instants and all bounded records.
+- Actual published site profiled at1440/768/390, cold+repeat: six usable loads, zero
+  runtime exceptions, zero extra API requests while navigating/choosing weeks/players.
+- Matching-data live Google versus local static benchmark uses REAL clock/no replay,
+  same loopback frontend hosting,4xCPU,40ms/10Mbps, desktop1440/mobile390 cold+repeat.
+  All four real source captures equal the fresh generation input except proof times.
+  Live usable13.37–15.27s; static0.43–0.59s, observed95.7–97.0% lower latency.
+  These are single observations, NOT production CDN guarantees. Static transfer is
+  not smaller than the existing compressed API: improvement avoids Google latency.
+- Strict projection/full decoded model parity PASS,23 existing random IDs unchanged;
+  no cloud registry access, recovery/setup, Keychain change or new ID assignment.
+- Actual local retained artifact staged/sealed/verified: exact38-file inventory,
+  public allowlists/private-reference scans and all32 supplied SVGs. Retention1–8;
+  Week9 protected values physically absent. No real artifact uploaded/published.
+- API20 does not provide underlying score-write time; keep scoreUpdatedAt/publishedAt
+  unknown in immutable candidate rather than inventing freshness. Adaptive15/30/6h
+  planner and unchanged-content checks remain prepared, unscheduled and OFF.
+
+Measurements/method: STATIC_V20_MEASUREMENTS.md. Restricted ignored benchmark files:
+tmp/performance/restored-v20-live and restored-v20-comparable. Never commit those
+captures, artifact JSON or private configuration. Existing encrypted generation1
+backups/Keychain remain unchanged; no need to initialize or recover again.
+
+### Final owner approval package — no backend repair required
+
+1. Publish the exact38-file static frontend inventory (existing frontend assets and
+   32SVGs, replace fixtures/preview.json with data/snapshot.json), switch the existing
+   Pages source profile only after first exact artifact validation. JSON fields are
+   strictly schema.cjs allowlisted public results/aliases/random IDs/scoring/estimates
+   and eligible retained selections/predictions/votes; no mapping/API endpoint/secret.
+2. Retention1–8 is already approved. Separately approve durable cached Week9 protected
+   records if full current-week/season features are wanted; current live disclosure
+   alone does not authorize this. Future weeks need independent CLOSED evidence and
+   owner retention approval. Without approval, keep those protected scopes omitted.
+3. Approve existing owner-Mac private publisher input using the pinned generation1
+   encrypted recovery mirror/Keychain and existing GitHub CLI credentials; or verify
+   existing owner-only cloud registry read access separately. No new credential,
+   OAuth client, secret in Actions, mapping upload or registry rotation is proposed.
+   Cloud primary remains intact; unattended cloud access is still not demonstrated.
+4. Approve installing/activating the prepared adaptive15/30/6h publication schedule
+   and first real static artifact after fail-closed generation/integrity checks.
+   Existing ESPN/Form writers remain sole production writers. Scores cannot become
+   newer through republication; skip unchanged content, preserve safe last-good output,
+   reject missing/stale authorization, and keep truthful age/expiry indicators.
+
+Rollback: existing api Pages profile at6d1adea/current API20 URL; stop private worker
+and restore that known-good frontend. No Apps Script deployment rollback is needed
+because API20 has not changed. Public snapshots may remain cached; retention cannot
+promise complete revocation.
+
+### Exact resume
+
+Read this CURRENT RESUME entry and STATIC_V20_READINESS.md; run `git status --short`
+and `git log -1 --format='%h %s'`. Completed preparation/benchmark work must NOT be
+repeated. Wait for the single static activation/Week9-retention/publisher-arrangement
+approval above. Then implement only the approved existing workflow/profile/publisher
+activation, generate a fresh exact artifact, run required release checks, deploy and
+verify CDN performance/privacy. Until approval, production stays API-backed and the
+publisher stays OFF. Do not upload the unused timestamp repair or retry blocked
+Sheets API access. Underlying cell types remain the explicit nonblocking unknown.
+
+
+## Earlier checkpoint — superseded by CURRENT RESUME above
 
 Latest passing implementation and PUBLISHED frontend: **6d1adea** on develop.
 Final documentation-only checkpoint follows this entry. Worktree was clean before

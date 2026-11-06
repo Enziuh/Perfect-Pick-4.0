@@ -22,3 +22,10 @@ test('bounded owner type inspection returns only counts and preserves native sub
  const {inspect}=require('../tools/scoring/timestamp-health.cjs'),time=new Date('2026-11-06T02:54:26.123Z'),calls=[],sheet={getLastRow:()=>2,getRange:(...args)=>{calls.push(args);return args[0]===1?{getValues:()=>[['Timestamp']]}:{getValues:()=>[[time]],getDisplayValues:()=>[['Thursday, November 5, 2026 at 6:54:26\u202fPM']]};}};
  const r=inspect(sheet,'America/Los_Angeles');assert.equal(r.nativeDates,1);assert.equal(r.validInstants,1);assert.equal(r.displaySecondsAgree,1);assert.equal(r.subsecondsPreserved,1);assert.equal(r.writes,0);assert.deepEqual(calls,[[1,1,1,1],[2,1,1,1]]);assert(!JSON.stringify(r).includes('2026-'));assert.equal(time.toISOString(),'2026-11-06T02:54:26.123Z');
 });
+test('standard 24-hour display and a Sheet filter do not change native timestamp inspection or omit filtered records',()=>{
+ const {inspect}=require('../tools/scoring/timestamp-health.cjs');
+ const values=[[new Date('2026-11-06T02:54:26.123Z')],[new Date('2026-11-06T03:00:00Z')]],display=[['11/5/2026 18:54:26'],['11/5/2026 19:00:00']],calls=[];
+ const sheet={getLastRow:()=>3,isRowHiddenByFilter(){throw Error('Filtered rows must not be excluded');},getFilter(){throw Error('No filter changes or visible-row reads');},getRange(...args){calls.push(args);return args[0]===1?{getValues:()=>[['Timestamp']]}:{getValues:()=>values,getDisplayValues:()=>display};}};
+ const before=values.map(r=>r[0].toISOString()),result=inspect(sheet,'America/Los_Angeles');
+ assert.equal(result.records,2);assert.equal(result.nativeDates,2);assert.equal(result.validInstants,2);assert.equal(result.invalidInstants,0);assert.equal(result.subsecondsPreserved,1);assert.equal(result.writes,0);assert.deepEqual(calls,[[1,1,1,1],[2,1,2,1]]);assert.deepEqual(values.map(r=>r[0].toISOString()),before);
+});
