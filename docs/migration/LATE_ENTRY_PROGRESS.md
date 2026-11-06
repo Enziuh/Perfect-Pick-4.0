@@ -1,6 +1,7 @@
 # Perfect Pick 4.1 late-entry checkpoint
 
 Baseline/rollback source:4266fb4 on develop. Published website/API18 were NOT changed.
+Latest passing implementation:8191922 (341/341 PASS), committed/pushed to develop.
 Latest tested full baseline before this work:321 tests. Do not resume registry setup or
 Week9 diagnostics as part of this scoring task; their checkpoints remain separate.
 
@@ -75,7 +76,8 @@ Final logs:/private/tmp/pp4-late-entry-all-tests.log and pp4-late-entry-stage.lo
 
 ## Exact next step
 
-Implementation/test milestone COMPLETE; safe commit/push records follow below.
+Implementation/test milestone COMPLETE;8191922 committed and pushed normally.
+No API upload, Google execution, Pages deployment or static publication occurred.
 Resume in ORIGINAL project on develop, not the detached validation worktree. Read this
 checkpoint and LATE_ENTRY_RULES.md; do not rebuild completed scoring/UI or rerun consent.
 Pending owner question: late monthly prediction cutoff (official weekly deadline vs
