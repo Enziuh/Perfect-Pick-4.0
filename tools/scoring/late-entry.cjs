@@ -1,10 +1,12 @@
 'use strict';
 // Pure private scoring. No services, logs, identity generation or deadline inference.
 const RULE='LATE_ENTRY_V1';
+const applies=(policy,week)=>policy.lateEntryRules===RULE&&week>=(policy.lateEntryStartWeek??9);
 function instant(value){
  try{if(Object.prototype.toString.call(value)==='[object Date]')value=Date.prototype.toISOString.call(value);
- if(typeof value!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{3})?(?:Z|[+-]\d\d:\d\d)$/.test(value))return null;
- const [year,month,day,hour,minute,second]=value.match(/\d+/g).slice(0,6).map(Number),wall=new Date(Date.UTC(year,month-1,day,hour,minute,second));
+ if(typeof value!=='string')return null;
+ const m=value.match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d)(?:\.(\d{3}))?)?(Z|[+-]\d\d:\d\d)$/);if(!m)return null;
+ const [year,month,day,hour,minute]=m.slice(1,6).map(Number),second=Number(m[6]||0),wall=new Date(Date.UTC(year,month-1,day,hour,minute,second));
  if(wall.getUTCFullYear()!==year||wall.getUTCMonth()+1!==month||wall.getUTCDate()!==day||wall.getUTCHours()!==hour||wall.getUTCMinutes()!==minute||wall.getUTCSeconds()!==second)return null;
  const n=Date.parse(value);return Number.isFinite(n)?n:null;}catch{return null;}
 }
@@ -14,7 +16,7 @@ function cutoff(game,evidence,now,maxAgeMs){
  const matches=evidence.schedule.filter(g=>g.game===game);if(matches.length!==1)return null;
  const first=evidence.schedule.filter(g=>g.game===evidence.firstGame);if(first.length!==1||first[0].verified!==true||first[0].revision!==evidence.revision||first[0].unresolvedReschedule===true||instant(first[0].kickoff)===null)return null;
  const row=matches[0];if(row.verified!==true||row.revision!==evidence.revision||row.unresolvedReschedule===true||instant(row.kickoff)===null)return null;
- if(game===evidence.firstGame){const deadline=instant(evidence.deadline);return deadline!==null&&deadline<=instant(row.kickoff)?deadline:null;}
+ if(game===evidence.firstGame){const deadline=instant(evidence.deadline);return deadline!==null&&deadline===instant(row.kickoff)-3600000?deadline:null;}
  return instant(row.kickoff)>=instant(first[0].kickoff)?instant(row.kickoff):null;
 }
 function fingerprint(row){return JSON.stringify({selections:[...row.selections].map(s=>[s.game,s.pick??null]).sort(),prediction:row.prediction??null});}
@@ -41,4 +43,4 @@ function score(entry,games,evidence,now,maxAgeMs){
  const eligible=selections.filter(s=>s.eligibility==='ELIGIBLE'&&s.pick),completed=eligible.filter(s=>games.find(g=>g.game===s.game).status==='FINAL'),points=selections.reduce((n,s)=>n+s.points,0);
  return {points,completedGames:completed.length,totalPicks:eligible.length,perfectWeek:games.length>0&&points===games.length&&completed.length===games.length&&eligible.length===games.length,selections};
 }
-module.exports={RULE,instant,verified,cutoff,selectEntry,eligibility,predictionEligibility,score};
+module.exports={RULE,applies,instant,verified,cutoff,selectEntry,eligibility,predictionEligibility,score};

@@ -151,6 +151,7 @@
   }
 
   function renderDashboard(prizes) {
+    setText('lateEntryStartWeek',prizes.lateEntryStartWeek??9);
     document.querySelectorAll('[data-late-entry-policy]').forEach(node=>{node.hidden=prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);

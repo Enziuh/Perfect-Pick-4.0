@@ -4,6 +4,14 @@ Owner-approved gameplay policy; production API18, original PP3 functions and pub
 Pages remain unchanged. The opt-in dashboard4 calculator and UI require a reviewed
 production release. Static publication and the refresh worker remain OFF.
 
+## Effective scope — preserve Weeks 1–8
+
+Owner instruction: do not apply 4.1 retroactively. Weeks 1–8 retain their original
+entry selection, results, standings, champions and prizes. No historical deadline
+reconstruction is required. The production facade rejects lateEntryStartWeek below 9;
+Week 9 impact is reviewed privately before any official change. Historical records
+carry LEGACY eligibility so aggregation retains their original contributions.
+
 ## Entry selection and cutoffs
 
 The private normalized phone remains the identity join; approved aliases/public IDs
@@ -16,7 +24,8 @@ there is no valid on-time entry, retain the earliest valid late entry, regardles
 source array order. Equal-time conflicting submissions block the week for audit;
 identical duplicates do not change choices. Original records are never edited/deleted.
 
-Opening game: the configured official weekly deadline, not a calculated hour offset.
+Opening game: exactly ONE HOUR before the verified first scheduled kickoff, per the
+owner-approved 4.1 hard-cutoff policy. A conflicting stored deadline cannot override it.
 Every other game: authoritative scheduled kickoff. Equality is eligible, strictly
 later is MISSED DEADLINE. Unknown/expired/mismatched/duplicate schedule evidence or
 unresolved rescheduling yields UNVERIFIED CUTOFF, never guessed eligibility. A verified
@@ -25,9 +34,9 @@ opening-game order or unresolved postponed game requires owner review. Result up
 and submission processing times are never schedule evidence.
 
 The existing ESPN read-only fetch/parser can supply event.date and team matching;
-no sync function, trigger or ESPN writer is invoked. Missing archived official weekly
-deadlines are not reconstructed from current Form Control, missing Form questions or
-historical week numbers. First-game identity must be explicitly available. Configured
+no sync function, trigger or ESPN writer is invoked. The earliest verified scheduled
+game determines the opening cutoff; ambiguous opening identity or incomplete schedule
+evidence fails closed. No historical deadline reconstruction is needed. Configured
 timezone is PP3.TIMEZONE; use native Sheet Date values/serials and the existing strict
 timezone parser, rejecting ambiguous/nonexistent local strings. Never use legacy
 new Date(displayedTimestamp) for the new scoring path.
@@ -73,9 +82,9 @@ with the new scoring basis and must not be described as parity with unchanged PP
 columns C onward; Name B values never read; field allowlist, no raw public records. Non-allowlisted columns are not read.
 `readPerfectPick4Cutoffs_` in generated additive JSON extension reuses ONLY existing
 readFormControl_/fetchESPNNFLWeek3_0_/parseESPNNFLEvent3_0_/normalizeNFLTeamKey3_0_.
-It reads current configured deadline only for the matching active week. Historical
-weeks require private `lateEntryDeadlines:[{week,firstGame,deadline}]`, where firstGame
-is the existing public matchup key and deadline is an evidence-backed UTC instant.
+It obtains schedule evidence only for affected, disclosure-eligible weeks, applying
+the hard-one-hour opening cutoff. Existing Form Control may disambiguate a matching
+opening game; it does not authorize historical regrading or substitute for kickoff.
 This read path is NOT installed or executed. Existing writer source stays untouched.
 
 The updated client requests `action=dashboard4&rules=LATE_ENTRY_V1` at the SAME URL.
@@ -92,8 +101,10 @@ provide private lateEntryEvidence; the generated Google extension obtains fresh
 schedule evidence through existing ESPN reads, using PP3.TIMEZONE.
 
 `pp4-public/1` adds discriminated scoringBasis ELIGIBLE_SUBMITTED_FINAL_PICKS. Only
-this basis permits per-selection eligibility ELIGIBLE/MISSED_DEADLINE/UNVERIFIED_CUTOFF;
-one record per scheduled game is required, with nullable team for a missing pick.
+this basis includes lateEntryStartWeek. Before that week, selections/predictions use
+LEGACY eligibility and preserve their original scoring/visibility. Affected weeks use
+ELIGIBLE/MISSED_DEADLINE/UNVERIFIED_CUTOFF; one record per scheduled game is required,
+with nullable team for a missing pick.
 Prediction timing is required for the new basis: ELIGIBLE, MISSED_DEADLINE or
 UNVERIFIED_CUTOFF. Ineligible/unknown timing requires total:null. No submission times,
 phones, keys or raw records are public. Validator reconciles eligible-only points,
@@ -108,12 +119,12 @@ missed team labels are crossed out, 0 points and accessible MISSED DEADLINE text
 (short MISSED on mobile). Rules/FAQ are hidden unless the validated adapter explicitly
 reports ELIGIBLE_SUBMITTED_FINAL_PICKS, so API18 never announces active4.1 rules.
 
-Before activation: complete a bounded private native-timestamp/identity comparison with
-verified historical deadlines and schedule revisions. `compare-late-entry.cjs` returns
-only affected-entry counts and aggregate point/denominator/Perfect Week deltas; missing
-cutoffs produce BLOCKED,not zero changes. Review all affected weeks before approving
-retroactive scoring. Late monthly prediction cutoff is now owner-approved as designated
-game kickoff. Then explicitly approve
+Before activation: complete the private Week 9-only impact review using native timestamps
+and verified kickoff evidence. Preserve original Weeks 1–8 contributions in monthly
+and season comparisons. Missing Week 9 evidence blocks that review, not legacy weeks.
+Review affected points, accuracy, ranks and prospective prize eligibility; do not change
+official results silently. The late monthly prediction cutoff is owner-approved as
+designated-game kickoff. Then explicitly approve
 the tested additive dashboard4 production candidate (extension plus narrow event-forwarding
 routing patch) AND synchronized Pages release. Both client generations remain usable;
 Rules/FAQ become active only when the validated new scoring basis is returned.

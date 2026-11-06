@@ -113,3 +113,76 @@ equal-distance unresolved ties, unchanged points/shared ranks and OPEN privacy.
 Final full346/346 PASS, zero failed/skipped, plus artifact/privacy/security checks.
 Syntax and whitespace checks PASS. Logs:/private/tmp/pp4-late-tiebreak-all-tests.log
 and pp4-late-tiebreak-stage.log. No live operation or deployment.
+
+## Owner scope correction — no retroactive scoring (current work)
+
+The latest owner instruction SUPERSEDES earlier historical-deadline reconstruction:
+Weeks 1–8 retain their original selections, scores, standings, champions and prize
+outcomes. Do not reconstruct or require historical deadlines for those weeks.
+The reviewed production facade rejects an effective start before Week 9; historical
+records continue through the original latest-entry path and carry LEGACY eligibility.
+The new opening cutoff is exactly one hour before the verified first scheduled kickoff;
+subsequent games use their own verified kickoff. Stored older deadline values cannot
+silently override this rule. No official Week 9 results may change without review.
+
+The private bounded review has verified native response timestamps and authoritative
+schedule parsing. An actual ESPN minute-precision ISO timestamp exposed a draft parser
+incompatibility; corrected with explicit-zone/calendar validation, including regression
+coverage. Actual player-level/OPEN-week impact findings remain only in the designated
+private, non-repository review directory. No private review data is committed here.
+A previous review requiring historical deadlines is now superseded; recompute only
+Week 9 while preserving the exact original Weeks 1–8 aggregate contributions.
+
+Current local work: explicit effective-week contract, legacy eligibility preservation,
+hard-one-hour cutoff, private counts-only review helper, original zero-score prediction
+normalization and fabricated regressions. Production API18, original routes/writers,
+Form, Sheet, triggers, registry Properties, Pages and static publication remain unchanged.
+Pending: final focused/full tests, Week 9-only private comparison, coordinated candidate
+verification, safe commit/push and explicit production activation approval.
+
+## Final Week 9-only review and release preparation
+
+Supersedes the earlier historical-evidence blocker and retrospective-review instructions.
+The owner explicitly prohibited retroactive changes to Weeks 1–8. Private comparison
+now copies their original entry/scoring contributions unchanged; historical monthly
+champions and prize calculations are unchanged. The Week 9 review is COMPLETE with
+all required kickoff/cutoff evidence verified, native timestamps valid, no invalid
+selection/result records and a stable repeated-read snapshot. It identified a real
+impact requiring owner review; it is NOT approval to alter official scoring.
+Actual player/open-week counts, point/rank deltas and source metadata remain outside
+Git in the restricted private activation/scoring-impact-nonretroactive directory.
+Do not copy those receipts or underlying records into Git, Pages, artifacts or logs.
+
+At the final bounded review, actual Form acceptance and Form Control both confirmed
+closure. This observation is snapshot-specific, not ongoing authority or blanket
+publication approval. Existing CLOSED evidence and approved-alias gates still apply.
+The temporary owner-only review route was removed; exact staging source restoration,
+unchanged production editor/deployment18 and untouched registry Properties verified.
+No production writer, trigger setup, Form change, Sheet change or deployment occurred.
+
+Verification: 36/36 focused tests and full357/357 PASS, zero failed/skipped, including
+browser/privacy/scoring/champion/registry/static/security regressions and responsive
+360/390/430/768/1440 checks. Initial sandbox invocation could not bind localhost;
+complete rerun with authorized local Chrome servers passed. Strict artifact validators
+were not changed. Log:/private/tmp/pp41-nonretroactive-all-tests.log.
+
+Coordinated local candidate sealed against immutable production18: ONLY
+00_Config_Setup routing and PerfectPick4_Json extension differ; every other source
+file and manifest unchanged. Temporary diagnostics/private registry code excluded.
+Existing API-profile Pages artifact verifies exactly38 allowlisted assets, including
+32 supplied logos. Generated candidate/configuration remain outside Git; new scoring
+is disabled pending approval. The Pages candidate is at the isolated local path
+/private/tmp/pp41-nonretroactive-api-pages; its seal must be reverified before use.
+The private readiness receipt is under activation/scoring-impact-nonretroactive-release.
+An earlier private artifact directory acquired macOS metadata; strict verification
+correctly rejected it. The isolated artifact passed without ignoring extra files.
+
+Exact next step: present the private Week 9 impact summary to the owner. Obtain one
+explicit approval covering Week 9 scoring impact, dashboard4-only API update from18
+and synchronized Pages4.1 activation. Effective scope is Week9 onward; Weeks1–8 remain
+legacy. First validate the opt-in production-shaped candidate in authorized private
+staging, preserving/restoring editor source. Preserve immutable18 and deployed Pages
+as rollback targets, same API URL/access/identity, original actions/writers/triggers.
+No production upload/activation, new scope, static publication or refresh-worker enable
+is authorized by this checkpoint. Do not repeat historical deadline reconstruction,
+identity setup, previous private captures or completed scoring/UI implementation.

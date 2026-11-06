@@ -90,7 +90,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
   if(policy.completeWeeks.get(rawWeek.week)!==true)return {table:{...base,reason:'INCOMPLETE'},complete:false};
   try {
     const latest=new Map(),candidates=new Map();
-    const lateRules=policy.lateEntryRules===late.RULE,cutoffs=policy.lateEntryEvidence?.get(rawWeek.week);
+    const lateRules=late.applies(policy,rawWeek.week),cutoffs=policy.lateEntryEvidence?.get(rawWeek.week);
     for(const raw of array(rawWeek.submissions)) {
       requireValue(typeof raw.identity==='string' && raw.identity.length>0);
       if(!array(raw.selections,32).some(s=>s.pick!==null&&s.pick!==undefined&&String(s.pick).trim()!==''))continue;
@@ -112,6 +112,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
     if(new Set(approvals.map(a=>a.player)).size!==approvals.length || new Set(approvals.map(a=>a.alias)).size!==approvals.length)return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
     const picks=[...latest.values()].map(({raw,selections,entryState},i)=>{
       if(lateRules)selections=games.filter(g=>g.week===rawWeek.week).map(g=>({game:g.game,team:selections.find(s=>s.game===g.game)?.team??null,eligibility:late.eligibility(raw.timestamp,g.game,cutoffs,policy.now,policy.maxAgeMs)}));
+      if(!lateRules&&policy.lateEntryRules===late.RULE)selections=selections.map(s=>({...s,eligibility:'LEGACY'}));
       const a=approvals[i],pick={player:a.player,alias:a.alias,selections};
       const period=policy.periods.find(p=>p.endWeek===rawWeek.week && p.designatedGame!==null);
       if(period){
@@ -120,7 +121,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
         // Owner-approved: retained entry prediction is eligible through designated kickoff.
         const timing=lateRules?(entryState==='UNVERIFIED CUTOFF'?'UNVERIFIED_CUTOFF':late.predictionEligibility(raw.timestamp,period.designatedGame,cutoffs,policy.now,policy.maxAgeMs)):null;
         if(lateRules&&timing!=='ELIGIBLE')total=null;
-        pick.prediction={game:period.designatedGame,total,...(lateRules?{eligibility:timing}:{})};
+        pick.prediction={game:period.designatedGame,total,...(policy.lateEntryRules===late.RULE?{eligibility:lateRules?timing:'LEGACY'}:{})};
       }
       return pick;
     }).sort((a,b)=>a.player.localeCompare(b.player));
@@ -151,7 +152,8 @@ function aggregate(scope,key,weeks,tables) {
 }
 function accountingProjection(key,policy) {
   const unavailable={key,currency:'USD',poolCents:null,poolState:'UNAVAILABLE',allocationState:'UNAVAILABLE',paymentState:'UNKNOWN'};
-  if(policy.lateEntryRules===late.RULE)return unavailable; // Legacy accounting is not reauthorized by a scoring update.
+  const affected=key[0]==='W'?late.applies(policy,Number(key.slice(1))):key[0]==='M'?policy.periods.some(p=>p.key===key&&late.applies(policy,p.endWeek)):policy.seasonWeeks.some(w=>late.applies(policy,w));
+  if(affected)return unavailable; // Legacy accounting is not reauthorized by a scoring update.
   const evidence=policy.accounting.get(key);
   if(!evidence || evidence.snapshotRevision!==policy.revision || !fresh(evidence.verifiedAt,policy))return unavailable;
   const raw=evidence.value;
@@ -177,7 +179,8 @@ function projectCompetition(source,policy) {
     if(source.revision!==policy.revision)return unavailable('INCONSISTENT');
     const rawWeeks=array(source.weeks,18),numbers=rawWeeks.map(w=>w.week);unique(numbers);
     let games;try{games=gamesProjection(source,policy,numbers);}catch{return unavailable('INVALID_RESULTS');}
-    const snapshot={version:VERSION,revision:policy.revision,generatedAt,state:'READY',season:source.season,scoringBasis:policy.lateEntryRules===late.RULE?'ELIGIBLE_SUBMITTED_FINAL_PICKS':'SUBMITTED_FINAL_PICKS',weeks:[],games,standings:[],months:[],prizes:[]};
+    if(policy.lateEntryRules===late.RULE)requireValue(Number.isInteger(policy.lateEntryStartWeek??9)&&(policy.lateEntryStartWeek??9)>=1&&(policy.lateEntryStartWeek??9)<=18);
+    const snapshot={...(policy.lateEntryRules===late.RULE?{lateEntryStartWeek:policy.lateEntryStartWeek??9}:{}),version:VERSION,revision:policy.revision,generatedAt,state:'READY',season:source.season,scoringBasis:policy.lateEntryRules===late.RULE?'ELIGIBLE_SUBMITTED_FINAL_PICKS':'SUBMITTED_FINAL_PICKS',weeks:[],games,standings:[],months:[],prizes:[]};
     const unverifiedTiebreakWeeks=new Map(),unverifiedCutoffWeeks=new Set();
     const trust={now:policy.now,maxAgeMs:policy.maxAgeMs,aliases:new Map(),closures:new Map(),aliasCompleteness:new Map(),prizes:new Map()};
     for(const rawWeek of rawWeeks){

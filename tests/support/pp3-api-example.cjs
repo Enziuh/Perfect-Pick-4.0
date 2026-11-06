@@ -14,4 +14,11 @@ function example(){
  const deps={config:()=>cfg,now:()=>e.policy.now,context,prizes:sandbox.buildPrizeDashboardFromContext_,latest:sandbox.getLatestSubmissionPerWeek_,prediction:sandbox.getTiebreakPredictionForWeek_,score:sandbox.scoreSubmissionForWeek_};
  return {e,matrix,sandbox,cfg,deps,get:createLegacyProvider(deps)};
 }
-module.exports={example};
+function lateExample(){
+ const x=example(),m=x.matrix;
+ m.Results.slice(1).forEach(r=>r[0]+=8);m['Form Control'][1][0]+=8;m['Form Control'][1][1]='Week 10';
+ m['Tiebreak Rules'].slice(1).forEach(r=>r[0]+=8);m['Prize Rules'].slice(1).forEach(r=>{r[2]+=8;r[3]+=8;});m['Weekly Prize Results'].slice(1).forEach(r=>r[0]+=8);
+ m.Responses[0]=m.Responses[0].map(h=>h.replace(/^W(\d+)(\s*\|)/,(_,n,s)=>'W'+(Number(n)+8)+s).replace(/^WK\s*(\d+)(\s+Tie)/,(_,n,s)=>'WK '+(Number(n)+8)+s));
+ x.e.authority.closures.forEach(c=>c.week+=8);return x;
+}
+module.exports={example,lateExample};

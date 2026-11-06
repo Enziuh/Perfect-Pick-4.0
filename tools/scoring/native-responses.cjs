@@ -13,7 +13,7 @@ function readNativeResponses(sheet,gameHeaders){
  for(const group of groups){
   const values=sheet.getRange(2,group.start,rows-1,group.length).getValues();
   if(values.length!==rows-1||values.some(r=>r.length!==group.length))throw Error('Native submission snapshot incomplete');
-  values.forEach((row,i)=>row.forEach((value,j)=>{result[i][headers[group.start-1+j]]=value;}));
+  values.forEach((row,i)=>row.forEach((value,j)=>{result[i][headers[group.start-1+j]]=value===null||value===undefined?'':String(value);}));
  }
  if(sheet.getLastRow()!==rows||sheet.getLastColumn()!==cols)throw Error('Native submission snapshot changed');return result;
 }

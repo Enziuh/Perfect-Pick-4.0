@@ -9,7 +9,7 @@ function projectReply(r,map){
  const player=id=>{const v=map.get(id);if(!ID.test(v||''))fail();return v;};
  const s=r.snapshot;
  return {schema:r.schema,activeWeek:r.activeWeek,control:pick(r.control,['activeWeek','firstGame','firstKickoff','picksClose','reportedStatus']),form:r.form===null?null:pick(r.form,['url','verified','approvedForPlayers']),aliases:r.aliases.map(a=>({player:player(a.player),alias:a.alias})),snapshot:{
-  ...pick(s,['version','revision','generatedAt','state','season','scoringBasis']),
+  ...pick(s,['version','revision','generatedAt','state','season','scoringBasis','lateEntryStartWeek']),
   games:s.games.map(g=>pick(g,['game','week','home','away','kickoff','status','homeScore','awayScore','winner','verifiedAt'])),
   weeks:s.weeks.map(w=>({...pick(w,['week']),entry:pick(w.entry,['status','authority','revision','checkedAt','validUntil','deadline']),
    ...(w.picks?{picks:w.picks.map(p=>({player:player(p.player),alias:p.alias,selections:p.selections.map(t=>pick(t,['game','team','eligibility'])),...(p.prediction?{prediction:pick(p.prediction,['game','total','eligibility'])}:{})}))}:{}),

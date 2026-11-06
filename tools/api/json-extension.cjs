@@ -14,14 +14,11 @@ const CUTOFF_READER=`
 function readPerfectPick4Cutoffs_(ctx,definitions,weeks){
  const c=perfectPick4JsonConfig_(),control=readFormControl_(ctx.ss),defs=Array.from(definitions.values());
  return weeks.map(function(week){
-  const archived=(c.lateEntryDeadlines||[]).filter(function(d){return d.week===week;});
-  if(archived.length>1)throw Error('Conflicting deadline evidence');
   const current=Number(control.activeWeek)===week;
   const found=current?Array.from(definitions).find(function(pair){return pair[0]===week+'|'+String(control.firstGame).trim().toLowerCase().replace(/\\s+/g,' ');}):null;
-  const firstGame=archived[0]?archived[0].firstGame:found?found[1].game:null;
-  const deadline=archived[0]?archived[0].deadline:current?control.picksClose:null;
+  const firstGame=found?found[1].game:null;
   let events=[];try{events=fetchESPNNFLWeek3_0_(week).map(parseESPNNFLEvent3_0_);}catch(_){}
-  return PerfectPick4Json_.buildScheduleEvidence({week:week,deadline:deadline,firstGame:firstGame,revision:c.revision,verifiedAt:new Date().toISOString(),timezone:PP3.TIMEZONE,definitions:defs,events:events,normalizeTeam:normalizeNFLTeamKey3_0_});
+  return PerfectPick4Json_.buildScheduleEvidence({week:week,deadline:null,hardCutoff:true,firstGame:firstGame,revision:c.revision,verifiedAt:new Date().toISOString(),timezone:PP3.TIMEZONE,definitions:defs,events:events,normalizeTeam:normalizeNFLTeamKey3_0_});
  });
 }
 `;

@@ -456,7 +456,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await closePage(connected);privateAssets=null;apiReply=null;
   }
   {
-   const api=legacyApiExample(),now=Date.now(),at=new Date(now).toISOString();api.e.policy.now=now;api.cfg.authority=api.e.authority;api.cfg.prizeParticipants=23;
+   const api=require('./support/pp3-api-example.cjs').lateExample(),now=Date.now(),at=new Date(now).toISOString();api.e.policy.now=now;api.cfg.authority=api.e.authority;api.cfg.prizeParticipants=23;
    api.e.authority.closures.forEach(c=>{c.checkedAt=at;c.validUntil=new Date(now+120000).toISOString();});
    const legacy=api.get();api.cfg.lateEntryRules='LATE_ENTRY_V1';
    api.cfg.lateEntryEvidence=legacy.snapshot.weeks.map(w=>({week:w.week,verified:true,revision:1,verifiedAt:at,timezone:'America/Los_Angeles',deadline:new Date(now-7200000).toISOString(),firstGame:legacy.snapshot.games.find(g=>g.week===w.week).game,schedule:legacy.snapshot.games.filter(g=>g.week===w.week).map(g=>({game:g.game,kickoff:new Date(now-3600000).toISOString(),verified:true,revision:1}))}));
@@ -465,8 +465,8 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    apiReply=api.get();assert.equal(apiReply.schema,'PP4_JSON_V1');assert.equal(apiReply.snapshot.scoringBasis,'ELIGIBLE_SUBMITTED_FINAL_PICKS');
    privateAssets=apiPages.render({endpoint:apiEndpoint,publicationApproved:true});const connected=await page('#match-center');
    await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded')");
-   await connected.evaluate("document.getElementById('weekSelect').value='1';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
-   await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 1')");
+   await connected.evaluate("document.getElementById('weekSelect').value='9';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");
+   await until(connected,"document.getElementById('picksSubmissionCount').textContent.includes('for Week 9')");
    await connected.evaluate("document.getElementById('playerSelect').selectedIndex=1;document.getElementById('playerSelect').dispatchEvent(new Event('change'))");
    await until(connected,"document.querySelectorAll('#playerPickCards .missed').length>0");
    assert(await connected.evaluate("[...document.querySelectorAll('#playerPickCards .missed')].every(e=>e.textContent.includes('MISSED DEADLINE')&&e.textContent.includes('0 points')&&getComputedStyle(e.querySelector('strong')).textDecorationLine.includes('line-through'))"));
@@ -477,7 +477,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await navigate(connected,'guide/rules');assert(await connected.evaluate("!document.querySelector('#rules [data-late-entry-policy]').hidden"));
    await navigate(connected,'guide/faq');assert.equal(await connected.evaluate("document.querySelectorAll('#faq [data-late-entry-policy]:not([hidden])').length"),4);
    api.matrix['Form Control'][1][5]='OPEN';apiReply=api.get();await connected.evaluate("document.getElementById('refreshResults').click()");await until(connected,"document.getElementById('status').textContent.startsWith('Competition data loaded') && !document.getElementById('refreshResults').disabled");
-   await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='2';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('playerSelect').disabled");
+   await navigate(connected,'match-center');await connected.evaluate("document.getElementById('weekSelect').value='10';document.getElementById('weekSelect').dispatchEvent(new Event('change'))");await until(connected,"document.getElementById('playerSelect').disabled");
    assert.equal(await connected.evaluate("document.querySelectorAll('#picks .missed,#picks .vote-option,#playerPicksBody .pick-cell').length"),0);
    await closePage(connected);privateAssets=null;apiReply=null;
   }
