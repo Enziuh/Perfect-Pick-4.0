@@ -2,13 +2,13 @@
 const {createDashboardModel,createViewAdapter,TEAM_NAMES}=require('../presentation/contract-dashboard.cjs');
 const {policyAlias}=require('../compatibility/pp3-display-name.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
-function decode(reply,now){
+function decode(reply,now,deadlineRecords=[]){
  if(!reply||Object.keys(reply).sort().join(',')!=='activeWeek,aliases,control,form,schema,snapshot'||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
  const aliases=new Map();for(const a of reply.aliases){if(!a||Object.keys(a).sort().join(',')!=='alias,player'||aliases.has(a.player))throw Error('Competition data unavailable');aliases.set(a.player,a.alias);}
  const disclosed=new Map();
  for(const w of reply.snapshot?.weeks||[])for(const p of w.picks||[])disclosed.set(p.player,p.alias);
  if(disclosed.size!==aliases.size||[...aliases].some(([player,alias])=>disclosed.get(player)!==alias||!policyAlias(alias)))throw Error('Competition data unavailable');
- const s=reply.snapshot;const trust={now,maxAgeMs:120000,aliases,closures:new Map((s?.weeks||[]).map(w=>[w.week,w.entry])),aliasCompleteness:new Map((s?.weeks||[]).map(w=>[w.week,Object.hasOwn(w,'picks')])),prizes:new Map((s?.prizes||[]).map(p=>[p.key,p]))};
+ const s=reply.snapshot;const deadlineDisclosures=require('../disclosure/weekly-deadline.cjs').trusted(deadlineRecords,s,now);const trust={deadlineDisclosures,now,maxAgeMs:120000,aliases,closures:new Map((s?.weeks||[]).map(w=>[w.week,w.entry])),aliasCompleteness:new Map((s?.weeks||[]).map(w=>[w.week,Object.hasOwn(w,'picks')])),prizes:new Map((s?.prizes||[]).map(p=>[p.key,p]))};
  if(reply.form!==null&&!approvedPlayerDestination(reply.form))throw Error('Competition data unavailable');
  const model=createDashboardModel(s,trust,{activeWeek:reply.activeWeek,form:reply.form});
  const c=reply.control,iso=v=>v===''||typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
@@ -17,7 +17,7 @@ function decode(reply,now){
  Object.assign(model.prizes.formControl,c);
  // Lightweight frontend metadata avoids cloning every historical pick list just
  // to label week controls. Actual disclosure still uses the validated week model.
- model.prizes.weekAvailability=model.weeks.map(w=>({week:w.week,entriesStatus:w.entriesStatus,visibility:w.visibility,hasPlayers:w.visibility==='AVAILABLE'&&w.standings.length>0}));
+ model.prizes.weekAvailability=model.weeks.map(w=>({... (w.disclosureMode?{disclosureMode:w.disclosureMode}:{}),week:w.week,entriesStatus:w.entriesStatus,visibility:w.visibility,hasPlayers:w.visibility==='AVAILABLE'&&w.standings.length>0}));
  return model;
 }
 function install(root,config){

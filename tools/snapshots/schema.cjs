@@ -28,11 +28,11 @@ function scanText(text,forbidden=[]){
  const contacts=text.replace(/"p_[a-f0-9]{32}"/g,'"PUBLIC_RANDOM_ID"');
  if(/\b(?:phone|privateKey|sourceKey|rawResponses?|submissionId|access_token|refresh_token|password|secret)\b|PRIVATE_/i.test(text)||/[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)||/-----BEGIN|\b(?:ya29\.|ghp_|github_pat_|AIza)/.test(text)||/\b(?:sheets|script)\.google\.|\/spreadsheets\//i.test(text)||/(?<!\d)(?:\+?1[- .]?)?\(?\d{3}\)?[- .]?\d{3}[- .]?\d{4}(?!\d)/.test(contacts)||forbidden.some(v=>typeof v==='string'&&v.length>=6&&text.includes(v)))fail();
 }
-function validate(file,now){
+function validate(file,now,deadlineRecords=[]){
  if(file?.schema==='PP4_STATIC_V2')return require('./retention.cjs').validateRetained(file,now);
  try{
   if(!file||Object.keys(file).sort().join(',')!=='expiresAt,generatedAt,payload,schema'||file.schema!=='PP4_STATIC_V1'||file.generatedAt!==file.payload.snapshot.generatedAt)fail();
-  const model=decode(file.payload,now);if(file.expiresAt!==new Date(model.expiresAt).toISOString()||now>=model.expiresAt)fail();
+  const model=decode(file.payload,now,deadlineRecords);if(file.expiresAt!==new Date(model.expiresAt).toISOString()||now>=model.expiresAt)fail();
   for(const a of file.payload.aliases)if(!ID.test(a.player))fail();
   // Prove every player reference is in the randomly assigned public namespace.
   const ids=new Map(file.payload.aliases.map(a=>[a.player,a.player]));

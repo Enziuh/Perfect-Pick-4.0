@@ -2002,3 +2002,13 @@ select,button:not(.submit-picks) {background:var(--panel2);color:var(--text);bor
 .selection-choice.unverified,.pick-cell.unverified,.selection-choice.no-submission,.pick-cell.no-submission,.selection-choice.no-selection,.pick-cell.no-selection{color:var(--muted,#aeb9cb);background:transparent}
 .deadline-label-short{display:none}
 @media(max-width:600px){.deadline-label-full{display:none}.deadline-label-short{display:inline}}
+
+/* Compact prize totals retain the approved sports dashboard identity. */
+.overview-pot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:10px 0 22px}
+.pot-card{min-width:0;border-top:2px solid var(--gold,#F5C451)}
+.pot-card>span{font-size:12px;font-weight:700;letter-spacing:.05em}
+.pot-card>strong{font-size:clamp(21px,3.1vw,34px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pot-card small:empty{display:none}
+.missing-entry{display:flex;justify-content:space-between;gap:12px;color:var(--muted,#aebbd0);padding:18px}
+@media(max-width:430px){.overview-pot-grid{gap:8px}.overview-pot-grid .pot-card{padding:12px 9px}.overview-pot-grid .pot-card>span{font-size:10px}.overview-pot-grid .pot-card>strong{font-size:20px}}
+@media(max-width:700px){.week-switcher .week-picker{flex:1 1 0;min-width:0}.week-switcher .week-picker select{width:100%;min-width:0;max-width:100%}.week-switcher button{flex:0 0 44px}}

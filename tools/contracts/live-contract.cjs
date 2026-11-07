@@ -52,7 +52,7 @@ function validatePublicInternal(snapshot,trust){
   if(w.entry.status==='CLOSED'){
    need(w.entry.authority==='OFFICIAL'&&evidence&&same(w.entry,evidence));fresh(w.entry.checkedAt);need(trust.now<time(w.entry.validUntil));
   }
-  if(w.entry.status!=='CLOSED')need(!Object.prototype.hasOwnProperty.call(w,'picks')&&!Object.prototype.hasOwnProperty.call(w,'votes'));
+  if(w.entry.status!=='CLOSED'&&!(trust.deadlineDisclosures?.has(w.week)&&require('../disclosure/weekly-deadline.cjs').permitted(trust,w.week,snapshot)))need(!Object.prototype.hasOwnProperty.call(w,'picks')&&!Object.prototype.hasOwnProperty.call(w,'votes'));
  }
  need(weeks.size>0);
  const games=new Map();
@@ -66,7 +66,7 @@ function validatePublicInternal(snapshot,trust){
    need(g.winner===(g.homeScore===g.awayScore?'TIE':g.homeScore>g.awayScore?'HOME':'AWAY'));
   }else need(g.winner===null);
  }
- const closed=ws=>ws.every(n=>weeks.get(n)?.entry.status==='CLOSED');
+ const closed=ws=>ws.every(n=>weeks.get(n)?.entry.status==='CLOSED'||trust.deadlineDisclosures?.has(n)&&require('../disclosure/weekly-deadline.cjs').permitted(trust,n,snapshot));
  const final=ws=>{const rows=[...games.values()].filter(g=>ws.includes(g.week));return ws.every(n=>rows.some(g=>g.week===n))&&rows.every(g=>g.status==='FINAL');};
  for(const w of weeks.values()){
   if(w.picks!==undefined||w.votes!==undefined)need(trust.aliasCompleteness.get(w.week)===true);

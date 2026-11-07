@@ -129,11 +129,11 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   await navigate(p,'prizes');
   assert.equal(await p.evaluate("document.querySelectorAll('#periodCards .period-card').length"),5);
   assert.equal(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr').length"),18);
-  assert(await p.evaluate("document.getElementById('prizeSummary').textContent.includes('Payment status unavailable')"));
+  assert(await p.evaluate("document.querySelectorAll('#prizeSummary .pot-card').length===3 && !/payment status|not collected|collection status/i.test(document.getElementById('prizeSummary').textContent)"));
   await navigate(p,'overview');
-  assert(await p.evaluate("document.querySelector('#weeklyPrizeBody tr').textContent.includes('Allocation each: $10.00')"));
-  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[1].textContent.includes('ROLLOVER CONFIRMED')"));
-  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[4].textContent.includes('PROJECTED')"));
+  assert(await p.evaluate("document.querySelector('#weeklyPrizeBody tr').textContent.includes('Each winner: $10.00')"));
+  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[1].textContent.includes('Rollover') && document.querySelectorAll('#weeklyPrizeBody tr')[1].lastElementChild.textContent==='$20.00'"));
+  assert(await p.evaluate("document.querySelectorAll('#weeklyPrizeBody tr')[4].textContent.includes('Winner determined after all games are final') && document.querySelectorAll('#weeklyPrizeBody tr')[4].children[3].textContent==='$20.00'"));
   assert(await p.evaluate("document.getElementById('overviewProgress').textContent.includes('0 of 2 games FINAL')"));
 
   for(const route of routes){
@@ -257,7 +257,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert.equal(await p.evaluate("document.querySelector('#monthlyStandingsBody .accuracy-indicator').textContent"),'50%');
   await navigate(p,'standings/season');
   assert.equal(await p.evaluate("document.querySelector('#seasonStandingsBody .accuracy-indicator').textContent"),'50%');
-  assert(await p.evaluate("document.getElementById('championSummary').textContent.includes('No prize has been awarded')"));
+  assert(await p.evaluate("document.getElementById('championSummary').textContent.includes('Champion determination pending')"));
   if(process.env.PP_SCREENSHOT_DIR){
    fs.mkdirSync(process.env.PP_SCREENSHOT_DIR,{recursive:true});
    for(const width of [375,1280]){
@@ -325,7 +325,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await navigate(example,'prizes');
    assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.status"),state,name);
    assert.equal(await example.evaluate("document.querySelector('#periodCards .period-card').dataset.winner"),winner,name);
-   assert(await example.evaluate("document.querySelector('#periodCards .period-card').textContent.includes('Payment status unavailable')"));
+   assert(await example.evaluate("! /payment status|not collected|collection status/i.test(document.querySelector('#periodCards .period-card').textContent)"));
    await navigate(example,'standings/monthly');
 
    assert.equal(await example.evaluate("document.querySelector('#monthlyStandingsBody tr').children.length"),5);
@@ -422,7 +422,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
    await openPlayerDetails(connected);
    assert(await connected.evaluate("(()=>{const e=document.querySelector('#playerPickCards .selection-choice.wrong');return e && getComputedStyle(e).backgroundColor==='rgba(0, 0, 0, 0)' && e.textContent.includes('Incorrect');})()"));
    for(const width of [360,375,390,430,768,1280,1440]){await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600},connected.sessionId);for(const route of ['overview','match-center','standings/weekly','standings/monthly','standings/season','prizes','guide/rules']){await navigate(connected,route);assert(await connected.evaluate(`document.documentElement.scrollWidth<=${width}+1`));}}
-   await navigate(connected,'prizes');assert(await connected.evaluate("document.getElementById('prizeSummary').textContent.includes('23 participants per week') && document.getElementById('prizeSummary').textContent.includes('not verified collected funds')"));
+   await navigate(connected,'prizes');assert(await connected.evaluate("document.getElementById('prizeSummary').textContent.includes('23 participants per week') && !/collected|payment status/i.test(document.getElementById('prizeSummary').textContent)"));
    await navigate(connected,'standings/monthly');assert(!await connected.evaluate("document.getElementById('monthlyPrizeCallout').textContent.includes('Payment status:')"));
    // A failed refresh must preserve still-valid disclosure, retry exactly twice,
    // leave an explicit retry control, and retain week/month filters on recovery.

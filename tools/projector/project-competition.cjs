@@ -86,7 +86,7 @@ function selectionsProjection(row, week, policy, games) {
 }
 function weeklyProjection(rawWeek, entry, policy, games) {
   const base={scope:'WEEKLY',key:'W'+rawWeek.week,weeks:[rawWeek.week],state:'WITHHELD',reason:'CLOSURE_UNVERIFIED'};
-  if(entry.status!=='CLOSED')return {table:base,complete:false}; // Do not read submissions before closure.
+  if(entry.status!=='CLOSED'&&!policy.deadlineDisclosures?.has(rawWeek.week))return {table:base,complete:false}; // Do not read submissions before closure.
   if(policy.completeWeeks.get(rawWeek.week)!==true)return {table:{...base,reason:'INCOMPLETE'},complete:false};
   try {
     const latest=new Map(),candidates=new Map();
@@ -182,7 +182,7 @@ function projectCompetition(source,policy) {
     if(policy.lateEntryRules===late.RULE)requireValue(Number.isInteger(policy.lateEntryStartWeek??9)&&(policy.lateEntryStartWeek??9)>=1&&(policy.lateEntryStartWeek??9)<=18);
     const snapshot={...(policy.lateEntryRules===late.RULE?{lateEntryStartWeek:policy.lateEntryStartWeek??9}:{}),version:VERSION,revision:policy.revision,generatedAt,state:'READY',season:source.season,scoringBasis:policy.lateEntryRules===late.RULE?'ELIGIBLE_SUBMITTED_FINAL_PICKS':'SUBMITTED_FINAL_PICKS',weeks:[],games,standings:[],months:[],prizes:[]};
     const unverifiedTiebreakWeeks=new Map(),unverifiedCutoffWeeks=new Set();
-    const trust={now:policy.now,maxAgeMs:policy.maxAgeMs,aliases:new Map(),closures:new Map(),aliasCompleteness:new Map(),prizes:new Map()};
+    const trust={deadlineDisclosures:policy.deadlineDisclosures||new Map(),now:policy.now,maxAgeMs:policy.maxAgeMs,aliases:new Map(),closures:new Map(),aliasCompleteness:new Map(),prizes:new Map()};
     for(const rawWeek of rawWeeks){
       const entry=entryProjection(policy.closures.get(rawWeek.week),policy);
       const projected=weeklyProjection(rawWeek,entry,policy,games);

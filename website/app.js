@@ -4,7 +4,7 @@
   const ownerView = liveView || preview?.kind === 'owner-contract';
   let navigationStarted = false;
   const sourceLabel = liveView ? 'Competition' : ownerView ? 'Owner verification' : 'Synthetic';
-  const publicPicks = data => data.entriesStatus === 'CLOSED' && data.visibility !== 'WITHHELD';
+  const publicPicks = data => data.visibility !== 'WITHHELD' && (data.entriesStatus === 'CLOSED' || data.disclosureMode === 'DEADLINE_PASSED');
   let picksRequest = 0;
   let monthlyRequest = 0;
   let activeWeek = null;
@@ -155,7 +155,9 @@
     document.querySelectorAll('[data-late-entry-policy]').forEach(node=>{node.hidden=prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
-    if(liveView)setText('sourceStatusNote','Entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. Player picks appear only after verified closure.');
+    const deadlinePolicy=prizes.disclosurePolicy==='PP4_WEEK9_DEADLINE_V1';
+    document.querySelectorAll('[data-disclosure-deadline]').forEach(el=>el.hidden=!deadlinePolicy);document.querySelectorAll('[data-disclosure-legacy]').forEach(el=>el.hidden=deadlinePolicy);
+    if(liveView)setText('sourceStatusNote','Entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. '+(deadlinePolicy?'Submitted picks appear after the official weekly deadline.':'Player picks appear only after verified closure.'));
 
     const periodLabel = prizes.currentPeriodName || prizes.currentPeriod || '—';
     setText('periodName', periodLabel);
@@ -163,10 +165,10 @@
     setText('monthlyPot', money(prizes.currentMonthlyPot));
     setText('monthlyWinnerPool', money(prizes.projectedMonthlyWinnerPool));
     setText('seasonPot', money(prizes.projectedSeasonPot));
-    setText('poolEstimateNote',prizes.estimateBasis ? `Pools are estimates based on ${prizes.estimateBasis.participantsPerWeek} participants per week, not verified collected funds.` : 'Prize amounts reflect available rules and evidence.');
+    setText('poolEstimateNote',prizes.estimateBasis ? `Pools use ${prizes.estimateBasis.participantsPerWeek} participants per week and the competition prize rules.` : 'Prize amounts reflect available rules and evidence.');
     setText(
       'confirmedSeasonPot',
-      prizes.estimateBasis ? `Estimate based on ${prizes.estimateBasis.participantsPerWeek} participants per week; not collected funds` : liveView ? 'Calculated pool information; collections handled separately' : `Confirmed after completed periods: ${money(prizes.confirmedSeasonPot)}`
+      prizes.estimateBasis ? `` : liveView ? '' : `Confirmed after completed periods: ${money(prizes.confirmedSeasonPot)}`
     );
 
     const rolloverLines = (prizes.currentMonthlyRolloverBreakdown || [])
@@ -185,13 +187,13 @@
       <div class="breakdown-row">
         <span>Monthly prize portion</span>
         <strong>${money(prizes.projectedMonthlyWinnerPool)}</strong>
-        <small>${prizes.estimateBasis ? 'Estimate based on '+prizes.estimateBasis.participantsPerWeek+' participants; not collected funds' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
+        <small>${prizes.estimateBasis ? 'Based on '+prizes.estimateBasis.participantsPerWeek+' participants per week' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
       </div>
       <div class="breakdown-arrow">+</div>
       <div class="breakdown-row">
         <span>Season pot portion</span>
         <strong>${money(projectedSeasonContribution)}</strong>
-        <small>${prizes.estimateBasis ? 'Estimate based on '+prizes.estimateBasis.participantsPerWeek+' participants; not collected funds' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
+        <small>${prizes.estimateBasis ? 'Based on '+prizes.estimateBasis.participantsPerWeek+' participants per week' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
       </div>
     `;
 
@@ -234,7 +236,7 @@
     const title = resolution.winner ? `${period.displayName} · ${resolution.winner}` : `${period.displayName} · ${resolution.status.toLowerCase()}`;
     setText('championHeading', title);
     const points = resolution.points === null ? '' : `${resolution.points} monthly points. `;
-    setText('championSummary', `${points}${championExplanation(resolution)} Prize pool: ${money(period.monthlyWinnerPool)}. ${resolution.winner ? 'Champion confirmation does not record or calculate a payment.' : 'No prize has been awarded.'}`);
+    setText('championSummary', `${points}${championExplanation(resolution)} Prize pool: ${money(period.monthlyWinnerPool)}. ${resolution.winner ? 'Monthly champion confirmed.' : 'Champion determination pending.'}`);
     setText('championState', resolution.status);
     $('championState').dataset.state = resolution.status;
     $('championHeading').dataset.winner = resolution.winner || '';
@@ -275,7 +277,7 @@
       <h3>${resolution.winner ? escapeHtml(resolution.winner) : 'Monthly Champion decision'}</h3></div>
       <span class="pill champion-status" data-state="${resolution.status}">${resolution.status}</span></div>
       <p>${resolution.points === null ? '' : `<strong>${resolution.points} monthly points</strong> · `}${escapeHtml(championExplanation(resolution))}</p>
-      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${liveView ? 'Estimated allocation, not collected funds. The treasurer handles disbursements separately.' : ownerView ? 'Payment status: ' + (period.paymentState || 'UNKNOWN') + '.' : resolution.winner ? 'No payment is recorded by this preview.' : 'No champion payout is awarded while the decision is pending.'}</p>
+      <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${resolution.winner ? 'Champion confirmed by competition results.' : 'Winner determined after all required results and tiebreakers are final.'}</p>
       ${championComparisonsHtml(resolution)}`;
     renderChampionSpotlight(period, resolution);
     renderStandingsRows('monthlyStandingsBody', period.standings || [], true, resolution);
@@ -310,15 +312,16 @@
     const seasonLeaders = prizes.overallStandings.filter(player => player.points === topPoints).map(player => player.name);
     const seasonContext = seasonLeaders.length ? `Current points leaders: ${seasonLeaders.join(', ')} · ${topPoints} points. Season title not confirmed.` : 'Season standings unavailable.';
     const basis=prizes.estimateBasis;
-    $('prizeSummary').innerHTML = `${basis ? `<p class="state-message" style="grid-column:1/-1">Prize estimates assume ${basis.participantsPerWeek} participants per week, not verified collected funds. Actual submissions determine standings and picks. Collections and disbursements are handled separately by the treasurer.</p>` : ''}<article class="card"><span>Week ${prizes.activeWeek} pool · ${basis ? 'estimate' : 'projected'}</span><strong>${money(current.pool)}</strong><small>${escapeHtml(current.status)}${liveView ? '' : '. '+current.payment}.</small></article>
-      <article class="card"><span>${basis ? 'Season allocation estimate to date' : liveView ? 'Season prize pool' : 'Season pool · confirmed'}</span><strong>${money(basis ? prizes.projectedSeasonPot : prizes.confirmedSeasonPot)}</strong><small>${basis ? 'Calculated from estimated rollovers; not collected funds.' : liveView ? 'Calculated allocation; treasurer manages collections separately.' : 'Projected total: '+money(prizes.projectedSeasonPot)+'. Payout distribution and payment status unavailable.'}</small><a href="#standings/season">View season standings ↗</a><small>${escapeHtml(seasonContext)}</small></article>`;
+    $('prizeSummary').innerHTML = `${basis?`<p class="muted" style="grid-column:1/-1">Pools use ${basis.participantsPerWeek} participants per week.</p>`:''}<article class="card pot-card"><span>WEEK ${prizes.activeWeek} · WEEKLY POT</span><strong>${money(current.pool)}</strong><small>${prizes.weekly[currentIndex]?.finalized ? current.winners.length ? 'Perfect Week achieved.' : 'Weekly results final; rollover follows the prize rules.' : 'Winner determined after all games are final.'}</small></article>
+      <article class="card pot-card"><span>MONTHLY POT</span><strong>${money(prizes.currentMonthlyPot)}</strong><small>${escapeHtml(prizes.currentPeriodName || prizes.currentPeriod || 'Current prize period')}</small><a href="#standings/monthly">Monthly standings ↗</a></article>
+      <article class="card pot-card"><span>SEASON POT</span><strong>${money(prizes.projectedSeasonPot ?? prizes.confirmedSeasonPot)}</strong><small>${escapeHtml(seasonContext)}</small><a href="#standings/season">Season standings ↗</a></article>`;
     const periodCards = (await Promise.all(prizes.periods.map(async p => {
       const resolution = await loadMonthlyResolution(p);
       return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
         <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
         <p><strong>${escapeHtml(resolution.winner || 'Champion not confirmed')}</strong>${resolution.points === null ? '' : ` · ${resolution.points} monthly points`}</p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
-        <div class="period-grid"><div><span>Monthly prize pool · ${p.estimateBasis ? 'estimate · not collected' : ownerView ? p.poolState : p.allWeeksFinalized ? 'reported final' : 'provisional'}</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
-        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. ${liveView ? 'Calculated pools are estimates, not collected funds. Champions are determined by game results.' : 'Champion confirmation is not a payment. '+(ownerView ? 'Payment status: ' + (p.paymentState || 'UNKNOWN') : 'Payment status unavailable')+'.'}</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
+        <div class="period-grid"><div><span>Monthly prize pool</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
+        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. Champions are determined by final game results and the monthly tiebreaker.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
     }))).join('');
     if(generation!==renderGeneration)return;
     $('periodCards').innerHTML=periodCards;
@@ -328,7 +331,7 @@
     }));
     $('weeklyPrizeBody').innerHTML = prizes.weekly.map((w,i) => {
       const view = weekly[i];
-      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">${liveView ? 'Perfect Week' : 'Allocation each: '+money(view.allocationEach)+' · '+view.payment}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
+      return `<tr><td>${w.week}</td><td>${escapeHtml(w.periodKey)}</td><td class="num">${publicPicks(weeks[i]) ? w.activePlayers : 'Unavailable'}</td><td class="num">${money(view.pool)}</td><td>${w.finalized ? view.rollover>0 ? 'Rollover' : 'Results final' : 'Winner determined after all games are final'}</td><td>${view.winners.length ? escapeHtml(view.winners.join(', ')) + `<small class="prize-allocation">Perfect Week${Number.isFinite(view.allocationEach)?' · Each winner: '+money(view.allocationEach):''}</small>` : 'Not confirmed'}</td><td class="num">${view.rollover === null ? 'Pending / unavailable' : money(view.rollover)}</td></tr>`;
     }).join('');
   }
 
@@ -340,7 +343,7 @@
     const views=new Map(recent.map((row,i)=>[row.week,preview.buildWeeklyPrize(row,recentWeeks[i])]));
     $('recentWeeks').innerHTML=recent.slice().reverse().map(w=>{
       const view=views.get(w.week);
-      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${view.status}</td><td>${view.winners.length?escapeHtml(view.winners.join(', ')):view.rollover>0?(view.estimateBasis?'Estimated rollover':'Rollover confirmed'):view.rollover===0?'No rollover':'Pending'}</td></tr>`;
+      return `<tr><td>W${w.week}</td><td>${money(view.pool)}</td><td>${w.finalized ? view.rollover>0 ? 'Rollover' : 'Results final' : 'Winner determined after all games are final'}</td><td>${view.winners.length?escapeHtml(view.winners.join(', ')):view.rollover>0?(view.estimateBasis?'Estimated rollover':'Rollover confirmed'):view.rollover===0?'No rollover':'Pending'}</td></tr>`;
     }).join('');
     const completed = currentWeek.results.filter(game => game.status === 'Final').length;
     setText('overviewProgress', `Week ${prizes.activeWeek}: ${completed} of ${currentWeek.games.length} games FINAL. ${liveView ? 'Results refresh automatically; use Refresh results to check again.' : ownerView ? 'Validated private snapshot; not a live feed.' : 'Synthetic snapshot, not a live feed.'}`);
@@ -414,6 +417,7 @@
   }
 
   function pickPrivacyMessage(data) {
+    if(data.disclosureMode==='DEADLINE_PASSED')return `Week ${data.week}: the official deadline has passed; submitted picks are temporarily unavailable.`;
     if (isOpenWeek(data)) return `Week ${data.week} is open. Picks, predictions and voting stay private until entries are officially closed.`;
     if (data.entriesStatus === 'CLOSED') return `Week ${data.week} is closed, but approved player picks are unavailable until weekly data is complete.`;
     return `Week ${data.week} player picks are unavailable until entries are officially closed and complete approved picks are available.`;
@@ -423,14 +427,14 @@
     eligiblePickWeeks = weeks.filter(w=>publicPicks(w)&&(w.hasPlayers??w.standings?.length)).map(w=>w.week).sort((a,b)=>a-b);
     for (const id of ['weekSelect','weeklyWeekSelect']) for (const option of $(id).options) {
       const data=weeks.find(w=>w.week===Number(option.value));
-      if(data)option.textContent=`Week ${data.week} · ${publicPicks(data)?'Closed':isOpenWeek(data)?'Open':'Private'}`;
+      if(data)option.textContent=`Week ${data.week} · ${publicPicks(data)?'Picks available':isOpenWeek(data)?'Open':'Private'}`;
     }
     if(matchData)renderPickWeekHelp(matchData);
   }
 
   function renderPickWeekHelp(data) {
     const latest=eligiblePickWeeks.at(-1),button=$('closedWeekShortcut');
-    setText('selectedWeekPrivacy',publicPicks(data)?`Week ${data.week} is closed. Approved player picks and comparisons are available.`:pickPrivacyMessage(data));
+    setText('selectedWeekPrivacy',publicPicks(data)?data.disclosureMode==='DEADLINE_PASSED'?`Week ${data.week}: the official deadline has passed. Submitted picks are available.`:`Week ${data.week} is closed. Approved player picks and comparisons are available.`:pickPrivacyMessage(data));
     button.hidden=publicPicks(data)||latest===undefined;
     button.textContent=latest===undefined?'No closed-week picks available':`View Week ${latest} player picks`;
     button.onclick=()=>loadWeekPicks(latest);
@@ -445,8 +449,8 @@
     $('matchPrivacyNotice').hidden = closed;
     $('matchPrivacyNotice').textContent = pickPrivacyMessage(data);
     renderPickWeekHelp(data);
-    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}` : pickPrivacyMessage(data));
-    $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('') : '');
+    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}${data.missingAliases?.length?' · '+data.missingAliases.length+' Not Submitted':''}` : pickPrivacyMessage(data));
+    $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('')+(data.missingAliases||[]).map(name=>`<option value="${escapeHtml(name)}">${escapeHtml(name)} · Not Submitted</option>`).join('') : '');
     $('playerSelect').disabled = !closed || !data.standings.length;
     for(const [id,value] of [['playerSelect',viewPreferences.player],['matchSelect',viewPreferences.match]])if(value&&[...$(id).options].some(o=>o.value===value))$(id).value=value;
     renderMatchCards();
@@ -516,7 +520,8 @@
     const selected = $('playerSelect').value;
     const players = data.standings.filter(p => !selected || p.name === selected);
     if(selected&&!currentMatchDisclosure(data))return;
-    $('playerPickCards').innerHTML = players.map(player => `<details class="player-pick-card"${selected ? ' open data-built="true"' : ''}>
+    const missing=(data.missingAliases||[]).filter(name=>!selected||name===selected).map(name=>`<article class="player-pick-card missing-entry"><strong>${escapeHtml(name)}</strong><span>Not Submitted</span></article>`).join('');
+    $('playerPickCards').innerHTML = missing+players.map(player => `<details class="player-pick-card"${selected ? ' open data-built="true"' : ''}>
       <summary><span>${escapeHtml(player.name)}</span>${accuracyHtml(player)}</summary><div class="player-pick-details">${selected?playerDetailsHtml(player,data):''}</div></details>`).join('') || '<p class="state-message">No public picks for this week.</p>';
   }
 
@@ -545,7 +550,7 @@
   function populateMatchComparison(details) {
     if(!currentMatchDisclosure(matchData)||details.dataset.built)return;
     const model=matchModels.find(m=>m.game===details.dataset.game);if(!model)return;
-    details.querySelector('ul').innerHTML=model.selections.map(p=>`<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick || '—')}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('')||'<li>No selections for this matchup.</li>';
+    details.querySelector('ul').innerHTML=model.selections.map(p=>`<li><span>${escapeHtml(p.name)}</span><span class="selection-choice ${p.state}" style="${teamColorStyle_(p.pick)}"><strong>${escapeHtml(p.pick || '—')}</strong><small>${selectionLabel(p.state)}</small></span></li>`).join('')+(matchData.missingAliases||[]).map(name=>`<li><span>${escapeHtml(name)}</span><span>Not Submitted</span></li>`).join('')||'<li>No selections for this matchup.</li>';
     details.dataset.built='true';
   }
 
@@ -567,7 +572,7 @@
     $('playerPicksBody').innerHTML = data.standings.map(player => `<tr><th scope="row" class="player-name">${escapeHtml(player.name)}</th>${matchModels.map(model => {
       const pick = model.selections.find(p => p.name === player.name);
       return pick ? `<td class="pick-cell ${pick.state}" style="${teamColorStyle_(pick.pick)}"><strong>${escapeHtml(pick.pick || '—')}</strong><p class="pick-outcome">${selectionLabel(pick.state)}</p></td>` : '<td class="pick-cell empty">—</td>';
-    }).join('')}${showPrediction?`<td class="num matrix-prediction">${player.tiebreakEligibility==='MISSED_DEADLINE'?'MISSED DEADLINE':player.tiebreakTimingUnverified?'UNVERIFIED CUTOFF':validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
+    }).join('')}${showPrediction?`<td class="num matrix-prediction">${player.tiebreakEligibility==='MISSED_DEADLINE'?'MISSED DEADLINE':player.tiebreakTimingUnverified?'UNVERIFIED CUTOFF':validTiebreakPrediction(player)??'—'}</td>`:''}<td class="num matrix-total">${player.points}</td><td class="num">${accuracyHtml(player)}</td></tr>`).join('') + (data.missingAliases||[]).map(name=>`<tr class="missing-entry-row"><th scope="row">${escapeHtml(name)}<small>Not Submitted</small></th>${matchModels.map(()=>'<td class="pick-cell no-submission" aria-label="Not Submitted">—</td>').join('')}${showPrediction?'<td>—</td>':''}<td>—</td><td>—</td></tr>`).join('') || `<tr><td colspan="${matchModels.length+3+(showPrediction?1:0)}">No submissions yet.</td></tr>`;
   }
 
   function populateWeekSelector(weeks, defaultWeek) {

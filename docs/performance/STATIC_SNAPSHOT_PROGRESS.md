@@ -1,5 +1,79 @@
 # Static snapshot progress
 
+## CURRENT RESUME — DEADLINE POLICY CANDIDATE + PRIZE FRONTEND READY
+
+Resume2026-11-07~06:35Z: interrupted git add/commit was NOT executed (index empty).
+All working changes recovered without reset. Fast-forwarded only sanitized snapshot
+commit9b1fbb8, already deployed by successful Pages run42324989310. Current snapshot
+333182bytes, expires2026-11-07T07:36:28.034Z, retention1–8,23IDs,272games;9+ picks/votes
+absent. Public health HEALTHY with64minutes remaining at initial resume check.
+Previous generated static test directory preserved in tmp/resume-prior-static-artifact
+before rebuilding synthetic stage (its extra data directory correctly failed allowlist).
+Focused resumed tests22/22 PASS; prior unchanged full394 plus durable browser1 PASS
+remain valid. Private package seal reverified; no Google update/execution performed.
+Fresh API20 schema READY; roster/historical1–8 parity PASS. Form now OPEN; Week9
+entry UNKNOWN, picks/votes absent, W9/M3/season tables WITHHELD. The older baseline
+assertion stopped on those entry/disclosure differences, not a discovered scoring
+regression. Do not claim fresh Week9 scoring parity while source withholds it.
+This validates the need for the opt-in private read-only deadline source. Existing
+published snapshot remains validated aggregate/history data, with no9+ selections.
+Clock state is not independently established by a new snapshot commit alone.
+
+
+Baseline develop7492fd1; published rollback110cfa9 (API-backed rollback6d1adea).
+Owner now explicitly approves Week9 deadline-based public disclosure/retention,
+including submitted predictions and eligible votes despite missing entries or an
+OPEN Form. Future weeks have NO automatic retention grant. Historical1–8 unchanged.
+
+Completed locally:
+- Pinned/verified Week9 configured cutoff2026-11-06T00:15:00.000Z and opening
+  kickoff01:15Z, inclusive deadline boundary; explicit PP4_WEEK9_DEADLINE_V1.
+- Optional backward-compatible V2 deadlineDisclosures evidence, strict allowlists,
+  deadline-only opt-in Google source path using existing reader/scorer. No fake
+  CLOSED status. Missing accepted entries show Not Submitted; future scopes denied.
+- Three Overview pots and concise Prizes cards, source amounts/formulas unchanged;
+  removed collection/payment disclaimers. Rules/FAQ conditionally explain the new
+  policy only when a validated authorized snapshot is loaded. Historical-only
+  snapshots retain truthful legacy explanations during the coordinated rollout.
+- Documented informational advantage to late first entrants (others' future picks
+  visible); no scoring compensation or resubmission-rule change.
+- Mobile week-selector intrinsic-width fix; matrix remains lazy and internally scrollable.
+
+Validation2026-11-06~20:56Z: fresh read-only API20 health/schema/parity PASS,
+272games122FINAL,23IDs/aliases exactly preserved, frozen1–8 and approved9 scoring
+identical. Week9 has21 accepted entries and9 missed-opening selections in source.
+Production deployment metadata still20, existing URL unchanged. No Google writer
+operation, publisher installation, token read, scope/trigger change or registry write.
+
+Tests: full existing suite plus deadline contract/provider regressions394/394 PASS;
+additional durable deadline browser regression1/1 PASS (total395, no skips/failures).
+Browser includes360/390/430/768/1440, OPEN-after-cutoff21entries/2missing/matrix23,
+three pots, expiry/privacy regressions, logo/base-path checks, controlled performance.
+Fabricated local profile~0.57–0.59s usable is NOT a live benchmark.
+
+Reviewed private candidate: tmp/cloud-publisher-deadline-candidate/CloudSnapshotPublisher.gs
+only, adjacent integrity seal SHA256
+13a0df3c4844b99aaf5ea404d9359c8936a75bee883d207bfc04bcdbe21a48f4.
+Stage/verify and Apps Script ES2020 check PASS. NOT uploaded or executed. Existing
+five authorized scopes suffice; no new HTTP handler/endpoint or football writer.
+
+Current public snapshot remains340242bytes, retention1–8, Week9 aggregate21 only,
+expiry2026-11-07T01:57:29.219Z. Safe frontend deployment is next; do not publish
+Week9 protected fields until the reviewed private source/config activation is approved.
+Clock last verified OFF, no scheduled receipt available; do not claim automation active.
+
+Exact next actions:
+1. Commit/push tested source; dispatch existing Pages workflow profile=static.
+2. Verify CI/deploy and all38 live files, mobile/desktop, pots, historical picks,
+   Week9 still withheld, future scopes absent, fresh expiry and same-origin loading.
+3. Record published SHA and actual timings here. Request ONE owner activation:
+   install ONLY sealed private candidate, add deadlineDisclosure:true to existing
+   config, run pp4CloudSnapshotTick once. Independently verify public9 after release.
+   See docs/operations/WEEK9_DEADLINE_DISCLOSURE.md. Preserve installed source for rollback.
+4. Observe/confirm existing publisher clock state via owner Executions; no duplicate
+   trigger or authorization reset. API20/football automation remain untouched.
+
+
 ## CURRENT RESUME — FIRST CLOUD PUBLICATION VERIFIED; clock still OFF
 
 Owner corrected fine-grained token permissions (Contents RW + Actions RW, selected

@@ -27,7 +27,7 @@ function createCloudPublisher(d){
    if(state.nextRunAt&&Date.parse(state.nextRunAt)>now)return {state:'NOT_DUE',nextRunAt:state.nextRunAt};
    phase='REGISTRY';const registry=d.registry.load();if(registry.generation!==1||registry.store.entries.length!==23)throw Error();
    phase='SOURCE';const source=d.readSource();
-   phase='PROJECTION';const file=project(source,registry.store,d.now(),new Map(config.approvedAliases.map(a=>[a.player,a.alias])));
+   phase='PROJECTION';const file=project(source,registry.store,d.now(),new Map(config.approvedAliases.map(a=>[a.player,a.alias])),{deadlineDisclosure:config.deadlineDisclosure===true});
    const activity=plan(source,d.now()),nextRunAt=new Date(Math.min(Date.parse(activity.nextCheckAt),Date.parse(file.expiresAt)-1800000)).toISOString();
    if(Date.parse(nextRunAt)<=d.now())throw Error();
    phase='PUBLIC_BASELINE';const previous=d.github.read();if(!previous||!previous.file||!previous.sha)throw Error();
