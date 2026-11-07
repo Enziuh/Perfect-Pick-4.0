@@ -1,5 +1,57 @@
 # Static snapshot progress
 
+## CURRENT RESUME — FRONTEND DEPLOYED; PRIVATE DEADLINE PUBLISHER PENDING
+
+Latest implementation/published Pages commit **a8fbf60a2e58c461faddc979b410ffc3cbae4d4c**.
+Pages run **42347602412**, verify SUCCESS (**395/395 PASS**,0 failures/skips), deploy
+SUCCESS. Prior interrupted staging had not executed; all recovered changes committed
+and pushed. No working implementation discarded. Safe frontend release is complete.
+
+Live verification2026-11-07T06:38:09Z PASS:
+- All38 live files EXACTLY match the reviewed rendered static artifact, including32
+  original logos. V2 snapshot333182bytes, SHA256
+  5e40ac3f0a5092348fd033433c0047462df35854312cac79248c21e3fb5ba13c,
+  expiry2026-11-07T07:36:28.034Z. Public health HEALTHY,58minutes remaining.
+- All23 random public IDs/aliases and frozen1–8 history match verified110cfa9.
+  Retention1–8; NO9+ selections, predictions, votes or private per-game details.
+- Actual DOM360/390/430/768/1440, cold/repeat: all5 destinations/8 capabilities,
+  historical picks/matrix,32 logos, verified Form link, no overflow/runtime errors.
+  Three Overview and Prizes pots show source values115/0/460 dollars; no collection
+  or payment-status language. No scoring/prize formula changed.
+- Actual usable times cold755/633/595/663/573ms respectively; repeat376/379/389/398/
+  410ms. One same-origin JSON request per load, ZERO Apps Script requests.
+  Observed controlled-network single samples, not guaranteed latency.
+- Fresh API20 schema/roster/history PASS; current Form OPEN, Week9 entry UNKNOWN and
+  W9/M3/season standings WITHHELD. Old fixed21/23-row verification failed on changed
+  source disclosure state; revised live checks explicitly validate unavailable rows,
+  not fabricated standings. The current public snapshot already lacks those aggregate
+  tables (cloud commit9b1fbb8 before our UI release). This is not a frontend regression.
+- Independent Google deployment metadata confirms version20 and entry points unchanged.
+  No Sheet/Form/football-trigger/source write, Google authorization change, registry
+  modification, private publisher installation or execution occurred in this task.
+
+Private deadline candidate remains EXACT sealed single file at
+`tmp/cloud-publisher-deadline-candidate/CloudSnapshotPublisher.gs`; SHA256
+13a0df3c4844b99aaf5ea404d9359c8936a75bee883d207bfc04bcdbe21a48f4.
+It uses the EXISTING registry/token/private read-only helpers; no new endpoint,
+credential, scope or trigger. Current cloud clock state unverified; existing clock
+and credentials untouched. Do not claim scheduled operation from a snapshot alone.
+
+**Exact next resume action — owner boundary:** obtain owner approval/installation of
+ONLY this candidate in the existing private registry project (save installed source
+backup), add ONLY deadlineDisclosure:true to existing PP4_CLOUD_SNAPSHOT_CONFIG,
+then run pp4CloudSnapshotTick ONCE. No API20 deploy, no registry initialization, no
+clock installer. Follow docs/operations/WEEK9_DEADLINE_DISCLOSURE.md. Independently
+validate commit/CI/live9 disclosure,23IDs,late scoring,missing entries/future privacy
+and scheduled receipt. Do not claim Week9 picks live before that public verification.
+New policy is implemented/tested but NOT yet active in production.
+
+Rollback: restore private publisher backup/disable deadline flag if activated; retain
+registry and API20. Previous compatible frontend9b1fbb8 uses historical-only JSON;
+API-backed rollback6d1adea remains available. Do not extend expired evidence or assume
+rollback erases approved public data from caches/history.
+
+
 ## CURRENT RESUME — DEADLINE POLICY CANDIDATE + PRIZE FRONTEND READY
 
 Resume2026-11-07~06:35Z: interrupted git add/commit was NOT executed (index empty).
