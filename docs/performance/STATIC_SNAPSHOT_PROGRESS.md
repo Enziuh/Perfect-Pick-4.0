@@ -1,5 +1,75 @@
 # Static snapshot progress
 
+## CURRENT RESUME — WEEK9 DEADLINE DISCLOSURE LIVE VERIFIED
+
+Owner installed the sealed private publisher, added deadlineDisclosure:true, and ran
+pp4CloudSnapshotTick once2026-11-06,22:47:47–22:48:08 Pacific. This execution DID
+publish (not NOT_DUE): snapshot commit **4ca795f69ab6a08987a15bfbcd65ae7db3f1575e**
+created **2026-11-07T06:48:05Z = Nov6,10:48:05PM Pacific**. Clean local develop
+fast-forwarded from cec7fa2 to that commit without discarding work.
+
+Pages run **42348582024**: verify SUCCESS **395/395 PASS**,0 failures; deploy SUCCESS
+**06:49:48Z =10:49:48PM Pacific**. No workflow, cloud tick or trigger was initiated
+by this verification task. Frontend source remains approved a8fbf60; new snapshot only.
+
+Independent LIVE verification06:53:21Z PASS:
+- All38 published files match reviewed rendered artifact byte-for-byte. Snapshot
+  PP4_STATIC_V2,371519bytes,SHA256
+  343e0b3f3a6107e4268d15b0d3ec623968c427188d387244206c2f9c8089423e.
+  Source observed06:48:02.017Z,captured06:48:03.918Z; expiry
+  **2026-11-07T12:47:55.910Z = Nov7,4:47:55AM Pacific**. ScoreUpdatedAt remains
+  unknown/null, not fabricated. Public health HEALTHY,354minutes remaining at check.
+- Explicit PP4_WEEK9_DEADLINE_V1, cutoff2026-11-06T00:15Z/opening01:15Z verified
+  passed, retained weeks1–9 only. Actual Form OPEN preserved, not relabeled CLOSED.
+- Week9 player selector/comparisons/matrix LIVE:22 accepted entries,1 Not Submitted,
+  23 matrix rows,10 MISSED DEADLINE cells, strikethrough/0points; eligible voting
+  visible. No Week9 designated tiebreak game in source, so no prediction fabricated;
+  current monthly designated game is Week12 and its protected predictions stay absent.
+- All23 random IDs/approved aliases exactly preserved. Frozen1–8 historical games,
+  picks,votes,standings,champions/prizes unchanged. Compared approved private API20
+  baseline without logging private values: prior21 Week9 entries' points/ranks/
+  completedGames/accuracy unchanged. ONE newly accepted late first entry contributes
+  0 current points and14 eligible future picks; all23 season points/ranks/completed
+  denominators/accuracy unchanged. Its season totalPicks correctly increases14.
+  Do not misreport the22/10 counts as regression from earlier21/9 baseline.
+- Strict production/schema projection/privacy scan PASS, including exact public
+  allowlists and absence of all private source keys. NO10+ picks,predictions,votes,
+  raw submission timestamps/rows,phone fields,mappings,credentials/recovery material.
+- Actual DOM360/390/430/768/1440,cold/repeat: all5 destinations,weekly22/season23
+  rows,missing player/marked missed picks,matrix,32 original logos,official Form link,
+  prize pots115/0/460,clean prize wording,no page overflow or runtime errors.
+  One same-origin JSON request,zero API requests. Usable cold710/588/1137/634/634ms;
+  repeat375/424/370/378/375ms. Observed throttled single samples,not latency guarantees.
+- Installed CloudSnapshotPublisher EXACTLY matches sealed candidate SHA256
+  13a0df3c4844b99aaf5ea404d9359c8936a75bee883d207bfc04bcdbe21a48f4.
+  ALL other private project files/manifest/deployment access unchanged; production
+  API20 deployment URL,metadata and editor hashes unchanged versus preservation baseline.
+  Existing registry,IDs,token and football automation were not modified by this task.
+- Targeted deadline/cloud tests17/17 PASS; complete CI395/395 PASS reused for this
+  exact published source. Numeric receipts/scripts retained under ignored
+  tmp/performance/week9-disclosure-live and tmp/cloud-activation/verify-week9-*.cjs.
+  Backend preservation result saved only in the approved private owner directory.
+
+**Only outstanding operational evidence:** owner reports installed15-minute clock;
+we did NOT reinstall/change it. Existing Script Processes API returned403, so physical
+trigger inventory and next TIME_DRIVEN completion are NOT independently verified.
+Latest observed public monitor run42333296089 succeeded before this release; current
+public monitor validation independently passes new9-authorized JSON. No new scopes,
+diagnostic routes,credentials or production operations were introduced to bypass403.
+
+Exact next/last owner action: observe existing project Executions, report ONLY next
+pp4CloudSnapshotTick Type Time-driven timestamp/status (NOT another manual run).
+A completed NOT_DUE/CI-acknowledgement is valid within the current adaptive interval.
+After receipt, recheck public health/source cadence and record scheduled evidence;
+never reinstall clock or alter nextRunAt/pending state to force a refresh.
+Week9 disclosure itself is COMPLETE and live; stop feature work here. No Form redesign.
+
+Recovery: preserve API20, registry/backup/token and existing clock. Restore saved
+private publisher/disable deadline flag if needed; use prior validated static profile
+or API-backed frontend6d1adea without extending expired data. Approved public Week9
+records may persist in caches/history; rollback does not erase them.
+
+
 ## CURRENT RESUME — OWNER APPROVED PRIVATE INSTALL; ARTIFACT REVERIFIED
 
 Resumed from bcc21aa with clean develop worktree. Owner explicitly approves ONLY
