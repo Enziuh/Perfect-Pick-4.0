@@ -30,6 +30,19 @@ advantage and may influence strategy. The owner-approved disclosure policy permi
 that effect; this release does not compensate by changing scoring or deadlines.
 Reopening the Form neither resets cutoffs nor authorizes a future week.
 
+## Exact approved installation artifact
+
+Owner approved the narrowly scoped private update after checkpoint bcc21aa.
+Verified candidate (Git-ignored, single-file inventory):
+`tmp/cloud-publisher-deadline-candidate/CloudSnapshotPublisher.gs`.
+SHA256: `13a0df3c4844b99aaf5ea404d9359c8936a75bee883d207bfc04bcdbe21a48f4`.
+The adjacent `.seal.json` is a local integrity receipt, NOT an Apps Script source file.
+Do not upload it, a clasp configuration, or any other source.
+
+Reverification: generated file equals current generator output; integrity seal and
+Apps Script syntax checks PASS; targeted deadline/cloud tests17/17 PASS. Previous
+CI395/395 PASS remains unchanged. No installation or execution was performed by Codex.
+
 ## Coordinated activation — private owner operation still required
 
 1. Deploy the compatible frontend first using the static Pages profile and existing
@@ -50,11 +63,16 @@ Reopening the Form neither resets cutoffs nor authorizes a future week.
 4. In existing PP4_CLOUD_SNAPSHOT_CONFIG, add ONLY `deadlineDisclosure: true`.
    Existing owner identity, aliases, token, registry and publication guards remain.
    No new scope is expected; stop on any unexpected permission request.
-5. Run pp4CloudSnapshotTick ONCE after approval. Independently verify its commit,
+5. Save the file and config, then select pp4CloudSnapshotTick and run ONCE. Stop on
+   any unexpected OAuth prompt. Do not run any registry initializer, clock installer,
+   deployment command or football function. Independently verify its commit,
    Pages verification/deploy success, fresh expiry, unchanged 23 IDs and scoring,
    21 accepted Week9 entries (or legitimate newly accepted entries), missing-player
    labels, and no Week10+ picks/predictions/votes. Do not declare success from an
    execution-completed message. Retain the previous public snapshot for parity.
+   Existing nextRunAt is honored: NOT_DUE or WAITING_FOR_CI can be legitimate. Do
+   not delete publisher state or repeatedly execute to force publication. Leave the
+   installed clock intact; verify the next due publication if no new commit appears.
 6. Preserve the existing publisher clock; do NOT run its installer or create a
    duplicate during this update. Observe a real Type Time-driven execution in the
    owner Executions panel. Current clock state has not been independently read;

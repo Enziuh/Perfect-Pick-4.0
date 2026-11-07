@@ -1,5 +1,40 @@
 # Static snapshot progress
 
+## CURRENT RESUME — OWNER APPROVED PRIVATE INSTALL; ARTIFACT REVERIFIED
+
+Resumed from bcc21aa with clean develop worktree. Owner explicitly approves ONLY
+Week9 deadline-disclosure publisher update and reports an installed15-minute clock;
+existing clock, registry,23 IDs and GitHub credential must be preserved.
+
+Exact installation candidate reverified: ONLY
+`tmp/cloud-publisher-deadline-candidate/CloudSnapshotPublisher.gs`, matching generator
+and adjacent seal SHA256
+13a0df3c4844b99aaf5ea404d9359c8936a75bee883d207bfc04bcdbe21a48f4.
+Apps Script compatibility check PASS; targeted deadline/cloud tests17/17 PASS,0 skips
+or failures. Prior unchanged published frontend a8fbf60/CI395PASS still applies.
+No source installation, config/Properties edit, trigger operation, registry write,
+OAuth change, Google read, cloud tick or publication was performed in this preparation.
+
+OWNER NEXT: back up installed CloudSnapshotPublisher privately; replace ONLY that
+file with the sealed candidate in the EXISTING registry project; save; add ONLY
+`"deadlineDisclosure": true` to existing PP4_CLOUD_SNAPSHOT_CONFIG JSON, preserving
+all other properties/token/aliases. No deployment or clock installer. Run
+pp4CloudSnapshotTick ONCE, then report completion time/status or fixed error label
+without private configuration. Stop on unexpected OAuth requests.
+
+Keep nextRunAt/pending/intent state untouched: a manual tick may correctly be NOT_DUE
+or WAITING_FOR_CI; do not repeatedly rerun or clear state to force publication. Existing
+clock will handle the next due attempt. See docs/operations/WEEK9_DEADLINE_DISCLOSURE.md.
+
+EXACT CODEX RESUME after owner save/run: fetch develop without discarding work;
+identify new snapshot commit and Pages run; validate live V2 deadlineDisclosures9,
+pinned official cutoff passed, all23 IDs unchanged, history1–8/scoring parity,
+Week9 submitted picks/predictions/eligible voting and missing entries, NO10+ protected
+fields/private values; verify five-width DOM/expiry/health. Capture scheduled receipt
+without reinstalling clock. Until public JSON confirms9, disclosure is NOT declared
+live or complete. API20 and football automation remain unchanged.
+
+
 ## CURRENT RESUME — FRONTEND DEPLOYED; PRIVATE DEADLINE PUBLISHER PENDING
 
 Latest implementation/published Pages commit **a8fbf60a2e58c461faddc979b410ffc3cbae4d4c**.
