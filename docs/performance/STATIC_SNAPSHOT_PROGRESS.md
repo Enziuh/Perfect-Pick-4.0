@@ -1,5 +1,100 @@
 # Static snapshot progress
 
+## CURRENT RESUME — ONE-WEEK PUBLIC TEST REVIEW: NOT READY FOR FULL WEEK10 ENTRY TEST
+
+Read-only production review2026-11-07~15:49–15:56 Pacific. Baseline71c6a6c;
+fast-forwarded only sanitized cloud commits ee0ceb0/e5b7d01/c9763c3. No application,
+Google configuration,Form/Sheet,score,trigger,OAuth or publisher-state modification.
+
+### Refresh reliability and live production PASS
+
+Observed successful cloud publications AFTER the owner's first manual run:
+- ee0ceb0 Nov7,04:21:59 Pacific, Pages42372158369 SUCCESS.
+- e5b7d01 Nov7,10:06:53 Pacific, Pages42399638299 SUCCESS.
+- **c9763c355f52b3d658496def48635d0ae9df9047 Nov7,15:52:16 Pacific**, appeared DURING
+  this read-only review, with no tick/dispatch by Codex. Pages **42427185948** verify
+  SUCCESS395/395 PASS0fails; deploy SUCCESS15:53:55 Pacific.
+Cadence~5h40–5h45 renews the six-hour score window without Mac publishing. Initial
+snapshot had17minutes remaining; monitor correctly failed near-expiry15minute buffer
+while fresh CI was running. New deployment completed before old expiry; no expired
+content was approved. New source23:52:01.593Z, expiry
+**2026-11-08T05:51:48.828Z = Nov7,21:51:48 Pacific**. Public health HEALTHY after
+renewal. Sanitized semantic content unchanged, only freshness advanced.
+
+Repeated LIVE38-file byte comparison and real DOM checks at360/390/430/768/1440 PASS
+against refreshed snapshot. Week9:22submitted,1Not Submitted,10crossed-out MISSED
+DEADLINE/0point selections,comparison matrix23rows,eligible voting. Weekly22 and
+season23 standings pass; all23 stable IDs,prior21Week9 scoring and frozen1–8 parity
+unchanged. New late entrant0points/14futureeligible picks is preserved. Future10+
+protected picks/predictions/voting absent; strict schema,field allowlists and private
+source-key leakage checks PASS. All32 SVG logos,official Form link,3pots115/0/460,
+mobile navigation/nooverflow/runtimechecks PASS. No full local suite repeated:
+latest exact cloud-published source already passed CI395/395; necessary live-data,
+privacy,parity and targeted browser checks performed.
+
+Read-only Google metadata/hash preservation check PASS: installed sealed private
+publisher,allother files/manifest/access,productionAPI20 deployment/URL/editor remain
+unchanged. Existing Processes API still403; exact Time-driven type/physical trigger
+inventory cannot be independently certified. Owner reports installed15minute clock;
+three subsequent publications,including one observed here, corroborate ongoing cloud
+refresh, but do not falsely label a particular execution type without its receipt.
+Owner replied '1' to the execution-receipt question; it supplied no timestamp/status
+and was NOT treated as permission or proof. No new scopes/diagnostics were introduced.
+
+### Entry-test blockers / source facts
+
+Fresh API20 health/schema READY,272games122FINAL,23aliases verified,activeWeek9,
+controlCLOSED. Official verified public responder URL returns200 and explicitly says
+NOT ACCEPTING RESPONSES. Closed public page hides questions: actual current question
+content is not independently inspectable through that public view. No Form opened.
+
+Existing ESPN scoreboard GET pattern independently verifies ALL Week9(15) and
+Week10(14) matchups. AllWeek9 stored kickoffs match,openingNov5,17:15Pacific and
+configuredcutoff16:15Pacific. Week10 opening **Nov12,17:15Pacific**, hence one-hour
+rule cutoff **Nov12,16:15Pacific =2026-11-13T00:15Z**. This is verified schedule/rule
+expectation, NOT a claim that Week10FormControl is configured. It is not: public/API
+control stillWeek9,Week10entryUNKNOWN and no configured next-week kickoff/deadline.
+
+Historical monthly M1/M2 each23rows and confirmed champion pass; currentM3 (Weeks9–12)
+is IN PROGRESS but its standings are WITHHELD/CLOSURE_UNVERIFIED. Concrete reason:
+`tools/projector/project-competition.cjs:142` aggregate() requires EVERY scoped weekly
+table AVAILABLE, including future10–12. `tools/snapshots/retention.cjs` also strips
+unapproved full-period tables. No running M3 table is being displayed. Do not describe
+all monthly functionality as ready or bypass privacy to invent a table/champion.
+
+Week10 has NO owner retention grant: current sealed policy permits1–8history +9only.
+Deadline passing alone will NOT enable10static picks. This is deliberate fail-closed
+scope, not a frontend refresh bug. No additional week was authorized by this review.
+
+### Minimal next actions (approval/owner boundary)
+
+For a full upcoming WEEK10 test:
+1. Owner use EXISTING3.0 weekly workflow at intended opening time to prepareWeek10,
+   confirm14correct matchup questions and verified Nov12,16:15Pacific cutoff in
+   FormControl,then intentionally allow official Form responses. No automatic open,
+   close,reopen,question cleanup or writer execution authorized/performed here.
+   If instead testing only remainingWeek9late entries, owner must explicitly choose
+   that scope and reopen existing Form; original per-game cutoffs never reset.
+2. Explicit per-week authorization + reviewed narrow publisher extension needed for
+   Week10deadline-based static disclosure/retention. Do not changeAPI20 or grant all
+   future weeks. Verify configured cutoff before promoting that change.
+3. To include running monthly rankings in the test, authorize a narrow publisher-only
+   partial-month aggregate from approved available weeks; preserve points/ranks and
+   unknown/future predictions/champion withholding. This review is READ ONLY and
+   prepared no new code or backend architecture.
+4. Owner may provide next existing pp4CloudSnapshotTick Type Time-driven timestamp/
+   status ONLY to close execution-type evidence gap. Do not reinstall or run manually.
+
+Exact resume: read this section; confirm intended test week/owner decisions, recheck
+public health, then verify owner-configured Form/Week10cutoff or prepare ONLY explicitly
+approved narrow publisher changes. Do not restart audits or redesign the Form. Current
+Week9 results dashboard is shareable for viewing; full one-week submission-test
+readiness remains NOT READY until the above applicable entry/disclosure gaps are closed.
+Numeric/private review captures are Git-ignored under tmp/readiness and
+ tmp/performance/week9-disclosure-live. Rollback remains API-backed6d1adea withAPI20,
+registry/token/backups unchanged; do not extend expiry or assume rollback erases caches.
+
+
 ## CURRENT RESUME — WEEK9 DEADLINE DISCLOSURE LIVE VERIFIED
 
 Owner installed the sealed private publisher, added deadlineDisclosure:true, and ran
