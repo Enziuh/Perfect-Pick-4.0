@@ -1,6 +1,76 @@
 # Static snapshot progress
 
+## CURRENT RELEASE — WEEK10 PREPARED; COMPATIBLE FRONTEND LIVE; OWNER ACTIONS PENDING
+
+Implementation and deployed frontend **76ddfd3f4f48a2d15c921d428587bcba0a7dbe70**.
+Pages **42429105238** verify SUCCESS400/400 PASS0fails/skips; deploy SUCCESS
+2026-11-08T00:19:41Z (Nov7,16:19:41Pacific). Full local400/400 PASS after proper
+benchmark HTTP cleanup; original assertions/timeouts retained. No dependencies added.
+
+Live00:21:08Z: ALL38published files exactly match reviewed render; five widths
+360/390/430/768/1440,Week9selector22+1missing,matrix23,10missed/0points,32logos,
+weekly/season views,115/0/460pots,Formlink,nooverflow/runtimeerrors; one same-origin
+snapshot,zero browserAPI requests. Approved snapshot unchanged c9763c3,371523bytes,
+retention1–9,Week10+protected fields absent,expiryNov7,21:51:48Pacific. Public health
+HEALTHY331minutes atcheck. API metadata independently confirms20/URL/access unchanged.
+No Google writer/trigger/Properties/config edit or source upload was performed.
+
+Prepared REAL LOCAL Month3 candidate and five-width DOM PASS:22running rows,covered9,
+sourceWeek9 points/ranks/denominators match player-by-player; no champion/award; no10
+protected values. All23IDs/aliases and frozen1–8 history unchanged. Candidate/artifact
+remain ONLY ignored tmp/week10-real-candidate and tmp/week10-real-artifact; NOT
+published. LiveM3 still withheld until owner installs/runs the new private publisher.
+
+Week10:14matchups/Results order/kickoffs verified against original NFL ESPN source;
+Nov12,17:15Pacific kickoff,16:15cutoff. Plan docs/operations/WEEK10_FORM_PLAN.json.
+Authorized10grant implemented/tested inclusive boundary,predeadline privacy evenCLOSED,
+postdeadline whileOPEN,missingentries/late eligibility,no11+grant. Current private
+installed file has NOT been updated; server-side10grant therefore pending installation.
+Questions are verified/prepared, NOT claimed created. Current Form stillWeek9CLOSED.
+
+EXACT next owner actions (no extra architecture/source replacement):
+A. Existing PRIVATE REGISTRY project: back up and replace ONLY CloudSnapshotPublisher
+   with tmp/cloud-publisher-week10-approved/CloudSnapshotPublisher.gs; sealSHA256
+   648edf3f4ca02dcb4385fcb98819c81c5cfb580b4e0352f5bba2e312e883fc9a.
+   Keep existingdeadlineDisclosure:true,registry23IDs,credentials,allProperties and
+   installed15minuteclock. No installer/OAuth/deployment. Run existing
+   pp4CloudSnapshotTick ONCE after installation; respect NOT_DUE/pending state. Verify
+   resulting commit/CI/liveM3running and10withheld before cutoff. No static real candidate
+   upload by Codex. New source publication is owner-only boundary, not complete yet.
+B. ORIGINAL football project: PREFERRED existing previewWeek10() read-only. Confirm
+   14questions/order,earliestkickoffNov12,17:15,computeddeadline16:15,noWeek10tiebreak.
+   Current editor config was live read-only verified1hour; immutableAPI20retains3hours,
+   so DO NOT replace editor withimmutable20/local source. Preview's inherited textual
+   deadlineRule may say3hours; actual computedtimestamp must be16:15,otherwiseSTOP.
+   Separate owner opening/writer approval required, then existing setupWeek10() ONCE
+   at intended normal transition. It creates questions AND opens Form,updates active
+   FormControl/its normal close trigger. No Week9manualclose/reopen or scoring/ESPN
+   function, publisher-clock installer,or response deletion. Verify final responder and
+   FormControl10afterwards. No new original-project source is necessary.
+
+Optional disabled guarded Form adapter exists/tested/sealed but is NOT required for
+currentcorrecteditor and must NOT create unnecessary installation steps. Full effects,
+owner boundary and fallback are in docs/operations/WEEK10_PUBLIC_TEST.md.
+
+Overall: READY FOR OWNER ACTIVATION/PREFLIGHT, NOT YET OPEN or fully live forWeek10.
+Do not claim liveM3running or actual14Formquestions until the owner operations and
+subsequent read-only verification are complete. ExistingWeek9site remains operational.
+Resume by reading this section and owner execution receipts; do not regenerate IDs,
+reinitialize private registry,install clocks or repeat completed audits. Stop feature
+work at these genuine owner boundaries; no Google Form interface redesign.
+Rollback: preserve currentstaticc9763c3,priorprivatepublisher,API20 andAPI-backed6d1adea.
+Do not extend stale evidence or assume rollback erases authorized public cache/history.
+
+
 ## CURRENT RESUME — WEEK10 PREPARATION IMPLEMENTED; OWNER OPERATIONS PENDING
+
+OWNER INSTRUCTION CLARIFICATION: current original editor's offset is verified1hour,
+so PREFERRED Form preparation uses EXISTING previewWeek10 (read-only), then existing
+setupWeek10 ONLY after explicit opening/writer approval and a correct14question,
+16:15Pacific computed preview. No original-project source installation is needed.
+The disabled temporary adapter listed below is OPTIONAL, not a prerequisite; do not
+add unnecessary production source. API20 immutable3hour source is not editorHEAD.
+
 
 Baseline86f1527. Owner authorizes scoped Week10 deadline disclosure and running Month3
 standings, but Form opening/irreversible writer actions and owner-only source installation

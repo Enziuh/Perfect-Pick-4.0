@@ -56,36 +56,41 @@ unchanged. Champions/tiebreakers/prizes stay pending until their original finali
 rules are met. Season running totals similarly preserve approved history while a new
 week is OPEN. API20/scoring formulas are not modified.
 
-## 3. ORIGINAL football project — temporary owner wrapper, no deployment
+## 3. ORIGINAL football project — preferred EXISTING workflow, no new source
 
-Prepared file: `tmp/week10-form-owner-candidate/Week10OwnerSetup.gs`
-SHA256: `88853e322a0992583f29a4ca3a924855bce07ab0eea324584e5252387e13683f`.
-This is a DIFFERENT project from the private registry. Never upload whole directories.
+The live editor was verified to have DEADLINE_HOURS_BEFORE_KICKOFF:1. Preserve it;
+no new file, upload, deployment, source replacement or permission is required here.
 
-After owner approves adding the temporary file, preserve all existing unpublished
-editor source, add ONLY Week10OwnerSetup, leave PP4_WEEK10_SETUP_APPROVED=false.
-Run **pp4PreviewWeek10OneHour**: read-only duplicate check,14Results row/team/order
-checks, current authoritative kickoff check; report contains NFL questions/dates only.
-Stop on any mismatch, existingWeek10,unexpected OAuth or missing function. No manual
-header edits, timestamp rewrites or response copying.
+1. Owner select existing **previewWeek10** and run. This is read-only. Confirm14
+   matchup questions/Results order against WEEK10_FORM_PLAN.json, openingNov12,17:15
+   Pacific,computed picksCloseNov12,16:15Pacific and no Week10 tiebreak question.
+   Stop on a duplicate existingWeek10 or any mismatch. The inherited preview result
+   may still label deadlineRule as3hours in text; actual computed picksClose must be
+  16:15. That stale diagnostic string is not authority to change the cutoff.
+2. **Separate approval is still required to open/create Week10.** At the intended
+   normal transition (prefer after Week9 games conclude), owner run existing
+   **setupWeek10 once**, ONLY after the computed preview above is correct. The existing
+   workflow creates the section/14required questions, routes entry to10, opens the
+   existing Form, updates active FormControl and replaces its ordinary one-time Form
+   closing trigger. It also removes legacy TEST-close triggers per existing workflow.
+   These writer effects must be expressly approved; no manual Week9close/reopen,
+   ESPNsync,scoring writer or publisher-clock installer is requested.
+3. Verify official responder has correct14questions/choices/order; FormControl10
+   deadlineNov12,16:15Pacific,original URL,correct normal close trigger,historical9
+   responses preserved. Do not run setup twice or repair partial setup by deleting
+   historical data. If preview is wrong, STOP; do not run it with the immutableAPI20
+   source's old3hour offset or replace the restored unpublished editor source.
 
-**Separate owner approval is required before opening/creating Week10.** Existing
-setup is not split into safe-create/late-open phases: setup creates questions AND
-opens the Form. Do not run it just to preview. At the intended normal transition
-(prefer after Week9 games conclude), owner sets ONLY the temporary wrapper flag true
-and runs **pp4SetupWeek10OneHourApproved once**. It calls existing setupWeek10 with
-one-hour runtime offset, then restores the original setting. The existing workflow
-creates the section/14required questions, routes entry to10, opens the existing Form,
-updates active FormControl and replaces its ordinary one-time Form closing trigger.
-It also removes legacy TEST-close triggers per existing workflow. These writer effects
-must be explicitly approved; it never calls Week9 close/reopen, ESPN sync, scoring
-writers or the publisher clock installer. Existing responses are not deleted/rewritten.
-Do not run twice or try to repair partial setup by deleting old responses.
-
-Verify official responder has correct14questions/choices/order; FormControl10deadline
-Nov12,16:15Pacific, original URL, correct normal close trigger, historical9records
-preserved. Remove ONLY the temporary wrapper file afterward (no registry Properties
-or normal trigger deletion). No production API version/deployment update is needed.
+Optional strict guard adapter (NOT necessary with the verified current editor):
+`tmp/week10-form-owner-candidate/Week10OwnerSetup.gs`, SHA256
+`88853e322a0992583f29a4ca3a924855bce07ab0eea324584e5252387e13683f`.
+It is prepared/tested/disabled, NOT installed. If owner explicitly chooses its added
+row-order/instant guards, adding its temporary file requires separate approval:
+pp4PreviewWeek10OneHour reads only,pp4SetupWeek10OneHourApproved is blocked unless its
+own approval flag is enabled. The latter calls the SAME existing setupWeek10 with
+one-hour runtime offset and restores config. It is not a replacement backend or a
+prerequisite for the preferred existing workflow above. Remove temporary file after
+use if ever installed; never modify registry Properties or duplicate triggers.
 
 ## Acceptance and rollback
 
