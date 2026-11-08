@@ -1,5 +1,67 @@
 # Static snapshot progress
 
+## CURRENT INCIDENT STATUS — SITE RECOVERED; MONITOR PASS; CLOUD FILE INSTALL PENDING
+
+Emergency recovery deployed **16148e1611455a662da3bcbd4d963dc6c9af38fb** (Nov8,14:24:18
+Pacific commit). Pages **42530077735** verify SUCCESS402/402 PASS0fails,deploy SUCCESS
+**2026-11-08T22:26:14Z =14:26:14Pacific**. This was an authorized ONE-TIME sanitized
+recovery,not a scheduled cloud publication or new Mac dependency. No Mac scheduler,
+Keychain export,new credential,Google write or football operation was enabled.
+
+Subsequent UNCHANGED public monitor **42530303613 SUCCESS** (workflow_dispatch,
+22:27:12Z). Local identicalmonitor HEALTHY. Olderfailedscheduled42527713976 is retained,
+not suppressed; no check weakened,workflow disabled,main edit or alert suppression.
+A future scheduled monitor still needs observation,not misrepresented as this manualrun.
+
+Actual LIVE22:27:37Z ALL38files byte-match reviewedartifact;V2,376278bytes,SHA256
+ ae42e71f94331199eb678d67baade8f26148e19f722a3db7926b29519034e2f9.
+Source observed22:23:05.019Z,expiry **2026-11-09T04:22:57.726Z =Nov8,20:22:57Pacific**.
+272games128FINAL,all23IDs/aliases unchanged,23acceptedWeek9entries/11MISSED selections,
+no missingplayer now,23matrixrows/runningMonth3rows,season/weekly scoringvalidated.
+Frozen1–8 games,picks,champions/prizes unchanged; sourceactualscores/picks/standings
+are not recomputed/changed by metadata repair. All10+protectedpicks/predictions/votes
+absent. Strictpublicfieldallowlists/source-key/privacy/integrity PASS; no raw rows,
+phones,private mappings,credential/recovery material inGit/Pages/workflow artifacts.
+
+Realbrowser360/390/430/768/1440cold+repeat PASS: Week9selectors,matrix,eligiblevotes,
+crossed-outmissed/0points,monthlyrunningINPROGRESS/nochampion,prizepots115/0/460,
+32SVGlogos,allfive destinations,nooverflow/runtimeerrors. One same-originJSON request,
+zero browserAPI requests. Numericreceipts/temporarychecks ignored under
+ tmp/performance/source-recovery-live and tmp/readiness; no private records committed.
+
+FreshAPI20HTTPhealth/READY source scoringcontract PASS after narrowtransportnormalization;
+version20/URL/accessmetadata unchanged. Officialverifiedresponder GETstillCLOSED.
+CurrentAPIlabels competitionWeek9 withWeek10deadline/game metadata, so rawdecodefails;
+sourcehelper fixes ONLY presentationcontrol using fresh schedule +explicitowner9grant,
+UNKNOWNstatus,noclosureguess or futuregrant. SOURCErootcause is proved,not just expiry.
+InstalledCloudsource read-only hash EXACTLY oldreviewedWeek10artifact648edf3f...,contains
+raw `.decode(publicReply,Date.now())`,repair absent. Screenshot supplies latest actual
+Time-drivenFAILSOURCE. Existingclock is installed/running but AUTOMATION NOT HEALTHY.
+
+**ONLY permanent cloud action pending owner approval/installation:** replace ONLY
+CloudSnapshotPublisher in EXISTING PRIVATE REGISTRY project with
+`tmp/cloud-publisher-source-recovery-final/CloudSnapshotPublisher.gs`,verifiedSHA256
+36c0b7c2f5f4d62bfc08f095c70d8cea98ebd28a3465763e095db05b638c06d6.
+Back up previous source; retain ALLProperties,23IDs,token,deadlineDisclosure:true and
+15minuteclock. No initializer,clockinstaller,scope/deployment or state reset. Then one
+approved tick or next scheduled execution; verify a REAL Time-drivenSUCCESS and fresh
+cloudcommit/Pages/monitor. Must complete before current20:22expiry for uninterrupted
+service. Do not claim localemergencypublication fixed unattended operation.
+
+Week10notreadyforsubmissions: officialFormCLOSED despitefutureNov12,16:15cutoff metadata.
+Publicclosedpagecannotprove14questions. OwnerexistingREAD-ONLY checkWeek10 and
+PP_checkAutomationStatus can reconcile questioncount,storedactiveweek/deadline,status
+andclose-triggercount; reportcounts/status/datesonly. No setup/reopen/forceopen/trigger
+change authorized or performed by this incident. Do not call setup twice if10exists.
+
+EXACT RESUME: read this section and SOURCE_ROLLOVER_RECOVERY.md; obtain private-file
+installation approval/receipt,verify installedhash then observe scheduledsuccess/new
+commit,rununchangedmonitor. RecheckFormread-onlyreports; request only specific opening
+correction if needed. No Formredesign/newarchitecture. Do not re-run oldaudits/registry
+setup,rotateIDs,changeAPI20 or clearpublisherstate. Staticrecovery avoided APIrollback;
+rawAPIprofile also encounters mixedmetadata,so do not claim untestedAPIrollback succeeds.
+
+
 ## CURRENT INCIDENT — EXPIRED STATIC DATA; SOURCE ROLLOVER FIX TESTED; RECOVERY STAGED
 
 Nov8owner reports failingpublic-health42527713976; full job/annotations inspected.
