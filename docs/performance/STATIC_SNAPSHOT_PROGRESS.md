@@ -1,5 +1,58 @@
 # Static snapshot progress
 
+## CURRENT FORM REVIEW — WEEK10 CONFIG OPEN BUT ACTUAL FORM CLOSED; REOPEN PREPARED ONLY
+
+Owner read-only receipts: Week10exists/1PAGE_BREAK/14questions/no duplicates;
+Propertiesweek10,storedOPEN,kickoffNov12,17:15PST,deadline16:15PST;FormControlOPEN,
+closeTriggerCount1; actualacceptingfalse. Fresh officialresponderGET200/closedmessage
+confirms CLOSED,not merely stale frontend. No setup/open/close/trigger operation run.
+
+Current ORIGINAL editor source refreshed via read-onlygetContent. Normal
+PP_closeFormAtDeadline_ reads storedPP_DEADLINE_ISO and returns before setters when
+future. Exact current function tested locally with fabricated services and correct
+Week10 futuredeadline:0writes. PP_replaceCloseTrigger_ uses.at(deadline),BUT actual
+installedtargetdate/time is not readable through Trigger's available getters; count1
+and correctProperties do NOT prove schedule. Owner trigger UI check required.
+
+Competing inspected closers: PP_forceCloseForm,repairWeek7Automation(pastWeek7deadline),
+normaldeadlinehandler. Nativepublishstate changes can override acceptingresponses
+without updatingScriptProperties/FormControl (officialFormsAPI). Otherowner/project
+triggers/add-ons/manualaction/partialpriorrace cannot be ruled out from source. Exact
+initiatingcause remainsUNPROVEN; do NOT claim no conflicts or modify triggers.
+
+Prepared ONLY tools/forms/week10-reopen.cjs generates temporary owner-only function
+pp4ReopenExistingWeek10AfterReview,disableduntilownerconfirmsclosureReview. Guards
+Properties+FormControlweek10/OPEN/exactUTCdeadline+kickoff/futuretime,one officialclose
+handler,no suspectclose/repairhandler,14validquestions,publishedstate. ONLY mutation
+setAcceptingResponses(true),followedbyactualisAcceptingResponses check. No Sheet/
+Properties/cache/routing/question/trigger/publish/API20/publisher/scoring writes.
+Idempotent already-open returns0writes. Existing PP_forceOpenForm is deliberately
+notused because it also writesProperties/FormControl/cache state.
+
+Sealed ignoredartifact tmp/week10-reopen-owner/Week10Reopen.gs,ONLYfile;
+SHA25638187831c1504858b24f1d4b5d62a81b8b5bb64517b82f9f18ca3fee16cfd9f3.
+Targetedtests4/4PASS,disabled0reads/writes,success1write,idempotence,wrong/expired
+config,competing/missingclock,badquestions,unpublishedstate and failedpostcondition;
+AppsScriptcompatibilityPASS. Fullsuite/deployment notneeded: no live runtime changed.
+
+EXACT NEXT OWNER ACTION:
+1. ORIGINALproject Triggers inspect existing PP_closeFormAtDeadline_ targetNov12,16:15
+   America/Los_Angeles (Nov13,00:15UTC),CANCEL withoutsave. Review allother closing/
+   repair/testhandlers,recentclosing executions,Formpublish/responseclose rules/add-ons.
+   If conflictingautomation existsSTOP/requestspecificfix; do notdelete/reinstall.
+2. Only after no conflicts confirmed,owneraddtemporaryWeek10Reopen file,preserveexisting
+   source,set localclosureReviewConfirmed=true,run pp4ReopenExistingWeek10AfterReview
+   ONCE. No deployment/newscopes. Do NOT setupWeek10,forceopen,repairWeek7 or addtriggers.
+3. ReceiptmustshowWEEK10_ACCEPTING_RESPONSES (orALREADY_OPEN);verify SAME officialForm
+   loads14questions/allowsentry WITHOUT submitting responses,and existingread-only
+   PP_checkAutomationStatus accepts true withdeadline/flags/triggercountunchanged.
+   Remove temporaryhelperafterward. Untilthenactualacceptance remainsFALSE/unfixed.
+
+Exact instructions/limitations: docs/operations/WEEK10_REOPEN.md. No changes toAPI20,
+privatecloudpublisher,IDs,ESPNscoring or footballautomation in this task. Resume at
+owner targetdate/conflictreview receipt; do not claim successfulreopen from localtests.
+
+
 ## CURRENT INCIDENT STATUS — SITE RECOVERED; MONITOR PASS; CLOUD FILE INSTALL PENDING
 
 Emergency recovery deployed **16148e1611455a662da3bcbd4d963dc6c9af38fb** (Nov8,14:24:18
