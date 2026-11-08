@@ -104,3 +104,21 @@ restore its prior file and preserve state/clock; use existing approved static/AP
 frontend rollback6d1adea if necessary. Never extend expired evidence or assume rollback
 removes public cache/history. Form setup is not a transactional operation: on partial
 failure stop for owner inspection, do not delete/recreate data or repeat blindly.
+
+## Reviewed preview-label correction (prepared only, not applied)
+
+Current editor configuration/calculations already use1hour. In
+previewPerfectPickWeek, replace ONLY `deadlineRule: '3 hours before first kickoff'` with:
+
+```javascript
+deadlineRule: PP_WEEKLY_FORM.DEADLINE_HOURS_BEFORE_KICKOFF +
+  (PP_WEEKLY_FORM.DEADLINE_HOURS_BEFORE_KICKOFF === 1 ? ' hour' : ' hours') +
+  ' before first kickoff',
+```
+
+This affects the returned diagnostic text only. FormControl,storeddeadline,trigger
+and4.1eligibility do not consume this field. Exact current function was locally
+reproduced and patched:14games and16:15Pacific unchanged. No production source edit
+has been applied. No API20redeployment,trigger recreation,Form opening or Sheet edit
+is required for this correction. Obsolete3hour introductory comment can be corrected
+separately; it is not executable logic. Opening still requires explicit owner approval.

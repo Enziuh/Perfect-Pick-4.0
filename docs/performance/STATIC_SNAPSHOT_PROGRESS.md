@@ -1,5 +1,38 @@
 # Static snapshot progress
 
+## CURRENT REVIEW — WEEK10 PREVIEW THREE-HOUR TEXT IS LABEL ONLY
+
+Owner previewWeek10 succeeded:14games,Nov12,17:15Pacific kickoff,16:15cutoff. Fresh
+READ-ONLY getContent inspection of the ORIGINAL project's CURRENT editor confirms
+DEADLINE_HOURS_BEFORE_KICKOFF=1. No setup,Form open,Google writer,source edit or trigger
+operation executed. Week10opening/privatepublisher installation remain pending.
+
+Exact trace in current50_Form_Weekly_Setup:
+- setup calculates kickoff minus configuredhours (line132), stores identical
+  PP_DEADLINE_ISO (257), passes deadline to FormControl (261+) and trigger (274).
+- FormControl writes data.deadline plus a config-derived rule label (765–767).
+- PP_replaceCloseTrigger_ uses .at(deadline) (802); close handler reads stored
+  PP_DEADLINE_ISO and checks actual now vsdeadline (367–382), never preview text.
+- preview calculates the same configureddeadline (869–871), but line881 hardcodes
+  deadlineRule:'3 hours before first kickoff'. Only other3hour occurrence is an
+  introductory comment. No old3hour arithmetic in these inspected editor paths.
+- 4.1scoring cutoff (tools/scoring/late-entry.cjs:19) independently requires verified
+  openingkickoff minus3600000; source labels do not drive eligibility/disclosure.
+
+Minimal prepared correction: replace ONLY previewPerfectPickWeek's deadlineRule
+literal with configuredhours + singular/plural text (see WEEK10_PUBLIC_TEST.md).
+No source/trigger/time change, API20deployment or FormControl rewrite is needed for
+this diagnostic correction. ImmutableAPI20's old3hour Form-helper source is NOT current
+editor and must not be reloaded over it. Do not claim physicalWeek10trigger/FormControl
+already exist: actual setup remains owner-approved future operation.
+
+Exact live preview body was reproduced locally with fabricated read-only service stubs:
+14games/00:15Zcutoff unchanged by label correction, newtext1hour; configured3hour
+simulation correctly gives3hour label/date. AppsScript syntax check PASS. Numeric
+receipts/scripts only in ignored tmp/readiness. Targeted late-entry + Week10 regressions37/37 PASS,0failures/skips. No full suite
+or deployment needed for this documentation-only edit.
+
+
 ## CURRENT RELEASE — WEEK10 PREPARED; COMPATIBLE FRONTEND LIVE; OWNER ACTIONS PENDING
 
 Implementation and deployed frontend **76ddfd3f4f48a2d15c921d428587bcba0a7dbe70**.
