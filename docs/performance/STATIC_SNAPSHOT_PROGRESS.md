@@ -1,5 +1,67 @@
 # Static snapshot progress
 
+## CURRENT INCIDENT — EXPIRED STATIC DATA; SOURCE ROLLOVER FIX TESTED; RECOVERY STAGED
+
+Nov8owner reports failingpublic-health42527713976; full job/annotations inspected.
+Monitor correctly reports REAL expiry: last cloud f3557ea Nov7,21:36:50Pacific,
+Pages42451468469SUCCESS; captured artifact schema/privacy valid,expiryNov8,03:36:39
+Pacific. No subsequent cloud publication. Owner screenshot confirms existing15minute
+clock ran Nov8,14:06:25–14:06:47Pacific and FAILED `SOURCE`. Do not reinstall triggers
+or suppress alerts. Nativebrowserunavailable/Processes403; receipt supplies actual
+Time-driven evidence without new permissions.
+
+Root cause REPRODUCED: fresh API20 health/READY scoring snapshot passes strict
+contract, but unfinished competition activeWeek9 is paired with advanced FormControl
+Week10game/deadline (Nov12,16:15). Legacy APIformatter labels control.activeWeek9,
+causing initial privatepublisher decode to reject the off-week firstGame before
+private read-only projection. This is not a GitHub token/Pages failure or bad scores.
+Form setup metadata transition caused a transport mismatch; no production writer fix
+or API20redeploy is necessary. API20metadata/URL/access independently unchanged.
+
+Prepared narrow tools/api/source-control.cjs applies ONLY verified9→10rollover:
+strict keys/NFLlabels/known10cutoff, fresh9schedule and owner9deadline grant; replaces
+mixed PRESENTATION control with verified9game/deadline and statusUNKNOWN. Never
+modifies source snapshot/scores/picks/aliases/proof timestamps/closure. Missing9entry
+Deadline staysnull; contradictory non-null evidence rejected. No10beforedeadline or
+11+ grant. Private CloudSnapshotPublisher uses this beforeAPIpreflight and after its
+existing read-only provider. Source error no longer reproduced on freshAPI input.
+
+Tests:402/402 full regressions PASS0fail/skips,including2newrollover cases rejecting
+wrongdates/fields/games/aliases,staleproof and futureprotecteddata. Full browser,privacy,
+scoring/artifact tests retained. Prior full run hung on profiler's inherited Chrome
+stderr close after completed checks; teardown now bounds close and destroys its own
+pipe after exit. No assertion/timeout/monitor check weakened.
+
+Permanent sealed private update NOT INSTALLED:
+`tmp/cloud-publisher-source-recovery-final/CloudSnapshotPublisher.gs`,singlefile,
+SHA25636c0b7c2f5f4d62bfc08f095c70d8cea98ebd28a3465763e095db05b638c06d6.
+Owner approval/installation required:replaceONLYfile,keep registry23IDs/token/Props/
+clock,save. No deployment/initializer/clockinstaller/state-reset/scopes. Next due tick
+or one approved manualtick must independently verify commit/Pages/Time-driven success.
+Until installed, automatic source reads still fail. See SOURCE_ROLLOVER_RECOVERY.md.
+
+Emergency one-time sanitized static recovery staged from freshAPI20,not stalefile:
+source2026-11-08T22:23:05.019Z,expiryNov9T04:22:57.726Z (Nov8,20:22:57Pacific),
+376278bytes,272games128FINAL,23stableIDs/aliases,23accepted9entries/11missed selections,
+retention1–9,10+protecteddata absent. Frozen1–8 exact,all raw source scores/picks
+unchanged; existing private mapping staysoutsideGit/noKeychainexport. Exact38file
+artifact/privacy/schema/integrity PASS. No ongoingMacscheduler enabled; this one-time
+recovery bridges the owner-only cloud source update. Do not call automation healthy.
+
+Week10officialFormURL verified unchanged; live responder CLOSED,no questions visible.
+APIcontrolmetadata hasNov12one-hourdeadline but cannot alone prove actual14questions
+or active ScriptProperties. Owner read-only checkWeek10 + PP_checkAutomationStatus
+needed before any further opening/setup; do not run setup twice or force-open.
+No Form/Sheet/footballtrigger/credential/scoring action performed in this incident.
+
+NEXT: commit/push validated repair + sanitized snapshot, dispatch existingstaticPages,
+verify402CI/deploy and liveJSON/DOM,then rerun unchangedpublic monitor and recordsuccess.
+If deployment fails do not serve unverifiedcontent; APIprofile rollback6d1adea remains
+fallback but rawmixed source would also need safe compatibility handling. After live
+recovery, request ONLY privatefile installation and existing read-only Form diagnostics.
+No new architecture,credentials or football automation.
+
+
 ## CURRENT REVIEW — WEEK10 PREVIEW THREE-HOUR TEXT IS LABEL ONLY
 
 Owner previewWeek10 succeeded:14games,Nov12,17:15Pacific kickoff,16:15cutoff. Fresh
