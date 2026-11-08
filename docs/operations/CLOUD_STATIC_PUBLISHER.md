@@ -1,7 +1,20 @@
-# Cloud static publisher — first publication verified; clock activation pending
+# Cloud static publisher
+
+## Current Week10 preparation
+
+The existing clock is owner-installed and cloud refreshes have been observed; do NOT
+follow the historical installer steps below or duplicate it. Latest operational state
+is in STATIC_SNAPSHOT_PROGRESS.md. Week9 deadline disclosure is already live.
+
+The reviewed Week10 publisher and running Month3/season aggregate extension is prepared,
+NOT installed. See [WEEK10_PUBLIC_TEST.md](WEEK10_PUBLIC_TEST.md) for the exact sealed
+file and owner-only steps. Existing registry23IDs/token/clock/API20 remain unchanged.
+Weeks1–8 historical retention plus approved9/10 cutoff grants only; no11+ disclosure.
+The earlier1–8-only and clock-pending descriptions below are historical records.
 
 
-## First cloud publication — VERIFIED; clock awaiting owner flag/installation
+
+## Historical first cloud publication — VERIFIED; clock was awaiting owner installation
 
 Owner corrected the existing repository-scoped token permissions and ran one tick.
 Snapshot commit110cfa9 at2026-11-06T19:57:42Z; Pages run42284191632 verified391/391

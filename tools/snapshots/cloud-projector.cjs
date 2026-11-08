@@ -5,7 +5,7 @@ const {projectReply,scanText}=require('./schema.cjs'),{create}=require('./retent
 function project(reply,store,now,approvedAliases,{deadlineDisclosure=false}={}){
  try{
   identity(store);if(store.entries.length!==23||!(approvedAliases instanceof Map)||reply.aliases.some(a=>approvedAliases.get(a.player)!==a.alias))throw Error();
-  const r=deadlineDisclosure?require('../disclosure/weekly-deadline.cjs').record(reply,now):null,records=r?[r]:[];decode(reply,now,records);const ids=new Map(store.entries.map(e=>[e.sourceKey,e.publicId]));
+  const records=deadlineDisclosure?require('../disclosure/weekly-deadline.cjs').records(reply,now):[];decode(reply,now,records);const ids=new Map(store.entries.map(e=>[e.sourceKey,e.publicId]));
   if(reply.aliases.some(a=>!ids.has(a.player)))throw Error();
   const payload=projectReply(reply,ids),model=decode(payload,now,records),v1={schema:'PP4_STATIC_V1',generatedAt:payload.snapshot.generatedAt,expiresAt:new Date(model.expiresAt).toISOString(),payload};
   const file=production(create(v1,now,{publicAggregates:true,deadlineDisclosures:records}),now);

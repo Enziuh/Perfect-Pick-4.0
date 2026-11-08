@@ -1,5 +1,73 @@
 # Static snapshot progress
 
+## CURRENT RESUME — WEEK10 PREPARATION IMPLEMENTED; OWNER OPERATIONS PENDING
+
+Baseline86f1527. Owner authorizes scoped Week10 deadline disclosure and running Month3
+standings, but Form opening/irreversible writer actions and owner-only source installation
+remain separate approval/execution boundaries. No Google or private publisher write done.
+
+Completed:
+- Verified14Week10 NFL matchups/Results order against original ESPN GET; public plan
+  docs/operations/WEEK10_FORM_PLAN.json. OpeningNov12,17:15Pacific; cutoff16:15Pacific
+  (Nov13,01:15Z/00:15Z). Results order retained (openinggame is row14). Existing identity
+  questions/link preserved. Week10 is not a designated tiebreak week; Week12 remains so.
+- Existing current ORIGINAL editor offset was read-only verified1hour; immutableAPI20
+  source has3hours. Reviewed disabled temporary adapter uses existing setupWeek10 at
+  one-hour runtime offset and restores configuration in finally. Preview verifies14
+  rows/teams/order/earliestkickoff/duplicates BEFORE any setup. No scoring code rewrite.
+- Explicit separate pinned Week10 grant; before cutoff no protected data even if
+  FormCLOSED,atcutoff inclusive accepted entries may publish whileOPEN. Missing players
+  do not block.11+ no grant. FormControl.activeWeek is distinguished from competition
+  activeWeek to preserve9 disclosure during normal transition. Invalid config failsclosed.
+- RunningM3 aggregates sum EXISTING approved AVAILABLE weekly points/completed-final-pick
+  counts with shared ranks and checked coveredWeeks. No future/withheld week contributes.
+  Current month champion/tiebreaker/prize decision remainsINPROGRESS. Historical1–8 unchanged.
+  Running season similarly preserves historical totals while newWeek10 isOPEN. New
+  metadata/rows are deterministic validated public aggregates, not selections/identities.
+- Compatible UI says Running Standings/coveredweeks and deadline privacy; existing
+  five-destination design,38-file allowlist,logos,prize formulas unchanged.
+
+Tests: final full **400/400 PASS**,0failures/skips,log/private/tmp/pp-week10-cleanup-full.log.
+Five new regressions include exactcutoff±1,OPEN/unknown/mismatched/evidence expiry,
+Week10end-to-end pre/postcutoff/staticprivacy,Week11denial,nonzero monthly sums/shared
+ranks/denominators,tamper rejection,season preservation and disabled Form setup/restore.
+Existing browser test additionally verifies runningM3 rows/title/INPROGRESS at five widths.
+A previous run timedout AFTER benchmark browser checks due lingering HTTP connections;
+benchmark now closes its own connections in finally. No assertions/timeouts were weakened;
+rerun400passed. API20,Form/Sheet,scores,triggers,registry,credentials untouched.
+
+REAL private local candidate from fresh read-onlyAPI:23IDs exact,1–8 parity exact,
+Week9 retained,Month3 running22rows/covered9 matchesWeek9 scores player-by-player,
+no champion,Week10+protected data absent,38-file artifact passes integrity/privacy.
+Stored ONLY ignored tmp/week10-real-candidate and tmp/week10-real-artifact,NOT published.
+
+EXACT reviewed artifacts (NOT installed):
+1. PRIVATE REGISTRY project: tmp/cloud-publisher-week10-approved/CloudSnapshotPublisher.gs
+   SHA256648edf3f4ca02dcb4385fcb98819c81c5cfb580b4e0352f5bba2e312e883fc9a.
+   Replace ONLY prior file after backup/approval; existingdeadlineDisclosure:true,
+   registry23IDs/token/Properties/15minuteclock unchanged. No new flag/trigger/deployment.
+2. ORIGINAL football project: tmp/week10-form-owner-candidate/Week10OwnerSetup.gs
+   SHA25688853e322a0992583f29a4ca3a924855bce07ab0eea324584e5252387e13683f.
+   Add temporary file ONLY after approval; disabled bydefault. Run read-only
+   pp4PreviewWeek10OneHour. Existing setup creates AND OPENS Form together, so cannot
+   safely run merely to prepare questions. Separate owner approval required to enable
+   pp4SetupWeek10OneHourApproved once at intended normal week transition. Existing
+   workflow writes activeFormControl and its ordinary close trigger; expressly disclose
+   those effects. No Week9 close/reopen function or scoring/ESPN writer called.
+   Remove temporary wrapper afterward; no immutableAPI20deployment/editor overwrite.
+Both source inventories/seals/AppsScriptES2020 verified. See
+ docs/operations/WEEK10_PUBLIC_TEST.md for exact effects,approval boundaries and rollback.
+
+NEXT: commit/push validatedsource and deploy compatible FRONTEND ONLY profile=static
+using existing historical/Week9 public snapshot; do not upload the real local candidate.
+Verify live38files/Week9privacy/IDs/prizes/layout after Pages verify+deploy SUCCESS.
+Then record publishedSHA and request consolidated owner installations/preflight/opening
+approval. Until newprivatefile runs, liveM3 remains withheld and10grant is not active
+server-side. Until owner setup runs,14questions are verified/prepared but notcreated;
+Week10 is NOT yet ready for player submissions. Preserve API-backed rollback6d1adea,
+privatepublisher backup and all IDs/credentials. Do not redesign the Form.
+
+
 ## CURRENT RESUME — ONE-WEEK PUBLIC TEST REVIEW: NOT READY FOR FULL WEEK10 ENTRY TEST
 
 Read-only production review2026-11-07~15:49–15:56 Pacific. Baseline71c6a6c;

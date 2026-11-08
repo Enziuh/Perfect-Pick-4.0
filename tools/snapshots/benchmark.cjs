@@ -42,7 +42,11 @@ async function run({out='tmp/static-snapshot-benchmark',widths=[1440,768,390],co
  try{
   if(compare)await profile({url:s.url+'/api/Perfect-Pick-4.0/',output:path.join(out,'controlled-api.json'),widths,replayFile:replay});
   await profile({url:s.url+'/static/Perfect-Pick-4.0/',output:path.join(out,'static.json'),widths,clockAt:s.now+(retained?10800000:1000),inspect:check?(e,w,v)=>inspect(e,w,v,{retained}):null});
- }finally{await new Promise(resolve=>s.app.close(resolve));}
+ }finally{
+  // The browser is already stopped. Drain its lingering HTTP sockets so cleanup
+  // cannot hang after all assertions have passed (notably under Node26).
+  s.app.closeAllConnections();await new Promise(resolve=>s.app.close(resolve));
+ }
 }
 if(require.main===module)run().catch(()=>{console.error('Static snapshot browser benchmark failed');process.exitCode=1;});
 module.exports={run,server,inspect};

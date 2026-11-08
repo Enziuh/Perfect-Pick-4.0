@@ -1,0 +1,127 @@
+{
+  "season": 2026,
+  "week": 10,
+  "timezone": "America/Los_Angeles",
+  "openingKickoff": "2026-11-13T01:15:00.000Z",
+  "cutoff": "2026-11-13T00:15:00.000Z",
+  "tiebreakerQuestion": false,
+  "identityQuestions": "UNCHANGED",
+  "formUrl": "PRESERVE_EXISTING",
+  "resultsOrder": "PRESERVED; opening game is row14, cutoff uses earliest verified kickoff",
+  "verifiedAgainst": "existing ESPN scoreboard GET and public Results mapping",
+  "verifiedAt": "2026-11-08T00:07:49.545Z",
+  "questions": [
+    {
+      "resultsOrder": 1,
+      "team1": "WAS",
+      "team2": "NYG",
+      "kickoff": "2026-11-13T01:15:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 2,
+      "team1": "NE",
+      "team2": "DET",
+      "kickoff": "2026-11-15T14:30:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 3,
+      "team1": "KC",
+      "team2": "ATL",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 4,
+      "team1": "HOU",
+      "team2": "CLE",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 5,
+      "team1": "MIN",
+      "team2": "GB",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 6,
+      "team1": "JAX",
+      "team2": "TEN",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 7,
+      "team1": "MIA",
+      "team2": "IND",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 8,
+      "team1": "CAR",
+      "team2": "NO",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 9,
+      "team1": "BUF",
+      "team2": "NYJ",
+      "kickoff": "2026-11-15T18:00:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 10,
+      "team1": "SEA",
+      "team2": "LV",
+      "kickoff": "2026-11-15T21:05:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 11,
+      "team1": "LAR",
+      "team2": "ARI",
+      "kickoff": "2026-11-15T21:05:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 12,
+      "team1": "SF",
+      "team2": "DAL",
+      "kickoff": "2026-11-15T21:25:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 13,
+      "team1": "PIT",
+      "team2": "CIN",
+      "kickoff": "2026-11-16T01:20:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    },
+    {
+      "resultsOrder": 14,
+      "team1": "LAC",
+      "team2": "BAL",
+      "kickoff": "2026-11-17T01:15:00.000Z",
+      "questionTitle": "W10 | <exact Results Game value>",
+      "required": true
+    }
+  ]
+}

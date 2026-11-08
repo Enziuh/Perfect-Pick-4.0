@@ -155,7 +155,7 @@
     document.querySelectorAll('[data-late-entry-policy]').forEach(node=>{node.hidden=prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
-    const deadlinePolicy=prizes.disclosurePolicy==='PP4_WEEK9_DEADLINE_V1';
+    const deadlinePolicy=['PP4_WEEK9_DEADLINE_V1','PP4_WEEK10_DEADLINE_V1'].includes(prizes.disclosurePolicy);
     document.querySelectorAll('[data-disclosure-deadline]').forEach(el=>el.hidden=!deadlinePolicy);document.querySelectorAll('[data-disclosure-legacy]').forEach(el=>el.hidden=deadlinePolicy);
     if(liveView)setText('sourceStatusNote','Entries '+(prizes.formControl.reportedStatus||'UNKNOWN')+'. '+(deadlinePolicy?'Submitted picks appear after the official weekly deadline.':'Player picks appear only after verified closure.'));
 
@@ -288,7 +288,7 @@
     const request = ++monthlyRequest;
     const period = (prizeData.periods || []).find(p => p.periodKey === periodKey);
     if (!period) return;
-    setText('monthlyTitle', `${period.displayName} Standings`);
+    setText('monthlyTitle', `${period.displayName} ${period.runningWeeks?.length?'Running Standings · Weeks '+period.runningWeeks.join(', '):'Standings'}`);
     // Clear any previous period's winner immediately, including on failed loads.
     renderMonthlyChampion(period, preview.resolveMonthlyChampion(period, []));
     try {
@@ -418,6 +418,7 @@
 
   function pickPrivacyMessage(data) {
     if(data.disclosureMode==='DEADLINE_PASSED')return `Week ${data.week}: the official deadline has passed; submitted picks are temporarily unavailable.`;
+    if([9,10].includes(data.week)&&['PP4_WEEK9_DEADLINE_V1','PP4_WEEK10_DEADLINE_V1'].includes(prizeData?.disclosurePolicy))return `Week ${data.week} picks, predictions and voting stay private until the verified weekly deadline has passed and publication is confirmed.`;
     if (isOpenWeek(data)) return `Week ${data.week} is open. Picks, predictions and voting stay private until entries are officially closed.`;
     if (data.entriesStatus === 'CLOSED') return `Week ${data.week} is closed, but approved player picks are unavailable until weekly data is complete.`;
     return `Week ${data.week} player picks are unavailable until entries are officially closed and complete approved picks are available.`;
