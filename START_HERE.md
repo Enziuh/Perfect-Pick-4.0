@@ -6,13 +6,13 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-2026-11-12: owner separately authorized Phase2 investigation only; investigation
-is complete. Read [findings](docs/memory/SCORING_INVESTIGATION.md). Only memory records
-were changed. Stop for separate implementation approval; no scoring fix, notice,
-application edit, fetch, push, merge, deployment or production change is authorized.
-Historical approvals do not authorize repeating operations. Preserve private evidence
-and unrelated changes. Do not recreate Forms, rerun setup, reinstall/delete triggers,
-or change the active deadline.
+Owner has approved local Phase2 implementation, subject to evidence gates. Preflight
+reached the required stop boundary: reliable eligibility membership is not established
+in examined sources and frozen-history migration needs review. Read
+[boundary and migration proposal](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
+Do not implement until those conditions are resolved. Approval does not cover push,
+deployment, live Apps Script changes, production data/snapshots or automation changes.
+Preserve all unrelated work and private evidence; never infer membership from picks.
 
 ## Repository map
 

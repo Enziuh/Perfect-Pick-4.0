@@ -23,3 +23,9 @@ Recorded source-backed denominator findings, historical public snapshot evidence
 late-pick enforcement, eligibility limits, caching trace, notice placement,
 regression requirements, risks and implementation proposal. Investigation only;
 no application, scoring, production or deployment changes.
+
+## Implementation evidence boundary
+
+Recorded conditional local approval, verified checkpoint consistency, missing
+eligibility evidence, historical migration proposal and notice boundary wording
+conflict. Stopped before code or test changes as required. No production operation.

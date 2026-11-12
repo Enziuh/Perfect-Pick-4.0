@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Phase 2 investigation completed; awaiting separate implementation approval",
+  "phase": "Phase 2 local implementation approved; stopped at eligibility/history evidence boundary",
   "phase2Authorized": false,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
@@ -26,5 +26,14 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "No further Phase2 execution or implementation authorized; prior investigation-only authorization completed."
+  "authorizationNote": "Local implementation approved conditionally in latest owner message; no active execution while evidence gates unresolved. phase2Authorized is retained false for legacy memory-tool validation; localImplementation is the explicit current authorization record.",
+  "localImplementation": {
+    "authorized": true,
+    "executionState": "stopped at owner-required evidence boundary",
+    "blockers": [
+      "Reliable effective-dated eligibility roster not established",
+      "Historical frozen-row migration requires review"
+    ],
+    "report": "docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md"
+  }
 }

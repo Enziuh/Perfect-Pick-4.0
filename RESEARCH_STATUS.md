@@ -1,7 +1,8 @@
 # Research status
 
-As of 2026-11-12, Phase1 is complete and the separately authorized Phase2 investigation
-is complete. Implementation and deployment remain unauthorized.
+Phase1 and Phase2 investigation are complete. Local implementation is now approved
+subject to evidence gates, and stopped at the required eligibility/history boundary.
+Deployment and production changes remain unauthorized.
 
 ## Verified locally
 
@@ -55,3 +56,13 @@ under current semantics. Earlier pending-investigation text records the original
 request; this finding supersedes its unknown mechanism status, not its approval gate.
 Membership history, retroactive scope, legacy endpoint parity and monthly completion
 safeguards require decisions. No application or production changes were made.
+
+## Implementation preflight stopped at evidence boundary
+
+[Boundary report and historical migration proposal](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
+Reliable eligibility dates/period membership were not established in examined local
+sources. Do not substitute first submission, alias registry or prize counts.
+Whole frozen standings rows are compared by the historical guard; review the explicit
+versioned migration proposal before changing counters. Notice's strict “before”
+wording conflicts with existing equality-is-eligible scorer. No app/test edits made.
+Earlier pending approval statements above describe historical task states.

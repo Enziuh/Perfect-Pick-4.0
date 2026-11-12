@@ -39,3 +39,14 @@ semantics. No current runtime or exact83-point capture independently verified.
 Only memory files updated. No app/scoring/Apps Script/deployment/production changes.
 Next action: wait for owner decisions and separate implementation authorization.
 New checkpoint receipt records this investigation's final commit externally.
+
+## Implementation approval — stopped at required evidence boundary
+
+Latest owner approved local implementation conditionally. At starting4206886,
+Git and all investigation-package manifest bytes matched; tree was clean. Reviewed
+registry/policy, scoring consumers and frozen-result guards. Membership dates are
+not established; historical whole-row equality blocks counter-only migration.
+Recorded [migration proposal](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
+No application/test edits or live access. No new regression suite run. Resume after
+reliable membership evidence and migration review; local approval persists subject
+to those gates. Preserve exact-cutoff eligibility unless owner explicitly changes it.
