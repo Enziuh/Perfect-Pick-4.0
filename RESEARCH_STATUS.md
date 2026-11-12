@@ -114,3 +114,19 @@ captured source/config exactly; legacy weekly/overall/prize outputs match in VM.
 No production activation. Existing416 full-suite result predates this targeted
 publisher fix and is historical, not claimed as rerun. Release requires the registry
 receipt and separate remote-integration/live-source/publication approvals.
+
+## Final release review — registry resolved, no investigation repeat
+
+Owner supplied VERIFIED registryPlayers23,approvedAliases23,oneToOne true,writes0.
+Accepted completed receipt; diagnostic not rerun. Fresh captured original editor
+contains neither diagnostic nor wrapper. Prior403 gate is superseded, not reopened.
+[Final review](docs/memory/FINAL_RELEASE_REVIEW.md). Local V2 snapshot regenerated
+from fresh read-only source, all23 IDs/aliases retained, exact CURRENT published
+original tables/order/champions/prizes preserved. Isaias83/135→83/136,Pancho83/136
+unchanged is now independently verified at source capture, not just owner-observed.
+All season denominators136. Full417/417PASS and exact-artifact five-width ChromePASS.
+Existing API/private native publisher have different explicit season coverage; V2
+preserves publisher running scope and existing tied-row order. API/static arithmetic
+matches per identity/covered scope. No new disclosure grants or scoring rules.
+No application source edits this turn. Local release ready; final approval needed
+before any push/live source update/flag activation/publication. API remainsv20.

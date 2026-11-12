@@ -140,3 +140,37 @@ expires: verify-release correctly stops on stale artifacts; never renew capture 
 one additional sanitized release hash manifest, so its referenced artifact hashes
 travel with the checklist. Raw private artifacts/config/source remain excluded.
 New v2 package receipt identifies the final checkpoint; no production changes.
+
+## FINAL production accuracy review — local V2 ready, wait for approval
+
+Started609e259 clean; checkpoint verified. Owner registry VERIFIED23/23,oneToOne true,
+writes0 accepted, no rerun. Fresh original editor source confirms diagnostic AND
+wrapper absent; all editor files match prior capture. APIv20/live publisher unchanged.
+Read [final review](docs/memory/FINAL_RELEASE_REVIEW.md) and latest artifact manifest.
+
+Full417/417PASS,0fail/skip, current source unchanged. Exact V2 fresh production-facing
+artifact browser360/390/430/768/1440 cold/repeatPASS, no API requests/errors/overflow.
+Source20:00UTC captures83/135→83/136 for Isaias and unchanged83/136 Pancho; all23
+season136. Historical76/127→128 and missing/blank/late/full-absence cases pass.
+Original qualifying counters, ALL current public original standings arrays/order,
+monthly decisions/prizes and IDs/aliases EXACTLY preserved. API/static calculations
+match identity/covered scope; no new privacy/closure permission.
+
+Initial local v1 followed API20 seasonWeeks1–9 rather than existing native publisher
+running scope through10 and reordered equal-rank rows; superseded, never publish.
+V2 mirrors explicit existing published scope and validates full original table
+identity/order. Original API DTO retained privately. Future live native publisher
+uses unchanged created-week context. Refresh on scope/results change, never assume.
+
+Use ignored tmp/accuracy-release-final/accuracy-candidate-v2/ plus sibling seal,
+current/ rollback captures and staged/ compatible/activation API/publisher artifacts.
+API flags remain OFF; new metadata was produced LOCALLY only, no live source changes.
+Candidate expires2026-11-13T02:00:35.228Z; refresh from fresh source if stale/changed.
+Existing generated packages/seals restored byte-for-byte. No Forms/Sheets structure,
+triggers/ESPN changes, no fetch/merge/push/deploy or production snapshot publication.
+
+Next: explicit owner final approval covering snapshot-only remote integration/push,
+compatible reader/publisher/API updates, two-field activation AND next publication.
+Preserve old immutable snapshots; rollback API20 first, keep new compatible readers/
+publisher until fresh legacy snapshot confirmed, then restore old publisher/readers.
+No further broad investigation or registry diagnostic needed absent actual mismatch.

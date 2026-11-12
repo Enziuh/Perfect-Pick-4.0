@@ -6,16 +6,16 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Production release preparation is staged, not deployed. Read-only capture verified
-APIv20, installed publisher and current public website/snapshot. Compatible sealed
-artifacts and tested rollback are under ignored tmp/accuracy-production-release/.
-Read [release plan](docs/memory/PRODUCTION_RELEASE_PREPARATION.md) for exact stages.
-Remaining verification blocker: direct Players registry read403; owner-only read
-receipt required.23 deployed approved aliases match current public alias set.
-No fetch/merge/push, live source/config changes, regeneration or publication authorized.
-Remote has snapshot-only commits not fetched; preserve them during later approved
-integration. ef5300f fixes publisher fallback flag propagation locally only.
-Private preview remains separate at http://127.0.0.1:4789/. No strict weekly policy.
+Production accuracy release is locally ready for FINAL OWNER REVIEW. Roster check
+completed by owner (VERIFIED23/23,oneToOne,writes0); refreshed original editor source
+confirms diagnostic/wrapper absent. Do not rerun it. Read
+[final review](docs/memory/FINAL_RELEASE_REVIEW.md) and the sanitized release manifest.
+Fresh V2 local candidate corrects Isaias83/135→83/136 and retains current published
+core values AND ordering. Full417/417 plus exact-artifact five-width browsers PASS.
+Use tmp/accuracy-release-final/accuracy-candidate-v2/, NOT superseded V1 artifacts.
+No production flags/source/publication changes performed. Owner explicitly requires
+final review; stop before fetch/merge/push, live compatible updates, activation or
+publication. Existing per-game cutoffs unchanged; no strict weekly/Week11 policy.
 
 ## Repository map
 

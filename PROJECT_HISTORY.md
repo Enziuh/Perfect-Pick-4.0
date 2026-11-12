@@ -34,3 +34,8 @@ Release preparation: ef5300f adds validated accuracy propagation through existin
 publisher fallback. APIv20/editor/publisher and public assets captured read-only;
 new source artifacts and rollback staged privately. Current registry verification
 is pending owner receipt after direct-read403. No remote integration or deployment.
+
+Final review: owner registry check completed, temporary diagnostic confirmed absent;
+fresh read-only source independently verifies83/135→83/136 correction. Local V2
+artifact preserves current static table ordering/coverage;417 tests and5-width
+browser checks pass. Production remains APIv20 with flags off pending final review.

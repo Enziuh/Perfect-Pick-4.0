@@ -54,3 +54,11 @@ compatibility tests. [Release plan](docs/memory/PRODUCTION_RELEASE_PREPARATION.m
 Remote commit references are verified through GitHub GET, not fetched into local Git.
 Raw source/config/registry approvals remain ignored/private; current actual Players
 join is unverified after403. No live rollback or activation claimed.
+
+E-FINAL-REVIEW: owner VERIFIED23-way roster receipt and read-only source/editor capture;
+[review](docs/memory/FINAL_RELEASE_REVIEW.md), [manifest](docs/memory/release/ARTIFACT_MANIFEST.json).
+Current83/135 versus83/136 source now directly verified, corrected locally to83/136.
+417 tests and5-width V2 artifact pass. Diagnostic not rerun and absent from captured
+editor. API/static parity is by matching identity/covered period; prior raw API and
+native running-table coverage/order distinctions are preserved, not hidden.
+No live writes/deployments. Raw proofs/config/mappings remain ignored/private.

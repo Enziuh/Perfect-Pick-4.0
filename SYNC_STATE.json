@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Production release artifacts staged; registry verification gate; not activated",
+  "phase": "Production accuracy release locally verified; final explicit owner approval pending",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
@@ -12,7 +12,7 @@
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
-    "status": "Read-only APIv20/publisher/Pages capture completed; no deployment or activation",
+    "status": "Refreshed read-only APIv20/editor/publisher/public snapshot baseline; no live changes",
     "evidence": "docs/memory/PRODUCTION_RELEASE_PREPARATION.md"
   },
   "integrity": {
@@ -83,15 +83,41 @@
     "artifactsDirectory": "tmp/accuracy-production-release/staged",
     "manifest": "docs/memory/release/ARTIFACT_MANIFEST.json",
     "report": "docs/memory/PRODUCTION_RELEASE_PREPARATION.md",
-    "registryStatus": "23 approved aliases match public snapshot; actual Players read403; owner receipt pending",
+    "registryStatus": "Resolved: owner VERIFIED23/23 oneToOne writes0; diagnostic absent from original editor capture; no rerun",
     "compatibilityTestsPassed": 34,
     "diagnosticSyntheticCasesPassed": 3,
     "localRollback": "Exact captured source/config and synthetic legacy endpoint parity verified",
     "remainingApprovals": [
-      "Owner current roster read receipt",
-      "Fetch/merge/push and compatible publication",
-      "Narrow source/version changes",
-      "Accuracy activation including next scheduled publication"
+      "Final review: remote snapshot-only integration/push",
+      "Compatible reader/publisher/API live update",
+      "Two-field activation and existing publisher regeneration/publication"
     ]
+  },
+  "finalReleaseReview": {
+    "status": "READY_LOCALLY_WAITING_FINAL_APPROVAL",
+    "report": "docs/memory/FINAL_RELEASE_REVIEW.md",
+    "manifest": "docs/memory/release/ARTIFACT_MANIFEST.json",
+    "artifact": "tmp/accuracy-release-final/accuracy-candidate-v2",
+    "localSnapshotRegenerated": true,
+    "liveFlagsActivated": false,
+    "productionPublished": false,
+    "snapshotSha256": "eced05a40d618e0006aff7f0030c6c3504246f63c8796e93e7c1fb7fe82f5b35",
+    "expiresAt": "2026-11-13T02:00:35.228Z",
+    "tests": {
+      "total": 417,
+      "passed": 417,
+      "failed": 0,
+      "skipped": 0,
+      "artifactBrowserWidths": [
+        360,
+        390,
+        430,
+        768,
+        1440
+      ]
+    },
+    "protectedCurrentCore": "EXACT values and ordering; qualifying counters/champions/prizes preserved",
+    "registry": "Owner completed; source confirms diagnostic removed",
+    "parity": "By player and covered scope; existing API/native publisher scope difference preserved"
   }
 }
