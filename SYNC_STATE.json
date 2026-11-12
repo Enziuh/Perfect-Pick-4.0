@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Local implementation stopped: Week9 strict cutoff conflicts with preserved earned points",
-  "phase2Authorized": false,
+  "phase": "Phase2 local implementation complete; verified; production activation not authorized",
+  "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
@@ -26,20 +26,38 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "Local implementation approved conditionally in latest owner message; no active execution while evidence gates unresolved. phase2Authorized is retained false for legacy memory-tool validation; localImplementation is the explicit current authorization record.",
+  "authorizationNote": "Final owner clarification authorizes local accuracy correction only and preserves per-game cutoffs; strict weekly/Week11 policy is superseded. No push, deploy or live changes authorized.",
   "localImplementation": {
     "authorized": true,
-    "executionState": "stopped at explicit protected-result boundary",
-    "blockers": [
-      "Week9 all-week rule would remove captured earned points and change ranks; explicit grandfather/prospective boundary required",
-      "Week10 submissions not available in disclosed capture; complete protected history needed"
+    "executionState": "complete locally, verified",
+    "blockers": [],
+    "report": "docs/memory/SCORING_IMPLEMENTATION_REPORT.md",
+    "scoringPolicy": "Existing per-game LATE_ENTRY_V1 unchanged; no new activation week",
+    "rosterEvidence": "Owner unchanged23-person Week1 roster; historical approved mappings matched; provider enforces full registry check at opt-in",
+    "accuracyVersion": "ROSTER_FINAL_V1",
+    "productionActivated": false,
+    "commits": [
+      "96f1663",
+      "73698e4",
+      "896aae3",
+      "e64f28e"
     ],
-    "report": "docs/memory/WEEK9_ACTIVATION_CONFLICT.md",
-    "rosterEvidence": "Owner confirms same established roster since Week1; historical alias correspondence validated",
-    "requestedStrictWeeklyStart": {
-      "season": 2026,
-      "week": 9
-    },
-    "codeChanged": false
+    "verification": {
+      "fullTests": 416,
+      "passed": 416,
+      "failed": 0,
+      "skipped": 0,
+      "newRegressionTests": 10,
+      "browserWidths": [
+        360,
+        390,
+        430,
+        768,
+        1440
+      ],
+      "historicalProtectedResults": "unchanged",
+      "originalSnapshot": "unchanged",
+      "generatedPackages": "restored byte-for-byte"
+    }
   }
 }

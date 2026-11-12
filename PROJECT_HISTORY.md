@@ -21,3 +21,11 @@ See E-OWNER-1109 in [evidence index](EVIDENCE_INDEX.md).
 
 2026-11-12: owner approved memory setup only; scoring issue remains pending.
 Original Git history and all prior documentation remain preserved.
+
+## Final local accuracy correction
+
+Owner final clarification preserves existing per-game deadlines and supersedes strict
+weekly proposals. Local commits96f1663 (versioned roster accuracy),73698e4 (UI/notice),
+896aae3 (memory authorization validator),e64f28e (metadata validation hardening).
+Final416/416 regressions passed. No source deployment, snapshot publication, push or
+production write. See [report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md).

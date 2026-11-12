@@ -63,3 +63,33 @@ Players rows unverified. Week10 submissions withheld, not absent. Read
 [conflict report](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Resume after explicit
 grandfather/prospective boundary and complete protected-history evidence. Preserve
 all earned points and automation; no fetch/push/deploy/live writes authorized.
+
+## FINAL Phase2 local implementation — verified, not deployed
+
+Final owner clarification resolves earlier strict-week conflict: per-game cutoffs
+unchanged, no Week11 policy. Same23 roster since Week1 is owner-attested; historical
+identity/alias correspondence validated; API opt-in repeats full actual registry
+match or fails closed. Start checkpoint bff7741 was clean and its manifest matched.
+Implemented authoritative ROSTER_FINAL_V1 sidecar plus shared API/static derivation;
+original core qualification/scoring/outcome records and historical guards unchanged.
+Points/ranks/winners/monthly qualification/tiebreak/prizes preserved in synthetic and
+pinned historical comparisons; absent roster rows get0/allFINAL, no fabricated picks.
+
+Commits96f1663 scoring/contract/tests,73698e4 UI/browser,896aae3 memory validator,
+e64f28e malformed-metadata rejection. Final full416/416 PASS,0fail/skip;
+/tmp/pp-accuracy-verified.log. New unit/integration9/9; focused contract70/70;
+new browser all5 widths cold/repeat PASS (also included in final full suite).
+Earlier full415 had one legacy RPC failure, fixed before final;12/12 dedicated
+RPC then passed. Historical original bytes/hash and all protected outputs checked.
+Existing generated packages/seals restored byte-for-byte; test outputs isolated in
+ignored tmp/accuracy-test-artifacts-final and tmp/accuracy-test-artifacts-verified.
+
+Read [report/deployment plan](docs/memory/SCORING_IMPLEMENTATION_REPORT.md).
+Source feature remains opt-in (accuracyRules ROSTER_FINAL_V1,rosterFromWeek1 true);
+NO private config or production snapshot changed. Before future activation recheck
+actual23 registry/aliases, installed source, current API/static parity and fresh
+artifacts under separately authorized scope. Upgrade compatible readers/publisher
+before source opt-in. Never publish expired historical test data or rerun setup/
+trigger installation/cache writers. No push/deploy/live Apps Script/Form/data writes.
+Next: owner review; wait for separate production/push/deployment authorization.
+Final memory commit and package hash are recorded externally in the restart receipt.

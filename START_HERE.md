@@ -6,13 +6,16 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Owner approved local scoring/accuracy work and confirmed the same roster since
-Week1, with no joins/withdrawals. Owner selected Week9 as strict weekly-rule origin.
-Preflight found a protected-result conflict: applying that rule to captured Week9
-entries removes48 earned points and changes13 weekly ranks. Read
-[activation conflict](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Stop until an explicit
-grandfather/prospective enforcement boundary resolves this conflict. No application
-edits made. No push/deployment/live Apps Script/Form/data/automation changes authorized.
+Phase2 local implementation is complete and verified under the owner's FINAL
+clarification: preserve existing per-game cutoffs; no strict weekly/Week11 policy.
+Same approved23-person roster since Week1. Versioned ROSTER_FINAL_V1 corrects accuracy
+while retaining original qualification counters and protected competition outcomes.
+Read [implementation report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md) and
+[architecture](docs/architecture/ROSTER_ACCURACY_V1.md). Final full suite416/416 passes.
+The feature is opt-in and NOT activated in production. Stop before push/deployment,
+live Apps Script/Form/config/data writes, trigger or deadline changes. Next action:
+owner review of local changes and separately authorized fresh deployment preparation.
+Do not repeat old Week9 all-week-cutoff proposals; those are superseded evidence.
 
 ## Repository map
 

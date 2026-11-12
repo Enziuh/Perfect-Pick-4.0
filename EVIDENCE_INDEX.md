@@ -34,3 +34,11 @@ source61c4d00. [Report](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Both November
 captures show48 earned points/13 weekly ranks affected by strict Week9 rule.
 Owner roster attestation and Week9 selection are session statements, not independent
 runtime checks. No private identities or response records copied into memory.
+
+E-ACCURACY-IMPLEMENTED: LOCAL source/tests, final per-game owner clarification in this
+session. [Implementation report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md) and
+[versioned contract](docs/architecture/ROSTER_ACCURACY_V1.md). Immutable historical
+Git fixture and original artifact hash pinned; no current runtime claims. Full suite
+416/416; new browser covers360/390/430/768/1440 cold+repeat; exact protected-result
+comparisons and original snapshot/generated-package preservation pass. Ephemeral
+logs under /tmp/ are not part of the portable package or permanent evidence recovery.

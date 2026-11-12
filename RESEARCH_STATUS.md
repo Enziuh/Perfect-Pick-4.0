@@ -1,8 +1,8 @@
 # Research status
 
-Phase1 and Phase2 investigation are complete. Local implementation is now approved
-subject to evidence gates, and stopped at a confirmed Week9 activation conflict.
-Deployment and production changes remain unauthorized.
+Phase1 and investigation are complete. The owner's final per-game clarification
+supersedes strict weekly proposals. Local accuracy implementation is complete and
+verified; production activation/push/deployment remain unauthorized.
 
 ## Verified locally
 
@@ -78,3 +78,18 @@ with retained historical safeguards. Week10 picks are withheld, not proven absen
 [Full evidence, transition decision and gated plan](docs/memory/WEEK9_ACTIVATION_CONFLICT.md).
 No app/test edits or new regression suite. Do not proceed without explicit historical
 exception/prospective boundary. Earlier boundary reports remain historical records.
+
+## Final local implementation verified
+
+[Implementation report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md).
+Owner confirms unchanged23-person Week1 roster; existing per-game scorer/precedence
+is preserved. No strict Week9/Week11 policy. Authoritative derived accuracy version
+counts all FINAL games while retaining original points, ranks, qualification,
+champions, tiebreaks and prizes. All-absent weeks get zero-point roster rows.
+Final full416/416, no failures/skips, including five-width Chrome regression;
+contract-focused70/70 and9 new unit/integration regressions also pass.
+Pinned historical snapshot and generated packages/seals unchanged. New provider
+requires exact23-person live registry/approved alias correspondence before opt-in.
+Current live source/registry/cache status remains unverified, not a local blocker:
+activation is deferred until reviewed fresh source/artifacts and separate approval.
+Old memory entries describe historical gates and are superseded by this checkpoint.
