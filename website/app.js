@@ -153,6 +153,8 @@
   function renderDashboard(prizes) {
     setText('lateEntryStartWeek',prizes.lateEntryStartWeek??9);
     document.querySelectorAll('[data-late-entry-policy]').forEach(node=>{node.hidden=prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
+    document.querySelectorAll('[data-accuracy-policy]').forEach(node=>{node.hidden=prizes.accuracyBasis!=='ROSTER_FINAL_V1'||prizes.scoringBasis!=='ELIGIBLE_SUBMITTED_FINAL_PICKS';});
+    document.querySelectorAll('[data-accuracy-legacy]').forEach(node=>{node.hidden=prizes.accuracyBasis==='ROSTER_FINAL_V1';});
     setText('activeWeek', prizes.activeWeek || '—');
     renderFormControl_(prizes.formControl);
     const deadlinePolicy=['PP4_WEEK9_DEADLINE_V1','PP4_WEEK10_DEADLINE_V1'].includes(prizes.disclosurePolicy);
@@ -207,7 +209,7 @@
 
   function accuracyHtml(player) {
     const accuracy = formatAccuracy(player.points, player.completedGames);
-    return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="Correct picks divided by submitted picks with FINAL results">${accuracy}</span>`;
+    return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="${prizeData?.accuracyBasis==='ROSTER_FINAL_V1'?'Correct picks divided by all FINAL competition games':'Correct picks divided by submitted picks with FINAL results'}">${accuracy}</span>`;
   }
 
   function renderStandingsRows(containerId, standings, showCompleted = true, resolution = null) {

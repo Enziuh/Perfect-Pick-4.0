@@ -43,6 +43,13 @@
         </div>
 
         <div class="submit-entry"><button id="submitPicks" class="submit-picks" type="button" disabled aria-describedby="submitPicksNote">Submit Picks</button><p id="submitPicksNote">Official entry link unavailable in this preview. Owner verification required.</p></div>
+        <aside class="deadline-notice" data-accuracy-policy hidden aria-labelledby="lateFairnessHeading">
+          <h3 id="lateFairnessHeading">Late Picks &amp; Fairness</h3>
+          <p>If you submit picks after a game's cutoff, that game earns zero points—even if you select the winning team. Picks for games that have not reached their cutoff remain eligible.</p>
+          <p>The week's opening game locks one hour before kickoff. All other games lock at their scheduled kickoff.</p>
+          <p>Missed and late picks count as incorrect when calculating accuracy.</p>
+          <a href="#guide">Read the Guide</a>
+        </aside>
         <div id="deadlineNotice" class="deadline-notice" hidden></div>
       </div>
       <div class="panel"><h2>This week at a glance</h2><p id="overviewProgress" role="status">Checking game progress…</p><p id="overviewLeaders"></p><div id="overviewLeaderCards" class="overview-leader-grid"></div><a href="#match-center">Explore this week’s matchups ↗</a> · <a href="#standings/weekly">Weekly standings ↗</a></div>
@@ -200,7 +207,8 @@
         <p>You may submit your first weekly entry while the Form remains open. The opening game's hard cutoff is one hour before its official kickoff. Each later game's official kickoff is its cutoff. A submission at the cutoff is on time.</p>
         <p>Games whose cutoff passed before submission earn 0 points and appear crossed out with <strong>MISSED DEADLINE</strong>. Upcoming games remain eligible. Missing cutoff evidence is labelled <strong>UNVERIFIED CUTOFF</strong>.</p>
         <p>No resubmissions or pick changes after the weekly deadline. Your latest valid on-time entry is retained; if you have none, your first valid late entry counts. Reopening the Form does not reset any deadline.</p>
-        <p>Accuracy is correct eligible picks divided by eligible submitted picks in FINAL games. Missed deadlines and unverified cutoffs are excluded. With none completed, accuracy shows an em dash. A Perfect Week requires every game to be eligible, selected, FINAL and correct.</p>
+        <p data-accuracy-legacy>Accuracy is correct eligible picks divided by eligible submitted picks in FINAL games. Missed deadlines and unverified cutoffs are excluded. With none completed, accuracy shows an em dash. A Perfect Week requires every game to be eligible, selected, FINAL and correct.</p>
+        <p data-accuracy-policy hidden>Accuracy is correct picks divided by all FINAL competition games. Missing, blank and late picks earn zero points and remain in Games Final, including entirely missed weeks. Submitted eligible picks remain separate for qualification.</p>
         <p>A late entrant’s monthly tiebreaker prediction counts only from their retained first entry, submitted at or before the designated game’s official kickoff. Later submissions cannot change it. Missing kickoff evidence leaves eligibility unverified.</p>
         <p>Picks, predictions and voting stay private until the week is independently verified CLOSED. Only eligible picks count in voting.</p>
       </article>
