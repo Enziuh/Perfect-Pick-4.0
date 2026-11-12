@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-11-12",
+  "phase": "Phase 1 memory setup only",
+  "phase2Authorized": false,
+  "branch": "develop",
+  "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
+  "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
+  "remote": {
+    "status": "not contacted",
+    "lastObservedLocalTrackingCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e"
+  },
+  "deployment": {
+    "status": "not verified; no deployment authorized"
+  },
+  "integrity": {
+    "manifest": "external restart package MANIFEST.json",
+    "algorithm": "SHA-256",
+    "scope": "explicit memory package allowlist; not entire repository"
+  },
+  "cadence": "After 3\u20135 substantial commits, major decisions, phase transitions, and before new AI-agent sessions",
+  "privateEvidence": "preserved locally; excluded from portable package"
+}

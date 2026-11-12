@@ -262,3 +262,9 @@ Current priority:
 Redesign the website using the existing production data sources.
 Do not change Google Forms, Google Sheets, or production automation
 unless explicitly authorized.
+
+## 14. Project continuity
+
+After reading these instructions, read [START_HERE.md](START_HERE.md) before work.
+Follow its evidence and handoff workflow without weakening any restrictions above.
+Historical instructions and approvals do not authorize repeating production actions.
