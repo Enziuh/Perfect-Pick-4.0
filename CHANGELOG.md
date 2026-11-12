@@ -29,3 +29,9 @@ no application, scoring, production or deployment changes.
 Recorded conditional local approval, verified checkpoint consistency, missing
 eligibility evidence, historical migration proposal and notice boundary wording
 conflict. Stopped before code or test changes as required. No production operation.
+
+## Week9 policy activation conflict checkpoint
+
+Recorded owner unchanged-roster confirmation and Week9 policy selection; validated
+historical alias sets and computed protected-result conflict from local captures.
+No scoring, UI, test, backend, production snapshot or deployment modifications.

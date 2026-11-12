@@ -1,7 +1,7 @@
 # Research status
 
 Phase1 and Phase2 investigation are complete. Local implementation is now approved
-subject to evidence gates, and stopped at the required eligibility/history boundary.
+subject to evidence gates, and stopped at a confirmed Week9 activation conflict.
 Deployment and production changes remain unauthorized.
 
 ## Verified locally
@@ -66,3 +66,15 @@ Whole frozen standings rows are compared by the historical guard; review the exp
 versioned migration proposal before changing counters. Notice's strict “before”
 wording conflicts with existing equality-is-eligible scorer. No app/test edits made.
 Earlier pending approval statements above describe historical task states.
+
+## Resume: owner roster confirmation and Week9 activation conflict
+
+Owner attests unchanged established roster since Week1; previous eligibility-date
+question is resolved as policy. Historical23-record alias approval/capture sets match
+one-to-one; current live registry not independently verified. Owner selected Week9
+for new all-week deadline. Counterfactual on both available November8 captures removes
+48 already-earned points from11 entrants and changes13 weekly ranks, conflicting
+with retained historical safeguards. Week10 picks are withheld, not proven absent.
+[Full evidence, transition decision and gated plan](docs/memory/WEEK9_ACTIVATION_CONFLICT.md).
+No app/test edits or new regression suite. Do not proceed without explicit historical
+exception/prospective boundary. Earlier boundary reports remain historical records.

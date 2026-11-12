@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Phase 2 local implementation approved; stopped at eligibility/history evidence boundary",
+  "phase": "Local implementation stopped: Week9 strict cutoff conflicts with preserved earned points",
   "phase2Authorized": false,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
@@ -29,11 +29,17 @@
   "authorizationNote": "Local implementation approved conditionally in latest owner message; no active execution while evidence gates unresolved. phase2Authorized is retained false for legacy memory-tool validation; localImplementation is the explicit current authorization record.",
   "localImplementation": {
     "authorized": true,
-    "executionState": "stopped at owner-required evidence boundary",
+    "executionState": "stopped at explicit protected-result boundary",
     "blockers": [
-      "Reliable effective-dated eligibility roster not established",
-      "Historical frozen-row migration requires review"
+      "Week9 all-week rule would remove captured earned points and change ranks; explicit grandfather/prospective boundary required",
+      "Week10 submissions not available in disclosed capture; complete protected history needed"
     ],
-    "report": "docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md"
+    "report": "docs/memory/WEEK9_ACTIVATION_CONFLICT.md",
+    "rosterEvidence": "Owner confirms same established roster since Week1; historical alias correspondence validated",
+    "requestedStrictWeeklyStart": {
+      "season": 2026,
+      "week": 9
+    },
+    "codeChanged": false
   }
 }

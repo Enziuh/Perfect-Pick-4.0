@@ -6,13 +6,13 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Owner has approved local Phase2 implementation, subject to evidence gates. Preflight
-reached the required stop boundary: reliable eligibility membership is not established
-in examined sources and frozen-history migration needs review. Read
-[boundary and migration proposal](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
-Do not implement until those conditions are resolved. Approval does not cover push,
-deployment, live Apps Script changes, production data/snapshots or automation changes.
-Preserve all unrelated work and private evidence; never infer membership from picks.
+Owner approved local scoring/accuracy work and confirmed the same roster since
+Week1, with no joins/withdrawals. Owner selected Week9 as strict weekly-rule origin.
+Preflight found a protected-result conflict: applying that rule to captured Week9
+entries removes48 earned points and changes13 weekly ranks. Read
+[activation conflict](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Stop until an explicit
+grandfather/prospective enforcement boundary resolves this conflict. No application
+edits made. No push/deployment/live Apps Script/Form/data/automation changes authorized.
 
 ## Repository map
 

@@ -28,3 +28,9 @@ Additional evidence E-IMPLEMENTATION-BOUNDARY: LOCAL source inspection at4206886
 latest owner conditional approval; [report](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
 No reliable membership dates established from inspected local registry/policy;
 no claim about unseen private live records. No new application tests run.
+
+E-WEEK9-CONFLICT: LOCAL read-only counterfactual and historical capture evidence,
+source61c4d00. [Report](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Both November8
+captures show48 earned points/13 weekly ranks affected by strict Week9 rule.
+Owner roster attestation and Week9 selection are session statements, not independent
+runtime checks. No private identities or response records copied into memory.

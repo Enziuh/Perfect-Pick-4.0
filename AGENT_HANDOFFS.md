@@ -50,3 +50,16 @@ Recorded [migration proposal](docs/memory/SCORING_IMPLEMENTATION_BOUNDARY.md).
 No application/test edits or live access. No new regression suite run. Resume after
 reliable membership evidence and migration review; local approval persists subject
 to those gates. Preserve exact-cutoff eligibility unless owner explicitly changes it.
+
+## Resume — roster confirmed, Week9 strict-policy conflict
+
+Started61c4d00 clean; memory receipt/manifest/HEAD matched. Owner confirms unchanged
+Week1 roster and approves derived accuracy migration. Asked explicit strict weekly
+activation; owner answered Week9. Both November8 source representations show that
+unconditional Week9 enforcement removes48 earned points and changes13 weekly ranks.
+Stopped under user's protected-result blocker, without application or test edits.
+Historical23 alias approval records are unique and match captured roster; live
+Players rows unverified. Week10 submissions withheld, not absent. Read
+[conflict report](docs/memory/WEEK9_ACTIVATION_CONFLICT.md). Resume after explicit
+grandfather/prospective boundary and complete protected-history evidence. Preserve
+all earned points and automation; no fetch/push/deploy/live writes authorized.
