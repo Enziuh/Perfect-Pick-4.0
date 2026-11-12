@@ -17,7 +17,9 @@ cryptographic signature, secret scanner or full-history security audit is claime
 ## Scope and restoration
 
 The package explicitly includes the seven memory documents, AGENTS.md, this workflow,
-the memory tool, tracked docs/*.md recursively, and the Pages workflow as reference.
+the memory tool, tracked docs/*.md recursively, the optional explicitly allowlisted
+docs/memory/release/ARTIFACT_MANIFEST.json (sanitized hashes only), and the Pages
+workflow as reference. No other JSON evidence or private artifact is swept in.
 MANIFEST.json records exact paths, SHA-256 and finalized commit. The external receipt
 records archive hash and commit, avoiding self-reference. Build verifies restoration
 in a fresh temporary directory. It does not overwrite an existing checkout.

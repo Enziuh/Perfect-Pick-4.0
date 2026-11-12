@@ -42,14 +42,15 @@ def build(output):
     tracked = git('ls-files').splitlines()
     # Supporting records only; never sweep working directories or Git history.
     paths = sorted(set(MEMORY + EXTRA + [p for p in tracked if p.startswith('docs/') and p.endswith('.md')]
-                       + ['.github/workflows/pages.yml']))
+                       + ['.github/workflows/pages.yml']
+                       + [p for p in ['docs/memory/release/ARTIFACT_MANIFEST.json'] if p in tracked]))
     data = {}
     for p in paths:
         assert not (ROOT / p).is_symlink(), 'Symlink excluded'
         data[p] = (ROOT / p).read_bytes()
     manifest = {'schemaVersion': 1, 'checkpointCommit': git('rev-parse', 'HEAD'),
                 'branch': git('branch', '--show-current'),
-                'scope': 'Continuity records, supporting Markdown documentation, workflow reference and memory tool only; not a source checkout or deployment payload.',
+                'scope': 'Continuity records, supporting Markdown documentation, reviewed release hash manifest, workflow reference and memory tool only; not a source checkout or deployment payload.',
                 'files': {p: digest(b) for p, b in data.items()}}
     data['MANIFEST.json'] = (json.dumps(manifest, indent=2) + '\n').encode()
     output.parent.mkdir(parents=True, exist_ok=True)

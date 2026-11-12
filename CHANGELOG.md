@@ -59,3 +59,8 @@ Added tested publisher fallback metadata inheritance (ef5300f).34 targeted tests
 3 diagnostic cases pass; rollback/legacy parity passes locally. Current registry read
 403 remains owner verification gate. No fetch, push, deploy, source/config update or
 production snapshot regeneration/publication.
+
+## Portable release evidence
+
+Explicitly included the sanitized release artifact hash manifest in continuity
+packages; private/raw release artifacts remain excluded. Verified v2 restoration.

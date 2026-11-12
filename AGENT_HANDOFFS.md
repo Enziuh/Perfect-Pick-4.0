@@ -133,3 +133,10 @@ Do not fetch/push/install/activate/run publisher/regenerate until separately app
 No Form/trigger/deadline/data/cache writes or live Apps Script execution occurred.
 No broad reinvestigation needed absent a concrete hash/scope mismatch. Copied snapshot
 expires: verify-release correctly stops on stale artifacts; never renew capture proof.
+
+## Release package evidence inclusion
+
+1421bb7 records the release stages. Portable-package allowlist now includes exactly
+one additional sanitized release hash manifest, so its referenced artifact hashes
+travel with the checklist. Raw private artifacts/config/source remain excluded.
+New v2 package receipt identifies the final checkpoint; no production changes.
