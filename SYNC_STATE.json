@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Production accuracy release locally verified; final explicit owner approval pending",
+  "phase": "Stage1 snapshot-only integration complete; stopped pending Stage2 approval",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "Read-only GitHub comparison captured; no fetch or merge",
-    "lastObservedLocalTrackingCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
+    "status": "Authorized fetch and clean local merge completed; no push",
+    "lastObservedLocalTrackingCommit": "28ff44c5a206d885ac2be051336ad3f727f7edfe",
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
@@ -119,5 +119,22 @@
     "protectedCurrentCore": "EXACT values and ordering; qualifying counters/champions/prizes preserved",
     "registry": "Owner completed; source confirms diagnostic removed",
     "parity": "By player and covered scope; existing API/native publisher scope difference preserved"
+  },
+  "stage1Integration": {
+    "preMergeHead": "6dd89d479490338ef488d89aab9dbbbce612c700",
+    "remoteHead": "28ff44c5a206d885ac2be051336ad3f727f7edfe",
+    "remoteSnapshotSha256": "1c3037b53585f556a8b7bc5ac2c763e52a070edd9ed23eaaabdb7b8a0a5fd3e8",
+    "remoteCommits": 19,
+    "generatedAt": "2026-11-12T20:37:03.965Z",
+    "expiresAt": "2026-11-13T02:36:45.835Z",
+    "mergeCommit": "0a13035495ed6c008a5651cd01e1b1299b0d29b9",
+    "postMergeSnapshotSha256": "1c3037b53585f556a8b7bc5ac2c763e52a070edd9ed23eaaabdb7b8a0a5fd3e8",
+    "status": "COMPLETE_LOCAL_ONLY",
+    "report": "docs/memory/STAGE1_INTEGRATION.md",
+    "testsPassed": 34,
+    "testsFailed": 0,
+    "conflicts": false,
+    "pushed": false,
+    "productionChanged": false
   }
 }

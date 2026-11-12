@@ -6,16 +6,14 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Production accuracy release is locally ready for FINAL OWNER REVIEW. Roster check
-completed by owner (VERIFIED23/23,oneToOne,writes0); refreshed original editor source
-confirms diagnostic/wrapper absent. Do not rerun it. Read
-[final review](docs/memory/FINAL_RELEASE_REVIEW.md) and the sanitized release manifest.
-Fresh V2 local candidate corrects Isaias83/135→83/136 and retains current published
-core values AND ordering. Full417/417 plus exact-artifact five-width browsers PASS.
-Use tmp/accuracy-release-final/accuracy-candidate-v2/, NOT superseded V1 artifacts.
-No production flags/source/publication changes performed. Owner explicitly requires
-final review; stop before fetch/merge/push, live compatible updates, activation or
-publication. Existing per-game cutoffs unchanged; no strict weekly/Week11 policy.
+Stage1 ONLY is complete: fetched19 snapshot-only commits and merged cleanly at
+0a13035495ed6c008a5651cd01e1b1299b0d29b9. Remote snapshot preserved byte-for-byte;
+all local implementation commits retained.34 targeted tests and integrity checksPASS.
+Read [Stage1 handoff](docs/memory/STAGE1_INTEGRATION.md), then
+[final release review](docs/memory/FINAL_RELEASE_REVIEW.md). Registry gate completed;
+do not rerun diagnostic/investigation. No push, publication, activation, live source
+or configuration change performed. STOP until separate Stage2 authorization.
+Existing release artifacts need freshness/source revalidation before later publication.
 
 ## Repository map
 

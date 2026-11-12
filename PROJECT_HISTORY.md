@@ -39,3 +39,6 @@ Final review: owner registry check completed, temporary diagnostic confirmed abs
 fresh read-only source independently verifies83/135→83/136 correction. Local V2
 artifact preserves current static table ordering/coverage;417 tests and5-width
 browser checks pass. Production remains APIv20 with flags off pending final review.
+
+Stage1 owner-authorized snapshot-only integration completed at0a13035. Both remote
+28ff44c and local6dd89d4 retained;34 tests and integrity checks passed. Local only.

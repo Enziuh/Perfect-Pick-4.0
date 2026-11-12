@@ -130,3 +130,10 @@ preserves publisher running scope and existing tied-row order. API/static arithm
 matches per identity/covered scope. No new disclosure grants or scoring rules.
 No application source edits this turn. Local release ready; final approval needed
 before any push/live source update/flag activation/publication. API remainsv20.
+
+## Stage1 complete
+
+[Snapshot integration](docs/memory/STAGE1_INTEGRATION.md): fetched19 remote commits,
+all snapshot-only, merged cleanly0a13035; local code/history preserved and working
+snapshot byte-identical to origin/develop.34 targeted tests and integrity checksPASS.
+No conflicts; no push or live changes. Separate Stage2 approval remains required.

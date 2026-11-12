@@ -174,3 +174,16 @@ compatible reader/publisher/API updates, two-field activation AND next publicati
 Preserve old immutable snapshots; rollback API20 first, keep new compatible readers/
 publisher until fresh legacy snapshot confirmed, then restore old publisher/readers.
 No further broad investigation or registry diagnostic needed absent actual mismatch.
+
+## Stage1 ONLY — completed cleanly, stop before Stage2
+
+Owner authorized fetch/clean snapshot-only integration, not push or live changes.
+Started6dd89d479490338ef488d89aab9dbbbce612c700; fetched28ff44c5a206d885ac2be051336ad3f727f7edfe (19 snapshot-only commits).
+Clean merge0a13035495ed6c008a5651cd01e1b1299b0d29b9 has both heads as parents. Only public-data/snapshot.json
+changed by merge; bytes exactly remote, all implementation ancestors preserved.
+Schema/privacy/freshness,23 IDs/aliases and frozen-history equalityPASS.34 targeted
+compatibility testsPASS,0fail/skip; memory/whitespace validationPASS.
+[Exact handoff](docs/memory/STAGE1_INTEGRATION.md). No conflicts, no broad investigation,
+no diagnostic rerun, no push/deploy/publish/activate/Apps Script/config/automation write.
+Next: separate Stage2 push/compatible-publication approval; revalidate existing
+artifact freshness then, without rewriting source proof or old release evidence.
