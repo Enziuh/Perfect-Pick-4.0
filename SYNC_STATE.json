@@ -1,17 +1,19 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-12",
-  "phase": "Private local synthetic accuracy preview passed; production activation not authorized",
+  "phase": "Production release artifacts staged; registry verification gate; not activated",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "not contacted",
-    "lastObservedLocalTrackingCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e"
+    "status": "Read-only GitHub comparison captured; no fetch or merge",
+    "lastObservedLocalTrackingCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
+    "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
-    "status": "not verified; no deployment authorized"
+    "status": "Read-only APIv20/publisher/Pages capture completed; no deployment or activation",
+    "evidence": "docs/memory/PRODUCTION_RELEASE_PREPARATION.md"
   },
   "integrity": {
     "manifest": "external restart package MANIFEST.json",
@@ -72,5 +74,24 @@
     "focusedTestsPassed": 41,
     "productionActivated": false,
     "report": "docs/memory/PRIVATE_ACCURACY_PREVIEW.md"
+  },
+  "releasePreparation": {
+    "authorized": true,
+    "activated": false,
+    "snapshotRegenerated": false,
+    "publisherFixCommit": "ef5300f",
+    "artifactsDirectory": "tmp/accuracy-production-release/staged",
+    "manifest": "docs/memory/release/ARTIFACT_MANIFEST.json",
+    "report": "docs/memory/PRODUCTION_RELEASE_PREPARATION.md",
+    "registryStatus": "23 approved aliases match public snapshot; actual Players read403; owner receipt pending",
+    "compatibilityTestsPassed": 34,
+    "diagnosticSyntheticCasesPassed": 3,
+    "localRollback": "Exact captured source/config and synthetic legacy endpoint parity verified",
+    "remainingApprovals": [
+      "Owner current roster read receipt",
+      "Fetch/merge/push and compatible publication",
+      "Narrow source/version changes",
+      "Accuracy activation including next scheduled publication"
+    ]
   }
 }

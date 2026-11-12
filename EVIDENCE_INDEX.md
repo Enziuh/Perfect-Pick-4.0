@@ -47,3 +47,10 @@ E-PRIVATE-PREVIEW: local synthetic projector/Chrome checks at source c378fc7;
 [preview record](docs/memory/PRIVATE_ACCURACY_PREVIEW.md).23 synthetic aliases,
 41/41 focused tests,390/1440 cold/repeat verified. Logs/scripts remain ignored locally;
 no real player data or current production status is represented.
+
+E-RELEASE-PREP: current read-only Google/GitHub/Pages capture, local rollback and34
+compatibility tests. [Release plan](docs/memory/PRODUCTION_RELEASE_PREPARATION.md),
+[sanitized hashes](docs/memory/release/ARTIFACT_MANIFEST.json). Source ef5300f.
+Remote commit references are verified through GitHub GET, not fetched into local Git.
+Raw source/config/registry approvals remain ignored/private; current actual Players
+join is unverified after403. No live rollback or activation claimed.

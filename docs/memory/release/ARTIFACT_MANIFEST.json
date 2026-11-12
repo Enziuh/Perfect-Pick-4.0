@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "ef5300f0f79e6862ca138a164dc6e80f2ff52c10",
+  "capturedAt": "2026-11-12T19:11:58.029Z",
+  "activationPerformed": false,
+  "snapshotRegenerationPerformed": false,
+  "apiVersion": 20,
+  "currentPublicSnapshotSha256": "f51e816f111ef3eb9d803c585077e11084673a26054f4069cc16681c87062ecc",
+  "currentPublicSnapshotExpiresAt": "2026-11-12T21:21:45.335Z",
+  "remoteDevelop": "32c0c9572f38cd4bb87fd8c757dd6cb1397f1f42",
+  "remoteChanges": "18 commits, only public-data/snapshot.json; no fetch/merge performed",
+  "registryStatus": "23 approved unique deployed aliases match live public alias set; actual Players rows read denied403",
+  "privateArtifacts": {
+    "00_Config_Setup.route-compatible.private.gs": "28d74351f867589c1edcc294b850f1cea9bba5a919f25962ecdc46dd30c0e434",
+    "CloudSnapshotPublisher.compatible.gs": "e2385205e586f19e02b2e55e8b2c7790731fed4adb71423466f07a7edadedcea",
+    "CloudSnapshotPublisher.rollback.private.gs": "36c0b7c2f5f4d62bfc08f095c70d8cea98ebd28a3465763e095db05b638c06d6",
+    "PerfectPick4_Json.activate.private.gs": "b74f54306b655904c604cecf97cbfff35b8d0e665e10a456bac7135cd43fe5b4",
+    "PerfectPick4_Json.compatible.private.gs": "31cc1b28a3ffb8792ea518760a731616c76f883029ac8bf8e7cad9591f712960",
+    "api-activate-project.private.json": "1d8b18c570be9da1f3c960c93977810a2f75691b5463c3055c6cacf968ef2b97",
+    "api-compatible-project.private.json": "d4ebbb16255ceb6999520e3a09f9f2ee7d997cbd6580549248a240e4108e31a7",
+    "api-deployment-rollback.private.json": "699eca4c711f4c910df2216419e24b9ee8c8b5f80c6fb51d04392be0afa93f84",
+    "api-editor-rollback.private.json": "5ba8ae6154247996a6566ae4a749909d8404a94209035963bea41d5efaf52727",
+    "website-compatible.seal.json": "f708c4fa379b287ef21513e62627012eddb0520ebee3255fef8e7f60a62df0aa",
+    "RosterReadOnlyCheck.private.gs": "eb09027d685ecbb1ec293d2b05fa248f33a73a511d49b5314f40ef0decfd4493",
+    "RosterReadOnlyCheck.gs": "c6c63a1678d79d9b42fe4e56adf78c5b3316abba8249c70d4a2941698c8babd8"
+  },
+  "publisherPreviousSha256": "36c0b7c2f5f4d62bfc08f095c70d8cea98ebd28a3465763e095db05b638c06d6",
+  "websiteCompatibleFiles": 38,
+  "websiteRollbackFiles": 38,
+  "compatibilityTests": {
+    "passed": 34,
+    "failed": 0
+  },
+  "rosterDiagnosticSyntheticCases": 3,
+  "liveConfigurationChange": false
+}

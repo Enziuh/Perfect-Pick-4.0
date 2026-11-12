@@ -100,3 +100,17 @@ Old memory entries describe historical gates and are superseded by this checkpoi
 23-player ROSTER_FINAL_V1; weekly/monthly7 and season129. Late/blank6/7,absent0/7.
 Desktop/mobile Chrome checks and41 focused regressions passed. No local blockers;
 production opt-in remains OFF and requires separate authorization. No app edits.
+
+## Production release preparation — staged, one registry verification gate
+
+[Read-only evidence, artifacts and staged actions](docs/memory/PRODUCTION_RELEASE_PREPARATION.md).
+APIv20/current editor/publisher captured without execution or writes;38 public assets
+hashed, snapshot unchanged. Remote snapshot-only advances identified via GitHub GET,
+no fetch/merge.23 deployed alias approvals are unique and match current public aliases;
+direct current Players columns read403. Owner-only pinned read diagnostic staged,
+not installed/run. ef5300f fixes actual publisher fallback dropping validated accuracy
+metadata;34 targeted tests pass and3 diagnostic cases pass. Local rollback restores
+captured source/config exactly; legacy weekly/overall/prize outputs match in VM.
+No production activation. Existing416 full-suite result predates this targeted
+publisher fix and is historical, not claimed as rerun. Release requires the registry
+receipt and separate remote-integration/live-source/publication approvals.

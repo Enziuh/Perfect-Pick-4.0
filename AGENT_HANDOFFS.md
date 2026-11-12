@@ -105,3 +105,31 @@ app changes, live operations, push or deploy. Local scripts/logs ignored under
  tmp/private-accuracy-preview/. [Opening and deployment checklist](docs/memory/PRIVATE_ACCURACY_PREVIEW.md).
 Server is intentionally left running; lifecycle is temporary, not a trigger/scheduler.
 Next step: owner preview, then separate production authorization. No local blockers.
+
+## Production release preparation — artifacts staged, not activated
+
+Owner authorized preparation/read-only capture. Starting4b046a0 clean; checkpoint
+verified. GET-only Google deployment/source capture identifies APIv20, different
+editor with Week10 work and installed publisher rollover repair. Current public
+snapshot/38 website files captured and sealed; snapshot not regenerated. Remote-only
+18 snapshot commits identified without fetch or merge; actual remote hash is in the
+sanitized release manifest (not locally fetched). Preserve those snapshots.
+
+ef5300f fixes publisher fallback dropping validated ROSTER_FINAL_V1. Regression red
+then34 targeted testsPASS;3 readonly roster-diagnostic casesPASS. Compatible API uses
+new module, exact deployed-v20 config/wrappers, current-editor other files preserved;
+only dashboard route gets existing request e. Activation adds just2 approved fields.
+Exact API editor/config and publisher rollback testsPASS, synthetic legacy weekly/
+overall/prize outputs match,0native writes. New dual-compatible readers/publisher
+must remain until fresh legacy-format snapshot is confirmed during any rollback.
+
+Remaining gate: current Players read403 with existing credential; no scope widened.
+23 current deployed alias approvals are unique and match live public aliases but
+this is not proof of actual current Players join. Pinned owner-only diagnostic is
+staged privately, not uploaded/executed. Raw configs/sources stay in ignored
+ tmp/accuracy-production-release/; hashes/checklist only enter memory package.
+[Exact staged owner actions](docs/memory/PRODUCTION_RELEASE_PREPARATION.md).
+Do not fetch/push/install/activate/run publisher/regenerate until separately approved.
+No Form/trigger/deadline/data/cache writes or live Apps Script execution occurred.
+No broad reinvestigation needed absent a concrete hash/scope mismatch. Copied snapshot
+expires: verify-release correctly stops on stale artifacts; never renew capture proof.

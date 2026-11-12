@@ -50,3 +50,12 @@ No production activation or push/deployment. Supersedes strict-week proposals.
 Ran loopback-only synthetic ROSTER_FINAL_V1 preview; verified weekly/monthly/season
 accuracy, missing/late/absent examples and fairness notice on desktop/mobile.
 41 focused regressions passed; no production or application source changes.
+
+## Production release preparation
+
+Captured deployed APIv20/editor/publisher and38 public assets read-only; staged sealed
+compatible website/API/publisher,2-field activation and byte-exact rollback artifacts.
+Added tested publisher fallback metadata inheritance (ef5300f).34 targeted tests and
+3 diagnostic cases pass; rollback/legacy parity passes locally. Current registry read
+403 remains owner verification gate. No fetch, push, deploy, source/config update or
+production snapshot regeneration/publication.

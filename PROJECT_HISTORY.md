@@ -29,3 +29,8 @@ weekly proposals. Local commits96f1663 (versioned roster accuracy),73698e4 (UI/n
 896aae3 (memory authorization validator),e64f28e (metadata validation hardening).
 Final416/416 regressions passed. No source deployment, snapshot publication, push or
 production write. See [report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md).
+
+Release preparation: ef5300f adds validated accuracy propagation through existing
+publisher fallback. APIv20/editor/publisher and public assets captured read-only;
+new source artifacts and rollback staged privately. Current registry verification
+is pending owner receipt after direct-read403. No remote integration or deployment.
