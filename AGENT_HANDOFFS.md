@@ -16,3 +16,14 @@ verify package restoration. After Phase1 completion, wait for separate Phase2 ap
 No fetch/push/merge/deployment or production operation is authorized.
 See restart workflow and external package receipt for finalized checkpoint hashes;
 a document cannot truthfully contain its own future commit hash.
+
+## 2026-11-12 — Phase1 tooling completion
+
+Documentation commit: 246c2a7. Added local Python continuity-package tooling and
+restart workflow, separate from application/deployment tooling. Package includes
+memory and supporting Markdown records only, not source/history/private evidence.
+Finalized checkpoint and archive hashes are in the generated external receipt.
+Validation resolves memory links and commit references; package verification checks
+exact inventory and every restored byte in a temporary directory. Current runtime,
+full application behavior, supporting records' external links, private evidence and
+full-history secret absence remain unverified. Phase2 remains unauthorized.
