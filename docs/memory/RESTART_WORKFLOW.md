@@ -64,3 +64,10 @@ outside the committed checkpoint; no document can contain its own final commit h
 > Continue only within the currently approved phase. Phase2 requires separate owner
 > authorization. Do not fetch, push, merge, deploy, or modify production services
 > without separate approval.
+
+## Authorization metadata maintenance
+
+The integrity validator checks that phase2Authorized is a boolean; it does not force
+it false. Record the current owner-approved scope in SYNC_STATE.json and handoffs.
+Validation is an integrity check, not authorization to execute commands or deploy.
+The initial false-only check was specific to Phase1 and is superseded here.

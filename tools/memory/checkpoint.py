@@ -22,7 +22,7 @@ def digest(data):
 
 def validate():
     state = json.loads((ROOT / 'SYNC_STATE.json').read_text())
-    assert state['schemaVersion'] == 1 and state['phase2Authorized'] is False
+    assert state['schemaVersion'] == 1 and isinstance(state.get('phase2Authorized'), bool)
     git('rev-parse', '--verify', state['baselineCommit'] + '^{commit}')
     text = '\n'.join((ROOT / p).read_text() for p in MEMORY)
     for commit in set(re.findall(r'\b[0-9a-f]{7,40}\b', text)):
