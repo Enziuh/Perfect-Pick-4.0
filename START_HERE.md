@@ -13,8 +13,9 @@ while retaining original qualification counters and protected competition outcom
 Read [implementation report](docs/memory/SCORING_IMPLEMENTATION_REPORT.md) and
 [architecture](docs/architecture/ROSTER_ACCURACY_V1.md). Final full suite416/416 passes.
 The feature is opt-in and NOT activated in production. Stop before push/deployment,
-live Apps Script/Form/config/data writes, trigger or deadline changes. Next action:
-owner review of local changes and separately authorized fresh deployment preparation.
+live Apps Script/Form/config/data writes, trigger or deadline changes. Private synthetic preview passed at http://127.0.0.1:4789/. See
+[preview/checklist](docs/memory/PRIVATE_ACCURACY_PREVIEW.md). Next action: owner
+preview/review, then separately authorized deployment.
 Do not repeat old Week9 all-week-cutoff proposals; those are superseded evidence.
 
 ## Repository map

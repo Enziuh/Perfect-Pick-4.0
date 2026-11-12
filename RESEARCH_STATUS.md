@@ -93,3 +93,10 @@ requires exact23-person live registry/approved alias correspondence before opt-i
 Current live source/registry/cache status remains unverified, not a local blocker:
 activation is deferred until reviewed fresh source/artifacts and separate approval.
 Old memory entries describe historical gates and are superseded by this checkpoint.
+
+## Private preview verified
+
+[Preview/checklist](docs/memory/PRIVATE_ACCURACY_PREVIEW.md): loopback-only synthetic
+23-player ROSTER_FINAL_V1; weekly/monthly7 and season129. Late/blank6/7,absent0/7.
+Desktop/mobile Chrome checks and41 focused regressions passed. No local blockers;
+production opt-in remains OFF and requires separate authorization. No app edits.

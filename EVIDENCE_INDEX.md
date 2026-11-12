@@ -42,3 +42,8 @@ Git fixture and original artifact hash pinned; no current runtime claims. Full s
 416/416; new browser covers360/390/430/768/1440 cold+repeat; exact protected-result
 comparisons and original snapshot/generated-package preservation pass. Ephemeral
 logs under /tmp/ are not part of the portable package or permanent evidence recovery.
+
+E-PRIVATE-PREVIEW: local synthetic projector/Chrome checks at source c378fc7;
+[preview record](docs/memory/PRIVATE_ACCURACY_PREVIEW.md).23 synthetic aliases,
+41/41 focused tests,390/1440 cold/repeat verified. Logs/scripts remain ignored locally;
+no real player data or current production status is represented.

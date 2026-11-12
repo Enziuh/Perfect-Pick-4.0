@@ -44,3 +44,9 @@ weeks, Guide/tooltip and per-game fairness notice. Added10 regressions including
 immutable historical parity and5-width browser checks. Final416/416PASS. Original
 snapshot, points/ranks/champions/prizes and deadline/score/Form automation preserved.
 No production activation or push/deployment. Supersedes strict-week proposals.
+
+## Private preview verified
+
+Ran loopback-only synthetic ROSTER_FINAL_V1 preview; verified weekly/monthly/season
+accuracy, missing/late/absent examples and fairness notice on desktop/mobile.
+41 focused regressions passed; no production or application source changes.

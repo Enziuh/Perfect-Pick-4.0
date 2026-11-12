@@ -93,3 +93,15 @@ before source opt-in. Never publish expired historical test data or rerun setup/
 trigger installation/cache writers. No push/deploy/live Apps Script/Form/data writes.
 Next: owner review; wait for separate production/push/deployment authorization.
 Final memory commit and package hash are recorded externally in the restart receipt.
+
+## Private synthetic preview passed — local only
+
+Owner authorized preview without another broad audit. Started c378fc7 clean;
+checkpoint validated. Loopback preview http://127.0.0.1:4789/ serves fully synthetic
+23-person data with ROSTER_FINAL_V1 and no live Form link. Week9 A late6/7,B absent0/7,
+C blank6/7; all period denominators7 and season129. Chrome390/1440 cold/repeat PASS;
+focused41/41PASS including historical protection and per-game boundaries. No source
+app changes, live operations, push or deploy. Local scripts/logs ignored under
+ tmp/private-accuracy-preview/. [Opening and deployment checklist](docs/memory/PRIVATE_ACCURACY_PREVIEW.md).
+Server is intentionally left running; lifecycle is temporary, not a trigger/scheduler.
+Next step: owner preview, then separate production authorization. No local blockers.
