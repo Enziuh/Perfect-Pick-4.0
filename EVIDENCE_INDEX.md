@@ -18,3 +18,8 @@ not established. A passing historical test is not a test run in this session.
 Commit IDs resolve in local Git; identifiers are not evidence of deployed state.
 Integrity manifests verify bytes against the selected checkpoint, not truth,
 completeness, authorization, or absence of every possible secret.
+
+| E-PHASE2 | LOCAL source + historical snapshot, 2026-11-12 | [Investigation](docs/memory/SCORING_INVESTIGATION.md), source checkpoint3c27adf;100/100 focused tests; current runtime unverified. |
+
+E-PHASE2 is an additional evidence record; it does not convert historical runtime
+claims into current verification. No private raw data was copied into memory.

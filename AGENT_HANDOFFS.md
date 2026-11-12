@@ -27,3 +27,15 @@ Validation resolves memory links and commit references; package verification che
 exact inventory and every restored byte in a temporary directory. Current runtime,
 full application behavior, supporting records' external links, private evidence and
 full-history secret absence remain unverified. Phase2 remains unauthorized.
+
+## 2026-11-12 — Phase2 investigation only completed
+
+Owner separately authorized investigation; START_HERE/RESEARCH_STATUS updated to
+supersede prior Phase1-only scope. Phase1 receipt commit and every manifest byte
+matched the clean starting checkout at3c27adf. Findings are in
+[report](docs/memory/SCORING_INVESTIGATION.md).100/100 focused existing tests passed;
+source/snapshot and synthetic reproduction identify submitted-pick denominator
+semantics. No current runtime or exact83-point capture independently verified.
+Only memory files updated. No app/scoring/Apps Script/deployment/production changes.
+Next action: wait for owner decisions and separate implementation authorization.
+New checkpoint receipt records this investigation's final commit externally.

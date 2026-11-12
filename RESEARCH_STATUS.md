@@ -1,6 +1,7 @@
 # Research status
 
-As of 2026-11-12, Phase1 memory setup is authorized. Phase2–4 work is not authorized.
+As of 2026-11-12, Phase1 is complete and the separately authorized Phase2 investigation
+is complete. Implementation and deployment remain unauthorized.
 
 ## Verified locally
 
@@ -42,3 +43,15 @@ version and live cache state remain unverified. Older operational commands must 
 be rerun to establish continuity. Private runtime configuration is not recoverable
 from public documentation alone. Historical tests were not rerun as application code
 is unchanged. Future phases require their own authorization and verification.
+
+## Phase2 investigation completed — 2026-11-12
+
+[Findings and implementation proposal](docs/memory/SCORING_INVESTIGATION.md).
+Confirmed source/contract exclusion of missed/nonblank-ineligible FINAL picks explains
+the mismatch mechanism. Historical committed snapshot shows Isaias76/127 versus
+Pancho R.76/128, with Isaias's FINAL Week9 JAX/BAL pick MISSED_DEADLINE. Exact later
+83-point capture/current runtime remains unverified. Existing100 focused tests pass
+under current semantics. Earlier pending-investigation text records the original
+request; this finding supersedes its unknown mechanism status, not its approval gate.
+Membership history, retroactive scope, legacy endpoint parity and monthly completion
+safeguards require decisions. No application or production changes were made.

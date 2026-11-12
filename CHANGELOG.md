@@ -16,3 +16,10 @@ Added explicit package inventory, SHA-256 manifest and receipt, clean-tree guard
 non-overwriting archive creation, safe temporary restoration and restart workflow.
 No full Git bundle is exported because historical secret absence is unverified.
 No application or production behavior changed.
+
+## 2026-11-12 — Phase2 investigation record
+
+Recorded source-backed denominator findings, historical public snapshot evidence,
+late-pick enforcement, eligibility limits, caching trace, notice placement,
+regression requirements, risks and implementation proposal. Investigation only;
+no application, scoring, production or deployment changes.

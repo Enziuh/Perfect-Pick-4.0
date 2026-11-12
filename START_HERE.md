@@ -6,13 +6,13 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-2026-11-12: owner approved Phase 1 memory documents, integrity tooling, portable
-restart package, and focused local commits only. Phase 2 scoring investigation is
-NOT authorized. No fetch, push, merge, deployment, Apps Script changes, scoring
-changes, or production operations are authorized. Historical approvals are evidence,
-not standing permission to repeat operations. Preserve private evidence and all
-unrelated changes. Do not recreate Forms, rerun historical setup, reinstall/delete
-triggers, or change the active deadline.
+2026-11-12: owner separately authorized Phase2 investigation only; investigation
+is complete. Read [findings](docs/memory/SCORING_INVESTIGATION.md). Only memory records
+were changed. Stop for separate implementation approval; no scoring fix, notice,
+application edit, fetch, push, merge, deployment or production change is authorized.
+Historical approvals do not authorize repeating operations. Preserve private evidence
+and unrelated changes. Do not recreate Forms, rerun setup, reinstall/delete triggers,
+or change the active deadline.
 
 ## Repository map
 
