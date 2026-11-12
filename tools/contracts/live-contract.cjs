@@ -210,7 +210,7 @@ function validatePublicInternal(snapshot,trust){
    need(s.state==='AVAILABLE'&&!s.rows.some(r=>r.points===count&&r.completedGames===count&&r.totalPicks===count));
   }
  }
- if(snapshot.accuracy)require('../scoring/roster-accuracy.cjs').validate(snapshot,trust.aliases);
+ if(Object.prototype.hasOwnProperty.call(snapshot,'accuracy'))require('../scoring/roster-accuracy.cjs').validate(snapshot,trust.aliases);
  unique(prizeKeys);return snapshot;
 }
 function validatePublic(snapshot,trust){

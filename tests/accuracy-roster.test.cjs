@@ -48,7 +48,7 @@ test('API/static remapping parity including zero-pick roster members and fail-cl
  const weekly=direct.weeks.find(w=>w.week===9).standings;assert.deepEqual(weekly,staticModel.weeks.find(w=>w.week===9).standings);
  const map=new Map(f.payload.aliases.map((r,i)=>[r.player,'p_'+String(i+1).padStart(32,'0')]));
  const remapped=projectReply(f.payload,map);assert.deepEqual(decode(remapped,now,f.deadlineDisclosures||[]).weeks.map(w=>w.standings),direct.weeks.map(w=>w.standings));
- for(const mutate of [s=>s.accuracy.version='UNKNOWN',s=>s.accuracy.weeks[8].completedGames++,s=>s.accuracy.roster.push(s.accuracy.roster[0]),s=>s.accuracy.roster.pop(),s=>s.accuracy.extra=true]){const bad=structuredClone(f);mutate(bad.payload.snapshot);assert.throws(()=>validateStatic(bad,now));}
+ for(const mutate of [s=>s.accuracy=null,s=>s.accuracy=false,s=>s.accuracy.version='UNKNOWN',s=>s.accuracy.weeks[8].completedGames++,s=>s.accuracy.roster.push(s.accuracy.roster[0]),s=>s.accuracy.roster.pop(),s=>s.accuracy.extra=true]){const bad=structuredClone(f);mutate(bad.payload.snapshot);assert.throws(()=>validateStatic(bad,now));}
  assert.doesNotThrow(()=>validateStatic(original,now));assert.throws(()=>validateStatic(f,Date.parse(f.expiresAt)));
 });
 test('blank/invalid whole entry, wrong/on-time/late picks and incomplete evidence retain points but share FINAL denominator',()=>{

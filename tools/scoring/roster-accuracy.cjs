@@ -17,7 +17,7 @@ function create(snapshot,records){
  return {version:VERSION,fromWeek:1,roster:approved,weeks:snapshot.weeks.map(w=>({week:w.week,completedGames:finalizedGameCount(snapshot.games.filter(g=>g.week===w.week))}))};
 }
 function validate(snapshot,aliases){
- if(!snapshot.accuracy)return;
+ if(!Object.prototype.hasOwnProperty.call(snapshot,'accuracy'))return;
  const a=snapshot.accuracy;if(!exact(a,['version','fromWeek','roster','weeks'])||a.version!==VERSION||a.fromWeek!==1||JSON.stringify(a)!==JSON.stringify(create(snapshot,a.roster)))throw Error('Invalid derived accuracy contract');
  if(a.roster.some(r=>aliases.get(r.player)!==r.alias)||a.roster.length!==aliases.size)throw Error('Accuracy roster authority mismatch');
 }
