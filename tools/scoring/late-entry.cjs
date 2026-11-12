@@ -43,4 +43,5 @@ function score(entry,games,evidence,now,maxAgeMs){
  const eligible=selections.filter(s=>s.eligibility==='ELIGIBLE'&&s.pick),completed=eligible.filter(s=>games.find(g=>g.game===s.game).status==='FINAL'),points=selections.reduce((n,s)=>n+s.points,0);
  return {points,completedGames:completed.length,totalPicks:eligible.length,perfectWeek:games.length>0&&points===games.length&&completed.length===games.length&&eligible.length===games.length,selections};
 }
-module.exports={RULE,applies,instant,verified,cutoff,selectEntry,eligibility,predictionEligibility,score};
+function finalizedGameCount(games){return games.filter(g=>g.status==='FINAL').length;}
+module.exports={finalizedGameCount,RULE,applies,instant,verified,cutoff,selectEntry,eligibility,predictionEligibility,score};

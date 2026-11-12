@@ -119,6 +119,12 @@ function createLegacyProvider(deps){
    }
    if(cfg.prizeParticipants!==undefined)policy.accounting=new Map();
    if(policy.lateEntryRules===late.RULE){for(const g of source.games){const d=definitions.get(g.week+'|'+norm(g.game));const e=policy.lateEntryEvidence.get(g.week);const matches=e?.schedule?.filter(s=>s.game===d?.game)||[];g.kickoff=late.verified(e,now,maxAgeMs)&&matches.length===1&&matches[0].verified===true&&matches[0].revision===e.revision&&matches[0].unresolvedReschedule!==true&&late.instant(matches[0].kickoff)!==null?new Date(late.instant(matches[0].kickoff)).toISOString():null;}}
+   if(cfg.accuracyRules!==undefined){
+    if(cfg.accuracyRules!=='ROSTER_FINAL_V1'||cfg.rosterFromWeek1!==true||policy.aliases.size!==23)throw Error();
+    const registryKeys=Object.keys(ctx.playerRegistry).map(normalizePhone);
+    if(registryKeys.length!==23||new Set(registryKeys).size!==23||registryKeys.some(k=>!policy.aliases.has(k)))throw Error();
+    policy.accuracyRoster=[...policy.aliases.values()].map(({player,alias})=>({player,alias}));
+   }
    const snapshot=projectCompetition(source,policy);if(snapshot.state!=='READY')throw Error();
    if(cfg.prizeParticipants!==undefined)snapshot.prizes=estimatePrizes(snapshot,prizes,cfg.prizeParticipants);
    const trust={deadlineDisclosures:policy.deadlineDisclosures,now,maxAgeMs,aliases:new Map([...policy.aliases.values()].map(a=>[a.player,a.alias])),closures:new Map([...policy.closures].map(([w,c])=>[w,c.entry])),aliasCompleteness:new Map(snapshot.weeks.map(w=>[w.week,Array.isArray(w.picks)])),prizes:new Map(snapshot.prizes.map(p=>[p.key,p]))};
@@ -127,7 +133,7 @@ function createLegacyProvider(deps){
    const c=prizes.formControl||{},first=games.find(g=>norm(g.game)===norm(c.firstGame)&&g.week===Number(c.activeWeek));
    const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v?v:'';
    const control={activeWeek,firstGame:first?TEAM_NAMES[team(first.team1)]+' vs '+TEAM_NAMES[team(first.team2)]:'',firstKickoff:iso(c.firstKickoff),picksClose:iso(c.picksClose),reportedStatus:verifyCurrentForm?(observedForm?.responderMatchesVerified===true&&observedForm.acceptingResponses===true?'OPEN':observedForm?.responderMatchesVerified===true&&observedForm.acceptingResponses===false&&c.status==='CLOSED'?'CLOSED':'UNKNOWN'):['OPEN','CLOSED','UPCOMING'].includes(c.status)?c.status:'UNKNOWN'};
-   return {schema:'PP4_JSON_V1',snapshot,control,aliases:[...new Map(snapshot.weeks.flatMap(w=>(w.picks||[]).map(p=>[p.player,p.alias])))].map(([player,alias])=>({player,alias})),activeWeek,form:approvedPlayerDestination(cfg.form)?{url:cfg.form.url,verified:true,approvedForPlayers:true}:null};
+   return {schema:'PP4_JSON_V1',snapshot,control,aliases:snapshot.accuracy?snapshot.accuracy.roster:[...new Map(snapshot.weeks.flatMap(w=>(w.picks||[]).map(p=>[p.player,p.alias])))].map(([player,alias])=>({player,alias})),activeWeek,form:approvedPlayerDestination(cfg.form)?{url:cfg.form.url,verified:true,approvedForPlayers:true}:null};
   }catch{return {state:'UNAVAILABLE'};}
  };
 }

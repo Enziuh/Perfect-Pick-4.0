@@ -206,6 +206,7 @@ function projectCompetition(source,policy) {
     }
     snapshot.standings.push(aggregate('SEASON','S'+source.season,array(policy.seasonWeeks,18),snapshot.standings));
     for(const table of snapshot.standings){const prize=accountingProjection(table.key,policy);snapshot.prizes.push(prize);trust.prizes.set(table.key,prize);}
+    if(policy.accuracyRoster){snapshot.accuracy=require('../scoring/roster-accuracy.cjs').create(snapshot,policy.accuracyRoster);for(const r of snapshot.accuracy.roster)trust.aliases.set(r.player,r.alias);}
     validatePublic(snapshot,trust);
     return snapshot;
   }catch{return unavailable('INCONSISTENT');}

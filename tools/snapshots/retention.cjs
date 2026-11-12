@@ -15,7 +15,7 @@ function restrict(payload,allowed){
   prize.allocationState='UNAVAILABLE';prize.paymentState='UNKNOWN';delete prize.allocations;delete prize.rollover;
   if(Object.hasOwn(prize,'estimatedRolloverCents'))prize.estimatedRolloverCents=null;
  }
- const used=new Set(s.weeks.flatMap(w=>(w.picks||[]).map(p=>p.player)));p.aliases=p.aliases.filter(a=>used.has(a.player));
+ const used=new Set([...(s.accuracy?.roster||[]).map(r=>r.player),...s.weeks.flatMap(w=>(w.picks||[]).map(p=>p.player))]);p.aliases=p.aliases.filter(a=>used.has(a.player));
  return p;
 }
 function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??null,publicAggregates=false,deadlineDisclosures=[]}={}){
@@ -50,8 +50,9 @@ function validateRetained(file,now){
   // its recorded observation time. API decode's120s policy remains UNCHANGED.
   // Display after that point is authorized only by the independent policy above.
   const model=decode(file.payload,captured,deadlineRecords);
-  if(deadlineRecords.length){model.prizes.disclosurePolicy=deadlineRecords[0].policyId;model.prizes.playerAliases=file.payload.aliases.map(a=>a.alias);for(const w of model.weeks)if(deadlineMap.has(w.week)){w.missingAliases=Array.isArray(file.payload.snapshot.weeks.find(p=>p.week===w.week).picks)?file.payload.aliases.filter(a=>!file.payload.snapshot.weeks.find(p=>p.week===w.week).picks?.some(p=>p.player===a.player)).map(a=>a.alias):[];}}
+  if(deadlineRecords.length){model.prizes.disclosurePolicy=deadlineRecords[0].policyId;model.prizes.playerAliases=file.payload.aliases.map(a=>a.alias);for(const w of model.weeks)if(deadlineMap.has(w.week)){w.missingAliases=Array.isArray(file.payload.snapshot.weeks.find(p=>p.week===w.week).picks)?file.payload.snapshot.accuracy?[]:file.payload.aliases.filter(a=>!file.payload.snapshot.weeks.find(p=>p.week===w.week).picks?.some(p=>p.player===a.player)).map(a=>a.alias):[];}}
   if(Object.hasOwn(file,'aggregateStandings'))require('./aggregate-standings.cjs').apply(file.aggregateStandings,file.payload,model);
+  if(file.aggregateStandings)require('../scoring/roster-accuracy.cjs').applyModel(model,file.payload.snapshot,file.aggregateStandings);
   const scoreExpiry=Math.min(Date.parse(file.generatedAt),...file.payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS;
   const expiry=Math.min(scoreExpiry,allowed.size&&r.validUntil!==null?Date.parse(r.validUntil):Infinity);
   if(file.scoreValidUntil!==new Date(scoreExpiry).toISOString()||file.expiresAt!==new Date(expiry).toISOString()||now>=expiry)fail();

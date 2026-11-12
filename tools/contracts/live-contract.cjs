@@ -29,7 +29,7 @@ function normalizeScore(value){
 function validatePublicInternal(snapshot,trust){
  // Trust is injected by a future server, never supplied by a browser/request DTO.
  need(trust&&integer(trust.now)&&integer(trust.maxAgeMs)&&trust.maxAgeMs>0&&trust.aliases instanceof Map&&trust.closures instanceof Map&&trust.prizes instanceof Map&&trust.aliasCompleteness instanceof Map);
- object(snapshot,['version','revision','generatedAt','state'],snapshot.state==='READY'?['season','scoringBasis','weeks','games','standings','months','prizes','lateEntryStartWeek']:['reason']);
+ object(snapshot,['version','revision','generatedAt','state'],snapshot.state==='READY'?['season','scoringBasis','weeks','games','standings','months','prizes','lateEntryStartWeek','accuracy']:['reason']);
  need(snapshot.version===VERSION&&integer(snapshot.revision));
  const generated=time(snapshot.generatedAt);need(generated<=trust.now&&trust.now-generated<=trust.maxAgeMs);
  if(snapshot.state==='UNAVAILABLE'){
@@ -210,6 +210,7 @@ function validatePublicInternal(snapshot,trust){
    need(s.state==='AVAILABLE'&&!s.rows.some(r=>r.points===count&&r.completedGames===count&&r.totalPicks===count));
   }
  }
+ if(snapshot.accuracy)require('../scoring/roster-accuracy.cjs').validate(snapshot,trust.aliases);
  unique(prizeKeys);return snapshot;
 }
 function validatePublic(snapshot,trust){

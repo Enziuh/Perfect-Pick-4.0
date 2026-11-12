@@ -19,7 +19,8 @@ function projectReply(r,map){
   prizes:s.prizes.map(p=>({...pick(p,['key','currency','poolCents','poolState','allocationState','paymentState','projectedPoolCents','estimatedRolloverCents']),
    ...(p.allocations?{allocations:p.allocations.map(a=>({player:player(a.player),cents:a.cents}))}:{}),...(p.rollover?{rollover:pick(p.rollover,['to','cents'])}:{}),
    ...(p.funding?{funding:pick(p.funding,['rolloverCents','monthlyPrizeCents','seasonContributionCents','monthlyShareBasisPoints','seasonShareBasisPoints'])}:{}),
-   ...(p.estimateBasis?{estimateBasis:pick(p.estimateBasis,['kind','participantsPerWeek'])}:{})}))}};
+   ...(p.estimateBasis?{estimateBasis:pick(p.estimateBasis,['kind','participantsPerWeek'])}:{})})),
+  ...(s.accuracy?{accuracy:{version:s.accuracy.version,fromWeek:s.accuracy.fromWeek,roster:s.accuracy.roster.map(r=>({player:player(r.player),alias:r.alias})).sort((a,b)=>a.player.localeCompare(b.player)),weeks:s.accuracy.weeks.map(w=>pick(w,['week','completedGames']))}}:{})}};
 }
 function scanText(text,forbidden=[]){
  // Names/game labels/form responder URL are approved separately by the existing

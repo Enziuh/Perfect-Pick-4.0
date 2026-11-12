@@ -6,6 +6,7 @@ function decode(reply,now,deadlineRecords=[]){
  if(!reply||Object.keys(reply).sort().join(',')!=='activeWeek,aliases,control,form,schema,snapshot'||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
  const aliases=new Map();for(const a of reply.aliases){if(!a||Object.keys(a).sort().join(',')!=='alias,player'||aliases.has(a.player))throw Error('Competition data unavailable');aliases.set(a.player,a.alias);}
  const disclosed=new Map();
+ if(reply.snapshot?.accuracy)for(const p of reply.snapshot.accuracy.roster||[])disclosed.set(p.player,p.alias);
  for(const w of reply.snapshot?.weeks||[])for(const p of w.picks||[])disclosed.set(p.player,p.alias);
  if(disclosed.size!==aliases.size||[...aliases].some(([player,alias])=>disclosed.get(player)!==alias||!policyAlias(alias)))throw Error('Competition data unavailable');
  const s=reply.snapshot;const deadlineDisclosures=require('../disclosure/weekly-deadline.cjs').trusted(deadlineRecords,s,now);const trust={deadlineDisclosures,now,maxAgeMs:120000,aliases,closures:new Map((s?.weeks||[]).map(w=>[w.week,w.entry])),aliasCompleteness:new Map((s?.weeks||[]).map(w=>[w.week,Object.hasOwn(w,'picks')])),prizes:new Map((s?.prizes||[]).map(p=>[p.key,p]))};
