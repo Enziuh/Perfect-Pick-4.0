@@ -203,3 +203,25 @@ operations. [Exact approval actions](docs/memory/STAGE2_WEBSITE_APPROVAL.md).
 Next requires owner approval for five-commit snapshot reintegration,push and STATIC
 WEBSITE publication ONLY. No Apps Script/publisher/config activation authorized.
 Snapshot expires2026-11-13T20:22:01.684Z; revalidate actual freshness/tip at execution.
+
+## Stage2 COMPLETE — published, verified; STOP before Stage3
+
+Owner authorized conditional website-only deployment. Five fetched snapshot-only
+commits to f6d7cc7 merged cleanly at5a7da37; all local code/history preserved and
+snapshot byte-exact. Normal non-force push succeeded. Existing static workflow
+run43494274078 verify/deploySUCCESS,CI417/417PASS,0fail/skip; local34/34PASS.
+All38 live files match approved seal at19:43:10UTC, snapshot hash unchanged from
+pre-push remote/public capture. Live390/1440 cold+repeatPASS, no errors/overflow/API
+traffic; legacy counters retained and accuracy notice correctly gated OFF.
+
+[Completion and rollback](docs/memory/STAGE2_PUBLICATION_COMPLETE.md).
+No APIv20/Apps Script/publisher/config/Forms/triggers/scoring/NFL changes or snapshot
+regeneration. ROSTER_FINAL_V1 NOT active. Stop after recording/synchronizing memory;
+Stage3 live source/version/activation/publication requires separate approval. Do not
+repeat registry check/investigation. Rollback38 files/seal preserved, don't deploy
+expired data. Latest documentation-only checkpoint may follow deployed5a7da37; no
+additional website dispatch for memory changes. Full release artifacts stay private.
+
+Memory tooling626a84d now distinguishes decimal workflow IDs from Git abbreviations;
+needed to record run43494274078. Memory validation passes; no publication asset code
+changed after5a7da37. This tooling update is documentation/integrity maintenance only.

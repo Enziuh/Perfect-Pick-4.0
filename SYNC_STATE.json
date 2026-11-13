@@ -1,19 +1,21 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-13",
-  "phase": "Stage2 compatible website review ready; stop before owner-approved integration/push/publication",
+  "phase": "Stage2 published and verified; stop before Stage3",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "GitHub GET observes5 additional snapshot-only commits beyond local fetched tracking ref; no fetch/merge this turn",
-    "lastObservedLocalTrackingCommit": "28ff44c5a206d885ac2be051336ad3f727f7edfe",
+    "status": "Authorized Stage2 fetch/merge/normal push succeeded at5a7da37; final memory sync follows",
+    "lastObservedLocalTrackingCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
-    "status": "Refreshed read-only APIv20/editor/publisher/public snapshot baseline; no live changes",
-    "evidence": "docs/memory/PRODUCTION_RELEASE_PREPARATION.md"
+    "status": "Compatible STATIC WEBSITE published and verified; accuracy/backend activation OFF",
+    "codeCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
+    "runId": 43494274078,
+    "evidence": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
   },
   "integrity": {
     "manifest": "external restart package MANIFEST.json",
@@ -171,5 +173,43 @@
     "scope": "Compatible website approval preparation only; no fetch or merge",
     "report": "docs/memory/STAGE2_WEBSITE_APPROVAL.md",
     "remoteTipEvidence": "docs/memory/STAGE2_WEBSITE_APPROVAL.md; verified via GitHub GET, not fetched"
+  },
+  "stage2Publication": {
+    "status": "STAGE2_PUBLISHED_VERIFIED_STOP_BEFORE_STAGE3",
+    "mergeAndPublishedCodeCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
+    "integratedRemoteHead": "f6d7cc7e26f77edede3577aa3178c38a7a61ecff",
+    "integratedSnapshotOnlyCommits": 5,
+    "workflowRunId": 43494274078,
+    "workflowConclusion": "success",
+    "ciTests": {
+      "pass": 417,
+      "fail": 0,
+      "skip": 0
+    },
+    "localTargetedTestsPassed": 34,
+    "liveVerification": {
+      "state": "ALL_DEPLOYED_FILES_EXACT_MATCH",
+      "verifiedAt": "2026-11-13T19:43:10.919Z",
+      "url": "https://enziuh.github.io/Perfect-Pick-4.0/",
+      "files": 38,
+      "snapshotSha256": "db41a4ff7245d011d25372b0167ab3453751808cfa47f161abb09e1fd2972ad4",
+      "snapshotUnchanged": true,
+      "accuracyActivated": false,
+      "expiresAt": "2026-11-13T20:22:01.684Z"
+    },
+    "browser": {
+      "widths": [
+        390,
+        1440
+      ],
+      "coldRepeat": true,
+      "legacyCompatible": true,
+      "accuracyActivated": false
+    },
+    "rollback": "tmp/stage2-publication-review/rollback-public and seal preserved",
+    "backendChanged": false,
+    "rosterAccuracyActivated": false,
+    "nextApproval": "Stage3 live publisher/API source/version/config and subsequent accuracy publication; not authorized",
+    "report": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
   }
 }

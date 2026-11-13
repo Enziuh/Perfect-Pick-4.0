@@ -6,14 +6,13 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Stage1 checkpoint verified. Stage2 WEBSITE-ONLY approval review prepared; read
-[exact actions](docs/memory/STAGE2_WEBSITE_APPROVAL.md). Actual remote advanced FIVE
-snapshot-only commits beyond fetched28ff44c; no fetch/merge performed this review.
-Old artifacts expired. Fresh compatible assets are staged from an unchanged current
-remote snapshot;34 tests and390/1440 cold+repeat ChromePASS. Accuracy remains off.
-STOP before integration/push/publication pending separate owner approval. Stage2
-website approval does NOT authorize the older plan's Apps Script publisher stage.
-Do not rerun completed roster/scoring investigations or regenerate production data.
+Stage2 compatible static website is PUBLISHED AND VERIFIED at5a7da37. Read
+[completion/handoff](docs/memory/STAGE2_PUBLICATION_COMPLETE.md). Run43494274078
+verify/deploySUCCESS;417CI tests and34 local targeted testsPASS. All38 live files
+match the approved seal; production snapshot byte-unchanged at verification.
+ROSTER_FINAL_V1 remains OFF; no live Apps Script/API/publisher config/automation
+changed. STOP before Stage3; separate owner approval required. Preserve existing
+rollback evidence. Registry/scoring investigation complete: do not repeat.
 
 ## Repository map
 

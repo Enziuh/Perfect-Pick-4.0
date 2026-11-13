@@ -171,5 +171,43 @@
     "rollbackPublicCapture": "38 files sealed; live snapshot matches remote hash",
     "scope": "Compatible website approval preparation only; no fetch or merge",
     "report": "docs/memory/STAGE2_WEBSITE_APPROVAL.md"
+  },
+  "stage2Publication": {
+    "status": "STAGE2_PUBLISHED_VERIFIED_STOP_BEFORE_STAGE3",
+    "mergeAndPublishedCodeCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
+    "integratedRemoteHead": "f6d7cc7e26f77edede3577aa3178c38a7a61ecff",
+    "integratedSnapshotOnlyCommits": 5,
+    "workflowRunId": 43494274078,
+    "workflowConclusion": "success",
+    "ciTests": {
+      "pass": 417,
+      "fail": 0,
+      "skip": 0
+    },
+    "localTargetedTestsPassed": 34,
+    "liveVerification": {
+      "state": "ALL_DEPLOYED_FILES_EXACT_MATCH",
+      "verifiedAt": "2026-11-13T19:43:10.919Z",
+      "url": "https://enziuh.github.io/Perfect-Pick-4.0/",
+      "files": 38,
+      "snapshotSha256": "db41a4ff7245d011d25372b0167ab3453751808cfa47f161abb09e1fd2972ad4",
+      "snapshotUnchanged": true,
+      "accuracyActivated": false,
+      "expiresAt": "2026-11-13T20:22:01.684Z"
+    },
+    "browser": {
+      "widths": [
+        390,
+        1440
+      ],
+      "coldRepeat": true,
+      "legacyCompatible": true,
+      "accuracyActivated": false
+    },
+    "rollback": "tmp/stage2-publication-review/rollback-public and seal preserved",
+    "backendChanged": false,
+    "rosterAccuracyActivated": false,
+    "nextApproval": "Stage3 live publisher/API source/version/config and subsequent accuracy publication; not authorized",
+    "report": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
   }
 }

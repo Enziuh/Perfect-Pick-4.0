@@ -85,3 +85,13 @@ Verified Stage1 and inspected five new remote snapshot-only commits read-only.
 Old artifacts expired; staged compatible website with unchanged current remote data,
 not regenerated.34 tests and mobile/desktop compatibilityPASS; rollback captured.
 No fetch/merge/push/deployment/activation or application changes in this review.
+
+## Stage2 compatible static website published
+
+Merged five approved snapshot-only commits at5a7da37 and pushed normally. Existing
+Pages run43494274078 static verify/deploySUCCESS;417CI and34 local targeted testsPASS.
+All38 live files match; production JSON unchanged; live mobile/desktop checksPASS.
+No accuracy activation, backend/config/automation changes or data regeneration.
+
+Memory validation626a84d permits decimal workflow identifiers while retaining Git hash
+checks, allowing the successful deployment run to be recorded without false failures.

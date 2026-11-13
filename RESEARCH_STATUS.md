@@ -146,3 +146,12 @@ not fetched/merged. Old artifacts expired. Fresh unchanged remote snapshot stage
 with compatible readers;34 tests and390/1440 browsers pass. No ROSTER activation,
 production regeneration or source/data edits. Website-only Stage2 scope is distinct
 from older release document's publisher-install section. Owner approval required.
+
+## Stage2 publication complete
+
+[Completion](docs/memory/STAGE2_PUBLICATION_COMPLETE.md).Owner-approved normal push
+and static publication of5a7da37 completed. Run43494274078SUCCESS;417CI+34local tests
+pass. All38 live files and unchanged snapshot verified; live390/1440 checks pass.
+No ROSTER activation or backend/config/automation/data changes. Prior approval-review
+entries are historical. Stop before separately authorized Stage3; no investigation
+or registry rerun needed.
