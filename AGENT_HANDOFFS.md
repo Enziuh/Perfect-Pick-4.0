@@ -187,3 +187,19 @@ compatibility testsPASS,0fail/skip; memory/whitespace validationPASS.
 no diagnostic rerun, no push/deploy/publish/activate/Apps Script/config/automation write.
 Next: separate Stage2 push/compatible-publication approval; revalidate existing
 artifact freshness then, without rewriting source proof or old release evidence.
+
+## Stage2 WEBSITE-ONLY approval review prepared
+
+Started9b34620 clean; verified0a13035 parents,19 Stage1 snapshot-only commits,
+17ahead/0behind LOCAL tracking28ff44c and exact snapshot bytes. Package verified.
+GitHub GET shows FIVE newer commits to the remote tip pinned in the Stage2 review,
+each individually snapshot-only;
+no unexpected code. No fetch or merge in this review. Old snapshots/artifacts expired.
+Current remote/live snapshot copied UNCHANGED into tmp/stage2-publication-review/
+website-compatible/ with seal. Production schema/privacy/23-ID/frozen-history checks,
+34 targeted tests and390/1440 cold+repeat browserPASS, no accuracy activation.
+Current38 public rollback files captured/sealed GET-only. No app/data edits or live
+operations. [Exact approval actions](docs/memory/STAGE2_WEBSITE_APPROVAL.md).
+Next requires owner approval for five-commit snapshot reintegration,push and STATIC
+WEBSITE publication ONLY. No Apps Script/publisher/config activation authorized.
+Snapshot expires2026-11-13T20:22:01.684Z; revalidate actual freshness/tip at execution.

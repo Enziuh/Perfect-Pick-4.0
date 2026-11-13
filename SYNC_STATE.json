@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "recordedDate": "2026-11-12",
-  "phase": "Stage1 snapshot-only integration complete; stopped pending Stage2 approval",
+  "recordedDate": "2026-11-13",
+  "phase": "Stage2 compatible website review ready; stop before owner-approved integration/push/publication",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "Authorized fetch and clean local merge completed; no push",
+    "status": "GitHub GET observes5 additional snapshot-only commits beyond local fetched tracking ref; no fetch/merge this turn",
     "lastObservedLocalTrackingCommit": "28ff44c5a206d885ac2be051336ad3f727f7edfe",
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
@@ -136,5 +136,40 @@
     "conflicts": false,
     "pushed": false,
     "productionChanged": false
+  },
+  "stage2WebsiteReview": {
+    "checkedAt": "2026-11-13T18:57:23.169Z",
+    "remoteCommitsAhead": 5,
+    "snapshotSha256": "db41a4ff7245d011d25372b0167ab3453751808cfa47f161abb09e1fd2972ad4",
+    "generatedAt": "2026-11-13T14:22:16.712Z",
+    "expiresAt": "2026-11-13T20:22:01.684Z",
+    "files": 38,
+    "productionSnapshotRegenerated": false,
+    "sourceAccuracyMetadataAbsent": true,
+    "approved23IdsAliasesUnchanged": true,
+    "frozenHistoryUnchanged": true,
+    "stagedDataByteExact": true,
+    "websiteSealSha256": "4b1afb4b7c1b08ee1ef83a3303d5c9e0cca1f574c4d43a5cd68f6b8f4e20233f",
+    "pushPerformed": false,
+    "publicationPerformed": false,
+    "remotePerCommitCheck": "All5 individually snapshot-only",
+    "compatibilityTests": {
+      "pass": 34,
+      "fail": 0,
+      "skip": 0
+    },
+    "browser": {
+      "widths": [
+        390,
+        1440
+      ],
+      "coldAndRepeat": true,
+      "legacyUnchanged": true,
+      "accuracyActivated": false
+    },
+    "rollbackPublicCapture": "38 files sealed; live snapshot matches remote hash",
+    "scope": "Compatible website approval preparation only; no fetch or merge",
+    "report": "docs/memory/STAGE2_WEBSITE_APPROVAL.md",
+    "remoteTipEvidence": "docs/memory/STAGE2_WEBSITE_APPROVAL.md; verified via GitHub GET, not fetched"
   }
 }

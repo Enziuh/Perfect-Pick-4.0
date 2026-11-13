@@ -6,14 +6,14 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Stage1 ONLY is complete: fetched19 snapshot-only commits and merged cleanly at
-0a13035495ed6c008a5651cd01e1b1299b0d29b9. Remote snapshot preserved byte-for-byte;
-all local implementation commits retained.34 targeted tests and integrity checksPASS.
-Read [Stage1 handoff](docs/memory/STAGE1_INTEGRATION.md), then
-[final release review](docs/memory/FINAL_RELEASE_REVIEW.md). Registry gate completed;
-do not rerun diagnostic/investigation. No push, publication, activation, live source
-or configuration change performed. STOP until separate Stage2 authorization.
-Existing release artifacts need freshness/source revalidation before later publication.
+Stage1 checkpoint verified. Stage2 WEBSITE-ONLY approval review prepared; read
+[exact actions](docs/memory/STAGE2_WEBSITE_APPROVAL.md). Actual remote advanced FIVE
+snapshot-only commits beyond fetched28ff44c; no fetch/merge performed this review.
+Old artifacts expired. Fresh compatible assets are staged from an unchanged current
+remote snapshot;34 tests and390/1440 cold+repeat ChromePASS. Accuracy remains off.
+STOP before integration/push/publication pending separate owner approval. Stage2
+website approval does NOT authorize the older plan's Apps Script publisher stage.
+Do not rerun completed roster/scoring investigations or regenerate production data.
 
 ## Repository map
 

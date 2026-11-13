@@ -137,3 +137,12 @@ before any push/live source update/flag activation/publication. API remainsv20.
 all snapshot-only, merged cleanly0a13035; local code/history preserved and working
 snapshot byte-identical to origin/develop.34 targeted tests and integrity checksPASS.
 No conflicts; no push or live changes. Separate Stage2 approval remains required.
+
+## Stage2 website review prepared, awaiting approval
+
+[Current actions and freshness](docs/memory/STAGE2_WEBSITE_APPROVAL.md).Stage1 facts
+match Git. Five remote automated commits since28ff44c are individually snapshot-only;
+not fetched/merged. Old artifacts expired. Fresh unchanged remote snapshot staged
+with compatible readers;34 tests and390/1440 browsers pass. No ROSTER activation,
+production regeneration or source/data edits. Website-only Stage2 scope is distinct
+from older release document's publisher-install section. Owner approval required.

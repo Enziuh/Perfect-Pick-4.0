@@ -67,3 +67,8 @@ E-STAGE1-INTEGRATION: [handoff](docs/memory/STAGE1_INTEGRATION.md), merge0a13035
 fetched remote28ff44c. Exact remote snapshot bytes, both histories and local code
 preserved;34 compatibility tests and schema/privacy/history checksPASS. Log is local
 /tmp/pp-stage1-compatibility.log; no production operation or diagnostic rerun.
+
+E-STAGE2-WEBSITE: [review](docs/memory/STAGE2_WEBSITE_APPROVAL.md).Current remote
+objects checked through GitHub GET, not fetched into Git. Five commits individually
+snapshot-only; current public snapshot/38-file rollback captured; unchanged-data
+compatible artifact sealed.34 tests/mobile+desktopPASS. No live change or activation.
