@@ -95,3 +95,14 @@ No accuracy activation, backend/config/automation changes or data regeneration.
 
 Memory validation626a84d permits decimal workflow identifiers while retaining Git hash
 checks, allowing the successful deployment run to be recorded without false failures.
+
+## 2026-11-13 — accuracy backend production activation
+
+- Installed reviewed compatible publisher and deployed API21 then API22 with two
+  accuracy flags; same endpoint/access, original pending editor restored exactly.
+-417 tests/rollback/API23registry/protected results/legacy endpoint parityPASS.
+- Integrated one new native snapshot-only commit400a4ba;38 current public hashesPASS.
+- Corrected static publication pending publisher-state access: Google403,Firefox
+  permission denied. Preserved active safe backend,clock,state and rollback evidence.
+- [Exact continuation](docs/memory/ACCURACY_PRODUCTION_EXECUTION.md); no protected
+  scoring,Form,trigger,NFL or private registry modification.

@@ -225,3 +225,20 @@ additional website dispatch for memory changes. Full release artifacts stay priv
 Memory tooling626a84d now distinguishes decimal workflow IDs from Git abbreviations;
 needed to record run43494274078. Memory validation passes; no publication asset code
 changed after5a7da37. This tooling update is documentation/integrity maintenance only.
+
+## Latest — API22 active; missing publisher-state access
+
+[Exact resume and rollback](docs/memory/ACCURACY_PRODUCTION_EXECUTION.md). Owner
+authorized full accuracy release; no routine approvals needed. API21 compatibility
+and API22 ROSTER flags deployed on same URL/access; only reviewed module changed
+from deployed20, pending editor restored exactly. Compatible publisher installed;
+Properties/timers/other source untouched.417 tests and live23-way mapping PASS.
+ActualAPI Isaias83/136,61.0%,Pancho83/136,61.0%;protected records/legacy endpoints EXACT.
+Single native snapshot-only400a4ba integrated ff-only. Public snapshot remains legacy
+at last38-file verification. Native clock may subsequently publish corrected data.
+Process read403; Firefox denied even after owner says enabled. Owner away; stop at
+missing-permission boundary, do not improvise state resets or broaden OAuth. Resolve
+app permission or obtain safe pp4InspectCloudGitHubReadOnly receipt, then complete
+existing publisher/Pages verification. No scoring/registry investigation rerun.
+Private artifacts/seals fresh until recorded expiry; regenerate if stale. Rollback20
+ready, keep dual readers until fresh legacy data. No corrected public release claimed.

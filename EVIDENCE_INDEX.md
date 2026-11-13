@@ -77,3 +77,10 @@ E-STAGE2-PUBLISHED: [completion](docs/memory/STAGE2_PUBLICATION_COMPLETE.md), co
 5a7da37 and run43494274078 verify/deploySUCCESS.417CI+34local tests;38 live file hashes
 exact at19:43UTC with unchanged snapshot. Mobile/desktopPASS,accuracyOFF. Raw logs/
 captures ignored locally. No backend/automation changes or diagnostic execution.
+
+E-ACCURACY-PRODUCTION: [execution](docs/memory/ACCURACY_PRODUCTION_EXECUTION.md).
+API21/22 metadata+source receipts,legacy endpoint parity,23runtime roster,417 tests,
+fresh real-source candidate and rollback in ignored tmp/accuracy-production-execution/.
+Public400a4ba/run43498535843 and38 live hashes verified; accuracy site not yet verified.
+Private source/config/IDs excluded. Google403/Firefox denial receipts are permission
+limitations, not evidence of failed scoring or successful corrected publication.

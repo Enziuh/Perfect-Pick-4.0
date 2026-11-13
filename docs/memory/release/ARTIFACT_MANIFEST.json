@@ -209,5 +209,39 @@
     "rosterAccuracyActivated": false,
     "nextApproval": "Stage3 live publisher/API source/version/config and subsequent accuracy publication; not authorized",
     "report": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
+  },
+  "productionAccuracyExecution": {
+    "status": "API_ACTIVE_STATIC_VERIFICATION_PENDING_PERMISSION",
+    "report": "docs/memory/ACCURACY_PRODUCTION_EXECUTION.md",
+    "apiCompatibleVersion": 21,
+    "apiActiveVersion": 22,
+    "rollbackVersion": 20,
+    "publisherSha256": "e2385205e586f19e02b2e55e8b2c7790731fed4adb71423466f07a7edadedcea",
+    "accuracyRules": "ROSTER_FINAL_V1",
+    "rosterFromWeek1": true,
+    "registryPlayers": 23,
+    "protectedResults": "EXACT_MATCH",
+    "testsPassed": 417,
+    "testsFailed": 0,
+    "lastVerifiedStaticCommit": "400a4baa57c8667e1f52966044bd22b7c3b6b3d0",
+    "staticRun": 43498535843,
+    "staticAccuracyVerified": false,
+    "currentCandidate": {
+      "sha256": "c5f47b56dcc6692f872b0c282544443ebcce2a5374b0b87f67df72a2c113b94f",
+      "expiresAt": "2026-11-14T02:17:56.750Z",
+      "published": false
+    },
+    "permissionBlocker": "Google process read403; Firefox computer control denied even after owner approval",
+    "nextApproval": "No routine release approval; actual app permission or safe publisher receipt needed",
+    "privateEvidence": "tmp/accuracy-production-execution (excluded)",
+    "candidateBrowserWidths": [
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "candidateBrowser": "PASS_COLD_REPEAT_REAL_PRODUCTION_DATA_LOCAL_ONLY",
+    "candidateApiStaticParity": "PASS_AVAILABLE_SCOPES_AND_RUNNING_COVERAGE"
   }
 }

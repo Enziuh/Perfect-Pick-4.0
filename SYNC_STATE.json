@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-13",
-  "phase": "Stage2 published and verified; stop before Stage3",
+  "phase": "Accuracy API22 active; static publication verification blocked by publisher-state access",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "Authorized Stage2 fetch/merge/normal push succeeded at5a7da37; final memory sync follows",
-    "lastObservedLocalTrackingCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
+    "status": "Single new snapshot-only clock commit clean ff-integrated; memory sync follows",
+    "lastObservedLocalTrackingCommit": "400a4baa57c8667e1f52966044bd22b7c3b6b3d0",
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
-    "status": "Compatible STATIC WEBSITE published and verified; accuracy/backend activation OFF",
+    "status": "API22 accuracy active; Stage2 compatible website remains; corrected static publication NOT verified",
     "codeCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
     "runId": 43494274078,
     "evidence": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
@@ -30,7 +30,7 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "Final owner clarification authorizes local accuracy correction only and preserves per-game cutoffs; strict weekly/Week11 policy is superseded. No push, deploy or live changes authorized.",
+  "authorizationNote": "Owner explicitly authorized remaining accuracy release and production verification; preserve per-game rules and all protected outcomes. Firefox computer access still denied; do not bypass.",
   "localImplementation": {
     "authorized": true,
     "executionState": "complete locally, verified",
@@ -39,7 +39,7 @@
     "scoringPolicy": "Existing per-game LATE_ENTRY_V1 unchanged; no new activation week",
     "rosterEvidence": "Owner unchanged23-person Week1 roster; historical approved mappings matched; provider enforces full registry check at opt-in",
     "accuracyVersion": "ROSTER_FINAL_V1",
-    "productionActivated": false,
+    "productionActivated": true,
     "commits": [
       "96f1663",
       "73698e4",
@@ -79,7 +79,7 @@
   },
   "releasePreparation": {
     "authorized": true,
-    "activated": false,
+    "activated": true,
     "snapshotRegenerated": false,
     "publisherFixCommit": "ef5300f",
     "artifactsDirectory": "tmp/accuracy-production-release/staged",
@@ -89,11 +89,7 @@
     "compatibilityTestsPassed": 34,
     "diagnosticSyntheticCasesPassed": 3,
     "localRollback": "Exact captured source/config and synthetic legacy endpoint parity verified",
-    "remainingApprovals": [
-      "Final review: remote snapshot-only integration/push",
-      "Compatible reader/publisher/API live update",
-      "Two-field activation and existing publisher regeneration/publication"
-    ]
+    "remainingApprovals": []
   },
   "finalReleaseReview": {
     "status": "READY_LOCALLY_WAITING_FINAL_APPROVAL",
@@ -101,7 +97,7 @@
     "manifest": "docs/memory/release/ARTIFACT_MANIFEST.json",
     "artifact": "tmp/accuracy-release-final/accuracy-candidate-v2",
     "localSnapshotRegenerated": true,
-    "liveFlagsActivated": false,
+    "liveFlagsActivated": true,
     "productionPublished": false,
     "snapshotSha256": "eced05a40d618e0006aff7f0030c6c3504246f63c8796e93e7c1fb7fe82f5b35",
     "expiresAt": "2026-11-13T02:00:35.228Z",
@@ -211,5 +207,39 @@
     "rosterAccuracyActivated": false,
     "nextApproval": "Stage3 live publisher/API source/version/config and subsequent accuracy publication; not authorized",
     "report": "docs/memory/STAGE2_PUBLICATION_COMPLETE.md"
+  },
+  "productionAccuracyRelease": {
+    "status": "API_ACTIVE_STATIC_VERIFICATION_PENDING_PERMISSION",
+    "report": "docs/memory/ACCURACY_PRODUCTION_EXECUTION.md",
+    "apiCompatibleVersion": 21,
+    "apiActiveVersion": 22,
+    "rollbackVersion": 20,
+    "publisherSha256": "e2385205e586f19e02b2e55e8b2c7790731fed4adb71423466f07a7edadedcea",
+    "accuracyRules": "ROSTER_FINAL_V1",
+    "rosterFromWeek1": true,
+    "registryPlayers": 23,
+    "protectedResults": "EXACT_MATCH",
+    "testsPassed": 417,
+    "testsFailed": 0,
+    "lastVerifiedStaticCommit": "400a4baa57c8667e1f52966044bd22b7c3b6b3d0",
+    "staticRun": 43498535843,
+    "staticAccuracyVerified": false,
+    "currentCandidate": {
+      "sha256": "c5f47b56dcc6692f872b0c282544443ebcce2a5374b0b87f67df72a2c113b94f",
+      "expiresAt": "2026-11-14T02:17:56.750Z",
+      "published": false
+    },
+    "permissionBlocker": "Google process read403; Firefox computer control denied even after owner approval",
+    "nextApproval": "No routine release approval; actual app permission or safe publisher receipt needed",
+    "privateEvidence": "tmp/accuracy-production-execution (excluded)",
+    "candidateBrowserWidths": [
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "candidateBrowser": "PASS_COLD_REPEAT_REAL_PRODUCTION_DATA_LOCAL_ONLY",
+    "candidateApiStaticParity": "PASS_AVAILABLE_SCOPES_AND_RUNNING_COVERAGE"
   }
 }

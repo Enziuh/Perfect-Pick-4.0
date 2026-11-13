@@ -155,3 +155,11 @@ pass. All38 live files and unchanged snapshot verified; live390/1440 checks pass
 No ROSTER activation or backend/config/automation/data changes. Prior approval-review
 entries are historical. Stop before separately authorized Stage3; no investigation
 or registry rerun needed.
+
+## Latest — API22 active, static accuracy verification pending access
+
+[Execution and permission boundary](docs/memory/ACCURACY_PRODUCTION_EXECUTION.md).
+Registry/investigation COMPLETE; do not repeat.417 tests and API23roster PASS; points,
+ranks,winners,qualification,prizes,tiebreaks EXACT. Publisher installed; no Form/trigger
+or ESPN change. Actual Firefox permission remains denied; process read403. Owner away.
+Native clock may publish at next due run; verify actual state before claiming completion.
