@@ -26,6 +26,9 @@ def validate():
     git('rev-parse', '--verify', state['baselineCommit'] + '^{commit}')
     text = '\n'.join((ROOT / p).read_text() for p in MEMORY)
     for commit in set(re.findall(r'\b[0-9a-f]{7,40}\b', text)):
+        # Decimal workflow/job IDs are metadata; full 40-character hashes still verify.
+        if commit.isdecimal() and len(commit) < 40:
+            continue
         git('rev-parse', '--verify', commit + '^{commit}')
     for p in MEMORY + EXTRA:
         for target in re.findall(r'\]\(([^)]+)\)', (ROOT / p).read_text()):

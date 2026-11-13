@@ -73,3 +73,7 @@ The integrity validator checks that phase2Authorized is a boolean; it does not f
 it false. Record the current owner-approved scope in SYNC_STATE.json and handoffs.
 Validation is an integrity check, not authorization to execute commands or deploy.
 The initial false-only check was specific to Phase1 and is superseded here.
+
+Workflow/job decimal identifiers are not treated as abbreviated Git hashes during
+reference validation. Full40-character hashes and hexadecimal abbreviations with
+letters still resolve against local Git. This permits recording real workflow IDs.
