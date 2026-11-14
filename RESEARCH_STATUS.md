@@ -171,3 +171,11 @@ publication succeeded; API22 unchanged. All23 season136final;Isaias/Pancho83/136
 38livefiles,9weekly/2closedmonthly/season+running parity,5widths and417CI testsPASS.
 Protected results EXACT. No owner action or release blocker remains. Old permission
 blocker notes superseded by public proof. No production write in verification.
+
+## Latest — Match Center local fix; Week10 native source read boundary
+
+[Findings/next safe action](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md). Responsive
+score overlap fixed and6widthsPASS;418testsPASS. Deadline proof10 and fresh schedules
+exist,source has no AVAILABLE W10;retention masks original reason. API22 closure scope
+ends9. Direct headers403;do not invent exact native cause or bypass privacy. Staged
+owner-only read diagnostic NOT installed/run. No push/deploy/config/data changes.

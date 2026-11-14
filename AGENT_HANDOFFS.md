@@ -256,3 +256,18 @@ Git fetch/merge/push/dispatch. New remote snapshot tip in final report verified 
 only; local public-data older. Do not deploy local stale data. No further release
 action; any future task requires its own scope,not reuse of historical authorization.
 Preserve rollback/private evidence and verify new memory package/checkpoint.
+
+## Latest — local Match Center work done; Week10 diagnostic boundary
+
+[Exact handoff](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md). b9c43b1CSS/grid plus
+layout regression passes320/360/390/430/768/1440;oldCSSfails320.0b52245 testsWeek10
+withheld source/beforedeadline/badcontrol/expiredproof and legitimate disclosure.
+Full418PASS. Live38files/periodparity/privacy/protected ranks/points/prizesEXACT.
+Week10 proof and14schedulesALREADY verified;API22hasclosureattestations1–9/no
+deadlineDisclosure. Private fallback10stillunavailable;retentionoverwritesitsreason.
+Headers-onlySheets403 prevents exact native cause; no missing picks/aliases/trigger
+failure invented. Staged pp4InspectWeek10DisclosureReadOnly in ignoredreviewfolder,
+3synthetic safety casesPASS,notinstalled/run. Need owner review/authorization before
+install/runonce. No production push/deploy/config/state/Form/trigger/data changes.
+Accuracy deploymentcomplete,do not repeat it. UI releasependingseparateapproval and
+newerremote snapshot preservation;do not publish olderlocalpublic-data.

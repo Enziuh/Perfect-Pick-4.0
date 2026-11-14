@@ -279,5 +279,33 @@
       "skip": 0
     },
     "report": "docs/memory/ACCURACY_PUBLICATION_VERIFIED.md"
+  },
+  "matchCenterWeek10Review": {
+    "report": "docs/memory/MATCH_CENTER_WEEK10_REVIEW.md",
+    "status": "LOCAL_UI_DONE_PRIVATE_SOURCE_READ_BOUNDARY",
+    "uiCommit": "b9c43b1",
+    "privacyTestCommit": "0b52245",
+    "tests": {
+      "pass": 418,
+      "fail": 0,
+      "skip": 0
+    },
+    "browserWidths": [
+      320,
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "redBaseline": "OVERLAP_REPRODUCED_320",
+    "livePrivacyProof": "Week10 deadline proof present,source picks/votes absent",
+    "nativeExactReason": "UNVERIFIED; header-only Sheets403",
+    "diagnostic": "tmp/match-center-review/Week10DisclosureReadOnly.gs (not installed/run)",
+    "productionChanges": false,
+    "nextOwnerAction": "Review and authorize one-time safe-output native read diagnostic; UI publication separately pending",
+    "liveSnapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+    "stagedDiagnosticSha256": "43cfd152750efef60116164459c7ce234c9b1f9cd588345bd9a89adb8655cd5a",
+    "fullTestLogSha256": "69cfaf7e7b63363f9c6125b9424f5a10d5a0890d18c45b177cd2709a8f09231a"
   }
 }

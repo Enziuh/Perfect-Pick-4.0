@@ -114,3 +114,11 @@ checks, allowing the successful deployment run to be recorded without false fail
 -38livehashes,API/static parity,5widthsPASS;successful Pages CI417/417.
 - Updated final memory/handoff only; no regeneration/redeploy/state/trigger or remote
   Git write. [Final evidence](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md).
+
+## 2026-11-13 — local Match Center score layout / Week10 disclosure review
+
+- b9c43b1 reserves logo/name/score/status layout;6widths,no overlap/overflow.
+-0b52245 strengthens synthetic Week10 source/privacy boundary tests;full418PASS.
+- Verified live deadline proof10 alreadypresent; private source still withheld.
+  Headers403 prevents exact native explanation;staged safe read diagnostic only.
+- [Report](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md);no push/deploy/production writes.

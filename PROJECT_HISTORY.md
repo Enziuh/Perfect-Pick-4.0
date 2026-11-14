@@ -64,3 +64,10 @@ Scheduled publisher produced ROSTER_FINAL_V1; Pages run43544425722SUCCESS.38file
 API/static period parity,23players136final,5-width browsersPASS.417CI testsPASS.
 Protected results EXACT. [Final evidence](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md).
 Verification only; no redeploy/state/trigger/production or remote Git writes.
+
+## November13 — Match Center layout and Week10 disclosure review
+
+Local b9c43b1 reserves score/name/logo/status regions; original320overlap reproduced.
+0b52245 extends Week10 privacy guards.418testsPASS. Public deadline proof10 already
+exists,but source unavailable; exact native reason requires private read access403.
+[Report/boundary](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md). No production change.

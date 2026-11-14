@@ -6,15 +6,15 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Accuracy release COMPLETE and verified read-only on November13,18:27–18:30Pacific.
-[Final evidence and all23 values](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md).
-API22 unchanged; scheduled publisher published ROSTER_FINAL_V1. Pages run43544425722
-SUCCESS,417CI tests;38 live hashes,API/static covered-scope parity and5-width live
-browsers PASS. All23 seasonGamesFinal136;Isaias/Pancho83/136,61.0%. Protected results
-EXACT pre-release match. No further release action or owner permission needed.
-Remote snapshot tip verified via GET only,not fetched; local public-data is older.
-Do not redeploy/regenerate/reset or repeat production actions. New work needs its own
-authorization. Prior pending/permission notes are historical,superseded by live proof.
+Match Center responsive score fix COMPLETE LOCALLY; Week10 disclosure investigation
+at private-source read boundary. [Latest report](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md).
+b9c43b1 CSS/layout test;0b52245 disclosure guards;418testsPASS,0fail/skip. No push,
+deploy,backend/Form/trigger/state/data change. Live Week10 deadline proof exists but
+source picks/votes unavailable; do NOT bypass. Direct header-only read403. Exact native
+source reason requires owner-reviewed staged read-only diagnostic; not installed/run.
+Accuracy release remains verified complete,API22 unchanged. Production publication and
+new diagnostic installation require explicit authorization. Preserve newer remote
+snapshot; local public-data is older. Do not repeat historical deployment actions.
 
 ## Repository map
 
