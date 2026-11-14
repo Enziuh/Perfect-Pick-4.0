@@ -32,12 +32,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Record Chrome runtime
+        run: /usr/bin/google-chrome --version
       - name: Build exact synthetic publication artifact
         run: node tools/security/public-artifact.cjs stage
       - name: Required offline security and browser tests
         env:
           CHROME_PATH: /usr/bin/google-chrome
-        run: node --test tests/*.test.cjs
+        # Browser test files each launch Chrome; avoid competing startups on shared runners.
+        run: node --test --test-concurrency=1 tests/*.test.cjs
       - name: Build separately approved API profile
         if: inputs.profile == 'api'
         env:
