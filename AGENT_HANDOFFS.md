@@ -284,3 +284,20 @@ metadata returnsINSUFFICIENT_EVIDENCE;no inferred source/alias approval.13focuse
 no diagnostic evaluation/execution/installation. Layout b9c43b1 unchanged. Owner must
 review source then run once in EXISTING PRIVATE publisher and remove ONLY newfile.
 No live API/config/state/Form/trigger/publishing approval or remote Git write implied.
+
+## Latest — CI/local diagnostic fixes prepared,not pushed
+
+[Resume report/allfailureannotations](docs/memory/WORKFLOW_FAILURES_WEEK10.md). Starting
+86b6c3f. GitHubshowsonefailedfrontendtoday with3Chrome startup watchdog failures;
+414pass3fail,deployskipped. Identical-SHA retry43544425722passed417/deployed;runner
+imagebuildsdiffer. No privacy/freshness/schema assertion failure.5ae7d8d changesonly
+workflowtestserialization+Chromeversionreceipt. e4f23f8 addsdiagnosticfixedstage and
+trim-compatibleheadersearch;no newreads. Full426localserialPASS(8newASTchecks),YAMLvalid.
+Owner reportedgenericMETADATA_READ_OR_SCHEMA_UNVERIFIED;fullsafereceipt unavailable,
+output2500lines. Toldnotto pastehuge/private logs orrerunoldscript. ExactWeek10native
+gateunverified;CIstartupfailuredoesnotexplainwithholdingafter successfulretry. New
+review-onlydiagnosticv2 inignoredworkflowreviewfolder,notinstalled/run. Layoutb9c43b1
+preserved,live38files/parity/privacy/protectedresultsEXACT;API22unchanged. No push,
+fetch/merge/dispatch/deploy/config/state/Form/trigger/data writes. Needownerapproval
+fornormalremoteintegration/push/staticworkflow,whichincludesdeploymentandlocalUIfix;
+preservecurrentsnapshot. No force/statereset/privacybypass or unrelatedappwork.

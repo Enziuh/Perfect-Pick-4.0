@@ -187,3 +187,12 @@ metadata-only wrapper excludes broad loaders,registry/config and network entirel
 Old diagnostic remainsBLOCKED. Owner/project gated,one safe log;matching metadata
 yieldsINSUFFICIENT_EVIDENCE.7static/13focused testsPASS;no native results invented.
 Next boundary is owner source review and one-time execution,not production repair.
+
+## Latest — CI environmental startup failure;Week10 independent
+
+[Exact failure/comparison/boundaries](docs/memory/WORKFLOW_FAILURES_WEEK10.md). One
+frontend failure today,3Chrome startup watchdogs;samecommit417tests+deploypassedlater.
+Runner image versions differ;lower-level stall unrecorded. Local serialized426suite
+PASS;CIhardening5ae7d8d notshipped. Week10 stillsource-withheld;ownergenericreceipt
+not proof of corrupted headers/aliases. e4f23f8 staged-safe diagnostic addsstage and
+trims metadata header whitespace;no broader reads. No large logs/rerun olddiagnostic.

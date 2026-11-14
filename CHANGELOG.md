@@ -130,3 +130,11 @@ checks, allowing the successful deployment run to be recorded without false fail
 -7newstatic/13focused checksPASS;diagnostic never evaluated,installed or executed.
 - [Owner review boundary](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md);no network
   production call,push/deploy,publishing or configuration/state changes this session.
+
+## 2026-11-13 — CI Chrome startup diagnosis/local hardening
+
+- Retrievedalltodayfailures/annotations;onefailedrun,3Chromestartup errors,notdata
+  assertions. Same-SHA retrypassed417/deployed;liveprotectedresults unchanged.
+-5ae7d8d serial testfiles+Chromeversionreceipt;local426PASS,no skips/gatesremoved.
+-e4f23f8 safe diagnosticstage/headertrim;owner metadata catch remainsunverifiedcause.
+- [Fullreport](docs/memory/WORKFLOW_FAILURES_WEEK10.md);no push/deploy/productionwrites.

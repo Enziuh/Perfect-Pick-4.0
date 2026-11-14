@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-13",
-  "phase": "Week10 minimum-metadata diagnostic ready locally for owner review/execution",
+  "phase": "CI browser startup failure identified; local hardening verified; Week10 native source cause unverified",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
@@ -30,7 +30,7 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "Owner authorized local diagnostic revision/static tests only; no diagnostic execution/installation,production changes,push/deploy/publishing or private-data expansion.",
+  "authorizationNote": "Current owner authorizes investigation/local fixes/tests/commits only. No push/deploy,publisher reset,live configuration/data/Form/trigger changes or private-read expansion.",
   "localImplementation": {
     "authorized": true,
     "executionState": "complete locally, verified",
@@ -290,7 +290,7 @@
     "nextOwnerAction": "Review and authorize one-time safe-output native read diagnostic; UI publication separately pending"
   },
   "week10MetadataDiagnostic": {
-    "status": "READY_LOCAL_NOT_INSTALLED_NOT_EXECUTED",
+    "status": "OWNER_REPORTED_GENERIC_METADATA_FAILURE;LOCAL_V2_STAGE_DIAGNOSTIC_READY_NOT_INSTALLED",
     "report": "docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md",
     "toolCommit": "248db91",
     "source": "tmp/match-center-review/Week10DisclosureMetadataReadOnly.gs",
@@ -302,6 +302,38 @@
     "diagnosticExecuted": false,
     "installed": false,
     "runtimeEvidence": "NONE;static review only",
-    "nextOwnerAction": "Review complete new source,then owner-only single execution in existing private publisher;share receipt and remove temporary file"
+    "nextOwnerAction": "No large log paste or old diagnostic rerun. Review stage-labelled v2 candidate before any one-time owner execution.",
+    "latestReview": "docs/memory/WORKFLOW_FAILURES_WEEK10.md",
+    "ownerReportedResult": "INSUFFICIENT_EVIDENCE / METADATA_READ_OR_SCHEMA_UNVERIFIED"
+  },
+  "workflowWeek10Investigation": {
+    "report": "docs/memory/WORKFLOW_FAILURES_WEEK10.md",
+    "status": "LOCAL_FIXES_VERIFIED_NOT_SHIPPED",
+    "failedRun": 43543074590,
+    "failedTests": 3,
+    "failure": "Chrome readiness startup watchdogs",
+    "failedRunTotals": {
+      "pass": 414,
+      "fail": 3
+    },
+    "successfulSameCommitRun": 43544425722,
+    "ciFixCommit": "5ae7d8d",
+    "diagnosticFixCommit": "e4f23f8",
+    "localSerialSuite": {
+      "pass": 426,
+      "fail": 0,
+      "skip": 0
+    },
+    "localEnvironment": "macOS Node26.12.1; new workflow not yet exercised in GitHub Linux Node22",
+    "allFailedRunAnnotations": {
+      "verify": 3,
+      "deploy": 0
+    },
+    "ownerDiagnosticReceipt": "INSUFFICIENT_EVIDENCE / METADATA_READ_OR_SCHEMA_UNVERIFIED (owner reported,not reproduced)",
+    "week10RootCause": "UNVERIFIED_NATIVE_SOURCE;CI failure did not cause persistent withholding after successful retry",
+    "newDiagnostic": "tmp/workflow-week10-review/Week10DisclosureMetadataReadOnly.v2.gs (owner review only)",
+    "newDiagnosticSha256": "0599ee49536a802637904c429a561d80fba5b52d8de9d83b13e82e57cb66a11e",
+    "productionOperations": "GET only;no writers/executions/dispatch",
+    "nextApproval": "Normal snapshot-preserving remote integration/push and existing static workflow;separate review before revised owner diagnostic execution"
   }
 }

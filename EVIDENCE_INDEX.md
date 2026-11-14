@@ -102,3 +102,9 @@ E-W10-METADATA-DIAGNOSTIC: [review](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIE
 248db91 generic renderer+7AST safety tests;13focused checksPASS. Bound source/receipt
 in ignored tmp/match-center-review/. No function evaluation/production execution or
 installation. Old blocked artifact SHA preserved. Runtime cause remains unverified.
+
+E-CI-W10-FAILURES: [consolidated report](docs/memory/WORKFLOW_FAILURES_WEEK10.md).
+Alltodayruns/jobs/annotations and failed/successlogs in ignoredworkflow-week10-review.
+43543074590failed3Chromestartups;43544425722sameSHApassed417+deployed. All3verify
+annotations retrieved,0deploy.5ae7d8d/e4f23f8localfixes;426serial+8ASTPASS. Fresh
+38livefile/parity/privacy/protected recordsauditPASS. Week10 nativecauseunverified.

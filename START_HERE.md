@@ -6,15 +6,16 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Week10 metadata-only diagnostic READY LOCALLY FOR OWNER REVIEW;NOT installed/run.
-[Safety review and exact steps](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md).
-Tool/static-test commit248db91. NEW pp4InspectWeek10DisclosureMetadataOnce uses bounded
-Week10 header/Results/control metadata only;no context/registry/config/network reads.
-Old Week10DisclosureReadOnly.gs remains BLOCKED.13focused testsPASS(7newstatic).
-No production calls or remote Git operations. Existing layout fix b9c43b1 preserved;
-accuracy deployment remains complete. Next boundary:owner review,one-time install/run
-in existing PRIVATE publisher,share only sanitized JSON,remove only temporary file.
-Matching metadata returns INSUFFICIENT_EVIDENCE;never broaden reads without approval.
+CI browser-startup investigation COMPLETE;local CI/diagnostic fixes tested,not shipped.
+[Exact failures,all annotations,and Week10 boundary](docs/memory/WORKFLOW_FAILURES_WEEK10.md).
+One failed frontend run today had3Chrome startup failures;identical-SHA retry succeeded.
+5ae7d8d serializes test files/logsChrome version;426serialtestsPASS. e4f23f8 adds safe
+metadata diagnostic stage and native-compatible trimmed headers;8static safety checks.
+Owner's generic diagnostic failure does not establish Week10's private source cause.
+No need to send2500lines or rerun olddiagnostic. New stage-labelled source staged for
+review only,notinstalled/run. Layout b9c43b1 preserved. API22/publicsnapshot remain
+verified/protected;no push/deploy/state/Form/trigger/data changes. New production
+integration/push/publication and any owner diagnostic execution require approval.
 
 ## Repository map
 

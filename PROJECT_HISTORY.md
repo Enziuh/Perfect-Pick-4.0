@@ -77,3 +77,11 @@ exists,but source unavailable; exact native reason requires private read access4
 248db91 replaces broad-loader approach with bounded header/Results/control searches
 and owner/project guard. Old diagnostic BLOCKED,unchanged.13focused checksPASS,7new
 static tests;no diagnostic execution/production call. [Review](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md).
+
+## November13 — CI startup failures isolated;local hardening ready
+
+[Evidence/allannotations](docs/memory/WORKFLOW_FAILURES_WEEK10.md). Failed43543074590
+had3Chrome startup errors(414pass/3fail),not snapshot/privacy assertions;identical-SHA
+retry43544425722succeeded.5ae7d8d serializes tests/logsChrome version;426localPASS.
+e4f23f8 adds safe diagnosticstage/headertrim;owner generic metadata failure doesnot
+identify Week10 source cause. No push/deploy/state/automation changes.

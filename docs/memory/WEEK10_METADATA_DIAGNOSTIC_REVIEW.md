@@ -144,3 +144,12 @@ original and new reviewed artifact. Stop at owner review/execution;no broad load
 privacy bypass to compensate for INSUFFICIENT_EVIDENCE. Existing Match Center layout
 fix remains local,accuracy release remains complete,and no production approval is
 inferred from historical entries.
+
+## Subsequent owner result/local v2 — original installation artifact superseded
+
+Owner reported INSUFFICIENT_EVIDENCE/METADATA_READ_OR_SCHEMA_UNVERIFIED,not independently
+reproduced. Do not reinstall/rerun the old artifact or send2500lines.
+[Current evidence/review candidate](WORKFLOW_FAILURES_WEEK10.md) adds safe fixedstage
+and native-compatible trimmed header discovery,no broadened read. V2 is localonly,
+notinstalled/run;requires newownerreviewbefore replacing ONLY temporary diagnostic.
+CIbrowserstartupfailure is independent of this native-read boundary.

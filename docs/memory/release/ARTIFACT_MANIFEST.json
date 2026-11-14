@@ -322,5 +322,37 @@
     "installed": false,
     "runtimeEvidence": "NONE;static review only",
     "nextOwnerAction": "Review complete new source,then owner-only single execution in existing private publisher;share receipt and remove temporary file"
+  },
+  "workflowWeek10Investigation": {
+    "report": "docs/memory/WORKFLOW_FAILURES_WEEK10.md",
+    "status": "LOCAL_FIXES_VERIFIED_NOT_SHIPPED",
+    "failedRun": 43543074590,
+    "failedTests": 3,
+    "failure": "Chrome readiness startup watchdogs",
+    "failedRunTotals": {
+      "pass": 414,
+      "fail": 3
+    },
+    "successfulSameCommitRun": 43544425722,
+    "ciFixCommit": "5ae7d8d",
+    "diagnosticFixCommit": "e4f23f8",
+    "localSerialSuite": {
+      "pass": 426,
+      "fail": 0,
+      "skip": 0
+    },
+    "localEnvironment": "macOS Node26.12.1; new workflow not yet exercised in GitHub Linux Node22",
+    "allFailedRunAnnotations": {
+      "verify": 3,
+      "deploy": 0
+    },
+    "ownerDiagnosticReceipt": "INSUFFICIENT_EVIDENCE / METADATA_READ_OR_SCHEMA_UNVERIFIED (owner reported,not reproduced)",
+    "week10RootCause": "UNVERIFIED_NATIVE_SOURCE;CI failure did not cause persistent withholding after successful retry",
+    "newDiagnostic": "tmp/workflow-week10-review/Week10DisclosureMetadataReadOnly.v2.gs (owner review only)",
+    "newDiagnosticSha256": "0599ee49536a802637904c429a561d80fba5b52d8de9d83b13e82e57cb66a11e",
+    "productionOperations": "GET only;no writers/executions/dispatch",
+    "nextApproval": "Normal snapshot-preserving remote integration/push and existing static workflow;separate review before revised owner diagnostic execution",
+    "remoteSnapshotCommit": "c03c053c6e6165110cad3d458474a3ac0617d470",
+    "liveSnapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4"
   }
 }
