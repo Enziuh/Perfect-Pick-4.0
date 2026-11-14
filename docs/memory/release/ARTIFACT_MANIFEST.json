@@ -354,5 +354,53 @@
     "nextApproval": "Normal snapshot-preserving remote integration/push and existing static workflow;separate review before revised owner diagnostic execution",
     "remoteSnapshotCommit": "c03c053c6e6165110cad3d458474a3ac0617d470",
     "liveSnapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4"
+  },
+  "consolidatedWebsiteRelease": {
+    "state": "READY_LOCAL_STOP_BEFORE_PUSH_PUBLICATION",
+    "at": "2026-11-14T04:29:14.093Z",
+    "sourceCommit": "557c7c8c4e1983971341657e5a578dd20bca9f5c",
+    "snapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+    "snapshotGeneratedAt": "2026-11-14T01:51:44.219Z",
+    "expiresAt": "2026-11-14T07:51:38.618Z",
+    "accuracyVersion": "ROSTER_FINAL_V1",
+    "players": 23,
+    "publicFiles": 38,
+    "changedPublicFiles": [
+      "styles.css"
+    ],
+    "unchangedPublicFiles": 37,
+    "rollbackPublicFiles": 38,
+    "websiteSealSha256": "261297a08684e89312710c38c3eddfb0649240e853a8a0183f46541dd6538a36",
+    "rollbackSealSha256": "088b8cd836cd5b185f8f31e87f44e7f093621a59c68e5933179b01142b4b1889",
+    "snapshotRegenerated": false,
+    "publicationPerformed": false,
+    "finalVerifiedAt": "2026-11-14T04:35:46.624Z",
+    "fullTests": {
+      "pass": 426,
+      "fail": 0,
+      "skip": 0
+    },
+    "browserWidths": [
+      320,
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "browserSamples": 12,
+    "rollbackRestoration": "38_EXACT_HASHES",
+    "linuxCI": "Pending owner-approved push;no local Linux runtime;existing workflow deploys after verify",
+    "diagnosticExecution": "Unavailable:no API-executable deployment and v2 not installed",
+    "productionChanges": 0,
+    "report": "docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md",
+    "integrationCommit": "557c7c8c4e1983971341657e5a578dd20bca9f5c",
+    "privateAccess": {
+      "apiExecutableDeployments": 0,
+      "webDeployments": 1,
+      "stageVersionInstalled": false,
+      "temporaryFile": "pp4InspectWeek10DisclosureMetadataOnce",
+      "directExecution": "UNAVAILABLE_WITH_EXISTING_API_ROUTES"
+    }
   }
 }

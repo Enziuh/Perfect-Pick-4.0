@@ -85,3 +85,11 @@ had3Chrome startup errors(414pass/3fail),not snapshot/privacy assertions;identic
 retry43544425722succeeded.5ae7d8d serializes tests/logsChrome version;426localPASS.
 e4f23f8 adds safe diagnosticstage/headertrim;owner generic metadata failure doesnot
 identify Week10 source cause. No push/deploy/state/automation changes.
+
+## November13 — consolidated website release prepared
+
+557c7c8 cleanmerge preserves newerremote snapshot and alllocal fixes.38-file artifact
+changesONLYCSS;426fulltests/12browser samplesPASS.37files/snapshotunchanged;rollback
+38hashes/simulationPASS. [Scope/actions](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
+No push/pub. PrivatepublisherhasnoAPIexecutiondeployment;oldtemporarydiagnosticexists,
+v2absent. Oneowneraction updates/runs existingtemporaryfile,notanotherinstallation.

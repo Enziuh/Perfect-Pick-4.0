@@ -301,3 +301,20 @@ preserved,live38files/parity/privacy/protectedresultsEXACT;API22unchanged. No pu
 fetch/merge/dispatch/deploy/config/state/Form/trigger/data writes. Needownerapproval
 fornormalremoteintegration/push/staticworkflow,whichincludesdeploymentandlocalUIfix;
 preservecurrentsnapshot. No force/statereset/privacybypass or unrelatedappwork.
+
+## Latest — consolidated release READY LOCALLY;stopbefore publication/private access
+
+[Exact release/restart](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md). Start706f9e8,
+authorizedfetchoneSNAPSHOT-ONLYc03c053,cleanmerge557c7c8preservesalllocalcode/history.
+Candidate38files,ONLYstyles.csschanged;all37othersincldataexactcurrentproduction.
+426fullserialPASS,12browser samples320/360/390/430/768/1440PASS,rollback38hashes/
+CSSsimulation/reversepatchchecksPASS. Privacy/points/ranks/prizes/qualificationEXACT.
+No localLinuxruntime;newLinuxCIneedspushapprovalandexistingstaticworkflowdeployson
+success. Data/artifactexpiresNov14 07:51:38UTC;rechecktip/freshnessbeforeanyrelease.
+Privatecloudprojecthas0APIEXEC,oneWEB_APPfixedrouter;oldtempfile
+pp4InspectWeek10DisclosureMetadataOnce.gsinstalledat6b0eSHA,v2NOTinstalled. Supported
+directexecutionunavailable. ONEowneraction:replaceONLYexistingtempfilewithreviewedv2,
+runwrapperonce,shareONLYJSON,removeONLYtempfile. No newscript/APIdeployment/OAuth
+expansionortrigger/state change. NativeWeek10gatenotprovenbymetadata-onlydiagnostic.
+No push/pub/GASexecution/config/Form/trigger/score/datawrites. Stopatdeployment/
+privateownerexecutionboundary;scopeCSS+CI,notaccuracy/backendreactivation.

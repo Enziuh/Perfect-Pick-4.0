@@ -196,3 +196,12 @@ Runner image versions differ;lower-level stall unrecorded. Local serialized426su
 PASS;CIhardening5ae7d8d notshipped. Week10 stillsource-withheld;ownergenericreceipt
 not proof of corrupted headers/aliases. e4f23f8 staged-safe diagnostic addsstage and
 trims metadata header whitespace;no broader reads. No large logs/rerun olddiagnostic.
+
+## Latest — consolidated website locally ready,publication/access boundary
+
+[Release manifest and exact owner action](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
+Authorizedsnapshot-onlymerge557c7c8preservesaccuracy/currentdata. PublicCSSonlydelta,
+CI5ae7d8d retained,426fulltests+6widthsPASS. LinuxCIpendingpushapproval;workflowdeploys
+afterverify. DirectdiagnosticAPIunavailable(0EXECUTION_API),v1stillinstalled. Owner
+canreplaceexistingtemporaryfilewithv2/runonce;no newscriptinstallation. No newnative
+rootcauseclaimed;matchingmetadata remainsINSUFFICIENT_EVIDENCE. No productionchanges.

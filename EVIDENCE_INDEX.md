@@ -108,3 +108,9 @@ Alltodayruns/jobs/annotations and failed/successlogs in ignoredworkflow-week10-r
 43543074590failed3Chromestartups;43544425722sameSHApassed417+deployed. All3verify
 annotations retrieved,0deploy.5ae7d8d/e4f23f8localfixes;426serial+8ASTPASS. Fresh
 38livefile/parity/privacy/protected recordsauditPASS. Week10 nativecauseunverified.
+
+E-CONSOLIDATED-WEBSITE: [release report](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
+557c7c8merge,426tests,12actual-artifactbrowser samples,38sealedcandidate/rollbackfiles,
+37unchanged+snapshotexact andprotectedresults/parityPASS. Ignoredconsolidated-release
+receiptsincludeGET-onlydeployment/sourceaccesscheck:0APIEXEC,existingv1tempfile,v2
+notinstalled;existingwebroutehasnoexecutionhook. No push/deploy/run/statechanges.

@@ -138,3 +138,13 @@ checks, allowing the successful deployment run to be recorded without false fail
 -5ae7d8d serial testfiles+Chromeversionreceipt;local426PASS,no skips/gatesremoved.
 -e4f23f8 safe diagnosticstage/headertrim;owner metadata catch remainsunverifiedcause.
 - [Fullreport](docs/memory/WORKFLOW_FAILURES_WEEK10.md);no push/deploy/productionwrites.
+
+## 2026-11-13 — consolidate tested website release without publishing
+
+-557c7c8 integrates approvedsnapshot-onlyremotecommit;preservesalllocalfixes.
+-38sealedcandidatefiles:ONLYCSSdelta,37unchanged;426tests/12browser samplesPASS.
+-38filerollbackcapture+restorationsimulationPASS;LinuxCIpendingownerpushapproval.
+- Read-onlyprivateprojectcheckprovesnoAPIexecutiondeployment;v1temporarydiagnostic
+  exists,v2absent. Oneownerupdate/run existingfile actionprepared.
+- [Scope/rollback](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md);no push/publication
+  orprivate-project/config/Forms/triggers/state changes.

@@ -6,16 +6,17 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-CI browser-startup investigation COMPLETE;local CI/diagnostic fixes tested,not shipped.
-[Exact failures,all annotations,and Week10 boundary](docs/memory/WORKFLOW_FAILURES_WEEK10.md).
-One failed frontend run today had3Chrome startup failures;identical-SHA retry succeeded.
-5ae7d8d serializes test files/logsChrome version;426serialtestsPASS. e4f23f8 adds safe
-metadata diagnostic stage and native-compatible trimmed headers;8static safety checks.
-Owner's generic diagnostic failure does not establish Week10's private source cause.
-No need to send2500lines or rerun olddiagnostic. New stage-labelled source staged for
-review only,notinstalled/run. Layout b9c43b1 preserved. API22/publicsnapshot remain
-verified/protected;no push/deploy/state/Form/trigger/data changes. New production
-integration/push/publication and any owner diagnostic execution require approval.
+Consolidated WEBSITE release READY LOCALLY;STOP before push/publication/private execution.
+[Exact scope,verification,rollback and owner action](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
+557c7c8 cleanly integrates ONLY newer remote snapshot c03c053;all local fixes preserved.
+38-file candidate changesONLYstyles.css;37others/snapshotBYTE-UNCHANGED.426fulltestsPASS,
+12browser samples/sixwidthsPASS,privacy/parity/protected resultsEXACT. Artifact expires
+Nov14 07:51:38UTC(Nov13 23:51Pacific);revalidate/restage if stale orremoteadvances.
+No localLinuxruntime;newGitHubCI needsapprovedpush and existingworkflowcanpublish.
+Privatepublisher0API-executabledeployments;oldtemporarydiagnosticinstalled,v2absent.
+Oneowneraction:replacecontents of EXISTING temporary pp4InspectWeek10DisclosureMetadataOnce.gs
+withreviewedv2,runwrapperonce,shareONLYJSON,removeONLYtemporaryfile. No newinstallation,
+APIdeployment,scope/trigger/state/score/Form change. No push/deploy/publication occurred.
 
 ## Repository map
 
