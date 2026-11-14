@@ -3,6 +3,9 @@
 const path=require('node:path'),{bundle}=require('../api/bundle.cjs'),{checkAppsScriptCompatibility}=require('../verification/gas-compatibility.cjs');
 function render(){
  let source=String.raw`// Private owner clock handler ONLY. No doGet/doPost/web deployment.
+// Temporary source-only switch. OFF unless separately approved; expires within24h.
+const PP4_WEEK10_TELEMETRY_ENABLED=false;
+const PP4_WEEK10_TELEMETRY_UNTIL=0;
 function pp4CloudOwn_(o,k){return Object.prototype.hasOwnProperty.call(o,k);}
 function pp4CloudClone_(value){return JSON.parse(JSON.stringify(value));}
 function pp4CloudSnapshotConfig_(){try{
@@ -36,16 +39,19 @@ function pp4CloudSnapshotTick(){
 // Reviewed read-only fallback for reopened weeks; opt-in private config ONLY.
 function pp4CloudDeadlineSource_(publicReply,c){
  publicReply=(${bundle(path.resolve(__dirname,'../api/source-control.cjs'))}).normalizeSource(publicReply,Date.now());
+ const diagnostic=(${bundle(path.resolve(__dirname,'../verification/disclosure-telemetry.cjs'))}).create({enabled:PP4_WEEK10_TELEMETRY_ENABLED,until:PP4_WEEK10_TELEMETRY_UNTIL,now:()=>Date.now(),sink:receipt=>console.log(receipt)});
  const provider=(${bundle(path.resolve(__dirname,'../api/legacy-provider.cjs'))});
  const revision=publicReply.snapshot.revision;
  const cfg={enabled:true,publicationApproved:true,revision,deadlineDisclosure:true,lateEntryRules:'LATE_ENTRY_V1',lateEntryStartWeek:9,prizeParticipants:23,form:publicReply.form,authority:{registryAliases:c.approvedAliases.map(a=>({player:a.player,alias:a.alias,sourceLabel:a.alias,approved:true,revision})),closures:publicReply.snapshot.weeks.filter(w=>w.week<=8&&w.entry.status==='CLOSED').map(w=>({week:w.week,snapshotRevision:revision,closureRevision:w.entry.revision,status:'CLOSED',mechanism:'OWNER_VERIFIED_CLOSURE',verifiedClosed:true,checkedAt:w.entry.checkedAt,validUntil:w.entry.validUntil,deadline:w.entry.deadline})),decisions:publicReply.snapshot.months.filter(m=>m.competitionComplete).map(m=>({key:m.key,snapshotRevision:revision,complete:true,verifiedAt:publicReply.snapshot.generatedAt}))}};
  // Preserve source-authorized accuracy through the reopened-week read-only fallback.
  if(publicReply.snapshot.accuracy){cfg.accuracyRules=publicReply.snapshot.accuracy.version;cfg.rosterFromWeek1=true;}
- const result=provider.createLegacyProvider({config:()=>cfg,now:()=>Date.now(),context:loadContext_,prizes:buildPrizeDashboardFromContext_,latest:getLatestSubmissionPerWeek_,prediction:getTiebreakPredictionForWeek_,score:scoreSubmissionForWeek_,timezone:ctx=>ctx.ss.getSpreadsheetTimeZone(),
+ try{
+ const result=provider.createLegacyProvider({observeWeek10:diagnostic.record,config:()=>cfg,now:()=>Date.now(),context:loadContext_,prizes:buildPrizeDashboardFromContext_,latest:getLatestSubmissionPerWeek_,prediction:getTiebreakPredictionForWeek_,score:scoreSubmissionForWeek_,timezone:ctx=>ctx.ss.getSpreadsheetTimeZone(),
  nativeResponses:ctx=>provider.readNativeResponses(ctx.ss.getSheetByName(PP3.RESPONSE_SHEET),ctx.games.map(g=>g.header)),
  formState:ctx=>{const link=ctx.ss.getFormUrl();if(!link)return null;const form=FormApp.openByUrl(link);return {acceptingResponses:form.isAcceptingResponses(),responderMatchesVerified:publicReply.form&&form.getPublishedUrl()===publicReply.form.url};},
  cutoffEvidence:(ctx,definitions,weeks)=>{const control=readFormControl_(ctx.ss);return weeks.map(week=>{let events=[];try{events=fetchESPNNFLWeek3_0_(week).map(parseESPNNFLEvent3_0_);}catch{}return provider.buildScheduleEvidence({week,deadline:null,hardCutoff:true,firstGame:null,revision,verifiedAt:new Date().toISOString(),timezone:ctx.ss.getSpreadsheetTimeZone(),definitions:[...definitions.values()],events,normalizeTeam:normalizeNFLTeamKey3_0_});});}})();
  return (${bundle(path.resolve(__dirname,'../api/source-control.cjs'))}).normalizeSource(result,Date.now());
+ }finally{diagnostic.finish();}
 }
 // Editor-only GET diagnostics. No registry/source read, state setter, PUT, POST or dispatch.
 function pp4InspectCloudGitHubReadOnly(){

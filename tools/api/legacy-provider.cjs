@@ -1,5 +1,6 @@
 'use strict';
 const late=require('../scoring/late-entry.cjs');
+const telemetry=require('../verification/disclosure-telemetry.cjs');
 const {createParser}=require('../verification/timestamps.cjs');
 const {readNativeResponses}=require('../scoring/native-responses.cjs');
 const {buildScheduleEvidence}=require('../scoring/schedule-evidence.cjs');
@@ -16,12 +17,15 @@ const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
 // No service access, writer, replacement identity registry or score-sync implementation.
 function createLegacyProvider(deps){
  return function read(){
+  let telemetryStage='CONTEXT';
+  const trace=event=>{try{if(typeof event.stage==='string')telemetryStage=event.stage;telemetry.observe(deps.observeWeek10,event);}catch{}};
+  const stage=value=>{telemetryStage=value;trace({stage:value});};
   try{
    const cfg=deps.config();if(cfg?.enabled!==true)return {state:'DISABLED'};
    if(cfg.publicationApproved!==true)throw Error();
    let now=deps.now();const at=new Date(now).toISOString(),revision=cfg.revision;
    if(!Number.isSafeInteger(revision)||revision<0)throw Error();
-   const rawContext=deps.context();let ctx=rawContext,nativeSource=null;
+   stage('CONTEXT');const rawContext=deps.context();let ctx=rawContext,nativeSource=null;
    // A displayed date format is presentation, not an instant. Opt-in reads use
    // native timestamps for historical selection too; no Sheet/form values change.
    if(cfg.nativeTimestampCompatibility===true){
@@ -32,9 +36,10 @@ function createLegacyProvider(deps){
     ctx={...rawContext,responses:rawContext.responses.map(row=>{const values=keyed.get(fingerprint(row));if(!values?.length)throw Error();return {...row,Timestamp:values.shift()};})};
     if([...keyed.values()].some(values=>values.length))throw Error();
    }
-   const prizes=deps.prizes(ctx),games=[],definitions=new Map();
+   stage('PRIZES');const prizes=deps.prizes(ctx),games=[],definitions=new Map();
    const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ').replace(/\s+vs\.?\s+/g,' vs ');
    const team=v=>{const matches=Object.entries(TEAM_NAMES).filter(([abbr,name])=>norm(v)===abbr.toLowerCase()||norm(v).split(' ').pop()===norm(name).split(' ').pop());if(matches.length!==1)throw Error();return matches[0][0];};
+   stage('GAME_MAPPING');
    for(const [week,lookup] of Object.entries(ctx.resultLookup))for(const r of Object.values(lookup)){
     const w=Number(week),home=team(r.team1),away=team(r.team2);
     if(!Number.isInteger(w)||w<1||w>18||home===away||norm(r.game)!==norm(r.team1+' vs '+r.team2))throw Error();
@@ -45,6 +50,7 @@ function createLegacyProvider(deps){
    const maxAgeMs=120000;
    const policy={now,revision,maxAgeMs,aliases:new Map(),closures:new Map(),completeWeeks:new Map(),games:definitions,teams:new Map(Object.entries(TEAM_NAMES).map(([a,n])=>[n,a])),periods:[],decisions:new Map(),accounting:new Map(),seasonWeeks:weeks};
    if(cfg.lateEntryRules!==undefined){if(cfg.lateEntryRules!==late.RULE||!(Array.isArray(cfg.lateEntryEvidence)||typeof deps.cutoffEvidence==='function'))throw Error();if(typeof deps.timezone!=='function'||typeof deps.nativeResponses!=='function')throw Error();policy.timeParser=createParser(deps.timezone(ctx));if((cfg.lateEntryEvidence||[]).some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryRules=late.RULE;policy.lateEntryStartWeek=cfg.lateEntryStartWeek??9;if(!Number.isInteger(policy.lateEntryStartWeek)||policy.lateEntryStartWeek<9||policy.lateEntryStartWeek>18)throw Error();policy.lateEntryEvidence=new Map((cfg.lateEntryEvidence||[]).map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==(cfg.lateEntryEvidence||[]).length)throw Error();}
+   stage('ALIASES');
    const authority=cfg.authority;
    if(authority){
     if(authority.aliases!==undefined&&authority.registryAliases!==undefined)throw Error();
@@ -55,9 +61,13 @@ function createLegacyProvider(deps){
     if(['OPEN','UPCOMING'].includes(prizes.formControl?.status))policy.closures.delete(Number(prizes.formControl.activeWeek));
     policy.decisions=configuredMap(authority.decisions,'decision');policy.accounting=configuredMap(authority.accounting,'accounting');
    }
+   policy.observeWeek10=trace;
    policy.periods=(prizes.periods||[]).map(p=>({key:p.periodKey,startWeek:p.startWeek,endWeek:p.endWeek,designatedGame:p.tiebreakRule?.method==='Combined Points'?definitions.get(p.endWeek+'|'+norm(p.tiebreakRule.game))?.game??null:null}));
+   stage('FORM');
    let observedForm=null;const verifyCurrentForm=cfg.verifyCurrentForm===true||late.applies(policy,Number(prizes.formControl?.activeWeek));
    if(verifyCurrentForm){try{observedForm=deps.formState(ctx);}catch{}if(observedForm?.responderMatchesVerified!==true||observedForm.acceptingResponses!==false)policy.closures.delete(Number(prizes.formControl?.activeWeek));}
+   trace({formIdentityVerified:observedForm?.responderMatchesVerified===true,formClosed:observedForm?.acceptingResponses===false});
+   stage('SCHEDULE');
    if(policy.lateEntryRules===late.RULE&&typeof deps.cutoffEvidence==='function'){const records=deps.cutoffEvidence(ctx,definitions,[...new Set([...policy.closures.keys(),...(cfg.deadlineDisclosure===true?require('../disclosure/weekly-deadline.cjs').GRANTS.map(g=>g.week):[])])].filter(w=>late.applies(policy,w)));if(!Array.isArray(records)||records.length>18||records.some(e=>e.timezone!==policy.timeParser.timeZone))throw Error();policy.lateEntryEvidence=new Map(records.map(e=>[e.week,e]));if(policy.lateEntryEvidence.size!==records.length)throw Error();now=deps.now();policy.now=now;}
    policy.deadlineDisclosures=new Map();
    if(cfg.deadlineDisclosure===true)for(const grant of require('../disclosure/weekly-deadline.cjs').GRANTS){
@@ -66,7 +76,11 @@ function createLegacyProvider(deps){
     const record=require('../disclosure/weekly-deadline.cjs').record(proof,now,week);
     if(record&&late.verified(cutoff,now,maxAgeMs)&&cutoff.revision===revision){policy.deadlineDisclosures.set(week,record);const status=Number(control.activeWeek)!==week?(policy.closures.get(week)?.entry.status||'UNKNOWN'):observedForm?.responderMatchesVerified===true?(observedForm.acceptingResponses?'OPEN':control.status==='CLOSED'?'CLOSED':'UNKNOWN'):'UNKNOWN';policy.closures.set(week,{snapshotRevision:revision,entry:{status,authority:'OFFICIAL',revision,checkedAt:observedAt,validUntil:new Date(now+maxAgeMs).toISOString(),deadline:record.deadline}});}
    }
+   try{trace({closurePresent:policy.closures.has(10),deadlineVerified:policy.deadlineDisclosures.has(10),scheduleVerified:late.verified(policy.lateEntryEvidence?.get(10),now,maxAgeMs)&&[...definitions.values()].filter(g=>g.week===10).every(g=>late.cutoff(g.game,policy.lateEntryEvidence.get(10),now,maxAgeMs)!==null)});}catch{}
+   stage('SUBMISSIONS');
    const latest=policy.closures.size?(policy.lateEntryRules===late.RULE&&[...policy.closures.keys()].some(w=>late.applies(policy,w))?(nativeSource||deps.nativeResponses(ctx)).flatMap(response=>{let time;try{time=Date.parse(policy.timeParser.parse(response.Timestamp));}catch{return [];}if(!Number.isFinite(time)||time<=0||time>now)return [];return [...new Set(ctx.games.filter(g=>String(response[g.header]??'').trim()).map(g=>g.week))].map(week=>({phone:normalizePhone(response['Phone Number']),week,timestamp:time,response})).filter(r=>r.phone&&late.applies(policy,r.week));}).concat(Object.values(deps.latest(ctx.responses,ctx.games)).filter(r=>!late.applies(policy,r.week))):Object.values(deps.latest(ctx.responses,ctx.games))):[];
+   trace({submissionsProcessed:true});
+   stage('SOURCE');
    // Match the original season scope: every created response-game week, not just disclosed weeks.
    const seasonWeeks=[...new Set(ctx.games.map(g=>g.week))].sort((a,b)=>a-b);
    if(seasonWeeks.length)policy.seasonWeeks=seasonWeeks;
@@ -74,7 +88,7 @@ function createLegacyProvider(deps){
    const source={revision,observedAt:at,season:prizes.season,games,weeks:weeks.map(week=>{
     const closed=policy.closures.has(week),columns=ctx.games.filter(g=>g.week===week),required=games.filter(g=>g.week===week);
     const complete=closed&&columns.length===required.length&&required.every(g=>columns.some(c=>norm(c.game)===norm(g.game)));
-    policy.completeWeeks.set(week,complete);
+    policy.completeWeeks.set(week,complete);if(week===10)trace({sourceComplete:complete});
     return {week,submissions:complete?latest.filter(s=>s.week===week).map(s=>{
      if(!Number.isFinite(s.timestamp)||s.timestamp<=0)throw Error();
      const p=policy.periods.find(p=>p.endWeek===week&&p.designatedGame),r=p?games.find(g=>definitions.get(week+'|'+norm(g.game))?.game===p.designatedGame):null;
@@ -125,16 +139,20 @@ function createLegacyProvider(deps){
     if(registryKeys.length!==23||new Set(registryKeys).size!==23||registryKeys.some(k=>!policy.aliases.has(k)))throw Error();
     policy.accuracyRoster=[...policy.aliases.values()].map(({player,alias})=>({player,alias}));
    }
+   stage('PROJECTION');
    const snapshot=projectCompetition(source,policy);if(snapshot.state!=='READY')throw Error();
+   try{const week10Table=snapshot.standings.find(t=>t.key==='W10');
+   if(week10Table)trace({stage:'PROJECTION',state:week10Table.state,reason:week10Table.reason??'NONE'});}catch{}
    if(cfg.prizeParticipants!==undefined)snapshot.prizes=estimatePrizes(snapshot,prizes,cfg.prizeParticipants);
    const trust={deadlineDisclosures:policy.deadlineDisclosures,now,maxAgeMs,aliases:new Map([...policy.aliases.values()].map(a=>[a.player,a.alias])),closures:new Map([...policy.closures].map(([w,c])=>[w,c.entry])),aliasCompleteness:new Map(snapshot.weeks.map(w=>[w.week,Array.isArray(w.picks)])),prizes:new Map(snapshot.prizes.map(p=>[p.key,p]))};
-   validatePublic(snapshot,trust);
+   stage('PUBLIC_VALIDATION');
+   validatePublic(snapshot,trust);trace({publicValidated:true});
    const activeWeek=Number(prizes.activeWeek);if(!weeks.includes(activeWeek))throw Error();
    const c=prizes.formControl||{},first=games.find(g=>norm(g.game)===norm(c.firstGame)&&g.week===Number(c.activeWeek));
    const iso=v=>typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v?v:'';
    const control={activeWeek,firstGame:first?TEAM_NAMES[team(first.team1)]+' vs '+TEAM_NAMES[team(first.team2)]:'',firstKickoff:iso(c.firstKickoff),picksClose:iso(c.picksClose),reportedStatus:verifyCurrentForm?(observedForm?.responderMatchesVerified===true&&observedForm.acceptingResponses===true?'OPEN':observedForm?.responderMatchesVerified===true&&observedForm.acceptingResponses===false&&c.status==='CLOSED'?'CLOSED':'UNKNOWN'):['OPEN','CLOSED','UPCOMING'].includes(c.status)?c.status:'UNKNOWN'};
    return {schema:'PP4_JSON_V1',snapshot,control,aliases:snapshot.accuracy?snapshot.accuracy.roster:[...new Map(snapshot.weeks.flatMap(w=>(w.picks||[]).map(p=>[p.player,p.alias])))].map(([player,alias])=>({player,alias})),activeWeek,form:approvedPlayerDestination(cfg.form)?{url:cfg.form.url,verified:true,approvedForPlayers:true}:null};
-  }catch{return {state:'UNAVAILABLE'};}
+  }catch{trace({stage:telemetryStage,state:'UNAVAILABLE',reason:'SOURCE_VALIDATION_FAILED'});return {state:'UNAVAILABLE'};}
  };
 }
 module.exports={createLegacyProvider,readNativeResponses,buildScheduleEvidence};

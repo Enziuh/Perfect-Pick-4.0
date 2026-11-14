@@ -1,4 +1,6 @@
 'use strict';
+// Fixed primitive events only; observers cannot affect projection.
+function observeWeek10(policy,event){try{if(typeof policy.observeWeek10==='function')policy.observeWeek10(event);}catch{}}
 const late=require('../scoring/late-entry.cjs');
 const {safeAlias}=require('../compatibility/pp3-display-name.cjs');
 const {VERSION,normalizeScore,validatePublic} = require('../contracts/live-contract.cjs');
@@ -99,8 +101,10 @@ function weeklyProjection(rawWeek, entry, policy, games) {
       const previous=latest.get(raw.identity);
       if(!previous || when>=previous.when)latest.set(raw.identity,{raw,when});
     }
+    if(rawWeek.week===10)observeWeek10(policy,{stage:'REPLACEMENT'});
     if(lateRules)for(const [identity,items] of candidates){const chosen=late.selectEntry(items,cutoffs,policy.now,policy.maxAgeMs);if(chosen.entry)latest.set(identity,{raw:chosen.entry,when:timestamp(chosen.entry.timestamp),entryState:chosen.state});}
     for(const candidate of latest.values())candidate.selections=selectionsProjection(candidate.raw,rawWeek.week,policy,games);
+    if(rawWeek.week===10)observeWeek10(policy,{replacementProcessed:true,stage:'ALIASES'});
     const approvals=[];
     for(const identity of latest.keys()){
       const a=policy.aliases.get(identity);
@@ -110,6 +114,7 @@ function weeklyProjection(rawWeek, entry, policy, games) {
       approvals.push(a);
     }
     if(new Set(approvals.map(a=>a.player)).size!==approvals.length || new Set(approvals.map(a=>a.alias)).size!==approvals.length)return {table:{...base,reason:'MISSING_ALIAS'},complete:false};
+    if(rawWeek.week===10)observeWeek10(policy,{aliasesVerified:true});
     const picks=[...latest.values()].map(({raw,selections,entryState},i)=>{
       if(lateRules)selections=games.filter(g=>g.week===rawWeek.week).map(g=>({game:g.game,team:selections.find(s=>s.game===g.game)?.team??null,eligibility:late.eligibility(raw.timestamp,g.game,cutoffs,policy.now,policy.maxAgeMs)}));
       if(!lateRules&&policy.lateEntryRules===late.RULE)selections=selections.map(s=>({...s,eligibility:'LEGACY'}));
