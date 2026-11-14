@@ -242,3 +242,17 @@ app permission or obtain safe pp4InspectCloudGitHubReadOnly receipt, then comple
 existing publisher/Pages verification. No scoring/registry investigation rerun.
 Private artifacts/seals fresh until recorded expiry; regenerate if stale. Rollback20
 ready, keep dual readers until fresh legacy data. No corrected public release claimed.
+
+## Latest — accuracy release COMPLETE, no owner action
+
+[Read-only final verification](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md) supersedes
+prior pending publication/permission blocker. Scheduled cloud publisher published
+ROSTER_FINAL_V1; Pages run43544425722 verify/deploySUCCESS,417CI testsPASS. API22/same
+URL unchanged.38livefile hashes,API/static matching periods,23roster136seasonfinal and
+360/390/430/768/1440 cold+repeat browsersPASS. Isaias/Pancho83/136,61.0%. Points,ranks,
+winners,prizes,tiebreaks,qualification/historical records EXACT pre-release match.
+This session no production/backend/config/state/Form/trigger/score/NFL write and no
+Git fetch/merge/push/dispatch. New remote snapshot tip in final report verified GET
+only; local public-data older. Do not deploy local stale data. No further release
+action; any future task requires its own scope,not reuse of historical authorization.
+Preserve rollback/private evidence and verify new memory package/checkpoint.

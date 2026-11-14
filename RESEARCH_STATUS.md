@@ -163,3 +163,11 @@ Registry/investigation COMPLETE; do not repeat.417 tests and API23roster PASS; p
 ranks,winners,qualification,prizes,tiebreaks EXACT. Publisher installed; no Form/trigger
 or ESPN change. Actual Firefox permission remains denied; process read403. Owner away.
 Native clock may publish at next due run; verify actual state before claiming completion.
+
+## Latest — accuracy release COMPLETE, live verified
+
+[Final report/all23 values](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md). Scheduled
+publication succeeded; API22 unchanged. All23 season136final;Isaias/Pancho83/136,61.0%.
+38livefiles,9weekly/2closedmonthly/season+running parity,5widths and417CI testsPASS.
+Protected results EXACT. No owner action or release blocker remains. Old permission
+blocker notes superseded by public proof. No production write in verification.

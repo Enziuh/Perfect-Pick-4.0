@@ -243,5 +243,41 @@
     ],
     "candidateBrowser": "PASS_COLD_REPEAT_REAL_PRODUCTION_DATA_LOCAL_ONLY",
     "candidateApiStaticParity": "PASS_AVAILABLE_SCOPES_AND_RUNNING_COVERAGE"
+  },
+  "finalLiveVerification": {
+    "state": "PASS",
+    "checkedAt": "2026-11-14T02:28:35.080Z",
+    "readOnly": true,
+    "liveFiles": 38,
+    "accuracy": "ROSTER_FINAL_V1",
+    "players": 23,
+    "seasonGamesFinal": [
+      136
+    ],
+    "weeklyPeriodsCompared": 9,
+    "monthlyClosedPeriodsCompared": 2,
+    "runningCoverage": "M3 Week9, season Weeks1-9; API/static arithmetic identical",
+    "protectedResults": "EXACT_PRE_RELEASE_MATCH",
+    "idsAliases": "EXACT_MATCH",
+    "privacy": "PASS",
+    "snapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+    "generatedAt": "2026-11-14T01:51:44.219Z",
+    "expiresAt": "2026-11-14T07:51:38.618Z",
+    "remoteCommit": "c03c053c6e6165110cad3d458474a3ac0617d470",
+    "successfulRun": 43544425722,
+    "browserWidths": [
+      360,
+      390,
+      430,
+      768,
+      1440
+    ],
+    "browser": "PASS_COLD_REPEAT_LIVE",
+    "ci": {
+      "pass": 417,
+      "fail": 0,
+      "skip": 0
+    },
+    "report": "docs/memory/ACCURACY_PUBLICATION_VERIFIED.md"
   }
 }

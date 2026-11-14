@@ -130,3 +130,12 @@ intervening edits. Original38-file rollback hash:
 No protected integrity/privacy/compatibility test failed after proper test setup, so
 API22 is retained rather than gratuitously rolled back. No immediate forced accuracy
 snapshot write or corrected public publication occurred in this execution.
+
+## Subsequent read-only verification — release COMPLETE
+
+The prior blocked/pending state above is historical. See
+[final live verification](ACCURACY_PUBLICATION_VERIFIED.md): scheduled publisher
+published ROSTER_FINAL_V1,successful Pages run43544425722,38livefile hashes/API-static
+parity/5widthsPASS,all23season136final,protected outcomes EXACT. API22 unchanged.
+No manual publication,regeneration,redeployment,state/trigger/config write was needed.
+No owner action remains; do not repeat production actions from historical steps.

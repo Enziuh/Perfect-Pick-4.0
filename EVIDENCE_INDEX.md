@@ -84,3 +84,9 @@ fresh real-source candidate and rollback in ignored tmp/accuracy-production-exec
 Public400a4ba/run43498535843 and38 live hashes verified; accuracy site not yet verified.
 Private source/config/IDs excluded. Google403/Firefox denial receipts are permission
 limitations, not evidence of failed scoring or successful corrected publication.
+
+E-ACCURACY-LIVE-VERIFIED: [final report](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md).
+Actual public snapshot/GitHub hash match,38files,API22/23players136final,covered-scope
+parity and live5-width browser PASS. Run43544425722 verify/deploySUCCESS,417CI tests.
+Protected outcomes EXACT; raw read-only receipts/logs in ignored verification folder.
+No regeneration/redeployment/state/trigger changes; remote observed by GET only.

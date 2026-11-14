@@ -6,15 +6,15 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Accuracy API22 and compatible publisher are DEPLOYED; ROSTER_FINAL_V1 active.
-[Latest execution/handoff](docs/memory/ACCURACY_PRODUCTION_EXECUTION.md).
-Owner authorized complete release; static accuracy publication/verification remains
-pending actual publisher-state access. Google process read403; Firefox app permission
-denied despite owner text approval. Owner away. No repeated registry/investigation.
-417 tests PASS; live API23roster,83/136 examples,protected results EXACT. Public snapshot
-400a4ba still legacy at20:17UTC; existing clock may publish corrected data at next due
-run. Do not reset publisher state/cadence or claim public completion without verifying.
-Existing authorization covers continuation once required access is available.
+Accuracy release COMPLETE and verified read-only on November13,18:27–18:30Pacific.
+[Final evidence and all23 values](docs/memory/ACCURACY_PUBLICATION_VERIFIED.md).
+API22 unchanged; scheduled publisher published ROSTER_FINAL_V1. Pages run43544425722
+SUCCESS,417CI tests;38 live hashes,API/static covered-scope parity and5-width live
+browsers PASS. All23 seasonGamesFinal136;Isaias/Pancho83/136,61.0%. Protected results
+EXACT pre-release match. No further release action or owner permission needed.
+Remote snapshot tip verified via GET only,not fetched; local public-data is older.
+Do not redeploy/regenerate/reset or repeat production actions. New work needs its own
+authorization. Prior pending/permission notes are historical,superseded by live proof.
 
 ## Repository map
 
