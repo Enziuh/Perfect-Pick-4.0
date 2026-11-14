@@ -46,3 +46,6 @@ test('provider output matches pinned pre-telemetry b7957d8 synthetic baselines',
  const expected={valid:'9c2d824fda51c201609eb8e07ea1174a75ae97392ddf9cd0f424839aee0d43e2',withheld:'9c950a10c92245bf41d05f4d705244a815f2e507d4d15e9bea60161f4da949ef',alias:'489c0ad2796ba65996e1ad58dbb2a123314b105a8c492f2dddbb5a505ff0922f'};
  for(const [mode,digest]of Object.entries(expected))assert.equal(hash(run({enabled:true,mode}).result),digest);
 });
+test('accessor values are captured once before validation and cannot swap a secret into output',()=>{
+ const logs=[],d=t.create({enabled:true,until:10,now:()=>1,sink:s=>logs.push(s)}),counts={},event={};for(const [key,value]of Object.entries({stage:'SOURCE',state:'WITHHELD',reason:'INCOMPLETE',sourceComplete:false}))Object.defineProperty(event,key,{get(){counts[key]=(counts[key]||0)+1;return counts[key]===1?value:'SECRET';}});d.record(event);d.finish();assert(!logs[0].includes('SECRET'));assert(Object.values(counts).every(n=>n===1));
+});

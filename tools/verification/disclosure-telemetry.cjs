@@ -9,10 +9,11 @@ function create({enabled=false,until=0,now=()=>0,sink=()=>{}}={}){
  let active=false,done=false,receipt={week:10,stage:'CONTEXT',state:'UNVERIFIED',reason:'NOT_INSPECTED',flags:{}};
  try{const t=now();active=enabled===true&&Number.isSafeInteger(until)&&until>t&&until-t<=86400000;}catch{}
  function record(event){if(!active||done)return;try{
-  if(STAGES.includes(event.stage))receipt.stage=event.stage;
-  if(STATES.includes(event.state))receipt.state=event.state;
-  if(typeof event.reason==='string')receipt.reason=REASONS.includes(event.reason)?event.reason:'UNKNOWN';
-  for(const key of FLAGS)if(typeof event[key]==='boolean')receipt.flags[key]=event[key];
+  const stage=event.stage,state=event.state,reason=event.reason;
+  if(STAGES.includes(stage))receipt.stage=stage;
+  if(STATES.includes(state))receipt.state=state;
+  if(typeof reason==='string')receipt.reason=REASONS.includes(reason)?reason:'UNKNOWN';
+  for(const key of FLAGS){const value=event[key];if(typeof value==='boolean')receipt.flags[key]=value;}
  }catch{}}
  function finish(){if(!active||done)return;done=true;try{const t=now();if(t>=until)return;sink(JSON.stringify(receipt));}catch{}}
  return Object.freeze({record,finish});
