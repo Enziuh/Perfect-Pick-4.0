@@ -43,7 +43,17 @@ test('only four active-week control cells can be read; no phone, name, response 
 });
 test('one dedicated wrapper logs only its fixed-shape sanitized receipt and never raw values/exceptions',()=>{
  const wrapper=tree.body[0];assert.equal(wrapper.body.body.length,3);const logs=calls.filter(n=>n.callee.object?.name==='console');assert.equal(logs.length,1);assert.equal(logs[0].callee.property.name,'log');assert.equal(logs[0].arguments[0].callee.property.name,'stringify');assert.equal(logs[0].arguments[0].arguments[0].name,'receipt');
- const receipt=nodes(tree.body[1],'VariableDeclarator').find(n=>n.id.name==='receipt').init;assert.deepEqual(receipt.properties.map(p=>p.key.name),['state','week','reason','expectedGameHeaders','observedGameHeaders','missingGameHeaders','extraGameHeaders','duplicateGameHeaders','controlStatus','deadlineStatus','publicationFlags','writes']);assert.equal(receipt.properties.find(p=>p.key.name==='writes').value.value,0);
+ const receipt=nodes(tree.body[1],'VariableDeclarator').find(n=>n.id.name==='receipt').init;assert.deepEqual(receipt.properties.map(p=>p.key.name),['state','week','stage','reason','expectedGameHeaders','observedGameHeaders','missingGameHeaders','extraGameHeaders','duplicateGameHeaders','controlStatus','deadlineStatus','publicationFlags','writes']);assert.equal(receipt.properties.find(p=>p.key.name==='writes').value.value,0);
  for(const n of nodes(tree,'AssignmentExpression'))if(n.left.type==='MemberExpression'&&n.left.object.name==='receipt')assert.notEqual(n.left.property.name,'writes');
  assert(source.includes("publicationFlags:'NOT_INSPECTED'"));assert(source.includes("state:'INSUFFICIENT_EVIDENCE'"));assert(source.includes("reason:'SOURCE_AND_ALIAS_GATES_NOT_INSPECTED'"));assert(!source.includes("state='VERIFIED'"));
+});
+
+test('metadata failure stage contains only fixed labels; header search matches native trimmed headers',()=>{
+ const stages=nodes(tree,'AssignmentExpression').filter(n=>n.left.type==='MemberExpression'&&n.left.object.name==='receipt'&&n.left.property.name==='stage');
+ assert(stages.length>=20);for(const n of stages){assert.equal(n.right.type,'Literal');assert(/^[A-Z_0-9]+$/.test(n.right.value));}
+ assert(stages.some(n=>n.right.value==='OPEN_WORKBOOK'));assert(stages.some(n=>n.right.value==='COMPLETE'));
+ const header=nodes(tree,'FunctionDeclaration').find(n=>n.id.name==='column_');
+ const pattern=nodes(header,'CallExpression').find(n=>n.callee.name==='find_').arguments[1];
+ assert.equal(pattern.left.left.value,'^\\s*');assert.equal(pattern.right.value,'\\s*$');
+ const re=new RegExp(pattern.left.left.value+'Active Week'+pattern.right.value);assert(re.test(' Active Week '));assert(re.test('Active Week'));assert(!re.test('Active Week Private'));
 });
