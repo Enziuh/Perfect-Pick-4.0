@@ -179,3 +179,11 @@ score overlap fixed and6widthsPASS;418testsPASS. Deadline proof10 and fresh sche
 exist,source has no AVAILABLE W10;retention masks original reason. API22 closure scope
 ends9. Direct headers403;do not invent exact native cause or bypass privacy. Staged
 owner-only read diagnostic NOT installed/run. No push/deploy/config/data changes.
+
+## Latest — revised diagnostic ready,not executed
+
+[Static review/instructions](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md). New
+metadata-only wrapper excludes broad loaders,registry/config and network entirely.
+Old diagnostic remainsBLOCKED. Owner/project gated,one safe log;matching metadata
+yieldsINSUFFICIENT_EVIDENCE.7static/13focused testsPASS;no native results invented.
+Next boundary is owner source review and one-time execution,not production repair.

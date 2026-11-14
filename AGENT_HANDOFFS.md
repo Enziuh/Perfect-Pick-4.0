@@ -271,3 +271,16 @@ failure invented. Staged pp4InspectWeek10DisclosureReadOnly in ignoredreviewfold
 install/runonce. No production push/deploy/config/state/Form/trigger/data changes.
 Accuracy deploymentcomplete,do not repeat it. UI releasependingseparateapproval and
 newerremote snapshot preservation;do not publish olderlocalpublic-data.
+
+## Latest — metadata-only Week10 diagnostic READY for owner review
+
+[Exact review/install/run/remove steps](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md).
+248db91 adds local renderer/7AST tests. NEW file Week10DisclosureMetadataReadOnly.gs,
+wrapper pp4InspectWeek10DisclosureMetadataOnce;not old broad Week10DisclosureReadOnly.gs
+which remains BLOCKED. Source only reads matching W10header cells,14Results Game cells
+and4control cells with limited rechecks. No context/private registry/config/network.
+Pinned owner/private-project guards,one sanitized console receipt,writes0. Matching
+metadata returnsINSUFFICIENT_EVIDENCE;no inferred source/alias approval.13focusedPASS,
+no diagnostic evaluation/execution/installation. Layout b9c43b1 unchanged. Owner must
+review source then run once in EXISTING PRIVATE publisher and remove ONLY newfile.
+No live API/config/state/Form/trigger/publishing approval or remote Git write implied.

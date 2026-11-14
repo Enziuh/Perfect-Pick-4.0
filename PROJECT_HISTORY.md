@@ -71,3 +71,9 @@ Local b9c43b1 reserves score/name/logo/status regions; original320overlap reprod
 0b52245 extends Week10 privacy guards.418testsPASS. Public deadline proof10 already
 exists,but source unavailable; exact native reason requires private read access403.
 [Report/boundary](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md). No production change.
+
+## November13 — minimum-metadata Week10 diagnostic ready locally
+
+248db91 replaces broad-loader approach with bounded header/Results/control searches
+and owner/project guard. Old diagnostic BLOCKED,unchanged.13focused checksPASS,7new
+static tests;no diagnostic execution/production call. [Review](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md).

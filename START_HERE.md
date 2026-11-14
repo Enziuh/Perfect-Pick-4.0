@@ -6,15 +6,15 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Match Center responsive score fix COMPLETE LOCALLY; Week10 disclosure investigation
-at private-source read boundary. [Latest report](docs/memory/MATCH_CENTER_WEEK10_REVIEW.md).
-b9c43b1 CSS/layout test;0b52245 disclosure guards;418testsPASS,0fail/skip. No push,
-deploy,backend/Form/trigger/state/data change. Live Week10 deadline proof exists but
-source picks/votes unavailable; do NOT bypass. Direct header-only read403. Exact native
-source reason requires owner-reviewed staged read-only diagnostic; not installed/run.
-Accuracy release remains verified complete,API22 unchanged. Production publication and
-new diagnostic installation require explicit authorization. Preserve newer remote
-snapshot; local public-data is older. Do not repeat historical deployment actions.
+Week10 metadata-only diagnostic READY LOCALLY FOR OWNER REVIEW;NOT installed/run.
+[Safety review and exact steps](docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md).
+Tool/static-test commit248db91. NEW pp4InspectWeek10DisclosureMetadataOnce uses bounded
+Week10 header/Results/control metadata only;no context/registry/config/network reads.
+Old Week10DisclosureReadOnly.gs remains BLOCKED.13focused testsPASS(7newstatic).
+No production calls or remote Git operations. Existing layout fix b9c43b1 preserved;
+accuracy deployment remains complete. Next boundary:owner review,one-time install/run
+in existing PRIVATE publisher,share only sanitized JSON,remove only temporary file.
+Matching metadata returns INSUFFICIENT_EVIDENCE;never broaden reads without approval.
 
 ## Repository map
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-13",
-  "phase": "Match Center UI fixed locally; Week10 private source investigation blocked at read permission",
+  "phase": "Week10 minimum-metadata diagnostic ready locally for owner review/execution",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
@@ -30,7 +30,7 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "Current owner authorizes local UI/code/tests/memory and read-only production inspection only. No push/deploy,source diagnostic installation,production config/data/Forms/triggers or forced publication.",
+  "authorizationNote": "Owner authorized local diagnostic revision/static tests only; no diagnostic execution/installation,production changes,push/deploy/publishing or private-data expansion.",
   "localImplementation": {
     "authorized": true,
     "executionState": "complete locally, verified",
@@ -288,5 +288,20 @@
     "diagnostic": "tmp/match-center-review/Week10DisclosureReadOnly.gs (not installed/run)",
     "productionChanges": false,
     "nextOwnerAction": "Review and authorize one-time safe-output native read diagnostic; UI publication separately pending"
+  },
+  "week10MetadataDiagnostic": {
+    "status": "READY_LOCAL_NOT_INSTALLED_NOT_EXECUTED",
+    "report": "docs/memory/WEEK10_METADATA_DIAGNOSTIC_REVIEW.md",
+    "toolCommit": "248db91",
+    "source": "tmp/match-center-review/Week10DisclosureMetadataReadOnly.gs",
+    "function": "pp4InspectWeek10DisclosureMetadataOnce",
+    "sha256": "6b0e57bfb9cb77ffd3df2c875ccaf464f7fc05bb2fa2b3d59658759de6b77203",
+    "blockedOriginalPreserved": true,
+    "staticTestsPassed": 7,
+    "focusedTestsPassed": 13,
+    "diagnosticExecuted": false,
+    "installed": false,
+    "runtimeEvidence": "NONE;static review only",
+    "nextOwnerAction": "Review complete new source,then owner-only single execution in existing private publisher;share receipt and remove temporary file"
   }
 }

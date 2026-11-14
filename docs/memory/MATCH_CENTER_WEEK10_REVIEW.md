@@ -132,3 +132,12 @@ Git. Do not repeat completed accuracy rollout or the scored-data investigation. 
 safe local UI work is done; Week10 remains at an identified private-source read
 boundary,with uncertainty explicitly retained. Current authorization does not permit
 installing the staged diagnostic,deploying CSS or publishing any snapshot.
+
+## Subsequent safety review and metadata-only replacement
+
+The original Week10DisclosureReadOnly.gs above is BLOCKED:its broad-helper reads
+exceeded minimum necessary access. It remains unchanged and must NOT be installed.
+See [replacement review](WEEK10_METADATA_DIAGNOSTIC_REVIEW.md) for the NEW
+Week10DisclosureMetadataReadOnly.gs and pp4InspectWeek10DisclosureMetadataOnce.
+Metadata-only revision is local,static-tested,not installed or executed. Matching
+metadata returnsINSUFFICIENT_EVIDENCE,not permission to inspect submissions/registry.
