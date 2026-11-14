@@ -1,0 +1,16 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),http=require('node:http'),fs=require('node:fs'),os=require('node:os'),path=require('node:path');
+const {assets}=require('../tools/snapshots/local-preview.cjs'),{profile}=require('../tools/performance/browser-profile.cjs');
+test('final score cards reserve disjoint logo, long team name, score and winner regions at narrow and wide widths',{timeout:180000},async()=>{
+ const file=require('./support/accuracy-history.cjs').historical(),files=assets(file),dir=fs.mkdtempSync(path.join(os.tmpdir(),'pp-match-layout-'));
+ const server=http.createServer((req,res)=>{const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';if(!Object.hasOwn(files,name))return res.writeHead(404).end();res.setHeader('Content-Type',name.endsWith('.js')?'text/javascript':name.endsWith('.css')?'text/css':name.endsWith('.svg')?'image/svg+xml':name.endsWith('.json')?'application/json':'text/html');res.end(files[name]);});
+ await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
+ try{await profile({url:'http://127.0.0.1:'+server.address().port+'/',output:path.join(dir,'report.json'),widths:[320,360,390,430,768,1440],clockAt:Date.parse(file.capturedAt)+1000,inspect:async(evaluate,width,sample)=>{
+  assert.equal(sample.runtimeErrors,0);assert.equal(sample.apiRequests,0);
+  // Stress the actual renderer's markup with synthetic long labels; scores/data stay untouched.
+  const result=await evaluate(`(()=>{const card=[...document.querySelectorAll('#matchGameResults .game-result-card')].find(c=>c.querySelector('.team-winner'));if(!card)throw Error('Final result missing');const rows=[...card.querySelectorAll('.team-result')];rows[0].querySelector('.team-result-name>span:last-child').textContent='Washington Commanders';rows[1].querySelector('.team-result-name>span:last-child').textContent='New York Giants';
+   const box=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};};const overlap=(a,b)=>Math.min(a.right,b.right)-Math.max(a.left,b.left)>0.5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>0.5;
+   return {overflow:document.documentElement.scrollWidth>innerWidth,rows:rows.map(row=>{const logo=row.querySelector('.team-result-badge'),name=row.querySelector('.team-result-name>span:last-child'),score=row.querySelector('.team-result-score'),status=row.querySelector('.team-result-right>strong'),regions=[logo,name,score,status].filter(Boolean).map(box),outer=box(row);return {disjoint:regions.every((r,i)=>regions.slice(i+1).every(s=>!overlap(r,s))),contained:regions.every(r=>r.left>=outer.left-1&&r.right<=outer.right+1),winner:row.classList.contains('team-winner'),highlight:getComputedStyle(row).borderLeftStyle==='solid',label:status?.textContent,scoreWeight:getComputedStyle(score).fontWeight};})};})()`);
+  assert(!result.overflow,'page must not overflow at '+width);assert(result.rows.every(r=>r.disjoint&&r.contained),'score/name/logo/status overlap at '+width);const winner=result.rows.find(r=>r.winner);assert(winner.highlight&&winner.label.includes('WINNER')&&winner.scoreWeight==='900');
+ }});}finally{server.closeAllConnections();await new Promise(r=>server.close(r));fs.rmSync(dir,{recursive:true,force:true});}
+});

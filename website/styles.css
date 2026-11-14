@@ -987,15 +987,16 @@ tbody tr:last-child td {
 }
 
 .team-result {
-  display:flex;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) max-content;
   align-items:center;
-  justify-content:space-between;
   gap:12px;
   padding:10px 0
 }
 
 .team-result-name {
-  display:flex;
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr);
   align-items:center;
   gap:12px;
   font-weight:750;
@@ -1003,10 +1004,19 @@ tbody tr:last-child td {
   min-width:0
 }
 
+/* Reserve independent space for the logo, wrapping name, score and outcome. */
+.team-result-name>span:last-child {
+  min-width:0;
+  overflow-wrap:anywhere;
+  line-height:1.35
+}
+
 .team-result-right {
-  display:flex;
-  align-items:center;
-  gap:10px
+  display:grid;
+  justify-items:end;
+  align-content:center;
+  gap:4px;
+  white-space:nowrap
 }
 
 .team-result-right>strong {
@@ -1994,7 +2004,7 @@ select,button:not(.submit-picks) {background:var(--panel2);color:var(--text);bor
 #playerPicksTable .matchup-badge {min-width:36px}
 #playerPicksTable .pick-outcome {font-size:11px;margin:4px 0 0}
 #playerPicksTable .matrix-total {font-weight:800}
-@media(max-width:700px){.team-winner .team-result-right {flex-direction:column;align-items:flex-end;gap:4px}.team-winner .team-result-score {font-size:32px}.team-winner .team-result-right>strong {font-size:10px}.comparison-matrix>summary{font-size:16px}}
+@media(max-width:700px){.team-winner .team-result-score {font-size:32px}.team-winner .team-result-right>strong {font-size:10px}.comparison-matrix>summary{font-size:16px}}
 
 /* Late-entry states are supplied only by validated eligibility-aware contracts. */
 .selection-choice.missed,.pick-cell.missed{color:var(--muted,#aeb9cb);background:transparent;border-color:currentColor}
