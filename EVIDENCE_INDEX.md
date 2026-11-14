@@ -114,3 +114,9 @@ E-CONSOLIDATED-WEBSITE: [release report](docs/memory/CONSOLIDATED_WEBSITE_RELEAS
 37unchanged+snapshotexact andprotectedresults/parityPASS. Ignoredconsolidated-release
 receiptsincludeGET-onlydeployment/sourceaccesscheck:0APIEXEC,existingv1tempfile,v2
 notinstalled;existingwebroutehasnoexecutionhook. No push/deploy/run/statechanges.
+
+E-CONSOLIDATED-PUBLISHED: [completion](docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md).
+d7d6c1dnormalpush;43558486370Linux426PASS,verifycompletedbeforedeploy.38livehashesexact,
+CSSonlydelta,37unchangedincludingsnapshot;12livebrowsersamples/6widthsPASS. Private
+ignoredconsolidated-publication receiptsincludeCIordering,fulljobs/log,livefiles,and
+postAPI/static/protectedresultsaudit. No backend/state/Forms/triggers/diagnosticwrites.

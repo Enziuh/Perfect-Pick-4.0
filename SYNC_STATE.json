@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
   "recordedDate": "2026-11-13",
-  "phase": "Consolidated website release verified locally;stop at deployment/private execution boundary",
+  "phase": "Consolidated website PUBLISHED_AND_VERIFIED;stop after memory synchronization",
   "phase2Authorized": true,
   "branch": "develop",
   "baselineCommit": "5732be11e63ee43bdbc2e1350f255f34396c926e",
   "checkpointPolicy": "Package receipt records finalized HEAD; this file records the establishment baseline to avoid self-reference.",
   "remote": {
-    "status": "Authorized fetch and snapshot-only clean merge557c7c8 completed;remote tip c03c053 observed unchanged;not pushed",
-    "lastObservedLocalTrackingCommit": "c03c053c6e6165110cad3d458474a3ac0617d470",
+    "status": "Normal non-force push c03c053 to d7d6c1d succeeded;final memory sync follows",
+    "lastObservedLocalTrackingCommit": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
     "readOnlyEvidence": "docs/memory/release/ARTIFACT_MANIFEST.json"
   },
   "deployment": {
-    "status": "API22 and ROSTER_FINAL_V1 static publication VERIFIED_COMPLETE",
-    "codeCommit": "5a7da37ff957890ba012a76d61bba203ea59aa43",
-    "runId": 43544425722,
-    "evidence": "docs/memory/ACCURACY_PUBLICATION_VERIFIED.md"
+    "status": "CONSOLIDATED_STATIC_WEBSITE_PUBLISHED_VERIFIED",
+    "codeCommit": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
+    "runId": 43558486370,
+    "evidence": "docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md"
   },
   "integrity": {
     "manifest": "external restart package MANIFEST.json",
@@ -30,7 +30,7 @@
     "sourceCheckpoint": "3c27adf3fe5694174efdc1b7b39631a445be5d45",
     "report": "docs/memory/SCORING_INVESTIGATION.md"
   },
-  "authorizationNote": "Owner authorized preparation,read-only access checks and clean integration of snapshot-only remote commits. No push/publication/private-project source or execution changes. Deployment scope confirmation still required.",
+  "authorizationNote": "Owner approved website CSS+CI publication only;completed. No Apps Script/Forms/triggers/scoring/publisher state/private data or diagnostic actions authorized/performed. Further work requires new applicable request.",
   "localImplementation": {
     "authorized": true,
     "executionState": "complete locally, verified",
@@ -337,7 +337,7 @@
     "nextApproval": "Normal snapshot-preserving remote integration/push and existing static workflow;separate review before revised owner diagnostic execution"
   },
   "consolidatedWebsiteRelease": {
-    "status": "READY_LOCAL_STOP_BEFORE_PUSH_PUBLICATION",
+    "status": "PUBLISHED_LIVE_VERIFIED",
     "report": "docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md",
     "releaseCodeCommit": "557c7c8c4e1983971341657e5a578dd20bca9f5c",
     "integratedRemoteCommit": "c03c053c6e6165110cad3d458474a3ac0617d470",
@@ -373,7 +373,7 @@
       "state": "PASS"
     },
     "rollback": "38captured hashes exact;CSS restoration simulation+reverse patch checksPASS",
-    "linuxCI": "Pending owner-approved push/workflow;no local Linux runtime",
+    "linuxCI": "PASS426/0fail/0skip Ubuntu26.04 Node22.23.4 Chrome157.0.8103.50",
     "privateDiagnostic": {
       "apiExecutableDeployments": 0,
       "installedStageVersion": false,
@@ -381,10 +381,50 @@
       "directExecution": "UNAVAILABLE via supported existing API/web routes",
       "ownerAction": "Replace ONLY existing temporary diagnostic with reviewedv2,runonce,shareJSON,removeONLYtemporaryfile"
     },
-    "pushed": false,
-    "published": false,
+    "pushed": true,
+    "published": true,
     "snapshotRegenerated": false,
     "apiVersion": 22,
-    "protectedResults": "EXACT_MATCH"
+    "protectedResults": "EXACT_MATCH",
+    "finalReport": "docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md",
+    "publishedCommit": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
+    "workflowRun": 43558486370,
+    "liveFilesExact": 38,
+    "changedPublicFiles": [
+      "styles.css"
+    ],
+    "liveBrowser": {
+      "state": "PASS",
+      "widths": [
+        320,
+        360,
+        390,
+        430,
+        768,
+        1440
+      ],
+      "samples": 12
+    },
+    "nextOwnerAction": "None for completed website release;separate private diagnostic boundary unchanged"
+  },
+  "consolidatedWebsitePublication": {
+    "status": "COMPLETE",
+    "report": "docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md",
+    "sourceCommit": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
+    "runId": 43558486370,
+    "normalNonForcePush": true,
+    "profile": "static",
+    "linuxVerificationPrecededDeployment": true,
+    "verifyCompletedAt": "2026-11-14T04:51:58Z",
+    "deployStartedAt": "2026-11-14T04:52:02Z",
+    "deployCompletedAt": "2026-11-14T04:52:12Z",
+    "liveVerifiedAt": "2026-11-14T04:53:20.406Z",
+    "snapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+    "snapshotUnchanged": true,
+    "unchangedFiles": 37,
+    "protectedResults": "EXACT_MATCH",
+    "apiVersion": 22,
+    "privateProjectChanged": false,
+    "diagnosticExecuted": false
   }
 }

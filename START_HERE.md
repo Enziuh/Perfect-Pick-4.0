@@ -6,17 +6,15 @@ Use [evidence index](EVIDENCE_INDEX.md) and [history](PROJECT_HISTORY.md) for pr
 
 ## Current authorization
 
-Consolidated WEBSITE release READY LOCALLY;STOP before push/publication/private execution.
-[Exact scope,verification,rollback and owner action](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
-557c7c8 cleanly integrates ONLY newer remote snapshot c03c053;all local fixes preserved.
-38-file candidate changesONLYstyles.css;37others/snapshotBYTE-UNCHANGED.426fulltestsPASS,
-12browser samples/sixwidthsPASS,privacy/parity/protected resultsEXACT. Artifact expires
-Nov14 07:51:38UTC(Nov13 23:51Pacific);revalidate/restage if stale orremoteadvances.
-No localLinuxruntime;newGitHubCI needsapprovedpush and existingworkflowcanpublish.
-Privatepublisher0API-executabledeployments;oldtemporarydiagnosticinstalled,v2absent.
-Oneowneraction:replacecontents of EXISTING temporary pp4InspectWeek10DisclosureMetadataOnce.gs
-withreviewedv2,runwrapperonce,shareONLYJSON,removeONLYtemporaryfile. No newinstallation,
-APIdeployment,scope/trigger/state/score/Form change. No push/deploy/publication occurred.
+Consolidated WEBSITE release PUBLISHED AND VERIFIED atd7d6c1d.
+[Final publication evidence](docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md).
+Workflow43558486370verify/deploySUCCESS;Linux426testsPASS beforedeploy. All38livehashes
+matchapprovedseal:ONLYstyles.csschanged,37othersincl snapshotBYTE-UNCHANGED. Live6widths/
+12samplesPASS;privacy/accuracy/ranks/winners/prizes/qualification/tiebreaksEXACT.
+API22/ROSTER_FINAL_V1unchanged;Week10privacyrestrictionspreserved. No Apps Script,
+Forms/triggers/state/config/data or diagnostic modification/execution. No owner action
+forcompletedwebsite release. Stop;no reminders/unrelated work or repeateddeployment.
+SeparateWeek10nativeinvestigation staysatitspriorprivate-owner execution boundary.
 
 ## Repository map
 

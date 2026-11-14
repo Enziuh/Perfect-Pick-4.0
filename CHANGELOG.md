@@ -148,3 +148,11 @@ checks, allowing the successful deployment run to be recorded without false fail
   exists,v2absent. Oneownerupdate/run existingfile actionprepared.
 - [Scope/rollback](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md);no push/publication
   orprivate-project/config/Forms/triggers/state changes.
+
+## 2026-11-13 — consolidated website release published and verified
+
+- Normalpushd7d6c1d;staticrun43558486370verify/deploySUCCESS,Linux426PASSbeforedeploy.
+-38livefilehashesexact,CSSonlydelta,37otherfilesincludingsnapshotunchanged.
+-12livebrowserchecks/6widthsPASS;privacy/accuracy/ranks/prizes/tiebreaksprotected.
+- [Finalreport](docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md). No AppsScript/config/
+  Forms/triggers/state/privateplayerdata or diagnostic operations.

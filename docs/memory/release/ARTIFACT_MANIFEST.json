@@ -402,5 +402,58 @@
       "temporaryFile": "pp4InspectWeek10DisclosureMetadataOnce",
       "directExecution": "UNAVAILABLE_WITH_EXISTING_API_ROUTES"
     }
+  },
+  "consolidatedWebsitePublication": {
+    "status": "COMPLETE",
+    "report": "docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md",
+    "sourceCommit": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
+    "runId": 43558486370,
+    "normalNonForcePush": true,
+    "profile": "static",
+    "linuxVerificationPrecededDeployment": true,
+    "verifyCompletedAt": "2026-11-14T04:51:58Z",
+    "deployStartedAt": "2026-11-14T04:52:02Z",
+    "deployCompletedAt": "2026-11-14T04:52:12Z",
+    "liveVerifiedAt": "2026-11-14T04:53:20.406Z",
+    "snapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+    "snapshotUnchanged": true,
+    "unchangedFiles": 37,
+    "protectedResults": "EXACT_MATCH",
+    "apiVersion": 22,
+    "privateProjectChanged": false,
+    "diagnosticExecuted": false,
+    "linuxCI": {
+      "state": "PASS",
+      "runId": 43558486370,
+      "head": "d7d6c1d0e36f7ae77fca0e3ed32442053aa0e244",
+      "verifyCompletedAt": "2026-11-14T04:51:58Z",
+      "deployStartedAt": "2026-11-14T04:52:02Z",
+      "deployCompletedAt": "2026-11-14T04:52:12Z",
+      "linuxTests": {
+        "pass": 426,
+        "fail": 0,
+        "skip": 0
+      },
+      "runner": "ubuntu-26.04",
+      "node": "22.23.4",
+      "chrome": "157.0.8103.50",
+      "profile": "static",
+      "verificationPrecededDeployment": true
+    },
+    "liveReceipt": {
+      "state": "ALL_38_DEPLOYED_HASHES_MATCH_APPROVED_SEAL",
+      "at": "2026-11-14T04:53:20.406Z",
+      "url": "https://enziuh.github.io/Perfect-Pick-4.0/",
+      "files": 38,
+      "changedPublicFiles": [
+        "styles.css"
+      ],
+      "unchangedFiles": 37,
+      "snapshotUnchanged": true,
+      "snapshotSha256": "e1d4c6f4c73ec614bdfa797344fbd82eb2e38eeb82dca2efac1a7c190a5024e4",
+      "expiresAt": "2026-11-14T07:51:38.618Z",
+      "privacy": "VALIDATED",
+      "accuracy": "ROSTER_FINAL_V1"
+    }
   }
 }

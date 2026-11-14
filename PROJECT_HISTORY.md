@@ -93,3 +93,9 @@ changesONLYCSS;426fulltests/12browser samplesPASS.37files/snapshotunchanged;roll
 38hashes/simulationPASS. [Scope/actions](docs/memory/CONSOLIDATED_WEBSITE_RELEASE.md).
 No push/pub. PrivatepublisherhasnoAPIexecutiondeployment;oldtemporarydiagnosticexists,
 v2absent. Oneowneraction updates/runs existingtemporaryfile,notanotherinstallation.
+
+## November13 — consolidated website published/verified
+
+Owner-approved normalpushd7d6c1d/staticrun43558486370succeeded. Linux426PASSbefore
+deploy;38livehashesexact,ONLYCSSdelta,37remainingfilesunchanged(including
+snapshot). Live6widths/12samplesPASS;protectedresultsEXACT. [Finalevidence](docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md). No backend/privateprojectchanges.

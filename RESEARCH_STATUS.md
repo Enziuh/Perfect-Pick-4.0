@@ -205,3 +205,11 @@ CI5ae7d8d retained,426fulltests+6widthsPASS. LinuxCIpendingpushapproval;workflow
 afterverify. DirectdiagnosticAPIunavailable(0EXECUTION_API),v1stillinstalled. Owner
 canreplaceexistingtemporaryfilewithv2/runonce;no newscriptinstallation. No newnative
 rootcauseclaimed;matchingmetadata remainsINSUFFICIENT_EVIDENCE. No productionchanges.
+
+## Latest — consolidated website release COMPLETE
+
+[Verifiedpublication](docs/memory/CONSOLIDATED_WEBSITE_PUBLISHED.md). d7d6c1d/run43558486370
+Linux426PASSbeforedeploy,38livehashesPASS,6widths/12samplesPASS. CSSonlydelta;37other
+filesincludingsnapshotunchanged. Protectedaccuracy/ranks/prizes/qualification/tiebreaks
+EXACT,API22unchanged. No owneractionneededforwebsite. Week10privateboundaryunchanged;
+no diagnostic/GAS/Form/trigger/state/scoring/data operations during this release.
