@@ -86,15 +86,23 @@ function selectionsProjection(row, week, policy, games) {
   }
   unique(selections.map(s=>s.game));return selections;
 }
+// Membership is explicit only when the complete accuracy roster and alias authority
+// agree. Unknown submissions are not participants; never infer a replacement ID.
+function completeRosterAuthority(policy){
+ const roster=policy.accuracyRoster;if(!Array.isArray(roster)||!roster.length||roster.length!==policy.aliases.size)return false;
+ const keys=new Set(roster.map(r=>r.player+'|'+r.alias));
+ return keys.size===roster.length&&[...policy.aliases.values()].every(a=>a?.approved===true&&/^p_[a-z0-9]{8,32}$/.test(a.player)&&safeAlias(a.alias)&&keys.has(a.player+'|'+a.alias));
+}
 function weeklyProjection(rawWeek, entry, policy, games) {
   const base={scope:'WEEKLY',key:'W'+rawWeek.week,weeks:[rawWeek.week],state:'WITHHELD',reason:'CLOSURE_UNVERIFIED'};
   if(entry.status!=='CLOSED'&&!policy.deadlineDisclosures?.has(rawWeek.week))return {table:base,complete:false}; // Do not read submissions before closure.
   if(policy.completeWeeks.get(rawWeek.week)!==true)return {table:{...base,reason:'INCOMPLETE'},complete:false};
   try {
-    const latest=new Map(),candidates=new Map();
+    const latest=new Map(),candidates=new Map(),registeredRoster=completeRosterAuthority(policy);
     const lateRules=late.applies(policy,rawWeek.week),cutoffs=policy.lateEntryEvidence?.get(rawWeek.week);
     for(const raw of array(rawWeek.submissions)) {
       requireValue(typeof raw.identity==='string' && raw.identity.length>0);
+      if(registeredRoster&&!policy.aliases.has(raw.identity))continue;
       if(!array(raw.selections,32).some(s=>s.pick!==null&&s.pick!==undefined&&String(s.pick).trim()!==''))continue;
       let when;try{when=timestamp(raw.timestamp);requireValue(when<=policy.now);}catch(e){if(lateRules)continue;throw e;} // Same legacy rule: no game selections means no weekly entry.
       if(lateRules){try{selectionsProjection(raw,rawWeek.week,policy,games);}catch{continue;}const items=candidates.get(raw.identity)||[];items.push(raw);candidates.set(raw.identity,items);continue;}
