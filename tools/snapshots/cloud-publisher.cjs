@@ -1,6 +1,7 @@
 'use strict';
 // Private Google execution only. GitHub dependency accepts a validated public file, never source/store.
 const {safeCode}=require('./github-error.cjs');
+const {CLOSED_POLICY}=require('./retention-policy.cjs');
 const {project,historicalEqual,stableContent}=require('./cloud-projector.cjs'),{production}=require('./production-policy.cjs'),{plan}=require('./activity.cjs');
 function createCloudPublisher(d){
  function tick(){
@@ -22,23 +23,25 @@ function createCloudPublisher(d){
     if(result==='FAILED'&&(state.pending.retries||0)<1&&Date.parse(state.expiresAt)-now>1800000){state.pending.retries=(state.pending.retries||0)+1;d.state.save(state);d.github.dispatch();return {state:'CI_RETRY_QUEUED'};}if(result!=='SUCCESS')throw Error();
     const live=d.github.published();production(live,d.now());
     if(d.digest(JSON.stringify(live))!==state.pending.hash)throw Error();
-    state={nextRunAt:state.nextRunAt,lastSuccessAt:new Date(d.now()).toISOString(),expiresAt:live.expiresAt};d.state.save(state);
+    state={nextRunAt:state.nextRunAt,lastSuccessAt:new Date(d.now()).toISOString(),expiresAt:live.expiresAt,...(d.verifiedClosedRollover===true?{publicationPolicy:live.retention.policyId}:{})};d.state.save(state);
    }
-   if(state.nextRunAt&&Date.parse(state.nextRunAt)>now)return {state:'NOT_DUE',nextRunAt:state.nextRunAt};
+   const migration=d.verifiedClosedRollover===true&&state.publicationPolicy!==CLOSED_POLICY.id;
+   if(!migration&&state.nextRunAt&&Date.parse(state.nextRunAt)>now)return {state:'NOT_DUE',nextRunAt:state.nextRunAt};
    phase='REGISTRY';const registry=d.registry.load();if(registry.generation!==1||registry.store.entries.length!==23)throw Error();
    phase='SOURCE';const source=d.readSource();
-   phase='PROJECTION';const file=project(source,registry.store,d.now(),new Map(config.approvedAliases.map(a=>[a.player,a.alias])),{deadlineDisclosure:config.deadlineDisclosure===true});
+   phase='PROJECTION';const file=project(source,registry.store,d.now(),new Map(config.approvedAliases.map(a=>[a.player,a.alias])),{deadlineDisclosure:config.deadlineDisclosure===true,verifiedClosedRollover:d.verifiedClosedRollover===true});
    const activity=plan(source,d.now()),nextRunAt=new Date(Math.min(Date.parse(activity.nextCheckAt),Date.parse(file.expiresAt)-1800000)).toISOString();
    if(Date.parse(nextRunAt)<=d.now())throw Error();
    phase='PUBLIC_BASELINE';const previous=d.github.read();if(!previous||!previous.file||!previous.sha)throw Error();
    production(previous.file,Date.parse(previous.file.capturedAt));
-   if(!historicalEqual(previous.file,file)||JSON.stringify(previous.file.payload.aliases)!==JSON.stringify(file.payload.aliases)||Date.parse(file.generatedAt)<Date.parse(previous.file.generatedAt)||file.payload.snapshot.revision<previous.file.payload.snapshot.revision)throw Error();
-   if(state.lastSuccessAt&&stableContent(previous.file)===stableContent(file)&&Date.parse(previous.file.expiresAt)-d.now()>activity.intervalMs+900000){d.state.save({...state,nextRunAt});return {state:'UNCHANGED',nextRunAt};}
+   if(d.verifiedClosedRollover===true&&previous.file.retention.weeks.some(week=>!file.retention.weeks.includes(week)))throw Error();
+   if(!historicalEqual(previous.file,file,{verifiedClosedRollover:d.verifiedClosedRollover===true})||JSON.stringify(previous.file.payload.aliases)!==JSON.stringify(file.payload.aliases)||Date.parse(file.generatedAt)<Date.parse(previous.file.generatedAt)||file.payload.snapshot.revision<previous.file.payload.snapshot.revision)throw Error();
+   if(state.lastSuccessAt&&stableContent(previous.file)===stableContent(file)&&Date.parse(previous.file.expiresAt)-d.now()>activity.intervalMs+900000){d.state.save({...state,nextRunAt,...(d.verifiedClosedRollover===true?{publicationPolicy:CLOSED_POLICY.id}:{})});return {state:'UNCHANGED',nextRunAt};}
    phase='PUBLIC_WRITE';boundary='PUBLIC_VALIDATION';production(file,d.now());const hash=d.digest(JSON.stringify(file));
    // Save a public-only intent before the network write so a crash is recoverable.
-   boundary='INTENT_SAVE';d.state.save({...state,nextRunAt,expiresAt:file.expiresAt,intent:{hash,previousSha:previous.sha}});
+   boundary='INTENT_SAVE';d.state.save({...state,nextRunAt,...(d.verifiedClosedRollover===true?{publicationPolicy:CLOSED_POLICY.id}:{}),expiresAt:file.expiresAt,intent:{hash,previousSha:previous.sha}});
    boundary='GITHUB_PUT';const commit=d.github.write(file,previous.sha);if(!/^[a-f0-9]{40}$/.test(commit))throw Error();
-   boundary='PENDING_SAVE';d.state.save({...state,nextRunAt,pending:{commit,hash},expiresAt:file.expiresAt});
+   boundary='PENDING_SAVE';d.state.save({...state,nextRunAt,...(d.verifiedClosedRollover===true?{publicationPolicy:CLOSED_POLICY.id}:{}),pending:{commit,hash},expiresAt:file.expiresAt});
    phase='DISPATCH';boundary=null;d.github.dispatch();return {state:'QUEUED',nextRunAt,players:23,games:272};
   }catch(error){
    const detail=safeCode(error);

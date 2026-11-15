@@ -3,7 +3,7 @@ const {createDashboardModel,createViewAdapter,TEAM_NAMES}=require('../presentati
 const {policyAlias}=require('../compatibility/pp3-display-name.cjs');
 const {approvedPlayerDestination}=require('../presentation/form-entry.cjs');
 function decode(reply,now,deadlineRecords=[]){
- if(!reply||Object.keys(reply).sort().join(',')!=='activeWeek,aliases,control,form,schema,snapshot'||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
+ if(!reply||!['activeWeek,aliases,control,form,schema,snapshot','activeWeek,aggregateStandings,aliases,control,form,schema,snapshot'].includes(Object.keys(reply).sort().join(','))||reply.schema!=='PP4_JSON_V1'||!Array.isArray(reply.aliases)||reply.aliases.length>1000)throw Error('Competition data unavailable');
  const aliases=new Map();for(const a of reply.aliases){if(!a||Object.keys(a).sort().join(',')!=='alias,player'||aliases.has(a.player))throw Error('Competition data unavailable');aliases.set(a.player,a.alias);}
  const disclosed=new Map();
  if(reply.snapshot?.accuracy)for(const p of reply.snapshot.accuracy.roster||[])disclosed.set(p.player,p.alias);
@@ -13,12 +13,15 @@ function decode(reply,now,deadlineRecords=[]){
  if(reply.form!==null&&!approvedPlayerDestination(reply.form))throw Error('Competition data unavailable');
  const model=createDashboardModel(s,trust,{activeWeek:reply.activeWeek,form:reply.form});
  const c=reply.control,iso=v=>v===''||typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
- if(!c||Object.keys(c).sort().join(',')!=='activeWeek,firstGame,firstKickoff,picksClose,reportedStatus'||c.activeWeek!==reply.activeWeek||!['OPEN','CLOSED','UPCOMING','UNKNOWN'].includes(c.reportedStatus)||!iso(c.firstKickoff)||!iso(c.picksClose)||!(c.firstGame===''||s.games.some(g=>g.week===reply.activeWeek&&TEAM_NAMES[g.home]+' vs '+TEAM_NAMES[g.away]===c.firstGame)))throw Error('Competition data unavailable');
- const destination=approvedPlayerDestination(reply.form);if(destination&&model.weeks.find(w=>w.week===reply.activeWeek).entriesStatus!=='CLOSED')model.form={available:true,url:destination,label:'Submit Picks',message:'Official Form · Check entry availability on the Form.'};
- Object.assign(model.prizes.formControl,c);
+ if(!c||Object.keys(c).sort().join(',')!=='activeWeek,firstGame,firstKickoff,picksClose,reportedStatus'||!Number.isInteger(c.activeWeek)||c.activeWeek<reply.activeWeek||c.activeWeek>18||!['OPEN','CLOSED','UPCOMING','UNKNOWN'].includes(c.reportedStatus)||!iso(c.firstKickoff)||!iso(c.picksClose)||!(c.firstGame===''||s.games.some(g=>g.week===c.activeWeek&&TEAM_NAMES[g.home]+' vs '+TEAM_NAMES[g.away]===c.firstGame)))throw Error('Competition data unavailable');
+ const target=s.weeks.find(w=>w.week===c.activeWeek);
+ if(c.activeWeek!==reply.activeWeek){const games=s.games.filter(g=>g.week===c.activeWeek);if(!target||target.entry.authority!=='OFFICIAL'||target.entry.status!==c.reportedStatus||target.entry.deadline!==c.picksClose||!games.length||games.some(g=>g.kickoff===null)||Math.min(...games.map(g=>Date.parse(g.kickoff)))!==Date.parse(c.firstKickoff)||Date.parse(c.firstKickoff)-Date.parse(c.picksClose)!==3600000)throw Error('Competition data unavailable');}
+ const destination=approvedPlayerDestination(reply.form);if(destination&&model.weeks.find(w=>w.week===c.activeWeek)?.entriesStatus!=='CLOSED')model.form={available:true,url:destination,label:'Submit Picks',message:'Official Form · Check entry availability on the Form.'};
+ Object.assign(model.prizes.formControl,c);if(c.activeWeek!==reply.activeWeek)model.prizes.formControl.status=target.entry.status;
  // Lightweight frontend metadata avoids cloning every historical pick list just
  // to label week controls. Actual disclosure still uses the validated week model.
  model.prizes.weekAvailability=model.weeks.map(w=>({... (w.disclosureMode?{disclosureMode:w.disclosureMode}:{}),week:w.week,entriesStatus:w.entriesStatus,visibility:w.visibility,hasPlayers:w.visibility==='AVAILABLE'&&w.standings.length>0}));
+ if(Object.prototype.hasOwnProperty.call(reply,'aggregateStandings')){require('../snapshots/aggregate-standings.cjs').apply(reply.aggregateStandings,reply,model);require('../scoring/roster-accuracy.cjs').applyModel(model,s,reply.aggregateStandings);}
  return model;
 }
 function install(root,config){

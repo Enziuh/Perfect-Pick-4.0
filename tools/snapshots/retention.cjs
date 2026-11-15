@@ -1,10 +1,10 @@
 'use strict';
 const {decode}=require('../api/browser-client.cjs');
-const {POLICY,SCORE_MAX_AGE_MS,authorized}=require('./retention-policy.cjs');
+const {POLICY,CLOSED_POLICY,SCORE_MAX_AGE_MS,authorized}=require('./retention-policy.cjs');
 const fail=()=>{throw Error('Retained snapshot unavailable');};
 const iso=t=>typeof t==='string'&&Number.isFinite(Date.parse(t))&&new Date(t).toISOString()===t;
 const exact=(o,keys)=>o&&Object.keys(o).sort().join(',')===keys.split(',').sort().join(',');
-function permitted(policy){return policy===null||JSON.stringify(policy)===JSON.stringify(POLICY);}
+function permitted(policy){return policy===null||[POLICY,CLOSED_POLICY].some(p=>JSON.stringify(policy)===JSON.stringify(p));}
 function restrict(payload,allowed){
  const p=structuredClone(payload),s=p.snapshot;
  for(const w of s.weeks)if(!allowed.has(w.week)){delete w.picks;delete w.votes;}
@@ -24,7 +24,7 @@ function create(v1,now,{policy=POLICY,authorizationUntil=policy?.validUntil??nul
  const {validate}=require('./schema.cjs');validate(v1,now,deadlineDisclosures);
  if(!permitted(policy)||authorizationUntil!==null&&!iso(authorizationUntil))fail();
  const deadlineMap=require('../disclosure/weekly-deadline.cjs').trusted(deadlineDisclosures,v1.payload.snapshot,now);
- const allowed=new Set(v1.payload.snapshot.weeks.filter(w=>authorized(w.week,w.entry,v1.payload.snapshot.season,now,policy,authorizationUntil)&&!(w.week===v1.payload.activeWeek&&v1.payload.control.reportedStatus!=='CLOSED')&&Array.isArray(w.picks)&&Array.isArray(w.votes)).map(w=>w.week));
+ const allowed=new Set(v1.payload.snapshot.weeks.filter(w=>authorized(w.week,w.entry,v1.payload.snapshot.season,now,policy,authorizationUntil)&&!(w.week===v1.payload.control.activeWeek&&v1.payload.control.reportedStatus!=='CLOSED')&&Array.isArray(w.picks)&&Array.isArray(w.votes)).map(w=>w.week));
  for(const [week]of deadlineMap){const w=v1.payload.snapshot.weeks.find(w=>w.week===week);if(Array.isArray(w?.picks)&&Array.isArray(w?.votes))allowed.add(week);}
  const payload=restrict(v1.payload,allowed),scoreValidUntil=new Date(Math.min(Date.parse(payload.snapshot.generatedAt),...payload.snapshot.games.map(g=>Date.parse(g.verifiedAt)))+SCORE_MAX_AGE_MS).toISOString();
  const expiresAt=new Date(Math.min(Date.parse(scoreValidUntil),allowed.size&&authorizationUntil!==null?Date.parse(authorizationUntil):Infinity)).toISOString();
@@ -38,9 +38,9 @@ function validateRetained(file,now){
   if(file.freshness){const f=file.freshness;if(!exact(f,'sourceObservedAt,scoreUpdatedAt,generatedAt,publishedAt')||f.sourceObservedAt!==file.generatedAt||f.generatedAt!==file.capturedAt||f.scoreUpdatedAt!==null||f.publishedAt!==null)fail();}
   const captured=Date.parse(file.capturedAt);if(captured>now||captured<Date.parse(file.generatedAt))fail();
   const r=file.retention;if(!exact(r,'policyId,revision,weeks,validUntil')||!Array.isArray(r.weeks)||new Set(r.weeks).size!==r.weeks.length||JSON.stringify(r.weeks)!==JSON.stringify([...r.weeks].sort((a,b)=>a-b))||r.validUntil!==null&&!iso(r.validUntil))fail();
-  const policy=r.policyId===null&&r.revision===0?null:r.policyId===POLICY.id&&r.revision===POLICY.revision?POLICY:undefined;if(policy===undefined)fail();
+  const policy=r.policyId===null&&r.revision===0?null:r.policyId===POLICY.id&&r.revision===POLICY.revision?POLICY:r.policyId===CLOSED_POLICY.id&&r.revision===CLOSED_POLICY.revision?CLOSED_POLICY:undefined;if(policy===undefined)fail();
   const deadlineRecords=Object.hasOwn(file,'deadlineDisclosures')?file.deadlineDisclosures:[];if(!Array.isArray(deadlineRecords))fail();for(const record of deadlineRecords)if(JSON.stringify(require('../disclosure/weekly-deadline.cjs').record(file.payload,captured,record.week))!==JSON.stringify(record))fail();const deadlineMap=require('../disclosure/weekly-deadline.cjs').trusted(deadlineRecords,file.payload.snapshot,captured);
-  const allowed=new Set(r.weeks);for(const week of allowed){const w=file.payload.snapshot.weeks.find(w=>w.week===week);if(!w||!(authorized(week,w.entry,file.payload.snapshot.season,now,policy,r.validUntil)||deadlineMap.has(week))||week===file.payload.activeWeek&&file.payload.control.reportedStatus!=='CLOSED'&&!deadlineMap.has(week))fail();}
+  const allowed=new Set(r.weeks);for(const week of allowed){const w=file.payload.snapshot.weeks.find(w=>w.week===week);if(!w||!(authorized(week,w.entry,file.payload.snapshot.season,now,policy,r.validUntil)||deadlineMap.has(week))||week===file.payload.control.activeWeek&&file.payload.control.reportedStatus!=='CLOSED'&&!deadlineMap.has(week))fail();}
   // The public payload must already be physically stripped of every unapproved
   // protected field, including aggregate rows/decisions/allocations and unused aliases.
   if(JSON.stringify(restrict(file.payload,allowed))!==JSON.stringify(file.payload))fail();

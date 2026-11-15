@@ -3,8 +3,9 @@
 // Never change scores, picks, proof timestamps or closure/disclosure evidence.
 function normalizeSource(reply,now){
  const {decode}=require('./browser-client.cjs'),{TEAM_NAMES}=require('../presentation/contract-dashboard.cjs'),d=require('../disclosure/weekly-deadline.cjs'),c=reply?.control,s=reply?.snapshot,iso=v=>v===''||typeof v==='string'&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString()===v;
- if(!c||Object.keys(c).sort().join(',')!=='activeWeek,firstGame,firstKickoff,picksClose,reportedStatus'||c.activeWeek!==reply.activeWeek||!['OPEN','CLOSED','UPCOMING','UNKNOWN'].includes(c.reportedStatus)||!iso(c.firstKickoff)||!iso(c.picksClose))throw Error('Source control unavailable');
+ if(!c||Object.keys(c).sort().join(',')!=='activeWeek,firstGame,firstKickoff,picksClose,reportedStatus'||!Number.isInteger(c.activeWeek)||c.activeWeek<reply.activeWeek||c.activeWeek>18||!['OPEN','CLOSED','UPCOMING','UNKNOWN'].includes(c.reportedStatus)||!iso(c.firstKickoff)||!iso(c.picksClose))throw Error('Source control unavailable');
  const label=g=>TEAM_NAMES[g.home]+' vs '+TEAM_NAMES[g.away];
+ if(c.activeWeek!==reply.activeWeek){decode(reply,now,d.records(reply,now));return reply;}
  if(c.firstGame===''||s.games.some(g=>g.week===reply.activeWeek&&label(g)===c.firstGame)){decode(reply,now,d.records(reply,now));return reply;}
  const next=d.GRANTS.find(g=>g.week===10&&g.firstKickoff===c.firstKickoff&&g.deadline===c.picksClose);
  if(reply.activeWeek!==9||!next||!s.games.some(g=>g.week===10&&label(g)===c.firstGame))throw Error('Source control unavailable');

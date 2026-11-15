@@ -4,7 +4,7 @@ const keys=['player','alias','rank','points','completedGames','totalPicks','accu
 const exact=(o,k)=>o&&Object.keys(o).sort().join(',')===[...k].sort().join(',');
 const fail=()=>{throw Error('Public aggregate standings unavailable');};
 function runningTables(payload){
- const s=payload.snapshot;return s.standings.filter(t=>(t.key==='M3'||t.scope==='SEASON')&&t.state==='WITHHELD').flatMap(period=>{
+ const s=payload.snapshot;return s.standings.filter(t=>(t.scope==='MONTHLY'||t.scope==='SEASON')&&t.state==='WITHHELD').flatMap(period=>{
  const parts=period.weeks.map(w=>s.standings.find(t=>t.key==='W'+w)).filter(t=>t?.state==='AVAILABLE'&&s.weeks.some(w=>'W'+w.week===t.key&&Array.isArray(w.picks)&&Array.isArray(w.votes)));
  if(!parts.length)return [];
  const totals=new Map();for(const part of parts)for(const r of part.rows){const x=totals.get(r.player)||{player:r.player,alias:r.alias,points:0,completedGames:0,totalPicks:0};x.points+=r.points;x.completedGames+=r.completedGames;x.totalPicks+=r.totalPicks??0;totals.set(r.player,x);}
@@ -17,7 +17,7 @@ function apply(tables,payload,model){
  if(!Array.isArray(tables)||tables.length>30)fail();const seen=new Set(),aliases=new Map(payload.aliases.map(a=>[a.player,a.alias]));
  for(const table of tables){
   const source=payload.snapshot.standings.find(t=>t.key===table?.key);if(!(exact(table,['key','rows'])||exact(table,['key','rows','coveredWeeks']))||!source||seen.has(table.key)||!Array.isArray(table.rows)||table.rows.length>1000)fail();seen.add(table.key);
-  if(source.key==='M3'&&source.state==='WITHHELD'&&!Object.hasOwn(table,'coveredWeeks'))fail();
+  if((source.scope==='MONTHLY'||source.scope==='SEASON')&&source.state==='WITHHELD'&&!Object.hasOwn(table,'coveredWeeks'))fail();
   if(Object.hasOwn(table,'coveredWeeks')){const expected=runningTables(payload).find(t=>t.key===table.key);if(!expected||JSON.stringify(expected)!==JSON.stringify(table))fail();}
   const players=new Set(),max=payload.snapshot.games.filter(g=>source.weeks.includes(g.week)).length;let last=null,rank=0;
   table.rows.forEach((r,i)=>{if(!r||!exact(r,keys.filter(k=>Object.hasOwn(r,k)))||!['player','alias','rank','points','completedGames'].every(k=>Object.hasOwn(r,k))||aliases.get(r.player)!==r.alias||players.has(r.player))fail();players.add(r.player);
