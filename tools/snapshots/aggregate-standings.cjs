@@ -5,6 +5,7 @@ const exact=(o,k)=>o&&Object.keys(o).sort().join(',')===[...k].sort().join(',');
 const fail=()=>{throw Error('Public aggregate standings unavailable');};
 function runningTables(payload){
  const s=payload.snapshot;return s.standings.filter(t=>(t.scope==='MONTHLY'||t.scope==='SEASON')&&t.state==='WITHHELD').flatMap(period=>{
+ if(s.accuracy?.version==='ROSTER_FINAL_FORWARD_V1'&&period.reason==='INCOMPLETE')return [];
  const parts=period.weeks.map(w=>s.standings.find(t=>t.key==='W'+w)).filter(t=>t?.state==='AVAILABLE'&&s.weeks.some(w=>'W'+w.week===t.key&&Array.isArray(w.picks)&&Array.isArray(w.votes)));
  if(!parts.length)return [];
  const totals=new Map();for(const part of parts)for(const r of part.rows){const x=totals.get(r.player)||{player:r.player,alias:r.alias,points:0,completedGames:0,totalPicks:0};x.points+=r.points;x.completedGames+=r.completedGames;x.totalPicks+=r.totalPicks??0;totals.set(r.player,x);}

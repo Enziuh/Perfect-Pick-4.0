@@ -9,7 +9,7 @@ function restrict(payload,allowed){
  const p=structuredClone(payload),s=p.snapshot;
  for(const w of s.weeks)if(!allowed.has(w.week)){delete w.picks;delete w.votes;}
  const withheld=new Set();
- for(const t of s.standings)if(t.weeks.some(w=>!allowed.has(w))){t.state='WITHHELD';t.reason='CLOSURE_UNVERIFIED';delete t.rows;withheld.add(t.key);}
+ for(const t of s.standings)if(t.weeks.some(w=>!allowed.has(w))){const incomplete=p.snapshot.accuracy?.version==='ROSTER_FINAL_FORWARD_V1'&&t.reason==='INCOMPLETE';t.state='WITHHELD';t.reason=incomplete?'INCOMPLETE':'CLOSURE_UNVERIFIED';delete t.rows;withheld.add(t.key);}
  for(const m of s.months)if(withheld.has(m.key)){m.state='IN PROGRESS';m.winner=null;m.actualTotal=null;m.method='NONE';delete m.comparisons;}
  for(const prize of s.prizes)if(withheld.has(prize.key)){
   prize.allocationState='UNAVAILABLE';prize.paymentState='UNKNOWN';delete prize.allocations;delete prize.rollover;

@@ -105,7 +105,7 @@
     setText('picksCloseTime', formatPacificDateTime_(closeAt));
     setText('firstGameLabel', data.firstGame || '—');
     setText('firstKickoffTime', kickoffAt ? `Kickoff: ${formatPacificDateTime_(kickoffAt)}` : '—');
-    setText('deadlineRuleLabel', prizeData?.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS' ? 'Opening game: one hour before kickoff.' : 'Official opening-game deadline.');
+    setText('deadlineRuleLabel', prizeData?.scoringBasis==='ELIGIBLE_SUBMITTED_FINAL_PICKS' ? 'Normal Form deadline: one hour before opening kickoff.' : 'Official opening-game deadline.');
 
     const badge = $('formStatusBadge');
     if (badge) {
@@ -452,7 +452,7 @@
     $('matchPrivacyNotice').hidden = closed;
     $('matchPrivacyNotice').textContent = pickPrivacyMessage(data);
     renderPickWeekHelp(data);
-    setText('picksSubmissionCount', closed ? `${data.standings.length} submission${data.standings.length === 1 ? '' : 's'} for Week ${data.week}${data.missingAliases?.length?' · '+data.missingAliases.length+' Not Submitted':''}` : pickPrivacyMessage(data));
+    setText('picksSubmissionCount', closed ? `${data.submissionCount??data.standings.length} submission${(data.submissionCount??data.standings.length) === 1 ? '' : 's'} for Week ${data.week}${data.missingAliases?.length?' · '+data.missingAliases.length+' Not Submitted':''}` : pickPrivacyMessage(data));
     $('playerSelect').innerHTML = '<option value="">All players</option>' + (closed ? data.standings.map(player => `<option value="${escapeHtml(player.name)}">${escapeHtml(player.name)}</option>`).join('')+(data.missingAliases||[]).map(name=>`<option value="${escapeHtml(name)}">${escapeHtml(name)} · Not Submitted</option>`).join('') : '');
     $('playerSelect').disabled = !closed || !data.standings.length;
     for(const [id,value] of [['playerSelect',viewPreferences.player],['matchSelect',viewPreferences.match]])if(value&&[...$(id).options].some(o=>o.value===value))$(id).value=value;

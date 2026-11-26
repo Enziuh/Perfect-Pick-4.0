@@ -2,7 +2,7 @@
 // Private Google execution only. GitHub dependency accepts a validated public file, never source/store.
 const {safeCode}=require('./github-error.cjs');
 const {CLOSED_POLICY}=require('./retention-policy.cjs');
-const {project,historicalEqual,stableContent}=require('./cloud-projector.cjs'),{production}=require('./production-policy.cjs'),{plan}=require('./activity.cjs');
+const {project,historicalEqual,derivedHistoricalEqual,stableContent}=require('./cloud-projector.cjs'),{production}=require('./production-policy.cjs'),{plan}=require('./activity.cjs');
 function createCloudPublisher(d){
  function tick(){
   const config=d.config();if(!config||config.enabled!==true)return {state:'DISABLED'};
@@ -36,6 +36,7 @@ function createCloudPublisher(d){
    production(previous.file,Date.parse(previous.file.capturedAt));
    if(d.verifiedClosedRollover===true&&previous.file.retention.weeks.some(week=>!file.retention.weeks.includes(week)))throw Error();
    if(!historicalEqual(previous.file,file,{verifiedClosedRollover:d.verifiedClosedRollover===true})||JSON.stringify(previous.file.payload.aliases)!==JSON.stringify(file.payload.aliases)||Date.parse(file.generatedAt)<Date.parse(previous.file.generatedAt)||file.payload.snapshot.revision<previous.file.payload.snapshot.revision)throw Error();
+   if(d.verifiedClosedRollover===true&&!derivedHistoricalEqual(previous.file,file))throw Error();
    if(state.lastSuccessAt&&stableContent(previous.file)===stableContent(file)&&Date.parse(previous.file.expiresAt)-d.now()>activity.intervalMs+900000){d.state.save({...state,nextRunAt,...(d.verifiedClosedRollover===true?{publicationPolicy:CLOSED_POLICY.id}:{})});return {state:'UNCHANGED',nextRunAt};}
    phase='PUBLIC_WRITE';boundary='PUBLIC_VALIDATION';production(file,d.now());const hash=d.digest(JSON.stringify(file));
    // Save a public-only intent before the network write so a crash is recoverable.
