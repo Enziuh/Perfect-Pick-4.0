@@ -212,15 +212,20 @@
     return `<span class="accuracy-indicator${accuracy === '—' ? ' is-empty' : ''}" title="${prizeData?.accuracyBasis==='ROSTER_FINAL_V1'?'Correct picks divided by all FINAL competition games':'Correct picks divided by submitted picks with FINAL results'}">${accuracy}</span>`;
   }
 
-  function renderStandingsRows(containerId, standings, showCompleted = true, resolution = null) {
-    $(containerId).innerHTML = standings.map(player => `
+  function renderStandingsRows(containerId, standings, showCompleted = true, resolution = null, context = {}) {
+    const namesVerified = context.displayNamesVerified !== false && standings.every(player => typeof player.name === 'string' && player.name.trim());
+    const emptyMessage = !namesVerified ? "Player standings are temporarily unavailable while display names are verified."
+      : context.visibility === 'WITHHELD' && !context.aggregateAvailable ? "Standings will appear after this week's picks are approved for publication."
+      : context.visibility === 'AVAILABLE' && context.submissionCount === 0 ? "No player submissions are available for this week."
+      : 'No verified standings are available for this period.';
+    $(containerId).innerHTML = (namesVerified ? standings.map(player => `
       <tr class="${player.rank <= 3 ? ['','rank-first','rank-second','rank-third'][player.rank] : ''}${resolution?.leaders.includes(player.name) && resolution.status === 'UNRESOLVED TIE' ? ' is-unresolved' : ''}">
         <td><span class="rank-badge">${player.rank}</span></td>
         <td class="player-name-cell">${escapeHtml(player.name)}${resolution?.winner === player.name ? '<span class="standing-note is-champion">Monthly Champion</span>' : resolution?.leaders.includes(player.name) ? `<span class="standing-note">${resolution.leaders.length === 1 ? 'Leader' : 'Shared leader'}</span>` : ''}</td>
         <td class="num"><strong>${player.points}</strong></td>
         ${showCompleted ? `<td class="num">${player.completedGames}</td>` : ''}
         <td class="num">${accuracyHtml(player)}</td>
-      </tr>`).join('') || `<tr><td colspan="${showCompleted ? 5 : 4}">Standings await approved display names and verified closed entry periods.</td></tr>`;
+      </tr>`).join('') : '') || `<tr><td colspan="${showCompleted ? 5 : 4}">${escapeHtml(emptyMessage)}</td></tr>`;
   }
 
   function championExplanation(resolution) {
@@ -603,7 +608,7 @@
     );
     setText('weeklyResultsWeek', `Week ${weekData?.week || '—'}`);
 
-    renderStandingsRows('weeklyStandingsBody', weekData?.standings || []);
+    renderStandingsRows('weeklyStandingsBody', weekData?.standings || [], true, null, weekData || {});
 
     renderGameResultsInto_('weeklyGameResults', weekData);
   }
