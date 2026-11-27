@@ -169,8 +169,10 @@
         <div class="section-heading-row">
           <div>
             <div class="eyebrow">Season</div>
-            <h2>Overall Season Standings</h2>
-            <p class="muted">Season-long points. Final season payout structure will be decided later.</p>
+            <h2>Season Standings</h2>
+            <p id="seasonCurrentWeek" class="eyebrow">Current NFL week unavailable</p>
+            <p id="seasonResultsThrough" class="muted">Checking published results…</p>
+            <p class="muted">See who's leading the season.</p><p id="seasonPrizeNote" class="muted">Season prize details are being checked.</p>
           </div>
         </div>
         <div class="table-region" role="region" aria-label="season data table" tabindex="0"><table class="striped-table standings-table responsive-table">
@@ -180,14 +182,14 @@
       </div>
 </section></section>
 <section id="prizes" class="destination" aria-label="The prize room" hidden><header class="page-header"><p class="eyebrow">Know the stakes</p><h1 tabindex="-1">The prize room</h1><p class="page-intro">A clear view of each pool, every rollover, and the road to the season pot.</p></header><section id="prize-details" class="legacy-section">
-      <div id="prizeSummary" class="card-grid" aria-label="Prize pool summaries"></div><p class="state-message">Pools follow the competition prize rules. Unavailable amounts stay pending, not zero. Weekly rollovers are determined after all results are final. Unresolved monthly ties remain pending.</p>
+      <div id="prizeSummary" class="card-grid" aria-label="Prize pool summaries"></div><p class="state-message">$20 per player is paid monthly in advance. With 23 approved players, expected contributions are $460; this is not a verified payment total. The pools shown are prize budgets, not payment receipts. When nobody wins a weekly Perfect Week prize, 50% rolls into the monthly prize and 50% into the season pot after results are final. A monthly winner is announced only after results and any required tiebreaker are confirmed.</p>
       <div id="periodCards" class="periods"></div>
-      <details class="panel transparency-panel"><summary>How monthly rollovers fund prizes</summary><div id="prizeBreakdown" class="prize-breakdown"></div></details>
+      <details class="panel transparency-panel"><summary>How unclaimed weekly prizes are split</summary><div id="prizeBreakdown" class="prize-breakdown"></div></details>
       <div class="panel">
         <h2>Weekly Prize Tracker</h2>
         <div class="table-region" role="region" aria-label="prizes data table" tabindex="0"><table>
           <thead>
-            <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Pool status</th><th>Perfect Week winners</th><th class="num">Monthly Rollover</th></tr>
+            <tr><th>Week</th><th>Period</th><th class="num">Players</th><th class="num">Pot</th><th>Pool status</th><th>Perfect Week winners</th><th class="num">Unclaimed weekly prize</th></tr>
           </thead>
           <tbody id="weeklyPrizeBody"></tbody>
         </table></div>

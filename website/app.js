@@ -177,7 +177,7 @@
       .map(x => `Week ${x.week}: ${money(x.amount)}`)
       .join(' + ');
 
-    const monthlyBase = rolloverLines || 'No finalized weekly rollovers yet';
+    const monthlyBase = rolloverLines || 'Total from weekly prizes with no Perfect Week winner; see the weekly tracker below.';
     const projectedSeasonContribution = prizes.currentProjectedSeasonContribution;
     $('prizeBreakdown').innerHTML = `
       <div class="breakdown-row">
@@ -189,13 +189,13 @@
       <div class="breakdown-row">
         <span>Monthly prize portion</span>
         <strong>${money(prizes.projectedMonthlyWinnerPool)}</strong>
-        <small>${prizes.estimateBasis ? 'Based on '+prizes.estimateBasis.participantsPerWeek+' participants per week' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
+        <small>50% of unclaimed weekly prizes${prizes.estimateBasis ? ' · budget estimate' : ''}</small>
       </div>
       <div class="breakdown-arrow">+</div>
       <div class="breakdown-row">
         <span>Season pot portion</span>
         <strong>${money(projectedSeasonContribution)}</strong>
-        <small>${prizes.estimateBasis ? 'Based on '+prizes.estimateBasis.participantsPerWeek+' participants per week' : ownerView ? 'Calculated allocation from prize rules' : '50% of the monthly rollover pot'}</small>
+        <small>50% of unclaimed weekly prizes${prizes.estimateBasis ? ' · budget estimate' : ''}</small>
       </div>
     `;
 
@@ -229,6 +229,12 @@
   }
 
   function championExplanation(resolution) {
+    if (!resolution.winner) {
+      if (resolution.status === 'AWAITING FINAL SCORE') return "We're waiting for the final score in the tiebreaker game.";
+      if (resolution.status === 'UNRESOLVED TIE') return 'The leaders are still tied. The owner will confirm the winner after review.';
+      if (resolution.status === 'NO ELIGIBLE TIEBREAKER') return 'The tied leaders need a tiebreaker review before a winner can be confirmed.';
+      return 'Follow the standings as results come in. The monthly winner will be confirmed once all results and entry checks are complete.';
+    }
     let text = resolution.reason;
     if (resolution.actualTotal !== null) text = `${resolution.game} · FINAL combined score: ${resolution.actualTotal}. ${text}`;
     if (resolution.winner && resolution.winningDifference !== null) {
@@ -242,8 +248,7 @@
   function renderChampionSpotlight(period, resolution) {
     const title = resolution.winner ? `${period.displayName} · ${resolution.winner}` : `${period.displayName} · ${resolution.status.toLowerCase()}`;
     setText('championHeading', title);
-    const points = resolution.points === null ? '' : `${resolution.points} monthly points. `;
-    setText('championSummary', `${points}${championExplanation(resolution)} Prize pool: ${money(period.monthlyWinnerPool)}. ${resolution.winner ? 'Monthly champion confirmed.' : 'Champion determination pending.'}`);
+    setText('championSummary', `${championExplanation(resolution)} Prize pool: ${money(period.monthlyWinnerPool)}. ${resolution.winner ? 'Monthly winner confirmed.' : 'Monthly winner not yet confirmed.'}`);
     setText('championState', resolution.status);
     $('championState').dataset.state = resolution.status;
     $('championHeading').dataset.winner = resolution.winner || '';
@@ -259,9 +264,18 @@
     return monthlyCache.get(period.periodKey);
   }
 
-  function renderSeasonStandings(prizes) {
+  async function renderSeasonStandings(prizes) {
+    const generation = renderGeneration;
     renderStandingsRows('seasonStandingsBody', prizes.overallStandings || []);
-    if(liveView&&prizes.seasonCoverage){const heading=document.querySelector('#season h2');if(heading)heading.textContent='Season standings · covered weeks '+prizes.seasonCoverage;}
+    setText('seasonCurrentWeek', Number.isInteger(prizes.activeWeek) ? `Current NFL week: ${prizes.activeWeek}` : 'Current NFL week unavailable');
+    setText('seasonPrizeNote', `Season pot: ${money(prizes.projectedSeasonPot ?? prizes.confirmedSeasonPot)}. Final payout details will be confirmed by the owner.`);
+    setText('seasonResultsThrough', 'Checking published results…');
+    const covered = String(prizes.seasonCoverage || '').split(',').map(Number).filter(w => Number.isInteger(w) && w >= 1 && w <= 18);
+    const weeks = await Promise.all(covered.map(loadWeek));
+    if (generation !== renderGeneration) return;
+    const published = weeks.filter(w => publicPicks(w) && w.standings?.length && w.results?.some(r => r.status === 'Final'));
+    const latest = published.length ? Math.max(...published.map(w => w.week)) : null;
+    setText('seasonResultsThrough', latest === null ? 'Published season results are not yet available.' : `Results through Week ${latest} · completed games only`);
   }
 
   function championComparisonsHtml(resolution) {
@@ -281,9 +295,9 @@
     callout.dataset.state = resolution.status;
     callout.dataset.winner = resolution.winner || '';
     callout.innerHTML = `<div class="champion-panel-heading"><div><span class="monthly-prize-label">${escapeHtml(period.displayName)} · Monthly competition</span>
-      <h3>${resolution.winner ? escapeHtml(resolution.winner) : 'Monthly Champion decision'}</h3></div>
+      <h3>Monthly Winner${resolution.winner ? ' · '+escapeHtml(resolution.winner) : ''}</h3></div>
       <span class="pill champion-status" data-state="${resolution.status}">${resolution.status}</span></div>
-      <p>${resolution.points === null ? '' : `<strong>${resolution.points} monthly points</strong> · `}${escapeHtml(championExplanation(resolution))}</p>
+      <p>${escapeHtml(championExplanation(resolution))}</p>
       <p class="muted">Monthly prize pool: <strong>${money(period.monthlyWinnerPool)}</strong>. ${resolution.winner ? 'Champion confirmed by competition results.' : 'Winner determined after all required results and tiebreakers are final.'}</p>
       ${championComparisonsHtml(resolution)}`;
     renderChampionSpotlight(period, resolution);
@@ -320,15 +334,15 @@
     const seasonContext = seasonLeaders.length ? `Current points leaders: ${seasonLeaders.join(', ')} · ${topPoints} points. Season title not confirmed.` : 'Season standings unavailable.';
     const basis=prizes.estimateBasis;
     $('prizeSummary').innerHTML = `${basis?`<p class="muted" style="grid-column:1/-1">Pools use ${basis.participantsPerWeek} participants per week.</p>`:''}<article class="card pot-card"><span>WEEK ${prizes.activeWeek} · WEEKLY POT</span><strong>${money(current.pool)}</strong><small>${prizes.weekly[currentIndex]?.finalized ? current.winners.length ? 'Perfect Week achieved.' : 'Weekly results final; rollover follows the prize rules.' : 'Winner determined after all games are final.'}</small></article>
-      <article class="card pot-card"><span>MONTHLY POT</span><strong>${money(prizes.currentMonthlyPot)}</strong><small>${escapeHtml(prizes.currentPeriodName || prizes.currentPeriod || 'Current prize period')}</small><a href="#standings/monthly">Monthly standings ↗</a></article>
+      <article class="card pot-card"><span>MONTHLY WINNER’S POT</span><strong>${money(prizes.projectedMonthlyWinnerPool)}</strong><small>${escapeHtml(prizes.currentPeriodName || prizes.currentPeriod || 'Current prize period')}</small><a href="#standings/monthly">Monthly standings ↗</a></article>
       <article class="card pot-card"><span>SEASON POT</span><strong>${money(prizes.projectedSeasonPot ?? prizes.confirmedSeasonPot)}</strong><small>${escapeHtml(seasonContext)}</small><a href="#standings/season">Season standings ↗</a></article>`;
     const periodCards = (await Promise.all(prizes.periods.map(async p => {
       const resolution = await loadMonthlyResolution(p);
       return `<article class="period-card" data-status="${resolution.status}" data-winner="${escapeHtml(resolution.winner || '')}">
-        <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · ${escapeHtml(p.ruleMode)} rules</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
-        <p><strong>${escapeHtml(resolution.winner || 'Champion not confirmed')}</strong>${resolution.points === null ? '' : ` · ${resolution.points} monthly points`}</p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
+        <div class="period-head"><div><div class="eyebrow">Weeks ${p.startWeek}–${p.endWeek} · Monthly competition</div><h3>${escapeHtml(p.displayName)}</h3></div><span class="pill">${resolution.status}</span></div>
+        <p><strong>${escapeHtml(resolution.winner || 'Monthly winner not yet confirmed')}</strong></p><p class="muted">${escapeHtml(championExplanation(resolution))}</p>
         <div class="period-grid"><div><span>Monthly prize pool</span><strong>${money(p.monthlyWinnerPool)}</strong></div><div><span>Rollover pot</span><strong>${money(p.monthlyPot)}</strong></div><div><span>Season contribution</span><strong>${money(p.seasonContribution)}</strong></div></div>
-        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. Champions are determined by final game results and the monthly tiebreaker.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
+        <p class="muted">Monthly and season shares: ${p.monthlyWinnerPct == null ? 'Unavailable' : p.monthlyWinnerPct + '%'} / ${p.seasonPct == null ? 'Unavailable' : p.seasonPct + '%'}. The winner is confirmed after final results and any required tiebreaker.</p><a href="#standings/monthly" data-prize-period="${p.periodKey}">Review monthly standings and tiebreakers ↗</a></article>`;
     }))).join('');
     if(generation!==renderGeneration)return;
     $('periodCards').innerHTML=periodCards;
@@ -865,7 +879,7 @@
       }else if(key==='weekly'){
         const week=await loadWeek(Number($('weeklyWeekSelect').value));if(generation===renderGeneration)renderWeeklyDetails(week);
       }else if(key==='monthly')await renderMonthlyPeriod($('monthlyPeriodSelect').value);
-      else if(key==='season')renderSeasonStandings(prizes);
+      else if(key==='season')await renderSeasonStandings(prizes);
       else if(key==='prizes')await renderPrizes(prizes);
     }).then(()=>{if(generation===renderGeneration){panel.dataset.viewState='ready';panel.setAttribute('aria-busy','false');}}).catch(error=>{if(generation===renderGeneration){renderedViews.delete(key);panel.dataset.viewState='error';panel.setAttribute('aria-busy','false');}throw error;});
     renderedViews.set(key,job);return job;

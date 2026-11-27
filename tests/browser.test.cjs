@@ -257,7 +257,7 @@ test('isolated browser: five destinations, eight capabilities, closure privacy, 
   assert.equal(await p.evaluate("document.querySelector('#monthlyStandingsBody .accuracy-indicator').textContent"),'50%');
   await navigate(p,'standings/season');
   assert.equal(await p.evaluate("document.querySelector('#seasonStandingsBody .accuracy-indicator').textContent"),'50%');
-  assert(await p.evaluate("document.getElementById('championSummary').textContent.includes('Champion determination pending')"));
+  assert(await p.evaluate("document.getElementById('championSummary').textContent.includes('Monthly winner not yet confirmed')"));
   if(process.env.PP_SCREENSHOT_DIR){
    fs.mkdirSync(process.env.PP_SCREENSHOT_DIR,{recursive:true});
    for(const width of [375,1280]){
